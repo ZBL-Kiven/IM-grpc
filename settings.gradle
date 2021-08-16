@@ -1,0 +1,5 @@
+rootProject.name = "IMTest"
+include ':app', ':im-core'
+include ':im-protocol'
+//include ':protoc'
+include ':im-database'

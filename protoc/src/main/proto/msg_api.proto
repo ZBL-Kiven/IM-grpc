@@ -1,0 +1,136 @@
+syntax = "proto3";
+
+package app;
+
+option java_multiple_files = true;
+option java_package = "com.zj.im.gen";
+option java_outer_classname = "IMProtoc";
+
+message ListenTopicReq{
+
+  repeated string topic  = 1;//具体的topic key ，可多值
+
+  Method          method = 2;
+
+  enum Method{
+    Subscribe   = 0;
+    UnSubscribe = 1;
+  }
+
+}
+
+message ListenTopicReply{
+  string topic = 1;//具体的topic key
+  string data  = 2;//由业务推送过来的json信息，根据业务不同内部的格式不同
+}
+
+
+message GetImMessageReq {
+  uint64 groupId = 1;
+  uint64 ownerId = 2;//大V的id
+}
+
+message ImMessage{
+  uint64          groupId         = 1; //
+  uint64          ownerId         = 2;  //
+  uint64          sendTime        = 3;  //
+  uint64          msgId           = 4; //
+  string          clientMsgId     = 5;
+  string          msgType         = 6;
+  ImgContent      imgContent      = 7;
+  VideoContent    videoContent    = 8;
+  TextContent     textContent     = 9;
+  AudioContent    audioContent    = 10;
+  CCVideoContent  ccVideoContent  = 11;
+  QuestionContent questionContent = 12;
+  SenderInfo      sender          = 13;
+  uint64          replyMsgId      = 14;
+  ImMessage       replyMsg        = 15;
+}
+message ImgContent{
+  string url = 1;
+}
+message VideoContent{
+  string url = 1;
+}
+message TextContent{
+  string text = 1;
+}
+message AudioContent{
+  string url = 1;
+}
+message CCVideoContent{
+  string videoId = 1;
+}
+message QuestionContent{
+  TextContent textContent    = 1;
+  uint32      questionStatus = 2;
+  uint64      questionId     = 3;
+  uint64      spark          = 4;
+  uint64      diamond        = 5;
+  bool        isPublic       = 6;
+}
+
+
+message SenderInfo{
+  uint64 senderId       = 1;  //发送者id
+  string senderName     = 2; //发送者名字
+  string senderAvatar   = 3; //发送者头像
+  string senderPlatform = 4;//发送终端类型
+}
+
+
+message LeaveImGroupReq {
+  uint64 groupId = 1;
+}
+
+message LeaveImGroupReply {
+  bool success = 1;
+}
+
+message GetImHistoryMsgReq{
+  uint64 groupId = 1;
+  uint64 msgId   = 2;
+  uint64 ownerId = 3;//大V id
+}
+
+message BatchMsg{
+  repeated ImMessage imMessage = 1;
+}
+
+message PingReq{
+}
+
+message Pong{
+}
+
+service MsgApi{
+
+  /*
+  服务器向客户端推送当前实时变更的信息 比如+1的这种信息
+   */
+  rpc ListenTopicData(stream ListenTopicReq) returns (stream ListenTopicReply){}
+
+  /*
+  收取group实时消息
+   */
+  rpc GetImMessage(GetImMessageReq) returns (stream ImMessage){}
+
+  /*
+  不再收听房间（group）的消息0
+   */
+  rpc LeaveImGroup(LeaveImGroupReq) returns (LeaveImGroupReply){}
+
+  /*
+  获取群的历史消息
+   */
+  rpc GetGroupHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
+
+  /*
+  获取chat的历史消息
+   */
+  rpc GetChatHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
+
+  rpc Ping(PingReq) returns (Pong){}
+
+}
