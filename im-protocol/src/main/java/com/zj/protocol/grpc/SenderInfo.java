@@ -6,16 +6,106 @@ package com.zj.protocol.grpc;
 /**
  * Protobuf type {@code app.SenderInfo}
  */
-public  final class SenderInfo extends
-    com.google.protobuf.GeneratedMessageLite<
-        SenderInfo, SenderInfo.Builder> implements
+public final class SenderInfo extends
+    com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:app.SenderInfo)
     SenderInfoOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use SenderInfo.newBuilder() to construct.
+  private SenderInfo(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
   private SenderInfo() {
     senderName_ = "";
     senderAvatar_ = "";
     senderPlatform_ = "";
   }
+
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new SenderInfo();
+  }
+
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private SenderInfo(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
+
+            senderId_ = input.readUInt64();
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            senderName_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            senderAvatar_ = s;
+            break;
+          }
+          case 34: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            senderPlatform_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return IMProtoc.internal_static_app_SenderInfo_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return IMProtoc.internal_static_app_SenderInfo_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            SenderInfo.class, SenderInfo.Builder.class);
+  }
+
   public static final int SENDERID_FIELD_NUMBER = 1;
   private long senderId_;
   /**
@@ -23,250 +113,184 @@ public  final class SenderInfo extends
    *发送者id
    * </pre>
    *
-   * <code>optional uint64 senderId = 1;</code>
+   * <code>uint64 senderId = 1;</code>
+   * @return The senderId.
    */
+  @java.lang.Override
   public long getSenderId() {
     return senderId_;
   }
-  /**
-   * <pre>
-   *发送者id
-   * </pre>
-   *
-   * <code>optional uint64 senderId = 1;</code>
-   */
-  private void setSenderId(long value) {
-    
-    senderId_ = value;
-  }
-  /**
-   * <pre>
-   *发送者id
-   * </pre>
-   *
-   * <code>optional uint64 senderId = 1;</code>
-   */
-  private void clearSenderId() {
-    
-    senderId_ = 0L;
-  }
 
   public static final int SENDERNAME_FIELD_NUMBER = 2;
-  private java.lang.String senderName_;
+  private volatile java.lang.Object senderName_;
   /**
    * <pre>
    *发送者名字
    * </pre>
    *
-   * <code>optional string senderName = 2;</code>
+   * <code>string senderName = 2;</code>
+   * @return The senderName.
    */
+  @java.lang.Override
   public java.lang.String getSenderName() {
-    return senderName_;
+    java.lang.Object ref = senderName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      senderName_ = s;
+      return s;
+    }
   }
   /**
    * <pre>
    *发送者名字
    * </pre>
    *
-   * <code>optional string senderName = 2;</code>
+   * <code>string senderName = 2;</code>
+   * @return The bytes for senderName.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getSenderNameBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(senderName_);
-  }
-  /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
-   * <code>optional string senderName = 2;</code>
-   */
-  private void setSenderName(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    senderName_ = value;
-  }
-  /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
-   * <code>optional string senderName = 2;</code>
-   */
-  private void clearSenderName() {
-    
-    senderName_ = getDefaultInstance().getSenderName();
-  }
-  /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
-   * <code>optional string senderName = 2;</code>
-   */
-  private void setSenderNameBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    senderName_ = value.toStringUtf8();
+    java.lang.Object ref = senderName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      senderName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int SENDERAVATAR_FIELD_NUMBER = 3;
-  private java.lang.String senderAvatar_;
+  private volatile java.lang.Object senderAvatar_;
   /**
    * <pre>
    *发送者头像
    * </pre>
    *
-   * <code>optional string senderAvatar = 3;</code>
+   * <code>string senderAvatar = 3;</code>
+   * @return The senderAvatar.
    */
+  @java.lang.Override
   public java.lang.String getSenderAvatar() {
-    return senderAvatar_;
+    java.lang.Object ref = senderAvatar_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      senderAvatar_ = s;
+      return s;
+    }
   }
   /**
    * <pre>
    *发送者头像
    * </pre>
    *
-   * <code>optional string senderAvatar = 3;</code>
+   * <code>string senderAvatar = 3;</code>
+   * @return The bytes for senderAvatar.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getSenderAvatarBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(senderAvatar_);
-  }
-  /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
-   * <code>optional string senderAvatar = 3;</code>
-   */
-  private void setSenderAvatar(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    senderAvatar_ = value;
-  }
-  /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
-   * <code>optional string senderAvatar = 3;</code>
-   */
-  private void clearSenderAvatar() {
-    
-    senderAvatar_ = getDefaultInstance().getSenderAvatar();
-  }
-  /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
-   * <code>optional string senderAvatar = 3;</code>
-   */
-  private void setSenderAvatarBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    senderAvatar_ = value.toStringUtf8();
+    java.lang.Object ref = senderAvatar_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      senderAvatar_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int SENDERPLATFORM_FIELD_NUMBER = 4;
-  private java.lang.String senderPlatform_;
+  private volatile java.lang.Object senderPlatform_;
   /**
    * <pre>
    *发送终端类型
    * </pre>
    *
-   * <code>optional string senderPlatform = 4;</code>
+   * <code>string senderPlatform = 4;</code>
+   * @return The senderPlatform.
    */
+  @java.lang.Override
   public java.lang.String getSenderPlatform() {
-    return senderPlatform_;
+    java.lang.Object ref = senderPlatform_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      senderPlatform_ = s;
+      return s;
+    }
   }
   /**
    * <pre>
    *发送终端类型
    * </pre>
    *
-   * <code>optional string senderPlatform = 4;</code>
+   * <code>string senderPlatform = 4;</code>
+   * @return The bytes for senderPlatform.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getSenderPlatformBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(senderPlatform_);
-  }
-  /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
-   * <code>optional string senderPlatform = 4;</code>
-   */
-  private void setSenderPlatform(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    senderPlatform_ = value;
-  }
-  /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
-   * <code>optional string senderPlatform = 4;</code>
-   */
-  private void clearSenderPlatform() {
-    
-    senderPlatform_ = getDefaultInstance().getSenderPlatform();
-  }
-  /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
-   * <code>optional string senderPlatform = 4;</code>
-   */
-  private void setSenderPlatformBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    senderPlatform_ = value.toStringUtf8();
+    java.lang.Object ref = senderPlatform_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      senderPlatform_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (senderId_ != 0L) {
       output.writeUInt64(1, senderId_);
     }
-    if (!senderName_.isEmpty()) {
-      output.writeString(2, getSenderName());
+    if (!getSenderNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, senderName_);
     }
-    if (!senderAvatar_.isEmpty()) {
-      output.writeString(3, getSenderAvatar());
+    if (!getSenderAvatarBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, senderAvatar_);
     }
-    if (!senderPlatform_.isEmpty()) {
-      output.writeString(4, getSenderPlatform());
+    if (!getSenderPlatformBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 4, senderPlatform_);
     }
+    unknownFields.writeTo(output);
   }
 
+  @java.lang.Override
   public int getSerializedSize() {
-    int size = memoizedSerializedSize;
+    int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
@@ -274,123 +298,347 @@ public  final class SenderInfo extends
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(1, senderId_);
     }
-    if (!senderName_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(2, getSenderName());
+    if (!getSenderNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, senderName_);
     }
-    if (!senderAvatar_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(3, getSenderAvatar());
+    if (!getSenderAvatarBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, senderAvatar_);
     }
-    if (!senderPlatform_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(4, getSenderPlatform());
+    if (!getSenderPlatformBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, senderPlatform_);
     }
-    memoizedSerializedSize = size;
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
     return size;
   }
 
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof SenderInfo)) {
+      return super.equals(obj);
+    }
+    SenderInfo other = (SenderInfo) obj;
+
+    if (getSenderId()
+        != other.getSenderId()) return false;
+    if (!getSenderName()
+        .equals(other.getSenderName())) return false;
+    if (!getSenderAvatar()
+        .equals(other.getSenderAvatar())) return false;
+    if (!getSenderPlatform()
+        .equals(other.getSenderPlatform())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + SENDERID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getSenderId());
+    hash = (37 * hash) + SENDERNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getSenderName().hashCode();
+    hash = (37 * hash) + SENDERAVATAR_FIELD_NUMBER;
+    hash = (53 * hash) + getSenderAvatar().hashCode();
+    hash = (37 * hash) + SENDERPLATFORM_FIELD_NUMBER;
+    hash = (53 * hash) + getSenderPlatform().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static SenderInfo parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static SenderInfo parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static SenderInfo parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static SenderInfo parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static SenderInfo parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static SenderInfo parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static SenderInfo parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static SenderInfo parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
   public static SenderInfo parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
   }
   public static SenderInfo parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
   public static SenderInfo parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static SenderInfo parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(SenderInfo prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
 
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
   /**
    * Protobuf type {@code app.SenderInfo}
    */
   public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<SenderInfo, Builder> implements
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:app.SenderInfo)
           SenderInfoOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return IMProtoc.internal_static_app_SenderInfo_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return IMProtoc.internal_static_app_SenderInfo_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              SenderInfo.class, SenderInfo.Builder.class);
+    }
+
     // Construct using com.zj.protocol.grpc.SenderInfo.newBuilder()
     private Builder() {
-      super(DEFAULT_INSTANCE);
+      maybeForceBuilderInitialization();
     }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      senderId_ = 0L;
 
+      senderName_ = "";
+
+      senderAvatar_ = "";
+
+      senderPlatform_ = "";
+
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return IMProtoc.internal_static_app_SenderInfo_descriptor;
+    }
+
+    @java.lang.Override
+    public SenderInfo getDefaultInstanceForType() {
+      return SenderInfo.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public SenderInfo build() {
+      SenderInfo result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public SenderInfo buildPartial() {
+      SenderInfo result = new SenderInfo(this);
+      result.senderId_ = senderId_;
+      result.senderName_ = senderName_;
+      result.senderAvatar_ = senderAvatar_;
+      result.senderPlatform_ = senderPlatform_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof SenderInfo) {
+        return mergeFrom((SenderInfo)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(SenderInfo other) {
+      if (other == SenderInfo.getDefaultInstance()) return this;
+      if (other.getSenderId() != 0L) {
+        setSenderId(other.getSenderId());
+      }
+      if (!other.getSenderName().isEmpty()) {
+        senderName_ = other.senderName_;
+        onChanged();
+      }
+      if (!other.getSenderAvatar().isEmpty()) {
+        senderAvatar_ = other.senderAvatar_;
+        onChanged();
+      }
+      if (!other.getSenderPlatform().isEmpty()) {
+        senderPlatform_ = other.senderPlatform_;
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      SenderInfo parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (SenderInfo) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private long senderId_ ;
     /**
      * <pre>
      *发送者id
      * </pre>
      *
-     * <code>optional uint64 senderId = 1;</code>
+     * <code>uint64 senderId = 1;</code>
+     * @return The senderId.
      */
+    @java.lang.Override
     public long getSenderId() {
-      return instance.getSenderId();
+      return senderId_;
     }
     /**
      * <pre>
      *发送者id
      * </pre>
      *
-     * <code>optional uint64 senderId = 1;</code>
+     * <code>uint64 senderId = 1;</code>
+     * @param value The senderId to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderId(long value) {
-      copyOnWrite();
-      instance.setSenderId(value);
+      
+      senderId_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -398,46 +646,75 @@ public  final class SenderInfo extends
      *发送者id
      * </pre>
      *
-     * <code>optional uint64 senderId = 1;</code>
+     * <code>uint64 senderId = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSenderId() {
-      copyOnWrite();
-      instance.clearSenderId();
+      
+      senderId_ = 0L;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object senderName_ = "";
     /**
      * <pre>
      *发送者名字
      * </pre>
      *
-     * <code>optional string senderName = 2;</code>
+     * <code>string senderName = 2;</code>
+     * @return The senderName.
      */
     public java.lang.String getSenderName() {
-      return instance.getSenderName();
+      java.lang.Object ref = senderName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        senderName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      *发送者名字
      * </pre>
      *
-     * <code>optional string senderName = 2;</code>
+     * <code>string senderName = 2;</code>
+     * @return The bytes for senderName.
      */
     public com.google.protobuf.ByteString
         getSenderNameBytes() {
-      return instance.getSenderNameBytes();
+      java.lang.Object ref = senderName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        senderName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
      * <pre>
      *发送者名字
      * </pre>
      *
-     * <code>optional string senderName = 2;</code>
+     * <code>string senderName = 2;</code>
+     * @param value The senderName to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderName(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setSenderName(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      senderName_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -445,11 +722,13 @@ public  final class SenderInfo extends
      *发送者名字
      * </pre>
      *
-     * <code>optional string senderName = 2;</code>
+     * <code>string senderName = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSenderName() {
-      copyOnWrite();
-      instance.clearSenderName();
+      
+      senderName_ = getDefaultInstance().getSenderName();
+      onChanged();
       return this;
     }
     /**
@@ -457,47 +736,81 @@ public  final class SenderInfo extends
      *发送者名字
      * </pre>
      *
-     * <code>optional string senderName = 2;</code>
+     * <code>string senderName = 2;</code>
+     * @param value The bytes for senderName to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderNameBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setSenderNameBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      senderName_ = value;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object senderAvatar_ = "";
     /**
      * <pre>
      *发送者头像
      * </pre>
      *
-     * <code>optional string senderAvatar = 3;</code>
+     * <code>string senderAvatar = 3;</code>
+     * @return The senderAvatar.
      */
     public java.lang.String getSenderAvatar() {
-      return instance.getSenderAvatar();
+      java.lang.Object ref = senderAvatar_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        senderAvatar_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      *发送者头像
      * </pre>
      *
-     * <code>optional string senderAvatar = 3;</code>
+     * <code>string senderAvatar = 3;</code>
+     * @return The bytes for senderAvatar.
      */
     public com.google.protobuf.ByteString
         getSenderAvatarBytes() {
-      return instance.getSenderAvatarBytes();
+      java.lang.Object ref = senderAvatar_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        senderAvatar_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
      * <pre>
      *发送者头像
      * </pre>
      *
-     * <code>optional string senderAvatar = 3;</code>
+     * <code>string senderAvatar = 3;</code>
+     * @param value The senderAvatar to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderAvatar(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setSenderAvatar(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      senderAvatar_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -505,11 +818,13 @@ public  final class SenderInfo extends
      *发送者头像
      * </pre>
      *
-     * <code>optional string senderAvatar = 3;</code>
+     * <code>string senderAvatar = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSenderAvatar() {
-      copyOnWrite();
-      instance.clearSenderAvatar();
+      
+      senderAvatar_ = getDefaultInstance().getSenderAvatar();
+      onChanged();
       return this;
     }
     /**
@@ -517,47 +832,81 @@ public  final class SenderInfo extends
      *发送者头像
      * </pre>
      *
-     * <code>optional string senderAvatar = 3;</code>
+     * <code>string senderAvatar = 3;</code>
+     * @param value The bytes for senderAvatar to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderAvatarBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setSenderAvatarBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      senderAvatar_ = value;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object senderPlatform_ = "";
     /**
      * <pre>
      *发送终端类型
      * </pre>
      *
-     * <code>optional string senderPlatform = 4;</code>
+     * <code>string senderPlatform = 4;</code>
+     * @return The senderPlatform.
      */
     public java.lang.String getSenderPlatform() {
-      return instance.getSenderPlatform();
+      java.lang.Object ref = senderPlatform_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        senderPlatform_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      *发送终端类型
      * </pre>
      *
-     * <code>optional string senderPlatform = 4;</code>
+     * <code>string senderPlatform = 4;</code>
+     * @return The bytes for senderPlatform.
      */
     public com.google.protobuf.ByteString
         getSenderPlatformBytes() {
-      return instance.getSenderPlatformBytes();
+      java.lang.Object ref = senderPlatform_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        senderPlatform_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
      * <pre>
      *发送终端类型
      * </pre>
      *
-     * <code>optional string senderPlatform = 4;</code>
+     * <code>string senderPlatform = 4;</code>
+     * @param value The senderPlatform to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderPlatform(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setSenderPlatform(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      senderPlatform_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -565,11 +914,13 @@ public  final class SenderInfo extends
      *发送终端类型
      * </pre>
      *
-     * <code>optional string senderPlatform = 4;</code>
+     * <code>string senderPlatform = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSenderPlatform() {
-      copyOnWrite();
-      instance.clearSenderPlatform();
+      
+      senderPlatform_ = getDefaultInstance().getSenderPlatform();
+      onChanged();
       return this;
     }
     /**
@@ -577,134 +928,71 @@ public  final class SenderInfo extends
      *发送终端类型
      * </pre>
      *
-     * <code>optional string senderPlatform = 4;</code>
+     * <code>string senderPlatform = 4;</code>
+     * @param value The bytes for senderPlatform to set.
+     * @return This builder for chaining.
      */
     public Builder setSenderPlatformBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setSenderPlatformBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      senderPlatform_ = value;
+      onChanged();
       return this;
     }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
+    }
+
+    @java.lang.Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
+    }
+
 
     // @@protoc_insertion_point(builder_scope:app.SenderInfo)
   }
-  protected final Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      Object arg0, Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new SenderInfo();
-      }
-      case IS_INITIALIZED: {
-        return DEFAULT_INSTANCE;
-      }
-      case MAKE_IMMUTABLE: {
-        return null;
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case VISIT: {
-        Visitor visitor = (Visitor) arg0;
-        SenderInfo other = (SenderInfo) arg1;
-        senderId_ = visitor.visitLong(senderId_ != 0L, senderId_,
-            other.senderId_ != 0L, other.senderId_);
-        senderName_ = visitor.visitString(!senderName_.isEmpty(), senderName_,
-            !other.senderName_.isEmpty(), other.senderName_);
-        senderAvatar_ = visitor.visitString(!senderAvatar_.isEmpty(), senderAvatar_,
-            !other.senderAvatar_.isEmpty(), other.senderAvatar_);
-        senderPlatform_ = visitor.visitString(!senderPlatform_.isEmpty(), senderPlatform_,
-            !other.senderPlatform_.isEmpty(), other.senderPlatform_);
-        if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-            .INSTANCE) {
-        }
-        return this;
-      }
-      case MERGE_FROM_STREAM: {
-        com.google.protobuf.CodedInputStream input =
-            (com.google.protobuf.CodedInputStream) arg0;
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-            (com.google.protobuf.ExtensionRegistryLite) arg1;
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!input.skipField(tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 8: {
-
-                senderId_ = input.readUInt64();
-                break;
-              }
-              case 18: {
-                String s = input.readStringRequireUtf8();
-
-                senderName_ = s;
-                break;
-              }
-              case 26: {
-                String s = input.readStringRequireUtf8();
-
-                senderAvatar_ = s;
-                break;
-              }
-              case 34: {
-                String s = input.readStringRequireUtf8();
-
-                senderPlatform_ = s;
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw new RuntimeException(e.setUnfinishedMessage(this));
-        } catch (java.io.IOException e) {
-          throw new RuntimeException(
-              new com.google.protobuf.InvalidProtocolBufferException(
-                  e.getMessage()).setUnfinishedMessage(this));
-        } finally {
-        }
-      }
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        if (PARSER == null) {    synchronized (SenderInfo.class) {
-            if (PARSER == null) {
-              PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-            }
-          }
-        }
-        return PARSER;
-      }
-    }
-    throw new UnsupportedOperationException();
-  }
-
 
   // @@protoc_insertion_point(class_scope:app.SenderInfo)
   private static final SenderInfo DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new SenderInfo();
-    DEFAULT_INSTANCE.makeImmutable();
   }
 
   public static SenderInfo getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static volatile com.google.protobuf.Parser<SenderInfo> PARSER;
+  private static final com.google.protobuf.Parser<SenderInfo>
+      PARSER = new com.google.protobuf.AbstractParser<SenderInfo>() {
+    @java.lang.Override
+    public SenderInfo parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new SenderInfo(input, extensionRegistry);
+    }
+  };
 
   public static com.google.protobuf.Parser<SenderInfo> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
+    return PARSER;
   }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<SenderInfo> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public SenderInfo getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
 

@@ -5,14 +5,16 @@ package com.zj.protocol.grpc;
 
 public interface AudioContentOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.AudioContent)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string url = 1;</code>
+   * <code>string url = 1;</code>
+   * @return The url.
    */
   java.lang.String getUrl();
   /**
-   * <code>optional string url = 1;</code>
+   * <code>string url = 1;</code>
+   * @return The bytes for url.
    */
   com.google.protobuf.ByteString
       getUrlBytes();

@@ -6,45 +6,235 @@ package com.zj.protocol.grpc;
 /**
  * Protobuf type {@code app.ImMessage}
  */
-public  final class ImMessage extends
-    com.google.protobuf.GeneratedMessageLite<
-        ImMessage, ImMessage.Builder> implements
+public final class ImMessage extends
+    com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:app.ImMessage)
     ImMessageOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use ImMessage.newBuilder() to construct.
+  private ImMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
   private ImMessage() {
     clientMsgId_ = "";
     msgType_ = "";
   }
+
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new ImMessage();
+  }
+
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private ImMessage(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 8: {
+
+            groupId_ = input.readUInt64();
+            break;
+          }
+          case 16: {
+
+            ownerId_ = input.readUInt64();
+            break;
+          }
+          case 24: {
+
+            sendTime_ = input.readUInt64();
+            break;
+          }
+          case 32: {
+
+            msgId_ = input.readUInt64();
+            break;
+          }
+          case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            clientMsgId_ = s;
+            break;
+          }
+          case 50: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            msgType_ = s;
+            break;
+          }
+          case 58: {
+            ImgContent.Builder subBuilder = null;
+            if (imgContent_ != null) {
+              subBuilder = imgContent_.toBuilder();
+            }
+            imgContent_ = input.readMessage(ImgContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(imgContent_);
+              imgContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 66: {
+            VideoContent.Builder subBuilder = null;
+            if (videoContent_ != null) {
+              subBuilder = videoContent_.toBuilder();
+            }
+            videoContent_ = input.readMessage(VideoContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(videoContent_);
+              videoContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 74: {
+            TextContent.Builder subBuilder = null;
+            if (textContent_ != null) {
+              subBuilder = textContent_.toBuilder();
+            }
+            textContent_ = input.readMessage(TextContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(textContent_);
+              textContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 82: {
+            AudioContent.Builder subBuilder = null;
+            if (audioContent_ != null) {
+              subBuilder = audioContent_.toBuilder();
+            }
+            audioContent_ = input.readMessage(AudioContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(audioContent_);
+              audioContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 90: {
+            CCVideoContent.Builder subBuilder = null;
+            if (ccVideoContent_ != null) {
+              subBuilder = ccVideoContent_.toBuilder();
+            }
+            ccVideoContent_ = input.readMessage(CCVideoContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(ccVideoContent_);
+              ccVideoContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 98: {
+            QuestionContent.Builder subBuilder = null;
+            if (questionContent_ != null) {
+              subBuilder = questionContent_.toBuilder();
+            }
+            questionContent_ = input.readMessage(QuestionContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(questionContent_);
+              questionContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 106: {
+            SenderInfo.Builder subBuilder = null;
+            if (sender_ != null) {
+              subBuilder = sender_.toBuilder();
+            }
+            sender_ = input.readMessage(SenderInfo.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(sender_);
+              sender_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          case 112: {
+
+            replyMsgId_ = input.readUInt64();
+            break;
+          }
+          case 122: {
+            ImMessage.Builder subBuilder = null;
+            if (replyMsg_ != null) {
+              subBuilder = replyMsg_.toBuilder();
+            }
+            replyMsg_ = input.readMessage(ImMessage.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(replyMsg_);
+              replyMsg_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return IMProtoc.internal_static_app_ImMessage_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return IMProtoc.internal_static_app_ImMessage_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            ImMessage.class, ImMessage.Builder.class);
+  }
+
   public static final int GROUPID_FIELD_NUMBER = 1;
   private long groupId_;
   /**
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 groupId = 1;</code>
+   * <code>uint64 groupId = 1;</code>
+   * @return The groupId.
    */
+  @java.lang.Override
   public long getGroupId() {
     return groupId_;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 groupId = 1;</code>
-   */
-  private void setGroupId(long value) {
-    
-    groupId_ = value;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 groupId = 1;</code>
-   */
-  private void clearGroupId() {
-    
-    groupId_ = 0L;
   }
 
   public static final int OWNERID_FIELD_NUMBER = 2;
@@ -53,30 +243,12 @@ public  final class ImMessage extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 ownerId = 2;</code>
+   * <code>uint64 ownerId = 2;</code>
+   * @return The ownerId.
    */
+  @java.lang.Override
   public long getOwnerId() {
     return ownerId_;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 ownerId = 2;</code>
-   */
-  private void setOwnerId(long value) {
-    
-    ownerId_ = value;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 ownerId = 2;</code>
-   */
-  private void clearOwnerId() {
-    
-    ownerId_ = 0L;
   }
 
   public static final int SENDTIME_FIELD_NUMBER = 3;
@@ -85,30 +257,12 @@ public  final class ImMessage extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 sendTime = 3;</code>
+   * <code>uint64 sendTime = 3;</code>
+   * @return The sendTime.
    */
+  @java.lang.Override
   public long getSendTime() {
     return sendTime_;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 sendTime = 3;</code>
-   */
-  private void setSendTime(long value) {
-    
-    sendTime_ = value;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 sendTime = 3;</code>
-   */
-  private void clearSendTime() {
-    
-    sendTime_ = 0L;
   }
 
   public static final int MSGID_FIELD_NUMBER = 4;
@@ -117,563 +271,321 @@ public  final class ImMessage extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 msgId = 4;</code>
+   * <code>uint64 msgId = 4;</code>
+   * @return The msgId.
    */
+  @java.lang.Override
   public long getMsgId() {
     return msgId_;
   }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 msgId = 4;</code>
-   */
-  private void setMsgId(long value) {
-    
-    msgId_ = value;
-  }
-  /**
-   * <pre>
-   * </pre>
-   *
-   * <code>optional uint64 msgId = 4;</code>
-   */
-  private void clearMsgId() {
-    
-    msgId_ = 0L;
-  }
 
   public static final int CLIENTMSGID_FIELD_NUMBER = 5;
-  private java.lang.String clientMsgId_;
+  private volatile java.lang.Object clientMsgId_;
   /**
-   * <code>optional string clientMsgId = 5;</code>
+   * <code>string clientMsgId = 5;</code>
+   * @return The clientMsgId.
    */
+  @java.lang.Override
   public java.lang.String getClientMsgId() {
-    return clientMsgId_;
+    java.lang.Object ref = clientMsgId_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      clientMsgId_ = s;
+      return s;
+    }
   }
   /**
-   * <code>optional string clientMsgId = 5;</code>
+   * <code>string clientMsgId = 5;</code>
+   * @return The bytes for clientMsgId.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getClientMsgIdBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(clientMsgId_);
-  }
-  /**
-   * <code>optional string clientMsgId = 5;</code>
-   */
-  private void setClientMsgId(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    clientMsgId_ = value;
-  }
-  /**
-   * <code>optional string clientMsgId = 5;</code>
-   */
-  private void clearClientMsgId() {
-    
-    clientMsgId_ = getDefaultInstance().getClientMsgId();
-  }
-  /**
-   * <code>optional string clientMsgId = 5;</code>
-   */
-  private void setClientMsgIdBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    clientMsgId_ = value.toStringUtf8();
+    java.lang.Object ref = clientMsgId_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      clientMsgId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int MSGTYPE_FIELD_NUMBER = 6;
-  private java.lang.String msgType_;
+  private volatile java.lang.Object msgType_;
   /**
-   * <code>optional string msgType = 6;</code>
+   * <code>string msgType = 6;</code>
+   * @return The msgType.
    */
+  @java.lang.Override
   public java.lang.String getMsgType() {
-    return msgType_;
+    java.lang.Object ref = msgType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      msgType_ = s;
+      return s;
+    }
   }
   /**
-   * <code>optional string msgType = 6;</code>
+   * <code>string msgType = 6;</code>
+   * @return The bytes for msgType.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getMsgTypeBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(msgType_);
-  }
-  /**
-   * <code>optional string msgType = 6;</code>
-   */
-  private void setMsgType(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    msgType_ = value;
-  }
-  /**
-   * <code>optional string msgType = 6;</code>
-   */
-  private void clearMsgType() {
-    
-    msgType_ = getDefaultInstance().getMsgType();
-  }
-  /**
-   * <code>optional string msgType = 6;</code>
-   */
-  private void setMsgTypeBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    msgType_ = value.toStringUtf8();
+    java.lang.Object ref = msgType_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      msgType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int IMGCONTENT_FIELD_NUMBER = 7;
   private ImgContent imgContent_;
   /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
+   * <code>.app.ImgContent imgContent = 7;</code>
+   * @return Whether the imgContent field is set.
    */
+  @java.lang.Override
   public boolean hasImgContent() {
     return imgContent_ != null;
   }
   /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
+   * <code>.app.ImgContent imgContent = 7;</code>
+   * @return The imgContent.
    */
+  @java.lang.Override
   public ImgContent getImgContent() {
     return imgContent_ == null ? ImgContent.getDefaultInstance() : imgContent_;
   }
   /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
+   * <code>.app.ImgContent imgContent = 7;</code>
    */
-  private void setImgContent(ImgContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    imgContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
-   */
-  private void setImgContent(
-      ImgContent.Builder builderForValue) {
-    imgContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
-   */
-  private void mergeImgContent(ImgContent value) {
-    if (imgContent_ != null &&
-        imgContent_ != ImgContent.getDefaultInstance()) {
-      imgContent_ =
-        ImgContent.newBuilder(imgContent_).mergeFrom(value).buildPartial();
-    } else {
-      imgContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
-   */
-  private void clearImgContent() {  imgContent_ = null;
-    
+  @java.lang.Override
+  public ImgContentOrBuilder getImgContentOrBuilder() {
+    return getImgContent();
   }
 
   public static final int VIDEOCONTENT_FIELD_NUMBER = 8;
   private VideoContent videoContent_;
   /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
+   * <code>.app.VideoContent videoContent = 8;</code>
+   * @return Whether the videoContent field is set.
    */
+  @java.lang.Override
   public boolean hasVideoContent() {
     return videoContent_ != null;
   }
   /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
+   * <code>.app.VideoContent videoContent = 8;</code>
+   * @return The videoContent.
    */
+  @java.lang.Override
   public VideoContent getVideoContent() {
     return videoContent_ == null ? VideoContent.getDefaultInstance() : videoContent_;
   }
   /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
+   * <code>.app.VideoContent videoContent = 8;</code>
    */
-  private void setVideoContent(VideoContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    videoContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
-   */
-  private void setVideoContent(
-      VideoContent.Builder builderForValue) {
-    videoContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
-   */
-  private void mergeVideoContent(VideoContent value) {
-    if (videoContent_ != null &&
-        videoContent_ != VideoContent.getDefaultInstance()) {
-      videoContent_ =
-        VideoContent.newBuilder(videoContent_).mergeFrom(value).buildPartial();
-    } else {
-      videoContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
-   */
-  private void clearVideoContent() {  videoContent_ = null;
-    
+  @java.lang.Override
+  public VideoContentOrBuilder getVideoContentOrBuilder() {
+    return getVideoContent();
   }
 
   public static final int TEXTCONTENT_FIELD_NUMBER = 9;
   private TextContent textContent_;
   /**
-   * <code>optional .app.TextContent textContent = 9;</code>
+   * <code>.app.TextContent textContent = 9;</code>
+   * @return Whether the textContent field is set.
    */
+  @java.lang.Override
   public boolean hasTextContent() {
     return textContent_ != null;
   }
   /**
-   * <code>optional .app.TextContent textContent = 9;</code>
+   * <code>.app.TextContent textContent = 9;</code>
+   * @return The textContent.
    */
+  @java.lang.Override
   public TextContent getTextContent() {
     return textContent_ == null ? TextContent.getDefaultInstance() : textContent_;
   }
   /**
-   * <code>optional .app.TextContent textContent = 9;</code>
+   * <code>.app.TextContent textContent = 9;</code>
    */
-  private void setTextContent(TextContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    textContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.TextContent textContent = 9;</code>
-   */
-  private void setTextContent(
-      TextContent.Builder builderForValue) {
-    textContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.TextContent textContent = 9;</code>
-   */
-  private void mergeTextContent(TextContent value) {
-    if (textContent_ != null &&
-        textContent_ != TextContent.getDefaultInstance()) {
-      textContent_ =
-        TextContent.newBuilder(textContent_).mergeFrom(value).buildPartial();
-    } else {
-      textContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.TextContent textContent = 9;</code>
-   */
-  private void clearTextContent() {  textContent_ = null;
-    
+  @java.lang.Override
+  public TextContentOrBuilder getTextContentOrBuilder() {
+    return getTextContent();
   }
 
   public static final int AUDIOCONTENT_FIELD_NUMBER = 10;
   private AudioContent audioContent_;
   /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
+   * <code>.app.AudioContent audioContent = 10;</code>
+   * @return Whether the audioContent field is set.
    */
+  @java.lang.Override
   public boolean hasAudioContent() {
     return audioContent_ != null;
   }
   /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
+   * <code>.app.AudioContent audioContent = 10;</code>
+   * @return The audioContent.
    */
+  @java.lang.Override
   public AudioContent getAudioContent() {
     return audioContent_ == null ? AudioContent.getDefaultInstance() : audioContent_;
   }
   /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
+   * <code>.app.AudioContent audioContent = 10;</code>
    */
-  private void setAudioContent(AudioContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    audioContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
-   */
-  private void setAudioContent(
-      AudioContent.Builder builderForValue) {
-    audioContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
-   */
-  private void mergeAudioContent(AudioContent value) {
-    if (audioContent_ != null &&
-        audioContent_ != AudioContent.getDefaultInstance()) {
-      audioContent_ =
-        AudioContent.newBuilder(audioContent_).mergeFrom(value).buildPartial();
-    } else {
-      audioContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
-   */
-  private void clearAudioContent() {  audioContent_ = null;
-    
+  @java.lang.Override
+  public AudioContentOrBuilder getAudioContentOrBuilder() {
+    return getAudioContent();
   }
 
   public static final int CCVIDEOCONTENT_FIELD_NUMBER = 11;
   private CCVideoContent ccVideoContent_;
   /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+   * @return Whether the ccVideoContent field is set.
    */
+  @java.lang.Override
   public boolean hasCcVideoContent() {
     return ccVideoContent_ != null;
   }
   /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+   * @return The ccVideoContent.
    */
+  @java.lang.Override
   public CCVideoContent getCcVideoContent() {
     return ccVideoContent_ == null ? CCVideoContent.getDefaultInstance() : ccVideoContent_;
   }
   /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
    */
-  private void setCcVideoContent(CCVideoContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    ccVideoContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
-   */
-  private void setCcVideoContent(
-      CCVideoContent.Builder builderForValue) {
-    ccVideoContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
-   */
-  private void mergeCcVideoContent(CCVideoContent value) {
-    if (ccVideoContent_ != null &&
-        ccVideoContent_ != CCVideoContent.getDefaultInstance()) {
-      ccVideoContent_ =
-        CCVideoContent.newBuilder(ccVideoContent_).mergeFrom(value).buildPartial();
-    } else {
-      ccVideoContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
-   */
-  private void clearCcVideoContent() {  ccVideoContent_ = null;
-    
+  @java.lang.Override
+  public CCVideoContentOrBuilder getCcVideoContentOrBuilder() {
+    return getCcVideoContent();
   }
 
   public static final int QUESTIONCONTENT_FIELD_NUMBER = 12;
   private QuestionContent questionContent_;
   /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
+   * <code>.app.QuestionContent questionContent = 12;</code>
+   * @return Whether the questionContent field is set.
    */
+  @java.lang.Override
   public boolean hasQuestionContent() {
     return questionContent_ != null;
   }
   /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
+   * <code>.app.QuestionContent questionContent = 12;</code>
+   * @return The questionContent.
    */
+  @java.lang.Override
   public QuestionContent getQuestionContent() {
     return questionContent_ == null ? QuestionContent.getDefaultInstance() : questionContent_;
   }
   /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
+   * <code>.app.QuestionContent questionContent = 12;</code>
    */
-  private void setQuestionContent(QuestionContent value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    questionContent_ = value;
-    
-    }
-  /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
-   */
-  private void setQuestionContent(
-      QuestionContent.Builder builderForValue) {
-    questionContent_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
-   */
-  private void mergeQuestionContent(QuestionContent value) {
-    if (questionContent_ != null &&
-        questionContent_ != QuestionContent.getDefaultInstance()) {
-      questionContent_ =
-        QuestionContent.newBuilder(questionContent_).mergeFrom(value).buildPartial();
-    } else {
-      questionContent_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
-   */
-  private void clearQuestionContent() {  questionContent_ = null;
-    
+  @java.lang.Override
+  public QuestionContentOrBuilder getQuestionContentOrBuilder() {
+    return getQuestionContent();
   }
 
   public static final int SENDER_FIELD_NUMBER = 13;
   private SenderInfo sender_;
   /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
+   * <code>.app.SenderInfo sender = 13;</code>
+   * @return Whether the sender field is set.
    */
+  @java.lang.Override
   public boolean hasSender() {
     return sender_ != null;
   }
   /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
+   * <code>.app.SenderInfo sender = 13;</code>
+   * @return The sender.
    */
+  @java.lang.Override
   public SenderInfo getSender() {
     return sender_ == null ? SenderInfo.getDefaultInstance() : sender_;
   }
   /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
+   * <code>.app.SenderInfo sender = 13;</code>
    */
-  private void setSender(SenderInfo value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    sender_ = value;
-    
-    }
-  /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
-   */
-  private void setSender(
-      SenderInfo.Builder builderForValue) {
-    sender_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
-   */
-  private void mergeSender(SenderInfo value) {
-    if (sender_ != null &&
-        sender_ != SenderInfo.getDefaultInstance()) {
-      sender_ =
-        SenderInfo.newBuilder(sender_).mergeFrom(value).buildPartial();
-    } else {
-      sender_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
-   */
-  private void clearSender() {  sender_ = null;
-    
+  @java.lang.Override
+  public SenderInfoOrBuilder getSenderOrBuilder() {
+    return getSender();
   }
 
   public static final int REPLYMSGID_FIELD_NUMBER = 14;
   private long replyMsgId_;
   /**
-   * <code>optional uint64 replyMsgId = 14;</code>
+   * <code>uint64 replyMsgId = 14;</code>
+   * @return The replyMsgId.
    */
+  @java.lang.Override
   public long getReplyMsgId() {
     return replyMsgId_;
-  }
-  /**
-   * <code>optional uint64 replyMsgId = 14;</code>
-   */
-  private void setReplyMsgId(long value) {
-    
-    replyMsgId_ = value;
-  }
-  /**
-   * <code>optional uint64 replyMsgId = 14;</code>
-   */
-  private void clearReplyMsgId() {
-    
-    replyMsgId_ = 0L;
   }
 
   public static final int REPLYMSG_FIELD_NUMBER = 15;
   private ImMessage replyMsg_;
   /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
+   * <code>.app.ImMessage replyMsg = 15;</code>
+   * @return Whether the replyMsg field is set.
    */
+  @java.lang.Override
   public boolean hasReplyMsg() {
     return replyMsg_ != null;
   }
   /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
+   * <code>.app.ImMessage replyMsg = 15;</code>
+   * @return The replyMsg.
    */
+  @java.lang.Override
   public ImMessage getReplyMsg() {
     return replyMsg_ == null ? ImMessage.getDefaultInstance() : replyMsg_;
   }
   /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
+   * <code>.app.ImMessage replyMsg = 15;</code>
    */
-  private void setReplyMsg(ImMessage value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    replyMsg_ = value;
-    
-    }
-  /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
-   */
-  private void setReplyMsg(
-      ImMessage.Builder builderForValue) {
-    replyMsg_ = builderForValue.build();
-    
-  }
-  /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
-   */
-  private void mergeReplyMsg(ImMessage value) {
-    if (replyMsg_ != null &&
-        replyMsg_ != ImMessage.getDefaultInstance()) {
-      replyMsg_ =
-        ImMessage.newBuilder(replyMsg_).mergeFrom(value).buildPartial();
-    } else {
-      replyMsg_ = value;
-    }
-    
-  }
-  /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
-   */
-  private void clearReplyMsg() {  replyMsg_ = null;
-    
+  @java.lang.Override
+  public ImMessageOrBuilder getReplyMsgOrBuilder() {
+    return getReplyMsg();
   }
 
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     if (groupId_ != 0L) {
@@ -688,11 +600,11 @@ public  final class ImMessage extends
     if (msgId_ != 0L) {
       output.writeUInt64(4, msgId_);
     }
-    if (!clientMsgId_.isEmpty()) {
-      output.writeString(5, getClientMsgId());
+    if (!getClientMsgIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, clientMsgId_);
     }
-    if (!msgType_.isEmpty()) {
-      output.writeString(6, getMsgType());
+    if (!getMsgTypeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, msgType_);
     }
     if (imgContent_ != null) {
       output.writeMessage(7, getImgContent());
@@ -721,10 +633,12 @@ public  final class ImMessage extends
     if (replyMsg_ != null) {
       output.writeMessage(15, getReplyMsg());
     }
+    unknownFields.writeTo(output);
   }
 
+  @java.lang.Override
   public int getSerializedSize() {
-    int size = memoizedSerializedSize;
+    int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
@@ -744,13 +658,11 @@ public  final class ImMessage extends
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(4, msgId_);
     }
-    if (!clientMsgId_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(5, getClientMsgId());
+    if (!getClientMsgIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, clientMsgId_);
     }
-    if (!msgType_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(6, getMsgType());
+    if (!getMsgTypeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, msgType_);
     }
     if (imgContent_ != null) {
       size += com.google.protobuf.CodedOutputStream
@@ -788,933 +700,1849 @@ public  final class ImMessage extends
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(15, getReplyMsg());
     }
-    memoizedSerializedSize = size;
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
     return size;
   }
 
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof ImMessage)) {
+      return super.equals(obj);
+    }
+    ImMessage other = (ImMessage) obj;
+
+    if (getGroupId()
+        != other.getGroupId()) return false;
+    if (getOwnerId()
+        != other.getOwnerId()) return false;
+    if (getSendTime()
+        != other.getSendTime()) return false;
+    if (getMsgId()
+        != other.getMsgId()) return false;
+    if (!getClientMsgId()
+        .equals(other.getClientMsgId())) return false;
+    if (!getMsgType()
+        .equals(other.getMsgType())) return false;
+    if (hasImgContent() != other.hasImgContent()) return false;
+    if (hasImgContent()) {
+      if (!getImgContent()
+          .equals(other.getImgContent())) return false;
+    }
+    if (hasVideoContent() != other.hasVideoContent()) return false;
+    if (hasVideoContent()) {
+      if (!getVideoContent()
+          .equals(other.getVideoContent())) return false;
+    }
+    if (hasTextContent() != other.hasTextContent()) return false;
+    if (hasTextContent()) {
+      if (!getTextContent()
+          .equals(other.getTextContent())) return false;
+    }
+    if (hasAudioContent() != other.hasAudioContent()) return false;
+    if (hasAudioContent()) {
+      if (!getAudioContent()
+          .equals(other.getAudioContent())) return false;
+    }
+    if (hasCcVideoContent() != other.hasCcVideoContent()) return false;
+    if (hasCcVideoContent()) {
+      if (!getCcVideoContent()
+          .equals(other.getCcVideoContent())) return false;
+    }
+    if (hasQuestionContent() != other.hasQuestionContent()) return false;
+    if (hasQuestionContent()) {
+      if (!getQuestionContent()
+          .equals(other.getQuestionContent())) return false;
+    }
+    if (hasSender() != other.hasSender()) return false;
+    if (hasSender()) {
+      if (!getSender()
+          .equals(other.getSender())) return false;
+    }
+    if (getReplyMsgId()
+        != other.getReplyMsgId()) return false;
+    if (hasReplyMsg() != other.hasReplyMsg()) return false;
+    if (hasReplyMsg()) {
+      if (!getReplyMsg()
+          .equals(other.getReplyMsg())) return false;
+    }
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + GROUPID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getGroupId());
+    hash = (37 * hash) + OWNERID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getOwnerId());
+    hash = (37 * hash) + SENDTIME_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getSendTime());
+    hash = (37 * hash) + MSGID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getMsgId());
+    hash = (37 * hash) + CLIENTMSGID_FIELD_NUMBER;
+    hash = (53 * hash) + getClientMsgId().hashCode();
+    hash = (37 * hash) + MSGTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getMsgType().hashCode();
+    if (hasImgContent()) {
+      hash = (37 * hash) + IMGCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getImgContent().hashCode();
+    }
+    if (hasVideoContent()) {
+      hash = (37 * hash) + VIDEOCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getVideoContent().hashCode();
+    }
+    if (hasTextContent()) {
+      hash = (37 * hash) + TEXTCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getTextContent().hashCode();
+    }
+    if (hasAudioContent()) {
+      hash = (37 * hash) + AUDIOCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getAudioContent().hashCode();
+    }
+    if (hasCcVideoContent()) {
+      hash = (37 * hash) + CCVIDEOCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getCcVideoContent().hashCode();
+    }
+    if (hasQuestionContent()) {
+      hash = (37 * hash) + QUESTIONCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getQuestionContent().hashCode();
+    }
+    if (hasSender()) {
+      hash = (37 * hash) + SENDER_FIELD_NUMBER;
+      hash = (53 * hash) + getSender().hashCode();
+    }
+    hash = (37 * hash) + REPLYMSGID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getReplyMsgId());
+    if (hasReplyMsg()) {
+      hash = (37 * hash) + REPLYMSG_FIELD_NUMBER;
+      hash = (53 * hash) + getReplyMsg().hashCode();
+    }
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static ImMessage parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static ImMessage parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static ImMessage parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ImMessage parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ImMessage parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ImMessage parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ImMessage parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ImMessage parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
   public static ImMessage parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
   }
   public static ImMessage parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
   public static ImMessage parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ImMessage parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(ImMessage prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
 
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
   /**
    * Protobuf type {@code app.ImMessage}
    */
   public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<ImMessage, Builder> implements
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:app.ImMessage)
           ImMessageOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return IMProtoc.internal_static_app_ImMessage_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return IMProtoc.internal_static_app_ImMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ImMessage.class, ImMessage.Builder.class);
+    }
+
     // Construct using com.zj.protocol.grpc.ImMessage.newBuilder()
     private Builder() {
-      super(DEFAULT_INSTANCE);
+      maybeForceBuilderInitialization();
     }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      groupId_ = 0L;
 
+      ownerId_ = 0L;
+
+      sendTime_ = 0L;
+
+      msgId_ = 0L;
+
+      clientMsgId_ = "";
+
+      msgType_ = "";
+
+      if (imgContentBuilder_ == null) {
+        imgContent_ = null;
+      } else {
+        imgContent_ = null;
+        imgContentBuilder_ = null;
+      }
+      if (videoContentBuilder_ == null) {
+        videoContent_ = null;
+      } else {
+        videoContent_ = null;
+        videoContentBuilder_ = null;
+      }
+      if (textContentBuilder_ == null) {
+        textContent_ = null;
+      } else {
+        textContent_ = null;
+        textContentBuilder_ = null;
+      }
+      if (audioContentBuilder_ == null) {
+        audioContent_ = null;
+      } else {
+        audioContent_ = null;
+        audioContentBuilder_ = null;
+      }
+      if (ccVideoContentBuilder_ == null) {
+        ccVideoContent_ = null;
+      } else {
+        ccVideoContent_ = null;
+        ccVideoContentBuilder_ = null;
+      }
+      if (questionContentBuilder_ == null) {
+        questionContent_ = null;
+      } else {
+        questionContent_ = null;
+        questionContentBuilder_ = null;
+      }
+      if (senderBuilder_ == null) {
+        sender_ = null;
+      } else {
+        sender_ = null;
+        senderBuilder_ = null;
+      }
+      replyMsgId_ = 0L;
+
+      if (replyMsgBuilder_ == null) {
+        replyMsg_ = null;
+      } else {
+        replyMsg_ = null;
+        replyMsgBuilder_ = null;
+      }
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return IMProtoc.internal_static_app_ImMessage_descriptor;
+    }
+
+    @java.lang.Override
+    public ImMessage getDefaultInstanceForType() {
+      return ImMessage.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public ImMessage build() {
+      ImMessage result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public ImMessage buildPartial() {
+      ImMessage result = new ImMessage(this);
+      result.groupId_ = groupId_;
+      result.ownerId_ = ownerId_;
+      result.sendTime_ = sendTime_;
+      result.msgId_ = msgId_;
+      result.clientMsgId_ = clientMsgId_;
+      result.msgType_ = msgType_;
+      if (imgContentBuilder_ == null) {
+        result.imgContent_ = imgContent_;
+      } else {
+        result.imgContent_ = imgContentBuilder_.build();
+      }
+      if (videoContentBuilder_ == null) {
+        result.videoContent_ = videoContent_;
+      } else {
+        result.videoContent_ = videoContentBuilder_.build();
+      }
+      if (textContentBuilder_ == null) {
+        result.textContent_ = textContent_;
+      } else {
+        result.textContent_ = textContentBuilder_.build();
+      }
+      if (audioContentBuilder_ == null) {
+        result.audioContent_ = audioContent_;
+      } else {
+        result.audioContent_ = audioContentBuilder_.build();
+      }
+      if (ccVideoContentBuilder_ == null) {
+        result.ccVideoContent_ = ccVideoContent_;
+      } else {
+        result.ccVideoContent_ = ccVideoContentBuilder_.build();
+      }
+      if (questionContentBuilder_ == null) {
+        result.questionContent_ = questionContent_;
+      } else {
+        result.questionContent_ = questionContentBuilder_.build();
+      }
+      if (senderBuilder_ == null) {
+        result.sender_ = sender_;
+      } else {
+        result.sender_ = senderBuilder_.build();
+      }
+      result.replyMsgId_ = replyMsgId_;
+      if (replyMsgBuilder_ == null) {
+        result.replyMsg_ = replyMsg_;
+      } else {
+        result.replyMsg_ = replyMsgBuilder_.build();
+      }
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof ImMessage) {
+        return mergeFrom((ImMessage)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(ImMessage other) {
+      if (other == ImMessage.getDefaultInstance()) return this;
+      if (other.getGroupId() != 0L) {
+        setGroupId(other.getGroupId());
+      }
+      if (other.getOwnerId() != 0L) {
+        setOwnerId(other.getOwnerId());
+      }
+      if (other.getSendTime() != 0L) {
+        setSendTime(other.getSendTime());
+      }
+      if (other.getMsgId() != 0L) {
+        setMsgId(other.getMsgId());
+      }
+      if (!other.getClientMsgId().isEmpty()) {
+        clientMsgId_ = other.clientMsgId_;
+        onChanged();
+      }
+      if (!other.getMsgType().isEmpty()) {
+        msgType_ = other.msgType_;
+        onChanged();
+      }
+      if (other.hasImgContent()) {
+        mergeImgContent(other.getImgContent());
+      }
+      if (other.hasVideoContent()) {
+        mergeVideoContent(other.getVideoContent());
+      }
+      if (other.hasTextContent()) {
+        mergeTextContent(other.getTextContent());
+      }
+      if (other.hasAudioContent()) {
+        mergeAudioContent(other.getAudioContent());
+      }
+      if (other.hasCcVideoContent()) {
+        mergeCcVideoContent(other.getCcVideoContent());
+      }
+      if (other.hasQuestionContent()) {
+        mergeQuestionContent(other.getQuestionContent());
+      }
+      if (other.hasSender()) {
+        mergeSender(other.getSender());
+      }
+      if (other.getReplyMsgId() != 0L) {
+        setReplyMsgId(other.getReplyMsgId());
+      }
+      if (other.hasReplyMsg()) {
+        mergeReplyMsg(other.getReplyMsg());
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      ImMessage parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (ImMessage) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private long groupId_ ;
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 groupId = 1;</code>
+     * <code>uint64 groupId = 1;</code>
+     * @return The groupId.
      */
+    @java.lang.Override
     public long getGroupId() {
-      return instance.getGroupId();
+      return groupId_;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 groupId = 1;</code>
+     * <code>uint64 groupId = 1;</code>
+     * @param value The groupId to set.
+     * @return This builder for chaining.
      */
     public Builder setGroupId(long value) {
-      copyOnWrite();
-      instance.setGroupId(value);
+      
+      groupId_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 groupId = 1;</code>
+     * <code>uint64 groupId = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearGroupId() {
-      copyOnWrite();
-      instance.clearGroupId();
+      
+      groupId_ = 0L;
+      onChanged();
       return this;
     }
 
+    private long ownerId_ ;
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 ownerId = 2;</code>
+     * <code>uint64 ownerId = 2;</code>
+     * @return The ownerId.
      */
+    @java.lang.Override
     public long getOwnerId() {
-      return instance.getOwnerId();
+      return ownerId_;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 ownerId = 2;</code>
+     * <code>uint64 ownerId = 2;</code>
+     * @param value The ownerId to set.
+     * @return This builder for chaining.
      */
     public Builder setOwnerId(long value) {
-      copyOnWrite();
-      instance.setOwnerId(value);
+      
+      ownerId_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 ownerId = 2;</code>
+     * <code>uint64 ownerId = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearOwnerId() {
-      copyOnWrite();
-      instance.clearOwnerId();
+      
+      ownerId_ = 0L;
+      onChanged();
       return this;
     }
 
+    private long sendTime_ ;
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 sendTime = 3;</code>
+     * <code>uint64 sendTime = 3;</code>
+     * @return The sendTime.
      */
+    @java.lang.Override
     public long getSendTime() {
-      return instance.getSendTime();
+      return sendTime_;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 sendTime = 3;</code>
+     * <code>uint64 sendTime = 3;</code>
+     * @param value The sendTime to set.
+     * @return This builder for chaining.
      */
     public Builder setSendTime(long value) {
-      copyOnWrite();
-      instance.setSendTime(value);
+      
+      sendTime_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 sendTime = 3;</code>
+     * <code>uint64 sendTime = 3;</code>
+     * @return This builder for chaining.
      */
     public Builder clearSendTime() {
-      copyOnWrite();
-      instance.clearSendTime();
+      
+      sendTime_ = 0L;
+      onChanged();
       return this;
     }
 
+    private long msgId_ ;
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 msgId = 4;</code>
+     * <code>uint64 msgId = 4;</code>
+     * @return The msgId.
      */
+    @java.lang.Override
     public long getMsgId() {
-      return instance.getMsgId();
+      return msgId_;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 msgId = 4;</code>
+     * <code>uint64 msgId = 4;</code>
+     * @param value The msgId to set.
+     * @return This builder for chaining.
      */
     public Builder setMsgId(long value) {
-      copyOnWrite();
-      instance.setMsgId(value);
+      
+      msgId_ = value;
+      onChanged();
       return this;
     }
     /**
      * <pre>
      * </pre>
      *
-     * <code>optional uint64 msgId = 4;</code>
+     * <code>uint64 msgId = 4;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMsgId() {
-      copyOnWrite();
-      instance.clearMsgId();
+      
+      msgId_ = 0L;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object clientMsgId_ = "";
     /**
-     * <code>optional string clientMsgId = 5;</code>
+     * <code>string clientMsgId = 5;</code>
+     * @return The clientMsgId.
      */
     public java.lang.String getClientMsgId() {
-      return instance.getClientMsgId();
+      java.lang.Object ref = clientMsgId_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        clientMsgId_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>optional string clientMsgId = 5;</code>
+     * <code>string clientMsgId = 5;</code>
+     * @return The bytes for clientMsgId.
      */
     public com.google.protobuf.ByteString
         getClientMsgIdBytes() {
-      return instance.getClientMsgIdBytes();
+      java.lang.Object ref = clientMsgId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        clientMsgId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
-     * <code>optional string clientMsgId = 5;</code>
+     * <code>string clientMsgId = 5;</code>
+     * @param value The clientMsgId to set.
+     * @return This builder for chaining.
      */
     public Builder setClientMsgId(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setClientMsgId(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      clientMsgId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>optional string clientMsgId = 5;</code>
+     * <code>string clientMsgId = 5;</code>
+     * @return This builder for chaining.
      */
     public Builder clearClientMsgId() {
-      copyOnWrite();
-      instance.clearClientMsgId();
+      
+      clientMsgId_ = getDefaultInstance().getClientMsgId();
+      onChanged();
       return this;
     }
     /**
-     * <code>optional string clientMsgId = 5;</code>
+     * <code>string clientMsgId = 5;</code>
+     * @param value The bytes for clientMsgId to set.
+     * @return This builder for chaining.
      */
     public Builder setClientMsgIdBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setClientMsgIdBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      clientMsgId_ = value;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object msgType_ = "";
     /**
-     * <code>optional string msgType = 6;</code>
+     * <code>string msgType = 6;</code>
+     * @return The msgType.
      */
     public java.lang.String getMsgType() {
-      return instance.getMsgType();
+      java.lang.Object ref = msgType_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        msgType_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>optional string msgType = 6;</code>
+     * <code>string msgType = 6;</code>
+     * @return The bytes for msgType.
      */
     public com.google.protobuf.ByteString
         getMsgTypeBytes() {
-      return instance.getMsgTypeBytes();
+      java.lang.Object ref = msgType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        msgType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
-     * <code>optional string msgType = 6;</code>
+     * <code>string msgType = 6;</code>
+     * @param value The msgType to set.
+     * @return This builder for chaining.
      */
     public Builder setMsgType(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setMsgType(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      msgType_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>optional string msgType = 6;</code>
+     * <code>string msgType = 6;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMsgType() {
-      copyOnWrite();
-      instance.clearMsgType();
+      
+      msgType_ = getDefaultInstance().getMsgType();
+      onChanged();
       return this;
     }
     /**
-     * <code>optional string msgType = 6;</code>
+     * <code>string msgType = 6;</code>
+     * @param value The bytes for msgType to set.
+     * @return This builder for chaining.
      */
     public Builder setMsgTypeBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setMsgTypeBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      msgType_ = value;
+      onChanged();
       return this;
     }
 
+    private ImgContent imgContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<ImgContent, ImgContent.Builder, ImgContentOrBuilder> imgContentBuilder_;
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
+     * @return Whether the imgContent field is set.
      */
     public boolean hasImgContent() {
-      return instance.hasImgContent();
+      return imgContentBuilder_ != null || imgContent_ != null;
     }
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
+     * @return The imgContent.
      */
     public ImgContent getImgContent() {
-      return instance.getImgContent();
+      if (imgContentBuilder_ == null) {
+        return imgContent_ == null ? ImgContent.getDefaultInstance() : imgContent_;
+      } else {
+        return imgContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
      */
     public Builder setImgContent(ImgContent value) {
-      copyOnWrite();
-      instance.setImgContent(value);
-      return this;
+      if (imgContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        imgContent_ = value;
+        onChanged();
+      } else {
+        imgContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
      */
     public Builder setImgContent(
         ImgContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setImgContent(builderForValue);
+      if (imgContentBuilder_ == null) {
+        imgContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        imgContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
      */
     public Builder mergeImgContent(ImgContent value) {
-      copyOnWrite();
-      instance.mergeImgContent(value);
+      if (imgContentBuilder_ == null) {
+        if (imgContent_ != null) {
+          imgContent_ =
+            ImgContent.newBuilder(imgContent_).mergeFrom(value).buildPartial();
+        } else {
+          imgContent_ = value;
+        }
+        onChanged();
+      } else {
+        imgContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.ImgContent imgContent = 7;</code>
+     * <code>.app.ImgContent imgContent = 7;</code>
      */
-    public Builder clearImgContent() {  copyOnWrite();
-      instance.clearImgContent();
+    public Builder clearImgContent() {
+      if (imgContentBuilder_ == null) {
+        imgContent_ = null;
+        onChanged();
+      } else {
+        imgContent_ = null;
+        imgContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.ImgContent imgContent = 7;</code>
+     */
+    public ImgContent.Builder getImgContentBuilder() {
+      
+      onChanged();
+      return getImgContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.ImgContent imgContent = 7;</code>
+     */
+    public ImgContentOrBuilder getImgContentOrBuilder() {
+      if (imgContentBuilder_ != null) {
+        return imgContentBuilder_.getMessageOrBuilder();
+      } else {
+        return imgContent_ == null ?
+            ImgContent.getDefaultInstance() : imgContent_;
+      }
+    }
+    /**
+     * <code>.app.ImgContent imgContent = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<ImgContent, ImgContent.Builder, ImgContentOrBuilder>
+        getImgContentFieldBuilder() {
+      if (imgContentBuilder_ == null) {
+        imgContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<ImgContent, ImgContent.Builder, ImgContentOrBuilder>(
+                getImgContent(),
+                getParentForChildren(),
+                isClean());
+        imgContent_ = null;
+      }
+      return imgContentBuilder_;
     }
 
+    private VideoContent videoContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<VideoContent, VideoContent.Builder, VideoContentOrBuilder> videoContentBuilder_;
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
+     * @return Whether the videoContent field is set.
      */
     public boolean hasVideoContent() {
-      return instance.hasVideoContent();
+      return videoContentBuilder_ != null || videoContent_ != null;
     }
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
+     * @return The videoContent.
      */
     public VideoContent getVideoContent() {
-      return instance.getVideoContent();
+      if (videoContentBuilder_ == null) {
+        return videoContent_ == null ? VideoContent.getDefaultInstance() : videoContent_;
+      } else {
+        return videoContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
      */
     public Builder setVideoContent(VideoContent value) {
-      copyOnWrite();
-      instance.setVideoContent(value);
-      return this;
+      if (videoContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        videoContent_ = value;
+        onChanged();
+      } else {
+        videoContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
      */
     public Builder setVideoContent(
         VideoContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setVideoContent(builderForValue);
+      if (videoContentBuilder_ == null) {
+        videoContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        videoContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
      */
     public Builder mergeVideoContent(VideoContent value) {
-      copyOnWrite();
-      instance.mergeVideoContent(value);
+      if (videoContentBuilder_ == null) {
+        if (videoContent_ != null) {
+          videoContent_ =
+            VideoContent.newBuilder(videoContent_).mergeFrom(value).buildPartial();
+        } else {
+          videoContent_ = value;
+        }
+        onChanged();
+      } else {
+        videoContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.VideoContent videoContent = 8;</code>
+     * <code>.app.VideoContent videoContent = 8;</code>
      */
-    public Builder clearVideoContent() {  copyOnWrite();
-      instance.clearVideoContent();
+    public Builder clearVideoContent() {
+      if (videoContentBuilder_ == null) {
+        videoContent_ = null;
+        onChanged();
+      } else {
+        videoContent_ = null;
+        videoContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.VideoContent videoContent = 8;</code>
+     */
+    public VideoContent.Builder getVideoContentBuilder() {
+      
+      onChanged();
+      return getVideoContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.VideoContent videoContent = 8;</code>
+     */
+    public VideoContentOrBuilder getVideoContentOrBuilder() {
+      if (videoContentBuilder_ != null) {
+        return videoContentBuilder_.getMessageOrBuilder();
+      } else {
+        return videoContent_ == null ?
+            VideoContent.getDefaultInstance() : videoContent_;
+      }
+    }
+    /**
+     * <code>.app.VideoContent videoContent = 8;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<VideoContent, VideoContent.Builder, VideoContentOrBuilder>
+        getVideoContentFieldBuilder() {
+      if (videoContentBuilder_ == null) {
+        videoContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<VideoContent, VideoContent.Builder, VideoContentOrBuilder>(
+                getVideoContent(),
+                getParentForChildren(),
+                isClean());
+        videoContent_ = null;
+      }
+      return videoContentBuilder_;
     }
 
+    private TextContent textContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<TextContent, TextContent.Builder, TextContentOrBuilder> textContentBuilder_;
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
+     * @return Whether the textContent field is set.
      */
     public boolean hasTextContent() {
-      return instance.hasTextContent();
+      return textContentBuilder_ != null || textContent_ != null;
     }
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
+     * @return The textContent.
      */
     public TextContent getTextContent() {
-      return instance.getTextContent();
+      if (textContentBuilder_ == null) {
+        return textContent_ == null ? TextContent.getDefaultInstance() : textContent_;
+      } else {
+        return textContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
      */
     public Builder setTextContent(TextContent value) {
-      copyOnWrite();
-      instance.setTextContent(value);
-      return this;
+      if (textContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        textContent_ = value;
+        onChanged();
+      } else {
+        textContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
      */
     public Builder setTextContent(
         TextContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setTextContent(builderForValue);
+      if (textContentBuilder_ == null) {
+        textContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        textContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
      */
     public Builder mergeTextContent(TextContent value) {
-      copyOnWrite();
-      instance.mergeTextContent(value);
+      if (textContentBuilder_ == null) {
+        if (textContent_ != null) {
+          textContent_ =
+            TextContent.newBuilder(textContent_).mergeFrom(value).buildPartial();
+        } else {
+          textContent_ = value;
+        }
+        onChanged();
+      } else {
+        textContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.TextContent textContent = 9;</code>
+     * <code>.app.TextContent textContent = 9;</code>
      */
-    public Builder clearTextContent() {  copyOnWrite();
-      instance.clearTextContent();
+    public Builder clearTextContent() {
+      if (textContentBuilder_ == null) {
+        textContent_ = null;
+        onChanged();
+      } else {
+        textContent_ = null;
+        textContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.TextContent textContent = 9;</code>
+     */
+    public TextContent.Builder getTextContentBuilder() {
+      
+      onChanged();
+      return getTextContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.TextContent textContent = 9;</code>
+     */
+    public TextContentOrBuilder getTextContentOrBuilder() {
+      if (textContentBuilder_ != null) {
+        return textContentBuilder_.getMessageOrBuilder();
+      } else {
+        return textContent_ == null ?
+            TextContent.getDefaultInstance() : textContent_;
+      }
+    }
+    /**
+     * <code>.app.TextContent textContent = 9;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<TextContent, TextContent.Builder, TextContentOrBuilder>
+        getTextContentFieldBuilder() {
+      if (textContentBuilder_ == null) {
+        textContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<TextContent, TextContent.Builder, TextContentOrBuilder>(
+                getTextContent(),
+                getParentForChildren(),
+                isClean());
+        textContent_ = null;
+      }
+      return textContentBuilder_;
     }
 
+    private AudioContent audioContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<AudioContent, AudioContent.Builder, AudioContentOrBuilder> audioContentBuilder_;
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
+     * @return Whether the audioContent field is set.
      */
     public boolean hasAudioContent() {
-      return instance.hasAudioContent();
+      return audioContentBuilder_ != null || audioContent_ != null;
     }
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
+     * @return The audioContent.
      */
     public AudioContent getAudioContent() {
-      return instance.getAudioContent();
+      if (audioContentBuilder_ == null) {
+        return audioContent_ == null ? AudioContent.getDefaultInstance() : audioContent_;
+      } else {
+        return audioContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
      */
     public Builder setAudioContent(AudioContent value) {
-      copyOnWrite();
-      instance.setAudioContent(value);
-      return this;
+      if (audioContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        audioContent_ = value;
+        onChanged();
+      } else {
+        audioContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
      */
     public Builder setAudioContent(
         AudioContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setAudioContent(builderForValue);
+      if (audioContentBuilder_ == null) {
+        audioContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        audioContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
      */
     public Builder mergeAudioContent(AudioContent value) {
-      copyOnWrite();
-      instance.mergeAudioContent(value);
+      if (audioContentBuilder_ == null) {
+        if (audioContent_ != null) {
+          audioContent_ =
+            AudioContent.newBuilder(audioContent_).mergeFrom(value).buildPartial();
+        } else {
+          audioContent_ = value;
+        }
+        onChanged();
+      } else {
+        audioContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.AudioContent audioContent = 10;</code>
+     * <code>.app.AudioContent audioContent = 10;</code>
      */
-    public Builder clearAudioContent() {  copyOnWrite();
-      instance.clearAudioContent();
+    public Builder clearAudioContent() {
+      if (audioContentBuilder_ == null) {
+        audioContent_ = null;
+        onChanged();
+      } else {
+        audioContent_ = null;
+        audioContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.AudioContent audioContent = 10;</code>
+     */
+    public AudioContent.Builder getAudioContentBuilder() {
+      
+      onChanged();
+      return getAudioContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.AudioContent audioContent = 10;</code>
+     */
+    public AudioContentOrBuilder getAudioContentOrBuilder() {
+      if (audioContentBuilder_ != null) {
+        return audioContentBuilder_.getMessageOrBuilder();
+      } else {
+        return audioContent_ == null ?
+            AudioContent.getDefaultInstance() : audioContent_;
+      }
+    }
+    /**
+     * <code>.app.AudioContent audioContent = 10;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<AudioContent, AudioContent.Builder, AudioContentOrBuilder>
+        getAudioContentFieldBuilder() {
+      if (audioContentBuilder_ == null) {
+        audioContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<AudioContent, AudioContent.Builder, AudioContentOrBuilder>(
+                getAudioContent(),
+                getParentForChildren(),
+                isClean());
+        audioContent_ = null;
+      }
+      return audioContentBuilder_;
     }
 
+    private CCVideoContent ccVideoContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<CCVideoContent, CCVideoContent.Builder, CCVideoContentOrBuilder> ccVideoContentBuilder_;
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+     * @return Whether the ccVideoContent field is set.
      */
     public boolean hasCcVideoContent() {
-      return instance.hasCcVideoContent();
+      return ccVideoContentBuilder_ != null || ccVideoContent_ != null;
     }
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+     * @return The ccVideoContent.
      */
     public CCVideoContent getCcVideoContent() {
-      return instance.getCcVideoContent();
+      if (ccVideoContentBuilder_ == null) {
+        return ccVideoContent_ == null ? CCVideoContent.getDefaultInstance() : ccVideoContent_;
+      } else {
+        return ccVideoContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
      */
     public Builder setCcVideoContent(CCVideoContent value) {
-      copyOnWrite();
-      instance.setCcVideoContent(value);
-      return this;
+      if (ccVideoContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ccVideoContent_ = value;
+        onChanged();
+      } else {
+        ccVideoContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
      */
     public Builder setCcVideoContent(
         CCVideoContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setCcVideoContent(builderForValue);
+      if (ccVideoContentBuilder_ == null) {
+        ccVideoContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        ccVideoContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
      */
     public Builder mergeCcVideoContent(CCVideoContent value) {
-      copyOnWrite();
-      instance.mergeCcVideoContent(value);
+      if (ccVideoContentBuilder_ == null) {
+        if (ccVideoContent_ != null) {
+          ccVideoContent_ =
+            CCVideoContent.newBuilder(ccVideoContent_).mergeFrom(value).buildPartial();
+        } else {
+          ccVideoContent_ = value;
+        }
+        onChanged();
+      } else {
+        ccVideoContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
      */
-    public Builder clearCcVideoContent() {  copyOnWrite();
-      instance.clearCcVideoContent();
+    public Builder clearCcVideoContent() {
+      if (ccVideoContentBuilder_ == null) {
+        ccVideoContent_ = null;
+        onChanged();
+      } else {
+        ccVideoContent_ = null;
+        ccVideoContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+     */
+    public CCVideoContent.Builder getCcVideoContentBuilder() {
+      
+      onChanged();
+      return getCcVideoContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+     */
+    public CCVideoContentOrBuilder getCcVideoContentOrBuilder() {
+      if (ccVideoContentBuilder_ != null) {
+        return ccVideoContentBuilder_.getMessageOrBuilder();
+      } else {
+        return ccVideoContent_ == null ?
+            CCVideoContent.getDefaultInstance() : ccVideoContent_;
+      }
+    }
+    /**
+     * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<CCVideoContent, CCVideoContent.Builder, CCVideoContentOrBuilder>
+        getCcVideoContentFieldBuilder() {
+      if (ccVideoContentBuilder_ == null) {
+        ccVideoContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<CCVideoContent, CCVideoContent.Builder, CCVideoContentOrBuilder>(
+                getCcVideoContent(),
+                getParentForChildren(),
+                isClean());
+        ccVideoContent_ = null;
+      }
+      return ccVideoContentBuilder_;
     }
 
+    private QuestionContent questionContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<QuestionContent, QuestionContent.Builder, QuestionContentOrBuilder> questionContentBuilder_;
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
+     * @return Whether the questionContent field is set.
      */
     public boolean hasQuestionContent() {
-      return instance.hasQuestionContent();
+      return questionContentBuilder_ != null || questionContent_ != null;
     }
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
+     * @return The questionContent.
      */
     public QuestionContent getQuestionContent() {
-      return instance.getQuestionContent();
+      if (questionContentBuilder_ == null) {
+        return questionContent_ == null ? QuestionContent.getDefaultInstance() : questionContent_;
+      } else {
+        return questionContentBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
      */
     public Builder setQuestionContent(QuestionContent value) {
-      copyOnWrite();
-      instance.setQuestionContent(value);
-      return this;
+      if (questionContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        questionContent_ = value;
+        onChanged();
+      } else {
+        questionContentBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
      */
     public Builder setQuestionContent(
         QuestionContent.Builder builderForValue) {
-      copyOnWrite();
-      instance.setQuestionContent(builderForValue);
+      if (questionContentBuilder_ == null) {
+        questionContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        questionContentBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
      */
     public Builder mergeQuestionContent(QuestionContent value) {
-      copyOnWrite();
-      instance.mergeQuestionContent(value);
+      if (questionContentBuilder_ == null) {
+        if (questionContent_ != null) {
+          questionContent_ =
+            QuestionContent.newBuilder(questionContent_).mergeFrom(value).buildPartial();
+        } else {
+          questionContent_ = value;
+        }
+        onChanged();
+      } else {
+        questionContentBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.QuestionContent questionContent = 12;</code>
+     * <code>.app.QuestionContent questionContent = 12;</code>
      */
-    public Builder clearQuestionContent() {  copyOnWrite();
-      instance.clearQuestionContent();
+    public Builder clearQuestionContent() {
+      if (questionContentBuilder_ == null) {
+        questionContent_ = null;
+        onChanged();
+      } else {
+        questionContent_ = null;
+        questionContentBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.QuestionContent questionContent = 12;</code>
+     */
+    public QuestionContent.Builder getQuestionContentBuilder() {
+      
+      onChanged();
+      return getQuestionContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.QuestionContent questionContent = 12;</code>
+     */
+    public QuestionContentOrBuilder getQuestionContentOrBuilder() {
+      if (questionContentBuilder_ != null) {
+        return questionContentBuilder_.getMessageOrBuilder();
+      } else {
+        return questionContent_ == null ?
+            QuestionContent.getDefaultInstance() : questionContent_;
+      }
+    }
+    /**
+     * <code>.app.QuestionContent questionContent = 12;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<QuestionContent, QuestionContent.Builder, QuestionContentOrBuilder>
+        getQuestionContentFieldBuilder() {
+      if (questionContentBuilder_ == null) {
+        questionContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<QuestionContent, QuestionContent.Builder, QuestionContentOrBuilder>(
+                getQuestionContent(),
+                getParentForChildren(),
+                isClean());
+        questionContent_ = null;
+      }
+      return questionContentBuilder_;
     }
 
+    private SenderInfo sender_;
+    private com.google.protobuf.SingleFieldBuilderV3<SenderInfo, SenderInfo.Builder, SenderInfoOrBuilder> senderBuilder_;
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
+     * @return Whether the sender field is set.
      */
     public boolean hasSender() {
-      return instance.hasSender();
+      return senderBuilder_ != null || sender_ != null;
     }
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
+     * @return The sender.
      */
     public SenderInfo getSender() {
-      return instance.getSender();
+      if (senderBuilder_ == null) {
+        return sender_ == null ? SenderInfo.getDefaultInstance() : sender_;
+      } else {
+        return senderBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
      */
     public Builder setSender(SenderInfo value) {
-      copyOnWrite();
-      instance.setSender(value);
-      return this;
+      if (senderBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        sender_ = value;
+        onChanged();
+      } else {
+        senderBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
      */
     public Builder setSender(
         SenderInfo.Builder builderForValue) {
-      copyOnWrite();
-      instance.setSender(builderForValue);
+      if (senderBuilder_ == null) {
+        sender_ = builderForValue.build();
+        onChanged();
+      } else {
+        senderBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
      */
     public Builder mergeSender(SenderInfo value) {
-      copyOnWrite();
-      instance.mergeSender(value);
+      if (senderBuilder_ == null) {
+        if (sender_ != null) {
+          sender_ =
+            SenderInfo.newBuilder(sender_).mergeFrom(value).buildPartial();
+        } else {
+          sender_ = value;
+        }
+        onChanged();
+      } else {
+        senderBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.SenderInfo sender = 13;</code>
+     * <code>.app.SenderInfo sender = 13;</code>
      */
-    public Builder clearSender() {  copyOnWrite();
-      instance.clearSender();
+    public Builder clearSender() {
+      if (senderBuilder_ == null) {
+        sender_ = null;
+        onChanged();
+      } else {
+        sender_ = null;
+        senderBuilder_ = null;
+      }
+
       return this;
+    }
+    /**
+     * <code>.app.SenderInfo sender = 13;</code>
+     */
+    public SenderInfo.Builder getSenderBuilder() {
+      
+      onChanged();
+      return getSenderFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.SenderInfo sender = 13;</code>
+     */
+    public SenderInfoOrBuilder getSenderOrBuilder() {
+      if (senderBuilder_ != null) {
+        return senderBuilder_.getMessageOrBuilder();
+      } else {
+        return sender_ == null ?
+            SenderInfo.getDefaultInstance() : sender_;
+      }
+    }
+    /**
+     * <code>.app.SenderInfo sender = 13;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<SenderInfo, SenderInfo.Builder, SenderInfoOrBuilder>
+        getSenderFieldBuilder() {
+      if (senderBuilder_ == null) {
+        senderBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<SenderInfo, SenderInfo.Builder, SenderInfoOrBuilder>(
+                getSender(),
+                getParentForChildren(),
+                isClean());
+        sender_ = null;
+      }
+      return senderBuilder_;
     }
 
+    private long replyMsgId_ ;
     /**
-     * <code>optional uint64 replyMsgId = 14;</code>
+     * <code>uint64 replyMsgId = 14;</code>
+     * @return The replyMsgId.
      */
+    @java.lang.Override
     public long getReplyMsgId() {
-      return instance.getReplyMsgId();
+      return replyMsgId_;
     }
     /**
-     * <code>optional uint64 replyMsgId = 14;</code>
+     * <code>uint64 replyMsgId = 14;</code>
+     * @param value The replyMsgId to set.
+     * @return This builder for chaining.
      */
     public Builder setReplyMsgId(long value) {
-      copyOnWrite();
-      instance.setReplyMsgId(value);
+      
+      replyMsgId_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>optional uint64 replyMsgId = 14;</code>
+     * <code>uint64 replyMsgId = 14;</code>
+     * @return This builder for chaining.
      */
     public Builder clearReplyMsgId() {
-      copyOnWrite();
-      instance.clearReplyMsgId();
+      
+      replyMsgId_ = 0L;
+      onChanged();
       return this;
     }
 
+    private ImMessage replyMsg_;
+    private com.google.protobuf.SingleFieldBuilderV3<ImMessage, ImMessage.Builder, ImMessageOrBuilder> replyMsgBuilder_;
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
+     * @return Whether the replyMsg field is set.
      */
     public boolean hasReplyMsg() {
-      return instance.hasReplyMsg();
+      return replyMsgBuilder_ != null || replyMsg_ != null;
     }
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
+     * @return The replyMsg.
      */
     public ImMessage getReplyMsg() {
-      return instance.getReplyMsg();
+      if (replyMsgBuilder_ == null) {
+        return replyMsg_ == null ? ImMessage.getDefaultInstance() : replyMsg_;
+      } else {
+        return replyMsgBuilder_.getMessage();
+      }
     }
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
      */
     public Builder setReplyMsg(ImMessage value) {
-      copyOnWrite();
-      instance.setReplyMsg(value);
-      return this;
+      if (replyMsgBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        replyMsg_ = value;
+        onChanged();
+      } else {
+        replyMsgBuilder_.setMessage(value);
       }
+
+      return this;
+    }
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
      */
     public Builder setReplyMsg(
         ImMessage.Builder builderForValue) {
-      copyOnWrite();
-      instance.setReplyMsg(builderForValue);
+      if (replyMsgBuilder_ == null) {
+        replyMsg_ = builderForValue.build();
+        onChanged();
+      } else {
+        replyMsgBuilder_.setMessage(builderForValue.build());
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
      */
     public Builder mergeReplyMsg(ImMessage value) {
-      copyOnWrite();
-      instance.mergeReplyMsg(value);
+      if (replyMsgBuilder_ == null) {
+        if (replyMsg_ != null) {
+          replyMsg_ =
+            ImMessage.newBuilder(replyMsg_).mergeFrom(value).buildPartial();
+        } else {
+          replyMsg_ = value;
+        }
+        onChanged();
+      } else {
+        replyMsgBuilder_.mergeFrom(value);
+      }
+
       return this;
     }
     /**
-     * <code>optional .app.ImMessage replyMsg = 15;</code>
+     * <code>.app.ImMessage replyMsg = 15;</code>
      */
-    public Builder clearReplyMsg() {  copyOnWrite();
-      instance.clearReplyMsg();
+    public Builder clearReplyMsg() {
+      if (replyMsgBuilder_ == null) {
+        replyMsg_ = null;
+        onChanged();
+      } else {
+        replyMsg_ = null;
+        replyMsgBuilder_ = null;
+      }
+
       return this;
     }
+    /**
+     * <code>.app.ImMessage replyMsg = 15;</code>
+     */
+    public ImMessage.Builder getReplyMsgBuilder() {
+      
+      onChanged();
+      return getReplyMsgFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.ImMessage replyMsg = 15;</code>
+     */
+    public ImMessageOrBuilder getReplyMsgOrBuilder() {
+      if (replyMsgBuilder_ != null) {
+        return replyMsgBuilder_.getMessageOrBuilder();
+      } else {
+        return replyMsg_ == null ?
+            ImMessage.getDefaultInstance() : replyMsg_;
+      }
+    }
+    /**
+     * <code>.app.ImMessage replyMsg = 15;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<ImMessage, ImMessage.Builder, ImMessageOrBuilder>
+        getReplyMsgFieldBuilder() {
+      if (replyMsgBuilder_ == null) {
+        replyMsgBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<ImMessage, ImMessage.Builder, ImMessageOrBuilder>(
+                getReplyMsg(),
+                getParentForChildren(),
+                isClean());
+        replyMsg_ = null;
+      }
+      return replyMsgBuilder_;
+    }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
+    }
+
+    @java.lang.Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
+    }
+
 
     // @@protoc_insertion_point(builder_scope:app.ImMessage)
   }
-  protected final Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      Object arg0, Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new ImMessage();
-      }
-      case IS_INITIALIZED: {
-        return DEFAULT_INSTANCE;
-      }
-      case MAKE_IMMUTABLE: {
-        return null;
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case VISIT: {
-        Visitor visitor = (Visitor) arg0;
-        ImMessage other = (ImMessage) arg1;
-        groupId_ = visitor.visitLong(groupId_ != 0L, groupId_,
-            other.groupId_ != 0L, other.groupId_);
-        ownerId_ = visitor.visitLong(ownerId_ != 0L, ownerId_,
-            other.ownerId_ != 0L, other.ownerId_);
-        sendTime_ = visitor.visitLong(sendTime_ != 0L, sendTime_,
-            other.sendTime_ != 0L, other.sendTime_);
-        msgId_ = visitor.visitLong(msgId_ != 0L, msgId_,
-            other.msgId_ != 0L, other.msgId_);
-        clientMsgId_ = visitor.visitString(!clientMsgId_.isEmpty(), clientMsgId_,
-            !other.clientMsgId_.isEmpty(), other.clientMsgId_);
-        msgType_ = visitor.visitString(!msgType_.isEmpty(), msgType_,
-            !other.msgType_.isEmpty(), other.msgType_);
-        imgContent_ = visitor.visitMessage(imgContent_, other.imgContent_);
-        videoContent_ = visitor.visitMessage(videoContent_, other.videoContent_);
-        textContent_ = visitor.visitMessage(textContent_, other.textContent_);
-        audioContent_ = visitor.visitMessage(audioContent_, other.audioContent_);
-        ccVideoContent_ = visitor.visitMessage(ccVideoContent_, other.ccVideoContent_);
-        questionContent_ = visitor.visitMessage(questionContent_, other.questionContent_);
-        sender_ = visitor.visitMessage(sender_, other.sender_);
-        replyMsgId_ = visitor.visitLong(replyMsgId_ != 0L, replyMsgId_,
-            other.replyMsgId_ != 0L, other.replyMsgId_);
-        replyMsg_ = visitor.visitMessage(replyMsg_, other.replyMsg_);
-        if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-            .INSTANCE) {
-        }
-        return this;
-      }
-      case MERGE_FROM_STREAM: {
-        com.google.protobuf.CodedInputStream input =
-            (com.google.protobuf.CodedInputStream) arg0;
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-            (com.google.protobuf.ExtensionRegistryLite) arg1;
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!input.skipField(tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 8: {
-
-                groupId_ = input.readUInt64();
-                break;
-              }
-              case 16: {
-
-                ownerId_ = input.readUInt64();
-                break;
-              }
-              case 24: {
-
-                sendTime_ = input.readUInt64();
-                break;
-              }
-              case 32: {
-
-                msgId_ = input.readUInt64();
-                break;
-              }
-              case 42: {
-                String s = input.readStringRequireUtf8();
-
-                clientMsgId_ = s;
-                break;
-              }
-              case 50: {
-                String s = input.readStringRequireUtf8();
-
-                msgType_ = s;
-                break;
-              }
-              case 58: {
-                ImgContent.Builder subBuilder = null;
-                if (imgContent_ != null) {
-                  subBuilder = imgContent_.toBuilder();
-                }
-                imgContent_ = input.readMessage(ImgContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(imgContent_);
-                  imgContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 66: {
-                VideoContent.Builder subBuilder = null;
-                if (videoContent_ != null) {
-                  subBuilder = videoContent_.toBuilder();
-                }
-                videoContent_ = input.readMessage(VideoContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(videoContent_);
-                  videoContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 74: {
-                TextContent.Builder subBuilder = null;
-                if (textContent_ != null) {
-                  subBuilder = textContent_.toBuilder();
-                }
-                textContent_ = input.readMessage(TextContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(textContent_);
-                  textContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 82: {
-                AudioContent.Builder subBuilder = null;
-                if (audioContent_ != null) {
-                  subBuilder = audioContent_.toBuilder();
-                }
-                audioContent_ = input.readMessage(AudioContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(audioContent_);
-                  audioContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 90: {
-                CCVideoContent.Builder subBuilder = null;
-                if (ccVideoContent_ != null) {
-                  subBuilder = ccVideoContent_.toBuilder();
-                }
-                ccVideoContent_ = input.readMessage(CCVideoContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(ccVideoContent_);
-                  ccVideoContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 98: {
-                QuestionContent.Builder subBuilder = null;
-                if (questionContent_ != null) {
-                  subBuilder = questionContent_.toBuilder();
-                }
-                questionContent_ = input.readMessage(QuestionContent.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(questionContent_);
-                  questionContent_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 106: {
-                SenderInfo.Builder subBuilder = null;
-                if (sender_ != null) {
-                  subBuilder = sender_.toBuilder();
-                }
-                sender_ = input.readMessage(SenderInfo.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(sender_);
-                  sender_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-              case 112: {
-
-                replyMsgId_ = input.readUInt64();
-                break;
-              }
-              case 122: {
-                ImMessage.Builder subBuilder = null;
-                if (replyMsg_ != null) {
-                  subBuilder = replyMsg_.toBuilder();
-                }
-                replyMsg_ = input.readMessage(ImMessage.parser(), extensionRegistry);
-                if (subBuilder != null) {
-                  subBuilder.mergeFrom(replyMsg_);
-                  replyMsg_ = subBuilder.buildPartial();
-                }
-
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw new RuntimeException(e.setUnfinishedMessage(this));
-        } catch (java.io.IOException e) {
-          throw new RuntimeException(
-              new com.google.protobuf.InvalidProtocolBufferException(
-                  e.getMessage()).setUnfinishedMessage(this));
-        } finally {
-        }
-      }
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        if (PARSER == null) {    synchronized (ImMessage.class) {
-            if (PARSER == null) {
-              PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-            }
-          }
-        }
-        return PARSER;
-      }
-    }
-    throw new UnsupportedOperationException();
-  }
-
 
   // @@protoc_insertion_point(class_scope:app.ImMessage)
   private static final ImMessage DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new ImMessage();
-    DEFAULT_INSTANCE.makeImmutable();
   }
 
   public static ImMessage getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static volatile com.google.protobuf.Parser<ImMessage> PARSER;
+  private static final com.google.protobuf.Parser<ImMessage>
+      PARSER = new com.google.protobuf.AbstractParser<ImMessage>() {
+    @java.lang.Override
+    public ImMessage parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new ImMessage(input, extensionRegistry);
+    }
+  };
 
   public static com.google.protobuf.Parser<ImMessage> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
+    return PARSER;
   }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<ImMessage> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public ImMessage getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
 

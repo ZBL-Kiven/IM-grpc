@@ -1,4 +1,4 @@
-package com.zj.database.entity
+package com.zj.imtest.core.bean
 
 class SendMessageRespEn {
 

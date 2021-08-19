@@ -5,14 +5,15 @@ package com.zj.protocol.grpc;
 
 public interface SenderInfoOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.SenderInfo)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
    * <pre>
    *发送者id
    * </pre>
    *
-   * <code>optional uint64 senderId = 1;</code>
+   * <code>uint64 senderId = 1;</code>
+   * @return The senderId.
    */
   long getSenderId();
 
@@ -21,7 +22,8 @@ public interface SenderInfoOrBuilder extends
    *发送者名字
    * </pre>
    *
-   * <code>optional string senderName = 2;</code>
+   * <code>string senderName = 2;</code>
+   * @return The senderName.
    */
   java.lang.String getSenderName();
   /**
@@ -29,7 +31,8 @@ public interface SenderInfoOrBuilder extends
    *发送者名字
    * </pre>
    *
-   * <code>optional string senderName = 2;</code>
+   * <code>string senderName = 2;</code>
+   * @return The bytes for senderName.
    */
   com.google.protobuf.ByteString
       getSenderNameBytes();
@@ -39,7 +42,8 @@ public interface SenderInfoOrBuilder extends
    *发送者头像
    * </pre>
    *
-   * <code>optional string senderAvatar = 3;</code>
+   * <code>string senderAvatar = 3;</code>
+   * @return The senderAvatar.
    */
   java.lang.String getSenderAvatar();
   /**
@@ -47,7 +51,8 @@ public interface SenderInfoOrBuilder extends
    *发送者头像
    * </pre>
    *
-   * <code>optional string senderAvatar = 3;</code>
+   * <code>string senderAvatar = 3;</code>
+   * @return The bytes for senderAvatar.
    */
   com.google.protobuf.ByteString
       getSenderAvatarBytes();
@@ -57,7 +62,8 @@ public interface SenderInfoOrBuilder extends
    *发送终端类型
    * </pre>
    *
-   * <code>optional string senderPlatform = 4;</code>
+   * <code>string senderPlatform = 4;</code>
+   * @return The senderPlatform.
    */
   java.lang.String getSenderPlatform();
   /**
@@ -65,7 +71,8 @@ public interface SenderInfoOrBuilder extends
    *发送终端类型
    * </pre>
    *
-   * <code>optional string senderPlatform = 4;</code>
+   * <code>string senderPlatform = 4;</code>
+   * @return The bytes for senderPlatform.
    */
   com.google.protobuf.ByteString
       getSenderPlatformBytes();

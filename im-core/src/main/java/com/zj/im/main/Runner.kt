@@ -31,7 +31,7 @@ import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, BaseMsgInfo<T>, Throwable?) -> Unit {
+internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, Boolean, BaseMsgInfo<T>, Throwable?) -> Unit {
 
     private var dataStore: DataStore<T>? = null
     private var msgLooper: MsgLooper? = null
@@ -66,7 +66,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, BaseM
         initBase()
         initQueue()
         getServer("init and start")?.init(context)
-        getClient("init.setRunnigKey and start")?.let {
+        getClient("init.setRunningKey and start")?.let {
             dataStore?.canSend { it.canSend() }
             dataStore?.canReceive { it.canReceived() }
         }
@@ -146,7 +146,6 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, BaseM
         }
     }
 
-    /** ---------------------- */
     override fun run(runningKey: String) {
         if (runningKey != curRunningKey) {
             msgLooper?.shutdown()
@@ -178,11 +177,11 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, BaseM
         }
     }
 
-    override fun invoke(isSuccess: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
-        if (!isSuccess) {
-            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
-        } else {
+    override fun invoke(isSuccess: Boolean, inRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
+        if (isSuccess) {
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
+        } else {
+            if (!inRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
         }
         sendingPool?.unLock()
     }

@@ -31,7 +31,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api "android.arch.persistence.room:runtime:1.1.1"
     kapt "android.arch.persistence.room:compiler:1.1.1"
-    api('com.google.code.gson:gson:2.8.6') {
-        exclude group: 'android.support.v4'
-    }
+    implementation 'com.google.code.gson:gson:2.8.7'
 }

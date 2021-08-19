@@ -5,7 +5,7 @@ package com.zj.protocol.grpc;
 
 public interface ListenTopicReqOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.ListenTopicReq)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
    * <pre>
@@ -13,8 +13,9 @@ public interface ListenTopicReqOrBuilder extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @return A list containing the topic.
    */
-  java.util.List<String>
+  java.util.List<java.lang.String>
       getTopicList();
   /**
    * <pre>
@@ -22,6 +23,7 @@ public interface ListenTopicReqOrBuilder extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @return The count of topic.
    */
   int getTopicCount();
   /**
@@ -30,6 +32,8 @@ public interface ListenTopicReqOrBuilder extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @param index The index of the element to return.
+   * @return The topic at the given index.
    */
   java.lang.String getTopic(int index);
   /**
@@ -38,16 +42,20 @@ public interface ListenTopicReqOrBuilder extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the topic at the given index.
    */
   com.google.protobuf.ByteString
       getTopicBytes(int index);
 
   /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+   * <code>.app.ListenTopicReq.Method method = 2;</code>
+   * @return The enum numeric value on the wire for method.
    */
   int getMethodValue();
   /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+   * <code>.app.ListenTopicReq.Method method = 2;</code>
+   * @return The method.
    */
   ListenTopicReq.Method getMethod();
 }

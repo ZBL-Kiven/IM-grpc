@@ -5,10 +5,11 @@ package com.zj.protocol.grpc;
 
 public interface GetImMessageReqOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.GetImMessageReq)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional uint64 groupId = 1;</code>
+   * <code>uint64 groupId = 1;</code>
+   * @return The groupId.
    */
   long getGroupId();
 
@@ -17,7 +18,8 @@ public interface GetImMessageReqOrBuilder extends
    *大V的id
    * </pre>
    *
-   * <code>optional uint64 ownerId = 2;</code>
+   * <code>uint64 ownerId = 2;</code>
+   * @return The ownerId.
    */
   long getOwnerId();
 }

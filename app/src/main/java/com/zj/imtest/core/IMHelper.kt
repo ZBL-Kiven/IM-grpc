@@ -17,6 +17,7 @@ object IMHelper : IMInterface<Any?>() {
     fun init(app: Application) {
         val option = BaseOption.create(app).debug().logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000).setNotify(Notification()).build()
         initChat(option)
+
     }
 
     override fun getClient(): ClientHub<Any?> {
@@ -36,13 +37,13 @@ object IMHelper : IMInterface<Any?>() {
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        IMHelper.send(data, callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     fun leaveChatRoom(groupId: Long) {
         val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
-        IMHelper.send(data, callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 }

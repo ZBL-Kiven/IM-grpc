@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.zj.database.entity.MessageInfoEntity
 import com.zj.imtest.core.IMHelper
-import com.zj.protocol.grpc.ImMessage
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("------ ", "on topic ==> d = $r   lstD = $lr  s = $payload")
         }
 
-        IMHelper.addReceiveObserver<ImMessage>(0x1122).filterIn { t, _ -> t.hasSender() }.listen { m, list, s ->
+        IMHelper.addReceiveObserver<MessageInfoEntity>(0x1122).listen { m, list, s ->
             Log.e("------ ", "on message ==> d = ${m?.textContent?.text}   lstD = $list  s = $s")
         }
     }

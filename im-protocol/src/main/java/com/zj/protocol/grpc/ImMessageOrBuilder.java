@@ -5,13 +5,14 @@ package com.zj.protocol.grpc;
 
 public interface ImMessageOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.ImMessage)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 groupId = 1;</code>
+   * <code>uint64 groupId = 1;</code>
+   * @return The groupId.
    */
   long getGroupId();
 
@@ -19,7 +20,8 @@ public interface ImMessageOrBuilder extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 ownerId = 2;</code>
+   * <code>uint64 ownerId = 2;</code>
+   * @return The ownerId.
    */
   long getOwnerId();
 
@@ -27,7 +29,8 @@ public interface ImMessageOrBuilder extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 sendTime = 3;</code>
+   * <code>uint64 sendTime = 3;</code>
+   * @return The sendTime.
    */
   long getSendTime();
 
@@ -35,104 +38,158 @@ public interface ImMessageOrBuilder extends
    * <pre>
    * </pre>
    *
-   * <code>optional uint64 msgId = 4;</code>
+   * <code>uint64 msgId = 4;</code>
+   * @return The msgId.
    */
   long getMsgId();
 
   /**
-   * <code>optional string clientMsgId = 5;</code>
+   * <code>string clientMsgId = 5;</code>
+   * @return The clientMsgId.
    */
   java.lang.String getClientMsgId();
   /**
-   * <code>optional string clientMsgId = 5;</code>
+   * <code>string clientMsgId = 5;</code>
+   * @return The bytes for clientMsgId.
    */
   com.google.protobuf.ByteString
       getClientMsgIdBytes();
 
   /**
-   * <code>optional string msgType = 6;</code>
+   * <code>string msgType = 6;</code>
+   * @return The msgType.
    */
   java.lang.String getMsgType();
   /**
-   * <code>optional string msgType = 6;</code>
+   * <code>string msgType = 6;</code>
+   * @return The bytes for msgType.
    */
   com.google.protobuf.ByteString
       getMsgTypeBytes();
 
   /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
+   * <code>.app.ImgContent imgContent = 7;</code>
+   * @return Whether the imgContent field is set.
    */
   boolean hasImgContent();
   /**
-   * <code>optional .app.ImgContent imgContent = 7;</code>
+   * <code>.app.ImgContent imgContent = 7;</code>
+   * @return The imgContent.
    */
   ImgContent getImgContent();
+  /**
+   * <code>.app.ImgContent imgContent = 7;</code>
+   */
+  ImgContentOrBuilder getImgContentOrBuilder();
 
   /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
+   * <code>.app.VideoContent videoContent = 8;</code>
+   * @return Whether the videoContent field is set.
    */
   boolean hasVideoContent();
   /**
-   * <code>optional .app.VideoContent videoContent = 8;</code>
+   * <code>.app.VideoContent videoContent = 8;</code>
+   * @return The videoContent.
    */
   VideoContent getVideoContent();
+  /**
+   * <code>.app.VideoContent videoContent = 8;</code>
+   */
+  VideoContentOrBuilder getVideoContentOrBuilder();
 
   /**
-   * <code>optional .app.TextContent textContent = 9;</code>
+   * <code>.app.TextContent textContent = 9;</code>
+   * @return Whether the textContent field is set.
    */
   boolean hasTextContent();
   /**
-   * <code>optional .app.TextContent textContent = 9;</code>
+   * <code>.app.TextContent textContent = 9;</code>
+   * @return The textContent.
    */
   TextContent getTextContent();
+  /**
+   * <code>.app.TextContent textContent = 9;</code>
+   */
+  TextContentOrBuilder getTextContentOrBuilder();
 
   /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
+   * <code>.app.AudioContent audioContent = 10;</code>
+   * @return Whether the audioContent field is set.
    */
   boolean hasAudioContent();
   /**
-   * <code>optional .app.AudioContent audioContent = 10;</code>
+   * <code>.app.AudioContent audioContent = 10;</code>
+   * @return The audioContent.
    */
   AudioContent getAudioContent();
+  /**
+   * <code>.app.AudioContent audioContent = 10;</code>
+   */
+  AudioContentOrBuilder getAudioContentOrBuilder();
 
   /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+   * @return Whether the ccVideoContent field is set.
    */
   boolean hasCcVideoContent();
   /**
-   * <code>optional .app.CCVideoContent ccVideoContent = 11;</code>
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+   * @return The ccVideoContent.
    */
   CCVideoContent getCcVideoContent();
+  /**
+   * <code>.app.CCVideoContent ccVideoContent = 11;</code>
+   */
+  CCVideoContentOrBuilder getCcVideoContentOrBuilder();
 
   /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
+   * <code>.app.QuestionContent questionContent = 12;</code>
+   * @return Whether the questionContent field is set.
    */
   boolean hasQuestionContent();
   /**
-   * <code>optional .app.QuestionContent questionContent = 12;</code>
+   * <code>.app.QuestionContent questionContent = 12;</code>
+   * @return The questionContent.
    */
   QuestionContent getQuestionContent();
+  /**
+   * <code>.app.QuestionContent questionContent = 12;</code>
+   */
+  QuestionContentOrBuilder getQuestionContentOrBuilder();
 
   /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
+   * <code>.app.SenderInfo sender = 13;</code>
+   * @return Whether the sender field is set.
    */
   boolean hasSender();
   /**
-   * <code>optional .app.SenderInfo sender = 13;</code>
+   * <code>.app.SenderInfo sender = 13;</code>
+   * @return The sender.
    */
   SenderInfo getSender();
+  /**
+   * <code>.app.SenderInfo sender = 13;</code>
+   */
+  SenderInfoOrBuilder getSenderOrBuilder();
 
   /**
-   * <code>optional uint64 replyMsgId = 14;</code>
+   * <code>uint64 replyMsgId = 14;</code>
+   * @return The replyMsgId.
    */
   long getReplyMsgId();
 
   /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
+   * <code>.app.ImMessage replyMsg = 15;</code>
+   * @return Whether the replyMsg field is set.
    */
   boolean hasReplyMsg();
   /**
-   * <code>optional .app.ImMessage replyMsg = 15;</code>
+   * <code>.app.ImMessage replyMsg = 15;</code>
+   * @return The replyMsg.
    */
   ImMessage getReplyMsg();
+  /**
+   * <code>.app.ImMessage replyMsg = 15;</code>
+   */
+  ImMessageOrBuilder getReplyMsgOrBuilder();
 }

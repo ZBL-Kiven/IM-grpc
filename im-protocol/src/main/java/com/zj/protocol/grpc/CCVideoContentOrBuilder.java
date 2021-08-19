@@ -5,14 +5,16 @@ package com.zj.protocol.grpc;
 
 public interface CCVideoContentOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.CCVideoContent)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string videoId = 1;</code>
+   * <code>string videoId = 1;</code>
+   * @return The videoId.
    */
   java.lang.String getVideoId();
   /**
-   * <code>optional string videoId = 1;</code>
+   * <code>string videoId = 1;</code>
+   * @return The bytes for videoId.
    */
   com.google.protobuf.ByteString
       getVideoIdBytes();

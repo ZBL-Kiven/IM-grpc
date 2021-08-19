@@ -6,287 +6,564 @@ package com.zj.protocol.grpc;
 /**
  * Protobuf type {@code app.ListenTopicReply}
  */
-public  final class ListenTopicReply extends
-    com.google.protobuf.GeneratedMessageLite<
-        ListenTopicReply, ListenTopicReply.Builder> implements
+public final class ListenTopicReply extends
+    com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:app.ListenTopicReply)
     ListenTopicReplyOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use ListenTopicReply.newBuilder() to construct.
+  private ListenTopicReply(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
   private ListenTopicReply() {
     topic_ = "";
     data_ = "";
   }
+
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new ListenTopicReply();
+  }
+
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private ListenTopicReply(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            topic_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            data_ = s;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return IMProtoc.internal_static_app_ListenTopicReply_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return IMProtoc.internal_static_app_ListenTopicReply_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            ListenTopicReply.class, ListenTopicReply.Builder.class);
+  }
+
   public static final int TOPIC_FIELD_NUMBER = 1;
-  private java.lang.String topic_;
+  private volatile java.lang.Object topic_;
   /**
    * <pre>
    *具体的topic key
    * </pre>
    *
-   * <code>optional string topic = 1;</code>
+   * <code>string topic = 1;</code>
+   * @return The topic.
    */
+  @java.lang.Override
   public java.lang.String getTopic() {
-    return topic_;
+    java.lang.Object ref = topic_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      topic_ = s;
+      return s;
+    }
   }
   /**
    * <pre>
    *具体的topic key
    * </pre>
    *
-   * <code>optional string topic = 1;</code>
+   * <code>string topic = 1;</code>
+   * @return The bytes for topic.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getTopicBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(topic_);
-  }
-  /**
-   * <pre>
-   *具体的topic key
-   * </pre>
-   *
-   * <code>optional string topic = 1;</code>
-   */
-  private void setTopic(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    topic_ = value;
-  }
-  /**
-   * <pre>
-   *具体的topic key
-   * </pre>
-   *
-   * <code>optional string topic = 1;</code>
-   */
-  private void clearTopic() {
-    
-    topic_ = getDefaultInstance().getTopic();
-  }
-  /**
-   * <pre>
-   *具体的topic key
-   * </pre>
-   *
-   * <code>optional string topic = 1;</code>
-   */
-  private void setTopicBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    topic_ = value.toStringUtf8();
+    java.lang.Object ref = topic_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      topic_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   public static final int DATA_FIELD_NUMBER = 2;
-  private java.lang.String data_;
+  private volatile java.lang.Object data_;
   /**
    * <pre>
    *由业务推送过来的json信息，根据业务不同内部的格式不同
    * </pre>
    *
-   * <code>optional string data = 2;</code>
+   * <code>string data = 2;</code>
+   * @return The data.
    */
+  @java.lang.Override
   public java.lang.String getData() {
-    return data_;
+    java.lang.Object ref = data_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      data_ = s;
+      return s;
+    }
   }
   /**
    * <pre>
    *由业务推送过来的json信息，根据业务不同内部的格式不同
    * </pre>
    *
-   * <code>optional string data = 2;</code>
+   * <code>string data = 2;</code>
+   * @return The bytes for data.
    */
+  @java.lang.Override
   public com.google.protobuf.ByteString
       getDataBytes() {
-    return com.google.protobuf.ByteString.copyFromUtf8(data_);
-  }
-  /**
-   * <pre>
-   *由业务推送过来的json信息，根据业务不同内部的格式不同
-   * </pre>
-   *
-   * <code>optional string data = 2;</code>
-   */
-  private void setData(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  
-    data_ = value;
-  }
-  /**
-   * <pre>
-   *由业务推送过来的json信息，根据业务不同内部的格式不同
-   * </pre>
-   *
-   * <code>optional string data = 2;</code>
-   */
-  private void clearData() {
-    
-    data_ = getDefaultInstance().getData();
-  }
-  /**
-   * <pre>
-   *由业务推送过来的json信息，根据业务不同内部的格式不同
-   * </pre>
-   *
-   * <code>optional string data = 2;</code>
-   */
-  private void setDataBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    
-    data_ = value.toStringUtf8();
+    java.lang.Object ref = data_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      data_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!topic_.isEmpty()) {
-      output.writeString(1, getTopic());
+    if (!getTopicBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_);
     }
-    if (!data_.isEmpty()) {
-      output.writeString(2, getData());
+    if (!getDataBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, data_);
     }
+    unknownFields.writeTo(output);
   }
 
+  @java.lang.Override
   public int getSerializedSize() {
-    int size = memoizedSerializedSize;
+    int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
-    if (!topic_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(1, getTopic());
+    if (!getTopicBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, topic_);
     }
-    if (!data_.isEmpty()) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeStringSize(2, getData());
+    if (!getDataBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, data_);
     }
-    memoizedSerializedSize = size;
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
     return size;
   }
 
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof ListenTopicReply)) {
+      return super.equals(obj);
+    }
+    ListenTopicReply other = (ListenTopicReply) obj;
+
+    if (!getTopic()
+        .equals(other.getTopic())) return false;
+    if (!getData()
+        .equals(other.getData())) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + TOPIC_FIELD_NUMBER;
+    hash = (53 * hash) + getTopic().hashCode();
+    hash = (37 * hash) + DATA_FIELD_NUMBER;
+    hash = (53 * hash) + getData().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static ListenTopicReply parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static ListenTopicReply parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static ListenTopicReply parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ListenTopicReply parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ListenTopicReply parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ListenTopicReply parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ListenTopicReply parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ListenTopicReply parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
   public static ListenTopicReply parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
   }
   public static ListenTopicReply parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
   public static ListenTopicReply parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ListenTopicReply parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(ListenTopicReply prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
 
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
   /**
    * Protobuf type {@code app.ListenTopicReply}
    */
   public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<ListenTopicReply, Builder> implements
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:app.ListenTopicReply)
           ListenTopicReplyOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return IMProtoc.internal_static_app_ListenTopicReply_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return IMProtoc.internal_static_app_ListenTopicReply_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ListenTopicReply.class, ListenTopicReply.Builder.class);
+    }
+
     // Construct using com.zj.protocol.grpc.ListenTopicReply.newBuilder()
     private Builder() {
-      super(DEFAULT_INSTANCE);
+      maybeForceBuilderInitialization();
     }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      topic_ = "";
 
+      data_ = "";
+
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return IMProtoc.internal_static_app_ListenTopicReply_descriptor;
+    }
+
+    @java.lang.Override
+    public ListenTopicReply getDefaultInstanceForType() {
+      return ListenTopicReply.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public ListenTopicReply build() {
+      ListenTopicReply result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public ListenTopicReply buildPartial() {
+      ListenTopicReply result = new ListenTopicReply(this);
+      result.topic_ = topic_;
+      result.data_ = data_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof ListenTopicReply) {
+        return mergeFrom((ListenTopicReply)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(ListenTopicReply other) {
+      if (other == ListenTopicReply.getDefaultInstance()) return this;
+      if (!other.getTopic().isEmpty()) {
+        topic_ = other.topic_;
+        onChanged();
+      }
+      if (!other.getData().isEmpty()) {
+        data_ = other.data_;
+        onChanged();
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      ListenTopicReply parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (ListenTopicReply) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+
+    private java.lang.Object topic_ = "";
     /**
      * <pre>
      *具体的topic key
      * </pre>
      *
-     * <code>optional string topic = 1;</code>
+     * <code>string topic = 1;</code>
+     * @return The topic.
      */
     public java.lang.String getTopic() {
-      return instance.getTopic();
+      java.lang.Object ref = topic_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        topic_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      *具体的topic key
      * </pre>
      *
-     * <code>optional string topic = 1;</code>
+     * <code>string topic = 1;</code>
+     * @return The bytes for topic.
      */
     public com.google.protobuf.ByteString
         getTopicBytes() {
-      return instance.getTopicBytes();
+      java.lang.Object ref = topic_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        topic_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
      * <pre>
      *具体的topic key
      * </pre>
      *
-     * <code>optional string topic = 1;</code>
+     * <code>string topic = 1;</code>
+     * @param value The topic to set.
+     * @return This builder for chaining.
      */
     public Builder setTopic(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setTopic(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      topic_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -294,11 +571,13 @@ public  final class ListenTopicReply extends
      *具体的topic key
      * </pre>
      *
-     * <code>optional string topic = 1;</code>
+     * <code>string topic = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearTopic() {
-      copyOnWrite();
-      instance.clearTopic();
+      
+      topic_ = getDefaultInstance().getTopic();
+      onChanged();
       return this;
     }
     /**
@@ -306,47 +585,81 @@ public  final class ListenTopicReply extends
      *具体的topic key
      * </pre>
      *
-     * <code>optional string topic = 1;</code>
+     * <code>string topic = 1;</code>
+     * @param value The bytes for topic to set.
+     * @return This builder for chaining.
      */
     public Builder setTopicBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setTopicBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      topic_ = value;
+      onChanged();
       return this;
     }
 
+    private java.lang.Object data_ = "";
     /**
      * <pre>
      *由业务推送过来的json信息，根据业务不同内部的格式不同
      * </pre>
      *
-     * <code>optional string data = 2;</code>
+     * <code>string data = 2;</code>
+     * @return The data.
      */
     public java.lang.String getData() {
-      return instance.getData();
+      java.lang.Object ref = data_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        data_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
      * <pre>
      *由业务推送过来的json信息，根据业务不同内部的格式不同
      * </pre>
      *
-     * <code>optional string data = 2;</code>
+     * <code>string data = 2;</code>
+     * @return The bytes for data.
      */
     public com.google.protobuf.ByteString
         getDataBytes() {
-      return instance.getDataBytes();
+      java.lang.Object ref = data_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        data_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
     /**
      * <pre>
      *由业务推送过来的json信息，根据业务不同内部的格式不同
      * </pre>
      *
-     * <code>optional string data = 2;</code>
+     * <code>string data = 2;</code>
+     * @param value The data to set.
+     * @return This builder for chaining.
      */
     public Builder setData(
         java.lang.String value) {
-      copyOnWrite();
-      instance.setData(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      data_ = value;
+      onChanged();
       return this;
     }
     /**
@@ -354,11 +667,13 @@ public  final class ListenTopicReply extends
      *由业务推送过来的json信息，根据业务不同内部的格式不同
      * </pre>
      *
-     * <code>optional string data = 2;</code>
+     * <code>string data = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearData() {
-      copyOnWrite();
-      instance.clearData();
+      
+      data_ = getDefaultInstance().getData();
+      onChanged();
       return this;
     }
     /**
@@ -366,119 +681,71 @@ public  final class ListenTopicReply extends
      *由业务推送过来的json信息，根据业务不同内部的格式不同
      * </pre>
      *
-     * <code>optional string data = 2;</code>
+     * <code>string data = 2;</code>
+     * @param value The bytes for data to set.
+     * @return This builder for chaining.
      */
     public Builder setDataBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.setDataBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      data_ = value;
+      onChanged();
       return this;
     }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
+    }
+
+    @java.lang.Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
+    }
+
 
     // @@protoc_insertion_point(builder_scope:app.ListenTopicReply)
   }
-  protected final Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      Object arg0, Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new ListenTopicReply();
-      }
-      case IS_INITIALIZED: {
-        return DEFAULT_INSTANCE;
-      }
-      case MAKE_IMMUTABLE: {
-        return null;
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case VISIT: {
-        Visitor visitor = (Visitor) arg0;
-        ListenTopicReply other = (ListenTopicReply) arg1;
-        topic_ = visitor.visitString(!topic_.isEmpty(), topic_,
-            !other.topic_.isEmpty(), other.topic_);
-        data_ = visitor.visitString(!data_.isEmpty(), data_,
-            !other.data_.isEmpty(), other.data_);
-        if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-            .INSTANCE) {
-        }
-        return this;
-      }
-      case MERGE_FROM_STREAM: {
-        com.google.protobuf.CodedInputStream input =
-            (com.google.protobuf.CodedInputStream) arg0;
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-            (com.google.protobuf.ExtensionRegistryLite) arg1;
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!input.skipField(tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 10: {
-                String s = input.readStringRequireUtf8();
-
-                topic_ = s;
-                break;
-              }
-              case 18: {
-                String s = input.readStringRequireUtf8();
-
-                data_ = s;
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw new RuntimeException(e.setUnfinishedMessage(this));
-        } catch (java.io.IOException e) {
-          throw new RuntimeException(
-              new com.google.protobuf.InvalidProtocolBufferException(
-                  e.getMessage()).setUnfinishedMessage(this));
-        } finally {
-        }
-      }
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        if (PARSER == null) {    synchronized (ListenTopicReply.class) {
-            if (PARSER == null) {
-              PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-            }
-          }
-        }
-        return PARSER;
-      }
-    }
-    throw new UnsupportedOperationException();
-  }
-
 
   // @@protoc_insertion_point(class_scope:app.ListenTopicReply)
   private static final ListenTopicReply DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new ListenTopicReply();
-    DEFAULT_INSTANCE.makeImmutable();
   }
 
   public static ListenTopicReply getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static volatile com.google.protobuf.Parser<ListenTopicReply> PARSER;
+  private static final com.google.protobuf.Parser<ListenTopicReply>
+      PARSER = new com.google.protobuf.AbstractParser<ListenTopicReply>() {
+    @java.lang.Override
+    public ListenTopicReply parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new ListenTopicReply(input, extensionRegistry);
+    }
+  };
 
   public static com.google.protobuf.Parser<ListenTopicReply> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
+    return PARSER;
   }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<ListenTopicReply> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public ListenTopicReply getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
 

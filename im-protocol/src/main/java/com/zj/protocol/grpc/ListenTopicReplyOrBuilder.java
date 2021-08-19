@@ -5,14 +5,15 @@ package com.zj.protocol.grpc;
 
 public interface ListenTopicReplyOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.ListenTopicReply)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
    * <pre>
    *具体的topic key
    * </pre>
    *
-   * <code>optional string topic = 1;</code>
+   * <code>string topic = 1;</code>
+   * @return The topic.
    */
   java.lang.String getTopic();
   /**
@@ -20,7 +21,8 @@ public interface ListenTopicReplyOrBuilder extends
    *具体的topic key
    * </pre>
    *
-   * <code>optional string topic = 1;</code>
+   * <code>string topic = 1;</code>
+   * @return The bytes for topic.
    */
   com.google.protobuf.ByteString
       getTopicBytes();
@@ -30,7 +32,8 @@ public interface ListenTopicReplyOrBuilder extends
    *由业务推送过来的json信息，根据业务不同内部的格式不同
    * </pre>
    *
-   * <code>optional string data = 2;</code>
+   * <code>string data = 2;</code>
+   * @return The data.
    */
   java.lang.String getData();
   /**
@@ -38,7 +41,8 @@ public interface ListenTopicReplyOrBuilder extends
    *由业务推送过来的json信息，根据业务不同内部的格式不同
    * </pre>
    *
-   * <code>optional string data = 2;</code>
+   * <code>string data = 2;</code>
+   * @return The bytes for data.
    */
   com.google.protobuf.ByteString
       getDataBytes();

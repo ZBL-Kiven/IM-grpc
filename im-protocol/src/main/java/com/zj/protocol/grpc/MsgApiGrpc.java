@@ -1,22 +1,11 @@
 package com.zj.protocol.grpc;
 
 import static io.grpc.MethodDescriptor.generateFullMethodName;
-import static io.grpc.stub.ClientCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncServerStreamingCall;
-import static io.grpc.stub.ClientCalls.asyncUnaryCall;
-import static io.grpc.stub.ClientCalls.blockingServerStreamingCall;
-import static io.grpc.stub.ClientCalls.blockingUnaryCall;
-import static io.grpc.stub.ClientCalls.futureUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncBidiStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncServerStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnaryCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall;
-import static io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall;
 
 /**
  */
 @javax.annotation.Generated(
-    value = "by gRPC proto compiler (version 1.19.0)",
+    value = "by gRPC proto compiler (version 1.39.0)",
     comments = "Source: msg_api.proto")
 public final class MsgApiGrpc {
 
@@ -37,21 +26,21 @@ public final class MsgApiGrpc {
     if ((getListenTopicDataMethod = MsgApiGrpc.getListenTopicDataMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getListenTopicDataMethod = MsgApiGrpc.getListenTopicDataMethod) == null) {
-          MsgApiGrpc.getListenTopicDataMethod = getListenTopicDataMethod = 
+          MsgApiGrpc.getListenTopicDataMethod = getListenTopicDataMethod =
               io.grpc.MethodDescriptor.<ListenTopicReq, ListenTopicReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "ListenTopicData"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "ListenTopicData"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   ListenTopicReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   ListenTopicReply.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("ListenTopicData"))
+              .build();
         }
-     }
-     return getListenTopicDataMethod;
+      }
+    }
+    return getListenTopicDataMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<GetImMessageReq, ImMessage> getGetImMessageMethod;
@@ -66,21 +55,21 @@ public final class MsgApiGrpc {
     if ((getGetImMessageMethod = MsgApiGrpc.getGetImMessageMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getGetImMessageMethod = MsgApiGrpc.getGetImMessageMethod) == null) {
-          MsgApiGrpc.getGetImMessageMethod = getGetImMessageMethod = 
+          MsgApiGrpc.getGetImMessageMethod = getGetImMessageMethod =
               io.grpc.MethodDescriptor.<GetImMessageReq, ImMessage>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "GetImMessage"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetImMessage"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   GetImMessageReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   ImMessage.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetImMessage"))
+              .build();
         }
-     }
-     return getGetImMessageMethod;
+      }
+    }
+    return getGetImMessageMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<LeaveImGroupReq, LeaveImGroupReply> getLeaveImGroupMethod;
@@ -95,21 +84,21 @@ public final class MsgApiGrpc {
     if ((getLeaveImGroupMethod = MsgApiGrpc.getLeaveImGroupMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getLeaveImGroupMethod = MsgApiGrpc.getLeaveImGroupMethod) == null) {
-          MsgApiGrpc.getLeaveImGroupMethod = getLeaveImGroupMethod = 
+          MsgApiGrpc.getLeaveImGroupMethod = getLeaveImGroupMethod =
               io.grpc.MethodDescriptor.<LeaveImGroupReq, LeaveImGroupReply>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "LeaveImGroup"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "LeaveImGroup"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   LeaveImGroupReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   LeaveImGroupReply.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("LeaveImGroup"))
+              .build();
         }
-     }
-     return getLeaveImGroupMethod;
+      }
+    }
+    return getLeaveImGroupMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetGroupHistoryMessageMethod;
@@ -124,21 +113,21 @@ public final class MsgApiGrpc {
     if ((getGetGroupHistoryMessageMethod = MsgApiGrpc.getGetGroupHistoryMessageMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getGetGroupHistoryMessageMethod = MsgApiGrpc.getGetGroupHistoryMessageMethod) == null) {
-          MsgApiGrpc.getGetGroupHistoryMessageMethod = getGetGroupHistoryMessageMethod = 
+          MsgApiGrpc.getGetGroupHistoryMessageMethod = getGetGroupHistoryMessageMethod =
               io.grpc.MethodDescriptor.<GetImHistoryMsgReq, BatchMsg>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "GetGroupHistoryMessage"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetGroupHistoryMessage"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   GetImHistoryMsgReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   BatchMsg.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetGroupHistoryMessage"))
+              .build();
         }
-     }
-     return getGetGroupHistoryMessageMethod;
+      }
+    }
+    return getGetGroupHistoryMessageMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetChatHistoryMessageMethod;
@@ -153,21 +142,21 @@ public final class MsgApiGrpc {
     if ((getGetChatHistoryMessageMethod = MsgApiGrpc.getGetChatHistoryMessageMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getGetChatHistoryMessageMethod = MsgApiGrpc.getGetChatHistoryMessageMethod) == null) {
-          MsgApiGrpc.getGetChatHistoryMessageMethod = getGetChatHistoryMessageMethod = 
+          MsgApiGrpc.getGetChatHistoryMessageMethod = getGetChatHistoryMessageMethod =
               io.grpc.MethodDescriptor.<GetImHistoryMsgReq, BatchMsg>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "GetChatHistoryMessage"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetChatHistoryMessage"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   GetImHistoryMsgReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   BatchMsg.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetChatHistoryMessage"))
+              .build();
         }
-     }
-     return getGetChatHistoryMessageMethod;
+      }
+    }
+    return getGetChatHistoryMessageMethod;
   }
 
   private static volatile io.grpc.MethodDescriptor<PingReq, Pong> getPingMethod;
@@ -182,28 +171,35 @@ public final class MsgApiGrpc {
     if ((getPingMethod = MsgApiGrpc.getPingMethod) == null) {
       synchronized (MsgApiGrpc.class) {
         if ((getPingMethod = MsgApiGrpc.getPingMethod) == null) {
-          MsgApiGrpc.getPingMethod = getPingMethod = 
+          MsgApiGrpc.getPingMethod = getPingMethod =
               io.grpc.MethodDescriptor.<PingReq, Pong>newBuilder()
               .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(
-                  "app.MsgApi", "Ping"))
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "Ping"))
               .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   PingReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.lite.ProtoLiteUtils.marshaller(
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
                   Pong.getDefaultInstance()))
-                  .build();
-          }
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("Ping"))
+              .build();
         }
-     }
-     return getPingMethod;
+      }
+    }
+    return getPingMethod;
   }
 
   /**
    * Creates a new async stub that supports all call types for the service
    */
   public static MsgApiStub newStub(io.grpc.Channel channel) {
-    return new MsgApiStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<MsgApiStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<MsgApiStub>() {
+        @java.lang.Override
+        public MsgApiStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new MsgApiStub(channel, callOptions);
+        }
+      };
+    return MsgApiStub.newStub(factory, channel);
   }
 
   /**
@@ -211,7 +207,14 @@ public final class MsgApiGrpc {
    */
   public static MsgApiBlockingStub newBlockingStub(
       io.grpc.Channel channel) {
-    return new MsgApiBlockingStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<MsgApiBlockingStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<MsgApiBlockingStub>() {
+        @java.lang.Override
+        public MsgApiBlockingStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new MsgApiBlockingStub(channel, callOptions);
+        }
+      };
+    return MsgApiBlockingStub.newStub(factory, channel);
   }
 
   /**
@@ -219,7 +222,14 @@ public final class MsgApiGrpc {
    */
   public static MsgApiFutureStub newFutureStub(
       io.grpc.Channel channel) {
-    return new MsgApiFutureStub(channel);
+    io.grpc.stub.AbstractStub.StubFactory<MsgApiFutureStub> factory =
+      new io.grpc.stub.AbstractStub.StubFactory<MsgApiFutureStub>() {
+        @java.lang.Override
+        public MsgApiFutureStub newStub(io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
+          return new MsgApiFutureStub(channel, callOptions);
+        }
+      };
+    return MsgApiFutureStub.newStub(factory, channel);
   }
 
   /**
@@ -233,7 +243,7 @@ public final class MsgApiGrpc {
      */
     public io.grpc.stub.StreamObserver<ListenTopicReq> listenTopicData(
         io.grpc.stub.StreamObserver<ListenTopicReply> responseObserver) {
-      return asyncUnimplementedStreamingCall(getListenTopicDataMethod(), responseObserver);
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getListenTopicDataMethod(), responseObserver);
     }
 
     /**
@@ -243,7 +253,7 @@ public final class MsgApiGrpc {
      */
     public void getImMessage(GetImMessageReq request,
                              io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetImMessageMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetImMessageMethod(), responseObserver);
     }
 
     /**
@@ -253,7 +263,7 @@ public final class MsgApiGrpc {
      */
     public void leaveImGroup(LeaveImGroupReq request,
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
-      asyncUnimplementedUnaryCall(getLeaveImGroupMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getLeaveImGroupMethod(), responseObserver);
     }
 
     /**
@@ -263,7 +273,7 @@ public final class MsgApiGrpc {
      */
     public void getGroupHistoryMessage(GetImHistoryMsgReq request,
                                        io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetGroupHistoryMessageMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetGroupHistoryMessageMethod(), responseObserver);
     }
 
     /**
@@ -273,46 +283,46 @@ public final class MsgApiGrpc {
      */
     public void getChatHistoryMessage(GetImHistoryMsgReq request,
                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      asyncUnimplementedUnaryCall(getGetChatHistoryMessageMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetChatHistoryMessageMethod(), responseObserver);
     }
 
     /**
      */
     public void ping(PingReq request,
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
-      asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
     }
 
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
             getListenTopicDataMethod(),
-            asyncBidiStreamingCall(
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
               new MethodHandlers<ListenTopicReq, ListenTopicReply>(
                   this, METHODID_LISTEN_TOPIC_DATA)))
           .addMethod(
             getGetImMessageMethod(),
-            asyncServerStreamingCall(
+            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
               new MethodHandlers<GetImMessageReq, ImMessage>(
                   this, METHODID_GET_IM_MESSAGE)))
           .addMethod(
             getLeaveImGroupMethod(),
-            asyncUnaryCall(
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<LeaveImGroupReq, LeaveImGroupReply>(
                   this, METHODID_LEAVE_IM_GROUP)))
           .addMethod(
             getGetGroupHistoryMessageMethod(),
-            asyncUnaryCall(
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<GetImHistoryMsgReq, BatchMsg>(
                   this, METHODID_GET_GROUP_HISTORY_MESSAGE)))
           .addMethod(
             getGetChatHistoryMessageMethod(),
-            asyncUnaryCall(
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<GetImHistoryMsgReq, BatchMsg>(
                   this, METHODID_GET_CHAT_HISTORY_MESSAGE)))
           .addMethod(
             getPingMethod(),
-            asyncUnaryCall(
+            io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<PingReq, Pong>(
                   this, METHODID_PING)))
           .build();
@@ -321,19 +331,15 @@ public final class MsgApiGrpc {
 
   /**
    */
-  public static final class MsgApiStub extends io.grpc.stub.AbstractStub<MsgApiStub> {
-    private MsgApiStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private MsgApiStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class MsgApiStub extends io.grpc.stub.AbstractAsyncStub<MsgApiStub> {
+    private MsgApiStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected MsgApiStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected MsgApiStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new MsgApiStub(channel, callOptions);
     }
 
@@ -344,7 +350,7 @@ public final class MsgApiGrpc {
      */
     public io.grpc.stub.StreamObserver<ListenTopicReq> listenTopicData(
         io.grpc.stub.StreamObserver<ListenTopicReply> responseObserver) {
-      return asyncBidiStreamingCall(
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getListenTopicDataMethod(), getCallOptions()), responseObserver);
     }
 
@@ -355,7 +361,7 @@ public final class MsgApiGrpc {
      */
     public void getImMessage(GetImMessageReq request,
                              io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
-      asyncServerStreamingCall(
+      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
           getChannel().newCall(getGetImMessageMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -366,7 +372,7 @@ public final class MsgApiGrpc {
      */
     public void leaveImGroup(LeaveImGroupReq request,
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getLeaveImGroupMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -377,7 +383,7 @@ public final class MsgApiGrpc {
      */
     public void getGroupHistoryMessage(GetImHistoryMsgReq request,
                                        io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetGroupHistoryMessageMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -388,7 +394,7 @@ public final class MsgApiGrpc {
      */
     public void getChatHistoryMessage(GetImHistoryMsgReq request,
                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getGetChatHistoryMessageMethod(), getCallOptions()), request, responseObserver);
     }
 
@@ -396,26 +402,22 @@ public final class MsgApiGrpc {
      */
     public void ping(PingReq request,
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
-      asyncUnaryCall(
+      io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getPingMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
   /**
    */
-  public static final class MsgApiBlockingStub extends io.grpc.stub.AbstractStub<MsgApiBlockingStub> {
-    private MsgApiBlockingStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private MsgApiBlockingStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class MsgApiBlockingStub extends io.grpc.stub.AbstractBlockingStub<MsgApiBlockingStub> {
+    private MsgApiBlockingStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected MsgApiBlockingStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected MsgApiBlockingStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new MsgApiBlockingStub(channel, callOptions);
     }
 
@@ -426,7 +428,7 @@ public final class MsgApiGrpc {
      */
     public java.util.Iterator<ImMessage> getImMessage(
         GetImMessageReq request) {
-      return blockingServerStreamingCall(
+      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
           getChannel(), getGetImMessageMethod(), getCallOptions(), request);
     }
 
@@ -436,7 +438,7 @@ public final class MsgApiGrpc {
      * </pre>
      */
     public LeaveImGroupReply leaveImGroup(LeaveImGroupReq request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getLeaveImGroupMethod(), getCallOptions(), request);
     }
 
@@ -446,7 +448,7 @@ public final class MsgApiGrpc {
      * </pre>
      */
     public BatchMsg getGroupHistoryMessage(GetImHistoryMsgReq request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetGroupHistoryMessageMethod(), getCallOptions(), request);
     }
 
@@ -456,33 +458,29 @@ public final class MsgApiGrpc {
      * </pre>
      */
     public BatchMsg getChatHistoryMessage(GetImHistoryMsgReq request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getGetChatHistoryMessageMethod(), getCallOptions(), request);
     }
 
     /**
      */
     public Pong ping(PingReq request) {
-      return blockingUnaryCall(
+      return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getPingMethod(), getCallOptions(), request);
     }
   }
 
   /**
    */
-  public static final class MsgApiFutureStub extends io.grpc.stub.AbstractStub<MsgApiFutureStub> {
-    private MsgApiFutureStub(io.grpc.Channel channel) {
-      super(channel);
-    }
-
-    private MsgApiFutureStub(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+  public static final class MsgApiFutureStub extends io.grpc.stub.AbstractFutureStub<MsgApiFutureStub> {
+    private MsgApiFutureStub(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       super(channel, callOptions);
     }
 
     @java.lang.Override
-    protected MsgApiFutureStub build(io.grpc.Channel channel,
-        io.grpc.CallOptions callOptions) {
+    protected MsgApiFutureStub build(
+        io.grpc.Channel channel, io.grpc.CallOptions callOptions) {
       return new MsgApiFutureStub(channel, callOptions);
     }
 
@@ -493,7 +491,7 @@ public final class MsgApiGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<LeaveImGroupReply> leaveImGroup(
         LeaveImGroupReq request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getLeaveImGroupMethod(), getCallOptions()), request);
     }
 
@@ -504,7 +502,7 @@ public final class MsgApiGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getGroupHistoryMessage(
         GetImHistoryMsgReq request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetGroupHistoryMessageMethod(), getCallOptions()), request);
     }
 
@@ -515,7 +513,7 @@ public final class MsgApiGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getChatHistoryMessage(
         GetImHistoryMsgReq request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetChatHistoryMessageMethod(), getCallOptions()), request);
     }
 
@@ -523,7 +521,7 @@ public final class MsgApiGrpc {
      */
     public com.google.common.util.concurrent.ListenableFuture<Pong> ping(
         PingReq request) {
-      return futureUnaryCall(
+      return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getPingMethod(), getCallOptions()), request);
     }
   }
@@ -591,6 +589,41 @@ public final class MsgApiGrpc {
     }
   }
 
+  private static abstract class MsgApiBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoFileDescriptorSupplier, io.grpc.protobuf.ProtoServiceDescriptorSupplier {
+    MsgApiBaseDescriptorSupplier() {}
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.FileDescriptor getFileDescriptor() {
+      return IMProtoc.getDescriptor();
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.ServiceDescriptor getServiceDescriptor() {
+      return getFileDescriptor().findServiceByName("MsgApi");
+    }
+  }
+
+  private static final class MsgApiFileDescriptorSupplier
+      extends MsgApiBaseDescriptorSupplier {
+    MsgApiFileDescriptorSupplier() {}
+  }
+
+  private static final class MsgApiMethodDescriptorSupplier
+      extends MsgApiBaseDescriptorSupplier
+      implements io.grpc.protobuf.ProtoMethodDescriptorSupplier {
+    private final String methodName;
+
+    MsgApiMethodDescriptorSupplier(String methodName) {
+      this.methodName = methodName;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.MethodDescriptor getMethodDescriptor() {
+      return getServiceDescriptor().findMethodByName(methodName);
+    }
+  }
+
   private static volatile io.grpc.ServiceDescriptor serviceDescriptor;
 
   public static io.grpc.ServiceDescriptor getServiceDescriptor() {
@@ -600,6 +633,7 @@ public final class MsgApiGrpc {
         result = serviceDescriptor;
         if (result == null) {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
+              .setSchemaDescriptor(new MsgApiFileDescriptorSupplier())
               .addMethod(getListenTopicDataMethod())
               .addMethod(getGetImMessageMethod())
               .addMethod(getLeaveImGroupMethod())

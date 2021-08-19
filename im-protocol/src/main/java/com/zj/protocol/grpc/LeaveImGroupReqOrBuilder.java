@@ -5,10 +5,11 @@ package com.zj.protocol.grpc;
 
 public interface LeaveImGroupReqOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.LeaveImGroupReq)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional uint64 groupId = 1;</code>
+   * <code>uint64 groupId = 1;</code>
+   * @return The groupId.
    */
   long getGroupId();
 }

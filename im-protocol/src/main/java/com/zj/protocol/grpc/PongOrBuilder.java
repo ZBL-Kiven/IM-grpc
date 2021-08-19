@@ -5,5 +5,5 @@ package com.zj.protocol.grpc;
 
 public interface PongOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.Pong)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 }

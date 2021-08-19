@@ -1,12 +1,20 @@
 package com.zj.imtest.core.impl
 
 import android.util.Log
+import com.zj.api.BaseApi
+import com.zj.api.interceptor.HeaderProvider
+import com.zj.api.interceptor.UrlProvider
+import com.zj.imtest.core.bean.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.imtest.core.Constance
+import com.zj.imtest.core.bean.SendMessageRespEn
+import com.zj.imtest.core.sender.SenderApi
 import com.zj.protocol.grpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
+import retrofit2.HttpException
+import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 
 class ServerHubImpl : ServerImplGrpc() {
@@ -14,7 +22,7 @@ class ServerHubImpl : ServerImplGrpc() {
     private var subscribeTopics = mutableListOf<String>()
     private var requestStreamObserver: StreamObserver<ListenTopicReq>? = null
 
-    override fun send(params: Any?, callId: String, callBack: SendingCallBack): Long {
+    override fun send(params: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
         var sendSize = 0L
         val called = when (callId) {
             Constance.CALL_ID_SUBSCRIBE_REMOVE_TOPIC, Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC -> {
@@ -36,15 +44,13 @@ class ServerHubImpl : ServerImplGrpc() {
             Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES, Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES -> {
                 getOfflineMessage(callId, params)
             }
-
             else -> null
         }
         if (called == null) {
-            sendSize = sendMsg(params, callBack)
+            sendSize = sendMsg(params, callId, callBack)
         } else {
-            callBack.result(true, null)
+            callBack.result(true, null, null)
         }
-
         return sendSize
     }
 
@@ -71,9 +77,30 @@ class ServerHubImpl : ServerImplGrpc() {
     /**
      * send msg to server
      * */
-    private fun sendMsg(d: Any?, callBack: SendingCallBack): Long {
-        callBack.result(true, null)
-        return 1
+    private fun sendMsg(d: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
+        if (d !is SendMessageReqEn) {
+            callBack.result(false, null, IllegalArgumentException("the send msg type is not supported except SendMessageReqEn.class"))
+            return 0
+        }
+        if (d.clientMsgId != callId) d.clientMsgId = callId
+        val baseUrl = object : UrlProvider() {
+            override fun url(): String {
+                return Constance.getIMHost()
+            }
+        }
+        val header = object : HeaderProvider {
+            override fun headers(): Map<out String, String> {
+                return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${Constance.getUserId()}", "token" to Constance.getToken())
+            }
+        }
+        BaseApi.create<SenderApi>().baseUrl(baseUrl).header(header).build().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
+            var isOk = isSuccess
+            if (isSuccess && data != null) {
+                isOk = data.success && !data.black
+            }
+            callBack.result(isOk, data, throwable)
+        }
+        return d.uploadDataTotalByte + d.content.toString().toByteArray().size
     }
 
     /**

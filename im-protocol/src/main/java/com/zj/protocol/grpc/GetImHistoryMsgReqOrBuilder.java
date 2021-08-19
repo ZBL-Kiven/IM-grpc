@@ -5,15 +5,17 @@ package com.zj.protocol.grpc;
 
 public interface GetImHistoryMsgReqOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.GetImHistoryMsgReq)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional uint64 groupId = 1;</code>
+   * <code>uint64 groupId = 1;</code>
+   * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <code>optional uint64 msgId = 2;</code>
+   * <code>uint64 msgId = 2;</code>
+   * @return The msgId.
    */
   long getMsgId();
 
@@ -22,7 +24,8 @@ public interface GetImHistoryMsgReqOrBuilder extends
    *大V id
    * </pre>
    *
-   * <code>optional uint64 ownerId = 3;</code>
+   * <code>uint64 ownerId = 3;</code>
+   * @return The ownerId.
    */
   long getOwnerId();
 }

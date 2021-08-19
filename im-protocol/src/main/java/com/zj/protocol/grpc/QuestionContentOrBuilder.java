@@ -5,34 +5,50 @@ package com.zj.protocol.grpc;
 
 public interface QuestionContentOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.QuestionContent)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional .app.TextContent textContent = 1;</code>
+   * <code>.app.TextContent textContent = 1;</code>
+   * @return Whether the textContent field is set.
    */
   boolean hasTextContent();
   /**
-   * <code>optional .app.TextContent textContent = 1;</code>
+   * <code>.app.TextContent textContent = 1;</code>
+   * @return The textContent.
    */
   TextContent getTextContent();
+  /**
+   * <code>.app.TextContent textContent = 1;</code>
+   */
+  TextContentOrBuilder getTextContentOrBuilder();
 
   /**
-   * <code>optional uint32 questionStatus = 2;</code>
+   * <code>uint32 questionStatus = 2;</code>
+   * @return The questionStatus.
    */
   int getQuestionStatus();
 
   /**
-   * <code>optional uint64 questionId = 3;</code>
+   * <code>uint64 questionId = 3;</code>
+   * @return The questionId.
    */
   long getQuestionId();
 
   /**
-   * <code>optional uint64 spark = 4;</code>
+   * <code>uint64 spark = 4;</code>
+   * @return The spark.
    */
   long getSpark();
 
   /**
-   * <code>optional bool isPublic = 5;</code>
+   * <code>uint64 diamond = 5;</code>
+   * @return The diamond.
+   */
+  long getDiamond();
+
+  /**
+   * <code>bool isPublic = 6;</code>
+   * @return The isPublic.
    */
   boolean getIsPublic();
 }

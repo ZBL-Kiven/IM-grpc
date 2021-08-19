@@ -5,14 +5,16 @@ package com.zj.protocol.grpc;
 
 public interface TextContentOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.TextContent)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional string text = 1;</code>
+   * <code>string text = 1;</code>
+   * @return The text.
    */
   java.lang.String getText();
   /**
-   * <code>optional string text = 1;</code>
+   * <code>string text = 1;</code>
+   * @return The bytes for text.
    */
   com.google.protobuf.ByteString
       getTextBytes();

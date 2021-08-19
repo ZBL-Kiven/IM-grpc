@@ -3,14 +3,20 @@ package com.zj.database.entity
 import androidx.room.Entity
 import androidx.room.TypeConverters
 import com.zj.database.converter.*
+import java.util.*
 
-
-@Entity(primaryKeys = ["msgId", "clientMsgId"], tableName = "messages")
+@Entity(primaryKeys = ["serverMsgId", "clientMsgId"], tableName = "messages")
 class MessageInfoEntity {
+
+    /**
+     * 客户端消息id
+     */
+    var clientMsgId: String = UUID.randomUUID().toString()
+
     /**
      * 群组id
      */
-    var groupId: Long? = null
+    var groupId: Long = -1
 
     /**
      * 群主id
@@ -25,12 +31,7 @@ class MessageInfoEntity {
     /**
      * 信息id
      */
-    var msgId: Long = 0
-
-    /**
-     * 客户端消息id
-     */
-    var clientMsgId: String = ""
+    var msgId: Long = -1
 
     /**
      * 消息类型 text/img/audio/video/question/cc_video
@@ -87,6 +88,18 @@ class MessageInfoEntity {
         set(value) {
             replyId = value?.ownerId;field = value
         }
+
+    //----------------------------------------------------------------- 本地辅助字段 ⬇️--------------------------------------------------------------
+
+    /**
+     * 合并服务端消息 id
+     * */
+    val serverMsgId: String; get() = "$groupId.$msgId"
+
+    /**
+     * 标记存储类型的 id
+     * */
+    var saveInfoId: String? = ""
 
     /**
      * 本地状态，是否发送成功 , 0 无状态，比如收到新消息

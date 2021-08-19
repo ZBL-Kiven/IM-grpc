@@ -5,7 +5,7 @@ package com.zj.protocol.grpc;
 
 public interface BatchMsgOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.BatchMsg)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
    * <code>repeated .app.ImMessage imMessage = 1;</code>
@@ -20,4 +20,14 @@ public interface BatchMsgOrBuilder extends
    * <code>repeated .app.ImMessage imMessage = 1;</code>
    */
   int getImMessageCount();
+  /**
+   * <code>repeated .app.ImMessage imMessage = 1;</code>
+   */
+  java.util.List<? extends ImMessageOrBuilder>
+      getImMessageOrBuilderList();
+  /**
+   * <code>repeated .app.ImMessage imMessage = 1;</code>
+   */
+  ImMessageOrBuilder getImMessageOrBuilder(
+      int index);
 }

@@ -14,11 +14,6 @@ import io.grpc.stub.StreamObserver
 
 abstract class ServerImplGrpc : ServerHub<Any?>() {
 
-    companion object {
-        const val GRPC_HOST = "172.16.1.201"
-        const val GRPC_PORT = 50003
-    }
-
     private var channel: Grpc.CachedChannel? = null
     private var defaultHeader: Map<String, String>? = null
     private var pingHasNotResponseCount = 0
@@ -40,7 +35,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     override fun init(context: Application?) {
         super.init(context)
-        defaultHeader = mapOf("token" to "ZDU2OTk4ODctMGI1Yi00MjdmLWFhYTUtMTU1ODMxOWY3ZmVh", "userid" to "120539")
+        defaultHeader = mapOf("token" to Constance.getToken(), "userid" to "${Constance.getUserId()}")
         conn()
     }
 
@@ -58,7 +53,8 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
         try {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
-                channel = Grpc.get(GRPC_HOST, GRPC_PORT).defaultHeader(defaultHeader)
+                val url = Constance.getGrpcAddress()
+                channel = Grpc.get(url.host, url.port).defaultHeader(defaultHeader)
             }
             onConnection()
         } catch (e: Exception) {

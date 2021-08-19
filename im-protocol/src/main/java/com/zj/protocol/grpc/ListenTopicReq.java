@@ -6,19 +6,106 @@ package com.zj.protocol.grpc;
 /**
  * Protobuf type {@code app.ListenTopicReq}
  */
-public  final class ListenTopicReq extends
-    com.google.protobuf.GeneratedMessageLite<
-        ListenTopicReq, ListenTopicReq.Builder> implements
+public final class ListenTopicReq extends
+    com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:app.ListenTopicReq)
     ListenTopicReqOrBuilder {
-  private ListenTopicReq() {
-    topic_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
+private static final long serialVersionUID = 0L;
+  // Use ListenTopicReq.newBuilder() to construct.
+  private ListenTopicReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
   }
+  private ListenTopicReq() {
+    topic_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    method_ = 0;
+  }
+
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new ListenTopicReq();
+  }
+
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private ListenTopicReq(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    int mutable_bitField0_ = 0;
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              topic_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            topic_.add(s);
+            break;
+          }
+          case 16: {
+            int rawValue = input.readEnum();
+
+            method_ = rawValue;
+            break;
+          }
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        topic_ = topic_.getUnmodifiableView();
+      }
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return IMProtoc.internal_static_app_ListenTopicReq_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return IMProtoc.internal_static_app_ListenTopicReq_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            ListenTopicReq.class, ListenTopicReq.Builder.class);
+  }
+
   /**
    * Protobuf enum {@code app.ListenTopicReq.Method}
    */
   public enum Method
-      implements com.google.protobuf.Internal.EnumLite {
+      implements com.google.protobuf.ProtocolMessageEnum {
     /**
      * <code>Subscribe = 0;</code>
      */
@@ -41,10 +128,16 @@ public  final class ListenTopicReq extends
 
 
     public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
       return value;
     }
 
     /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
      * @deprecated Use {@link #forNumber(int)} instead.
      */
     @java.lang.Deprecated
@@ -52,6 +145,10 @@ public  final class ListenTopicReq extends
       return forNumber(value);
     }
 
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
     public static Method forNumber(int value) {
       switch (value) {
         case 0: return Subscribe;
@@ -72,6 +169,37 @@ public  final class ListenTopicReq extends
             }
           };
 
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return ListenTopicReq.getDescriptor().getEnumTypes().get(0);
+    }
+
+    private static final Method[] VALUES = values();
+
+    public static Method valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
     private final int value;
 
     private Method(int value) {
@@ -81,17 +209,18 @@ public  final class ListenTopicReq extends
     // @@protoc_insertion_point(enum_scope:app.ListenTopicReq.Method)
   }
 
-  private int bitField0_;
   public static final int TOPIC_FIELD_NUMBER = 1;
-  private com.google.protobuf.Internal.ProtobufList<String> topic_;
+  private com.google.protobuf.LazyStringList topic_;
   /**
    * <pre>
    *具体的topic key ，可多值
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @return A list containing the topic.
    */
-  public java.util.List<String> getTopicList() {
+  public com.google.protobuf.ProtocolStringList
+      getTopicList() {
     return topic_;
   }
   /**
@@ -100,6 +229,7 @@ public  final class ListenTopicReq extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @return The count of topic.
    */
   public int getTopicCount() {
     return topic_.size();
@@ -110,6 +240,8 @@ public  final class ListenTopicReq extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @param index The index of the element to return.
+   * @return The topic at the given index.
    */
   public java.lang.String getTopic(int index) {
     return topic_.get(index);
@@ -120,147 +252,66 @@ public  final class ListenTopicReq extends
    * </pre>
    *
    * <code>repeated string topic = 1;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the topic at the given index.
    */
   public com.google.protobuf.ByteString
       getTopicBytes(int index) {
-    return com.google.protobuf.ByteString.copyFromUtf8(
-        topic_.get(index));
-  }
-  private void ensureTopicIsMutable() {
-    if (!topic_.isModifiable()) {
-      topic_ =
-          com.google.protobuf.GeneratedMessageLite.mutableCopy(topic_);
-     }
-  }
-  /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
-   * <code>repeated string topic = 1;</code>
-   */
-  private void setTopic(
-      int index, java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTopicIsMutable();
-    topic_.set(index, value);
-  }
-  /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
-   * <code>repeated string topic = 1;</code>
-   */
-  private void addTopic(
-      java.lang.String value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  ensureTopicIsMutable();
-    topic_.add(value);
-  }
-  /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
-   * <code>repeated string topic = 1;</code>
-   */
-  private void addAllTopic(
-      java.lang.Iterable<java.lang.String> values) {
-    ensureTopicIsMutable();
-    com.google.protobuf.AbstractMessageLite.addAll(
-        values, topic_);
-  }
-  /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
-   * <code>repeated string topic = 1;</code>
-   */
-  private void clearTopic() {
-    topic_ = com.google.protobuf.GeneratedMessageLite.emptyProtobufList();
-  }
-  /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
-   * <code>repeated string topic = 1;</code>
-   */
-  private void addTopicBytes(
-      com.google.protobuf.ByteString value) {
-    if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-    ensureTopicIsMutable();
-    topic_.add(value.toStringUtf8());
+    return topic_.getByteString(index);
   }
 
   public static final int METHOD_FIELD_NUMBER = 2;
   private int method_;
   /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+   * <code>.app.ListenTopicReq.Method method = 2;</code>
+   * @return The enum numeric value on the wire for method.
    */
-  public int getMethodValue() {
+  @java.lang.Override public int getMethodValue() {
     return method_;
   }
   /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+   * <code>.app.ListenTopicReq.Method method = 2;</code>
+   * @return The method.
    */
-  public ListenTopicReq.Method getMethod() {
-    ListenTopicReq.Method result = ListenTopicReq.Method.forNumber(method_);
+  @java.lang.Override public ListenTopicReq.Method getMethod() {
+    @SuppressWarnings("deprecation")
+    ListenTopicReq.Method result = ListenTopicReq.Method.valueOf(method_);
     return result == null ? ListenTopicReq.Method.UNRECOGNIZED : result;
   }
-  /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
-   */
-  private void setMethodValue(int value) {
-      method_ = value;
-  }
-  /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
-   */
-  private void setMethod(ListenTopicReq.Method value) {
-    if (value == null) {
-      throw new NullPointerException();
-    }
-    
-    method_ = value.getNumber();
-  }
-  /**
-   * <code>optional .app.ListenTopicReq.Method method = 2;</code>
-   */
-  private void clearMethod() {
-    
-    method_ = 0;
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
   }
 
+  @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
     for (int i = 0; i < topic_.size(); i++) {
-      output.writeString(1, topic_.get(i));
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, topic_.getRaw(i));
     }
     if (method_ != ListenTopicReq.Method.Subscribe.getNumber()) {
       output.writeEnum(2, method_);
     }
+    unknownFields.writeTo(output);
   }
 
+  @java.lang.Override
   public int getSerializedSize() {
-    int size = memoizedSerializedSize;
+    int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
     {
       int dataSize = 0;
       for (int i = 0; i < topic_.size(); i++) {
-        dataSize += com.google.protobuf.CodedOutputStream
-          .computeStringSizeNoTag(topic_.get(i));
+        dataSize += computeStringSizeNoTag(topic_.getRaw(i));
       }
       size += dataSize;
       size += 1 * getTopicList().size();
@@ -269,102 +320,320 @@ public  final class ListenTopicReq extends
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(2, method_);
     }
-    memoizedSerializedSize = size;
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
     return size;
   }
 
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof ListenTopicReq)) {
+      return super.equals(obj);
+    }
+    ListenTopicReq other = (ListenTopicReq) obj;
+
+    if (!getTopicList()
+        .equals(other.getTopicList())) return false;
+    if (method_ != other.method_) return false;
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    if (getTopicCount() > 0) {
+      hash = (37 * hash) + TOPIC_FIELD_NUMBER;
+      hash = (53 * hash) + getTopicList().hashCode();
+    }
+    hash = (37 * hash) + METHOD_FIELD_NUMBER;
+    hash = (53 * hash) + method_;
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static ListenTopicReq parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static ListenTopicReq parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static ListenTopicReq parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ListenTopicReq parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ListenTopicReq parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static ListenTopicReq parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static ListenTopicReq parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ListenTopicReq parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
   public static ListenTopicReq parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
   }
   public static ListenTopicReq parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
   public static ListenTopicReq parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static ListenTopicReq parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(ListenTopicReq prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
 
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
   /**
    * Protobuf type {@code app.ListenTopicReq}
    */
   public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<ListenTopicReq, Builder> implements
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:app.ListenTopicReq)
           ListenTopicReqOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return IMProtoc.internal_static_app_ListenTopicReq_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return IMProtoc.internal_static_app_ListenTopicReq_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ListenTopicReq.class, ListenTopicReq.Builder.class);
+    }
+
     // Construct using com.zj.protocol.grpc.ListenTopicReq.newBuilder()
     private Builder() {
-      super(DEFAULT_INSTANCE);
+      maybeForceBuilderInitialization();
     }
 
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      topic_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      method_ = 0;
 
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return IMProtoc.internal_static_app_ListenTopicReq_descriptor;
+    }
+
+    @java.lang.Override
+    public ListenTopicReq getDefaultInstanceForType() {
+      return ListenTopicReq.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public ListenTopicReq build() {
+      ListenTopicReq result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public ListenTopicReq buildPartial() {
+      ListenTopicReq result = new ListenTopicReq(this);
+      int from_bitField0_ = bitField0_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        topic_ = topic_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.topic_ = topic_;
+      result.method_ = method_;
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof ListenTopicReq) {
+        return mergeFrom((ListenTopicReq)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(ListenTopicReq other) {
+      if (other == ListenTopicReq.getDefaultInstance()) return this;
+      if (!other.topic_.isEmpty()) {
+        if (topic_.isEmpty()) {
+          topic_ = other.topic_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureTopicIsMutable();
+          topic_.addAll(other.topic_);
+        }
+        onChanged();
+      }
+      if (other.method_ != 0) {
+        setMethodValue(other.getMethodValue());
+      }
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      ListenTopicReq parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (ListenTopicReq) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+    private int bitField0_;
+
+    private com.google.protobuf.LazyStringList topic_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureTopicIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        topic_ = new com.google.protobuf.LazyStringArrayList(topic_);
+        bitField0_ |= 0x00000001;
+       }
+    }
     /**
      * <pre>
      *具体的topic key ，可多值
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @return A list containing the topic.
      */
-    public java.util.List<String>
+    public com.google.protobuf.ProtocolStringList
         getTopicList() {
-      return java.util.Collections.unmodifiableList(
-          instance.getTopicList());
+      return topic_.getUnmodifiableView();
     }
     /**
      * <pre>
@@ -372,9 +641,10 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @return The count of topic.
      */
     public int getTopicCount() {
-      return instance.getTopicCount();
+      return topic_.size();
     }
     /**
      * <pre>
@@ -382,9 +652,11 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param index The index of the element to return.
+     * @return The topic at the given index.
      */
     public java.lang.String getTopic(int index) {
-      return instance.getTopic(index);
+      return topic_.get(index);
     }
     /**
      * <pre>
@@ -392,10 +664,12 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the topic at the given index.
      */
     public com.google.protobuf.ByteString
         getTopicBytes(int index) {
-      return instance.getTopicBytes(index);
+      return topic_.getByteString(index);
     }
     /**
      * <pre>
@@ -403,11 +677,18 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param index The index to set the value at.
+     * @param value The topic to set.
+     * @return This builder for chaining.
      */
     public Builder setTopic(
         int index, java.lang.String value) {
-      copyOnWrite();
-      instance.setTopic(index, value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTopicIsMutable();
+      topic_.set(index, value);
+      onChanged();
       return this;
     }
     /**
@@ -416,11 +697,17 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param value The topic to add.
+     * @return This builder for chaining.
      */
     public Builder addTopic(
         java.lang.String value) {
-      copyOnWrite();
-      instance.addTopic(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureTopicIsMutable();
+      topic_.add(value);
+      onChanged();
       return this;
     }
     /**
@@ -429,11 +716,15 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param values The topic to add.
+     * @return This builder for chaining.
      */
     public Builder addAllTopic(
         java.lang.Iterable<java.lang.String> values) {
-      copyOnWrite();
-      instance.addAllTopic(values);
+      ensureTopicIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, topic_);
+      onChanged();
       return this;
     }
     /**
@@ -442,10 +733,12 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @return This builder for chaining.
      */
     public Builder clearTopic() {
-      copyOnWrite();
-      instance.clearTopic();
+      topic_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
       return this;
     }
     /**
@@ -454,158 +747,124 @@ public  final class ListenTopicReq extends
      * </pre>
      *
      * <code>repeated string topic = 1;</code>
+     * @param value The bytes of the topic to add.
+     * @return This builder for chaining.
      */
     public Builder addTopicBytes(
         com.google.protobuf.ByteString value) {
-      copyOnWrite();
-      instance.addTopicBytes(value);
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureTopicIsMutable();
+      topic_.add(value);
+      onChanged();
       return this;
     }
 
+    private int method_ = 0;
     /**
-     * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+     * <code>.app.ListenTopicReq.Method method = 2;</code>
+     * @return The enum numeric value on the wire for method.
      */
-    public int getMethodValue() {
-      return instance.getMethodValue();
+    @java.lang.Override public int getMethodValue() {
+      return method_;
     }
     /**
-     * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+     * <code>.app.ListenTopicReq.Method method = 2;</code>
+     * @param value The enum numeric value on the wire for method to set.
+     * @return This builder for chaining.
      */
     public Builder setMethodValue(int value) {
-      copyOnWrite();
-      instance.setMethodValue(value);
+      
+      method_ = value;
+      onChanged();
       return this;
     }
     /**
-     * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+     * <code>.app.ListenTopicReq.Method method = 2;</code>
+     * @return The method.
      */
+    @java.lang.Override
     public ListenTopicReq.Method getMethod() {
-      return instance.getMethod();
+      @SuppressWarnings("deprecation")
+      ListenTopicReq.Method result = ListenTopicReq.Method.valueOf(method_);
+      return result == null ? ListenTopicReq.Method.UNRECOGNIZED : result;
     }
     /**
-     * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+     * <code>.app.ListenTopicReq.Method method = 2;</code>
+     * @param value The method to set.
+     * @return This builder for chaining.
      */
     public Builder setMethod(ListenTopicReq.Method value) {
-      copyOnWrite();
-      instance.setMethod(value);
+      if (value == null) {
+        throw new NullPointerException();
+      }
+      
+      method_ = value.getNumber();
+      onChanged();
       return this;
     }
     /**
-     * <code>optional .app.ListenTopicReq.Method method = 2;</code>
+     * <code>.app.ListenTopicReq.Method method = 2;</code>
+     * @return This builder for chaining.
      */
     public Builder clearMethod() {
-      copyOnWrite();
-      instance.clearMethod();
+      
+      method_ = 0;
+      onChanged();
       return this;
     }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
+    }
+
+    @java.lang.Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
+    }
+
 
     // @@protoc_insertion_point(builder_scope:app.ListenTopicReq)
   }
-  protected final Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      Object arg0, Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new ListenTopicReq();
-      }
-      case IS_INITIALIZED: {
-        return DEFAULT_INSTANCE;
-      }
-      case MAKE_IMMUTABLE: {
-        topic_.makeImmutable();
-        return null;
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case VISIT: {
-        Visitor visitor = (Visitor) arg0;
-        ListenTopicReq other = (ListenTopicReq) arg1;
-        topic_= visitor.visitList(topic_, other.topic_);
-        method_ = visitor.visitInt(method_ != 0, method_,    other.method_ != 0, other.method_);
-        if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-            .INSTANCE) {
-          bitField0_ |= other.bitField0_;
-        }
-        return this;
-      }
-      case MERGE_FROM_STREAM: {
-        com.google.protobuf.CodedInputStream input =
-            (com.google.protobuf.CodedInputStream) arg0;
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-            (com.google.protobuf.ExtensionRegistryLite) arg1;
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!input.skipField(tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 10: {
-                String s = input.readStringRequireUtf8();
-                if (!topic_.isModifiable()) {
-                  topic_ =
-                      com.google.protobuf.GeneratedMessageLite.mutableCopy(topic_);
-                }
-                topic_.add(s);
-                break;
-              }
-              case 16: {
-                int rawValue = input.readEnum();
-
-                method_ = rawValue;
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw new RuntimeException(e.setUnfinishedMessage(this));
-        } catch (java.io.IOException e) {
-          throw new RuntimeException(
-              new com.google.protobuf.InvalidProtocolBufferException(
-                  e.getMessage()).setUnfinishedMessage(this));
-        } finally {
-        }
-      }
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        if (PARSER == null) {    synchronized (ListenTopicReq.class) {
-            if (PARSER == null) {
-              PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-            }
-          }
-        }
-        return PARSER;
-      }
-    }
-    throw new UnsupportedOperationException();
-  }
-
 
   // @@protoc_insertion_point(class_scope:app.ListenTopicReq)
   private static final ListenTopicReq DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new ListenTopicReq();
-    DEFAULT_INSTANCE.makeImmutable();
   }
 
   public static ListenTopicReq getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static volatile com.google.protobuf.Parser<ListenTopicReq> PARSER;
+  private static final com.google.protobuf.Parser<ListenTopicReq>
+      PARSER = new com.google.protobuf.AbstractParser<ListenTopicReq>() {
+    @java.lang.Override
+    public ListenTopicReq parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new ListenTopicReq(input, extensionRegistry);
+    }
+  };
 
   public static com.google.protobuf.Parser<ListenTopicReq> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
+    return PARSER;
   }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<ListenTopicReq> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public ListenTopicReq getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
 

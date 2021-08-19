@@ -5,10 +5,11 @@ package com.zj.protocol.grpc;
 
 public interface LeaveImGroupReplyOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.LeaveImGroupReply)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional bool success = 1;</code>
+   * <code>bool success = 1;</code>
+   * @return The success.
    */
   boolean getSuccess();
 }

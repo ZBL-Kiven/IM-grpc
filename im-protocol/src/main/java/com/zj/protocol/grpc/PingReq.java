@@ -6,195 +6,414 @@ package com.zj.protocol.grpc;
 /**
  * Protobuf type {@code app.PingReq}
  */
-public  final class PingReq extends
-    com.google.protobuf.GeneratedMessageLite<
-        PingReq, PingReq.Builder> implements
+public final class PingReq extends
+    com.google.protobuf.GeneratedMessageV3 implements
     // @@protoc_insertion_point(message_implements:app.PingReq)
     PingReqOrBuilder {
+private static final long serialVersionUID = 0L;
+  // Use PingReq.newBuilder() to construct.
+  private PingReq(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    super(builder);
+  }
   private PingReq() {
   }
-  public void writeTo(com.google.protobuf.CodedOutputStream output)
-                      throws java.io.IOException {
+
+  @java.lang.Override
+  @SuppressWarnings({"unused"})
+  protected java.lang.Object newInstance(
+      UnusedPrivateParameter unused) {
+    return new PingReq();
   }
 
+  @java.lang.Override
+  public final com.google.protobuf.UnknownFieldSet
+  getUnknownFields() {
+    return this.unknownFields;
+  }
+  private PingReq(
+      com.google.protobuf.CodedInputStream input,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    this();
+    if (extensionRegistry == null) {
+      throw new java.lang.NullPointerException();
+    }
+    com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+        com.google.protobuf.UnknownFieldSet.newBuilder();
+    try {
+      boolean done = false;
+      while (!done) {
+        int tag = input.readTag();
+        switch (tag) {
+          case 0:
+            done = true;
+            break;
+          default: {
+            if (!parseUnknownField(
+                input, unknownFields, extensionRegistry, tag)) {
+              done = true;
+            }
+            break;
+          }
+        }
+      }
+    } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+      throw e.setUnfinishedMessage(this);
+    } catch (java.io.IOException e) {
+      throw new com.google.protobuf.InvalidProtocolBufferException(
+          e).setUnfinishedMessage(this);
+    } finally {
+      this.unknownFields = unknownFields.build();
+      makeExtensionsImmutable();
+    }
+  }
+  public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+    return IMProtoc.internal_static_app_PingReq_descriptor;
+  }
+
+  @java.lang.Override
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internalGetFieldAccessorTable() {
+    return IMProtoc.internal_static_app_PingReq_fieldAccessorTable
+        .ensureFieldAccessorsInitialized(
+            PingReq.class, PingReq.Builder.class);
+  }
+
+  private byte memoizedIsInitialized = -1;
+  @java.lang.Override
+  public final boolean isInitialized() {
+    byte isInitialized = memoizedIsInitialized;
+    if (isInitialized == 1) return true;
+    if (isInitialized == 0) return false;
+
+    memoizedIsInitialized = 1;
+    return true;
+  }
+
+  @java.lang.Override
+  public void writeTo(com.google.protobuf.CodedOutputStream output)
+                      throws java.io.IOException {
+    unknownFields.writeTo(output);
+  }
+
+  @java.lang.Override
   public int getSerializedSize() {
-    int size = memoizedSerializedSize;
+    int size = memoizedSize;
     if (size != -1) return size;
 
     size = 0;
-    memoizedSerializedSize = size;
+    size += unknownFields.getSerializedSize();
+    memoizedSize = size;
     return size;
   }
 
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
+    if (obj == this) {
+     return true;
+    }
+    if (!(obj instanceof PingReq)) {
+      return super.equals(obj);
+    }
+    PingReq other = (PingReq) obj;
+
+    if (!unknownFields.equals(other.unknownFields)) return false;
+    return true;
+  }
+
+  @java.lang.Override
+  public int hashCode() {
+    if (memoizedHashCode != 0) {
+      return memoizedHashCode;
+    }
+    int hash = 41;
+    hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (29 * hash) + unknownFields.hashCode();
+    memoizedHashCode = hash;
+    return hash;
+  }
+
+  public static PingReq parseFrom(
+      java.nio.ByteBuffer data)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data);
+  }
+  public static PingReq parseFrom(
+      java.nio.ByteBuffer data,
+      com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+      throws com.google.protobuf.InvalidProtocolBufferException {
+    return PARSER.parseFrom(data, extensionRegistry);
+  }
   public static PingReq parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static PingReq parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static PingReq parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data);
+    return PARSER.parseFrom(data);
   }
   public static PingReq parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, data, extensionRegistry);
+    return PARSER.parseFrom(data, extensionRegistry);
   }
   public static PingReq parseFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static PingReq parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
   public static PingReq parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input);
   }
   public static PingReq parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
   public static PingReq parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input);
   }
   public static PingReq parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
-    return com.google.protobuf.GeneratedMessageLite.parseFrom(
-        DEFAULT_INSTANCE, input, extensionRegistry);
+    return com.google.protobuf.GeneratedMessageV3
+        .parseWithIOException(PARSER, input, extensionRegistry);
   }
 
+  @java.lang.Override
+  public Builder newBuilderForType() { return newBuilder(); }
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
   public static Builder newBuilder(PingReq prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
+  @java.lang.Override
+  public Builder toBuilder() {
+    return this == DEFAULT_INSTANCE
+        ? new Builder() : new Builder().mergeFrom(this);
+  }
 
+  @java.lang.Override
+  protected Builder newBuilderForType(
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+    Builder builder = new Builder(parent);
+    return builder;
+  }
   /**
    * Protobuf type {@code app.PingReq}
    */
   public static final class Builder extends
-      com.google.protobuf.GeneratedMessageLite.Builder<PingReq, Builder> implements
+      com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:app.PingReq)
           PingReqOrBuilder {
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return IMProtoc.internal_static_app_PingReq_descriptor;
+    }
+
+    @java.lang.Override
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return IMProtoc.internal_static_app_PingReq_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              PingReq.class, PingReq.Builder.class);
+    }
+
     // Construct using com.zj.protocol.grpc.PingReq.newBuilder()
     private Builder() {
-      super(DEFAULT_INSTANCE);
+      maybeForceBuilderInitialization();
+    }
+
+    private Builder(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      super(parent);
+      maybeForceBuilderInitialization();
+    }
+    private void maybeForceBuilderInitialization() {
+      if (com.google.protobuf.GeneratedMessageV3
+              .alwaysUseFieldBuilders) {
+      }
+    }
+    @java.lang.Override
+    public Builder clear() {
+      super.clear();
+      return this;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Descriptors.Descriptor
+        getDescriptorForType() {
+      return IMProtoc.internal_static_app_PingReq_descriptor;
+    }
+
+    @java.lang.Override
+    public PingReq getDefaultInstanceForType() {
+      return PingReq.getDefaultInstance();
+    }
+
+    @java.lang.Override
+    public PingReq build() {
+      PingReq result = buildPartial();
+      if (!result.isInitialized()) {
+        throw newUninitializedMessageException(result);
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public PingReq buildPartial() {
+      PingReq result = new PingReq(this);
+      onBuilt();
+      return result;
+    }
+
+    @java.lang.Override
+    public Builder clone() {
+      return super.clone();
+    }
+    @java.lang.Override
+    public Builder setField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.setField(field, value);
+    }
+    @java.lang.Override
+    public Builder clearField(
+        com.google.protobuf.Descriptors.FieldDescriptor field) {
+      return super.clearField(field);
+    }
+    @java.lang.Override
+    public Builder clearOneof(
+        com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+      return super.clearOneof(oneof);
+    }
+    @java.lang.Override
+    public Builder setRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        int index, java.lang.Object value) {
+      return super.setRepeatedField(field, index, value);
+    }
+    @java.lang.Override
+    public Builder addRepeatedField(
+        com.google.protobuf.Descriptors.FieldDescriptor field,
+        java.lang.Object value) {
+      return super.addRepeatedField(field, value);
+    }
+    @java.lang.Override
+    public Builder mergeFrom(com.google.protobuf.Message other) {
+      if (other instanceof PingReq) {
+        return mergeFrom((PingReq)other);
+      } else {
+        super.mergeFrom(other);
+        return this;
+      }
+    }
+
+    public Builder mergeFrom(PingReq other) {
+      if (other == PingReq.getDefaultInstance()) return this;
+      this.mergeUnknownFields(other.unknownFields);
+      onChanged();
+      return this;
+    }
+
+    @java.lang.Override
+    public final boolean isInitialized() {
+      return true;
+    }
+
+    @java.lang.Override
+    public Builder mergeFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      PingReq parsedMessage = null;
+      try {
+        parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        parsedMessage = (PingReq) e.getUnfinishedMessage();
+        throw e.unwrapIOException();
+      } finally {
+        if (parsedMessage != null) {
+          mergeFrom(parsedMessage);
+        }
+      }
+      return this;
+    }
+    @java.lang.Override
+    public final Builder setUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.setUnknownFields(unknownFields);
+    }
+
+    @java.lang.Override
+    public final Builder mergeUnknownFields(
+        final com.google.protobuf.UnknownFieldSet unknownFields) {
+      return super.mergeUnknownFields(unknownFields);
     }
 
 
     // @@protoc_insertion_point(builder_scope:app.PingReq)
   }
-  protected final Object dynamicMethod(
-      com.google.protobuf.GeneratedMessageLite.MethodToInvoke method,
-      Object arg0, Object arg1) {
-    switch (method) {
-      case NEW_MUTABLE_INSTANCE: {
-        return new PingReq();
-      }
-      case IS_INITIALIZED: {
-        return DEFAULT_INSTANCE;
-      }
-      case MAKE_IMMUTABLE: {
-        return null;
-      }
-      case NEW_BUILDER: {
-        return new Builder();
-      }
-      case VISIT: {
-        Visitor visitor = (Visitor) arg0;
-        PingReq other = (PingReq) arg1;
-        if (visitor == com.google.protobuf.GeneratedMessageLite.MergeFromVisitor
-            .INSTANCE) {
-        }
-        return this;
-      }
-      case MERGE_FROM_STREAM: {
-        com.google.protobuf.CodedInputStream input =
-            (com.google.protobuf.CodedInputStream) arg0;
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry =
-            (com.google.protobuf.ExtensionRegistryLite) arg1;
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!input.skipField(tag)) {
-                  done = true;
-                }
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw new RuntimeException(e.setUnfinishedMessage(this));
-        } catch (java.io.IOException e) {
-          throw new RuntimeException(
-              new com.google.protobuf.InvalidProtocolBufferException(
-                  e.getMessage()).setUnfinishedMessage(this));
-        } finally {
-        }
-      }
-      case GET_DEFAULT_INSTANCE: {
-        return DEFAULT_INSTANCE;
-      }
-      case GET_PARSER: {
-        if (PARSER == null) {    synchronized (PingReq.class) {
-            if (PARSER == null) {
-              PARSER = new DefaultInstanceBasedParser(DEFAULT_INSTANCE);
-            }
-          }
-        }
-        return PARSER;
-      }
-    }
-    throw new UnsupportedOperationException();
-  }
-
 
   // @@protoc_insertion_point(class_scope:app.PingReq)
   private static final PingReq DEFAULT_INSTANCE;
   static {
     DEFAULT_INSTANCE = new PingReq();
-    DEFAULT_INSTANCE.makeImmutable();
   }
 
   public static PingReq getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static volatile com.google.protobuf.Parser<PingReq> PARSER;
+  private static final com.google.protobuf.Parser<PingReq>
+      PARSER = new com.google.protobuf.AbstractParser<PingReq>() {
+    @java.lang.Override
+    public PingReq parsePartialFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return new PingReq(input, extensionRegistry);
+    }
+  };
 
   public static com.google.protobuf.Parser<PingReq> parser() {
-    return DEFAULT_INSTANCE.getParserForType();
+    return PARSER;
   }
+
+  @java.lang.Override
+  public com.google.protobuf.Parser<PingReq> getParserForType() {
+    return PARSER;
+  }
+
+  @java.lang.Override
+  public PingReq getDefaultInstanceForType() {
+    return DEFAULT_INSTANCE;
+  }
+
 }
 

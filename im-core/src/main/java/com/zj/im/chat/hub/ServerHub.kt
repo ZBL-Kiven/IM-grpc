@@ -15,20 +15,22 @@ import com.zj.im.utils.netUtils.NetWorkInfo
 @Suppress("unused", "SameParameterValue")
 abstract class ServerHub<T> {
 
+    protected var app: Application? = null
     private var connectivityManager: IConnectivityManager? = null
 
     open fun init(context: Application?) {
+        this.app = context
         connectivityManager = IConnectivityManager()
         connectivityManager?.init(context) { netWorkStateChanged(it) }
     }
 
-    protected abstract fun send(params: T, callId: String, callBack: SendingCallBack): Long
+    protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
 
     abstract fun closeConnection(case: String)
 
     abstract fun reConnect(case: String)
 
-    internal fun sendToServer(params: T, callId: String, callBack: SendingCallBack) {
+    internal fun sendToServer(params: T, callId: String, callBack: SendingCallBack<T>) {
         val size = send(params, callId, callBack)
         if (size > 0) NetRecordUtils.recordLastModifySendData(size)
     }

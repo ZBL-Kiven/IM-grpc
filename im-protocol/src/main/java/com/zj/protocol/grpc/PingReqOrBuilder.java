@@ -5,5 +5,5 @@ package com.zj.protocol.grpc;
 
 public interface PingReqOrBuilder extends
     // @@protoc_insertion_point(interface_extends:app.PingReq)
-    com.google.protobuf.MessageLiteOrBuilder {
+    com.google.protobuf.MessageOrBuilder {
 }
