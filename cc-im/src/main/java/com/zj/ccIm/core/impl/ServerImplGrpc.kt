@@ -55,7 +55,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
                 val url = IMHelper.imConfig.getGrpcAddress()
-                channel = Grpc.get(url.host, url.port).defaultHeader(defaultHeader)
+                channel = Grpc.get(url.first, url.second).defaultHeader(defaultHeader)
             }
             onConnection()
         } catch (e: Exception) {

@@ -168,7 +168,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     }
 
     fun reconnect(case: String) {
-        getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.CONNECTED_ERROR, case)
+        getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.RECONNECT, case)
     }
 
     fun getAppContext(): Application? {

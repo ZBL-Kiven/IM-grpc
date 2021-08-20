@@ -20,10 +20,6 @@ public interface GetImHistoryMsgReqOrBuilder extends
   long getMsgId();
 
   /**
-   * <pre>
-   *大V id
-   * </pre>
-   *
    * <code>uint64 ownerId = 3;</code>
    * @return The ownerId.
    */

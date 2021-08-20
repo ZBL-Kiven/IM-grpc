@@ -125,32 +125,39 @@ public final class IMProtoc {
       "ent\022-\n\017questionContent\030\014 \001(\0132\024.app.Quest" +
       "ionContent\022\037\n\006sender\030\r \001(\0132\017.app.SenderI" +
       "nfo\022\022\n\nreplyMsgId\030\016 \001(\004\022 \n\010replyMsg\030\017 \001(" +
-      "\0132\016.app.ImMessage\"\031\n\nImgContent\022\013\n\003url\030\001" +
-      " \001(\t\"\033\n\014VideoContent\022\013\n\003url\030\001 \001(\t\"\033\n\013Tex" +
-      "tContent\022\014\n\004text\030\001 \001(\t\"\033\n\014AudioContent\022\013" +
-      "\n\003url\030\001 \001(\t\"!\n\016CCVideoContent\022\017\n\007videoId" +
-      "\030\001 \001(\t\"\226\001\n\017QuestionContent\022%\n\013textConten" +
-      "t\030\001 \001(\0132\020.app.TextContent\022\026\n\016questionSta" +
-      "tus\030\002 \001(\r\022\022\n\nquestionId\030\003 \001(\004\022\r\n\005spark\030\004" +
-      " \001(\004\022\017\n\007diamond\030\005 \001(\004\022\020\n\010isPublic\030\006 \001(\010\"" +
-      "`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\nsende" +
-      "rName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026\n\016sen" +
-      "derPlatform\030\004 \001(\t\"\"\n\017LeaveImGroupReq\022\017\n\007" +
-      "groupId\030\001 \001(\004\"$\n\021LeaveImGroupReply\022\017\n\007su" +
-      "ccess\030\001 \001(\010\"E\n\022GetImHistoryMsgReq\022\017\n\007gro" +
-      "upId\030\001 \001(\004\022\r\n\005msgId\030\002 \001(\004\022\017\n\007ownerId\030\003 \001" +
-      "(\004\"-\n\010BatchMsg\022!\n\timMessage\030\001 \003(\0132\016.app." +
-      "ImMessage\"\t\n\007PingReq\"\006\n\004Pong2\361\002\n\006MsgApi\022" +
-      "C\n\017ListenTopicData\022\023.app.ListenTopicReq\032" +
-      "\025.app.ListenTopicReply\"\000(\0010\001\0228\n\014GetImMes" +
-      "sage\022\024.app.GetImMessageReq\032\016.app.ImMessa" +
-      "ge\"\0000\001\022>\n\014LeaveImGroup\022\024.app.LeaveImGrou" +
-      "pReq\032\026.app.LeaveImGroupReply\"\000\022B\n\026GetGro" +
-      "upHistoryMessage\022\027.app.GetImHistoryMsgRe" +
-      "q\032\r.app.BatchMsg\"\000\022A\n\025GetChatHistoryMess" +
-      "age\022\027.app.GetImHistoryMsgReq\032\r.app.Batch" +
-      "Msg\"\000\022!\n\004Ping\022\014.app.PingReq\032\t.app.Pong\"\000" +
-      "B\033\n\rcom.zj.im.genB\010IMProtocP\001b\006proto3"
+      "\0132\016.app.ImMessage\"8\n\nImgContent\022\013\n\003url\030\001" +
+      " \001(\t\022\016\n\006height\030\002 \001(\r\022\r\n\005width\030\003 \001(\r\"L\n\014V" +
+      "ideoContent\022\013\n\003url\030\001 \001(\t\022\016\n\006height\030\002 \001(\t" +
+      "\022\r\n\005width\030\003 \001(\t\022\020\n\010duration\030\004 \001(\004\"\033\n\013Tex" +
+      "tContent\022\014\n\004text\030\001 \001(\t\"-\n\014AudioContent\022\013" +
+      "\n\003url\030\001 \001(\t\022\020\n\010duration\030\002 \001(\004\"\241\001\n\016CCVide" +
+      "oContent\022\017\n\007videoId\030\001 \001(\t\022\022\n\nvideoTitle\030" +
+      "\002 \001(\t\022\025\n\rvideoDescribe\030\003 \001(\t\022\020\n\010duration" +
+      "\030\004 \001(\001\022\r\n\005width\030\005 \001(\r\022\016\n\006height\030\006 \001(\r\022\"\n" +
+      "\032imgPreviewRemoteStorageUrl\030\007 \001(\t\"\250\001\n\017Qu" +
+      "estionContent\022%\n\013textContent\030\001 \001(\0132\020.app" +
+      ".TextContent\022\026\n\016questionStatus\030\002 \001(\r\022\022\n\n" +
+      "questionId\030\003 \001(\004\022\r\n\005spark\030\004 \001(\004\022\017\n\007diamo" +
+      "nd\030\005 \001(\004\022\020\n\010isPublic\030\006 \001(\010\022\020\n\010sendTime\030\007" +
+      " \001(\004\"`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\n" +
+      "senderName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026" +
+      "\n\016senderPlatform\030\004 \001(\t\"\"\n\017LeaveImGroupRe" +
+      "q\022\017\n\007groupId\030\001 \001(\004\"$\n\021LeaveImGroupReply\022" +
+      "\017\n\007success\030\001 \001(\010\"E\n\022GetImHistoryMsgReq\022\017" +
+      "\n\007groupId\030\001 \001(\004\022\r\n\005msgId\030\002 \001(\004\022\017\n\007ownerI" +
+      "d\030\003 \001(\004\"-\n\010BatchMsg\022!\n\timMessage\030\001 \003(\0132\016" +
+      ".app.ImMessage\"\t\n\007PingReq\"\006\n\004Pong2\361\002\n\006Ms" +
+      "gApi\022C\n\017ListenTopicData\022\023.app.ListenTopi" +
+      "cReq\032\025.app.ListenTopicReply\"\000(\0010\001\0228\n\014Get" +
+      "ImMessage\022\024.app.GetImMessageReq\032\016.app.Im" +
+      "Message\"\0000\001\022>\n\014LeaveImGroup\022\024.app.LeaveI" +
+      "mGroupReq\032\026.app.LeaveImGroupReply\"\000\022B\n\026G" +
+      "etGroupHistoryMessage\022\027.app.GetImHistory" +
+      "MsgReq\032\r.app.BatchMsg\"\000\022A\n\025GetChatHistor" +
+      "yMessage\022\027.app.GetImHistoryMsgReq\032\r.app." +
+      "BatchMsg\"\000\022!\n\004Ping\022\014.app.PingReq\032\t.app.P" +
+      "ong\"\000B\033\n\rcom.zj.im.genB\010IMProtocP\001b\006prot" +
+      "o3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -185,13 +192,13 @@ public final class IMProtoc {
     internal_static_app_ImgContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_ImgContent_descriptor,
-        new java.lang.String[] { "Url", });
+        new java.lang.String[] { "Url", "Height", "Width", });
     internal_static_app_VideoContent_descriptor =
       getDescriptor().getMessageTypes().get(5);
     internal_static_app_VideoContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_VideoContent_descriptor,
-        new java.lang.String[] { "Url", });
+        new java.lang.String[] { "Url", "Height", "Width", "Duration", });
     internal_static_app_TextContent_descriptor =
       getDescriptor().getMessageTypes().get(6);
     internal_static_app_TextContent_fieldAccessorTable = new
@@ -203,19 +210,19 @@ public final class IMProtoc {
     internal_static_app_AudioContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_AudioContent_descriptor,
-        new java.lang.String[] { "Url", });
+        new java.lang.String[] { "Url", "Duration", });
     internal_static_app_CCVideoContent_descriptor =
       getDescriptor().getMessageTypes().get(8);
     internal_static_app_CCVideoContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_CCVideoContent_descriptor,
-        new java.lang.String[] { "VideoId", });
+        new java.lang.String[] { "VideoId", "VideoTitle", "VideoDescribe", "Duration", "Width", "Height", "ImgPreviewRemoteStorageUrl", });
     internal_static_app_QuestionContent_descriptor =
       getDescriptor().getMessageTypes().get(9);
     internal_static_app_QuestionContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_QuestionContent_descriptor,
-        new java.lang.String[] { "TextContent", "QuestionStatus", "QuestionId", "Spark", "Diamond", "IsPublic", });
+        new java.lang.String[] { "TextContent", "QuestionStatus", "QuestionId", "Spark", "Diamond", "IsPublic", "SendTime", });
     internal_static_app_SenderInfo_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_app_SenderInfo_fieldAccessorTable = new

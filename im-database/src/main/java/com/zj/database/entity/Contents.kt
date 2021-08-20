@@ -12,17 +12,20 @@ class AudioContent : BaseFileContent()
 
 class CCVideoContent : BaseFileContent() {
     var videoId: String? = null
+    var videoTitle: String? = null
+    var videoDescribe: String? = null
+    var imgPreviewRemoteStorageUrl: String? = null
 }
 
 class QuestionContent : BaseFileContent() {
-    var txtContent: TextContent? = null
-
+    var textContent: TextContent? = null
     //0 正常   1 已回复  2 已过期
     var questionStatus: Int = 0
-
     var questionId: Int = 0
     var spark: Int = 0
-    var isPublic: Boolean = false
+    var diamond: Int = 0
+    var isPublic: Boolean = true
+    var sendTime: Long = 0
 }
 
 

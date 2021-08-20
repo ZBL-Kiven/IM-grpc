@@ -212,10 +212,6 @@ private static final long serialVersionUID = 0L;
   public static final int TOPIC_FIELD_NUMBER = 1;
   private com.google.protobuf.LazyStringList topic_;
   /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
    * <code>repeated string topic = 1;</code>
    * @return A list containing the topic.
    */
@@ -224,10 +220,6 @@ private static final long serialVersionUID = 0L;
     return topic_;
   }
   /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
    * <code>repeated string topic = 1;</code>
    * @return The count of topic.
    */
@@ -235,10 +227,6 @@ private static final long serialVersionUID = 0L;
     return topic_.size();
   }
   /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
    * <code>repeated string topic = 1;</code>
    * @param index The index of the element to return.
    * @return The topic at the given index.
@@ -247,10 +235,6 @@ private static final long serialVersionUID = 0L;
     return topic_.get(index);
   }
   /**
-   * <pre>
-   *具体的topic key ，可多值
-   * </pre>
-   *
    * <code>repeated string topic = 1;</code>
    * @param index The index of the value to return.
    * @return The bytes of the topic at the given index.
@@ -624,10 +608,6 @@ private static final long serialVersionUID = 0L;
        }
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @return A list containing the topic.
      */
@@ -636,10 +616,6 @@ private static final long serialVersionUID = 0L;
       return topic_.getUnmodifiableView();
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @return The count of topic.
      */
@@ -647,10 +623,6 @@ private static final long serialVersionUID = 0L;
       return topic_.size();
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param index The index of the element to return.
      * @return The topic at the given index.
@@ -659,10 +631,6 @@ private static final long serialVersionUID = 0L;
       return topic_.get(index);
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param index The index of the value to return.
      * @return The bytes of the topic at the given index.
@@ -672,10 +640,6 @@ private static final long serialVersionUID = 0L;
       return topic_.getByteString(index);
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param index The index to set the value at.
      * @param value The topic to set.
@@ -692,10 +656,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param value The topic to add.
      * @return This builder for chaining.
@@ -711,10 +671,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param values The topic to add.
      * @return This builder for chaining.
@@ -728,10 +684,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @return This builder for chaining.
      */
@@ -742,10 +694,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key ，可多值
-     * </pre>
-     *
      * <code>repeated string topic = 1;</code>
      * @param value The bytes of the topic to add.
      * @return This builder for chaining.

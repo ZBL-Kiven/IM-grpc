@@ -18,4 +18,16 @@ public interface ImgContentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getUrlBytes();
+
+  /**
+   * <code>uint32 height = 2;</code>
+   * @return The height.
+   */
+  int getHeight();
+
+  /**
+   * <code>uint32 width = 3;</code>
+   * @return The width.
+   */
+  int getWidth();
 }

@@ -197,6 +197,6 @@ class ClientHubImpl : ClientHub<Any?>() {
 
 
     override fun progressUpdate(progress: Int, callId: String) {
-        Log.e("------ ", "sending progress ->  callId = $callId   p = $progress")
+        Log.e("------ ", "sending progress change , callId = $callId ===> $progress")
     }
 }

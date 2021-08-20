@@ -10,13 +10,13 @@ import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.sp.SPHelper
 import io.reactivex.schedulers.Schedulers
 
-object Fetcher {
+internal object Fetcher {
 
     private const val SP_FETCH_SESSIONS_TS = "fetch_sessions_ts"
     private var onFetching = false
     private val compos = mutableListOf<BaseRetrofit.RequestCompo>()
 
-    init {
+    fun init() {
         IMHelper.registerConnectionStateChangeListener("main_fetcher_observer") {
             when (it) {
                 ConnectionState.CONNECTED -> {
@@ -44,9 +44,9 @@ object Fetcher {
         compo = ImApi.getFetcherApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
             try {
                 if (b && d != null) {
-                    log("fetch sessions success , new ts is ${d.timeStamp}, changed group is [${d.groups?.joinToString { "${it.groupName} , " }}]")
+                    log("fetch sessions success , new ts is ${d.timeStamp}, changed group is [${d.groupList?.joinToString { "${it.groupName} , " }}]")
                     SPHelper.put(SP_FETCH_SESSIONS_TS, d.timeStamp)
-                    val sl = d.groups
+                    val sl = d.groupList
                     if (!sl.isNullOrEmpty()) {
                         Constance.app?.let {
                             val sessionDao = DbHelper.get(it)?.db?.sessionDao()
@@ -120,6 +120,7 @@ object Fetcher {
 
     private fun finishFetch(onlyRefresh: Boolean) {
         if (!onlyRefresh) {
+            log(" Fetch finished !!")
             if (!IMHelper.tryToRegisterAfterConnected()) {
                 IMHelper.resume(Constance.FETCH_SESSION_CODE)
             }

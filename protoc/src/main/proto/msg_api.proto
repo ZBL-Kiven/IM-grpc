@@ -8,7 +8,7 @@ option java_outer_classname = "IMProtoc";
 
 message ListenTopicReq{
 
-  repeated string topic  = 1;//具体的topic key ，可多值
+  repeated string topic  = 1;
 
   Method          method = 2;
 
@@ -20,21 +20,21 @@ message ListenTopicReq{
 }
 
 message ListenTopicReply{
-  string topic = 1;//具体的topic key
-  string data  = 2;//由业务推送过来的json信息，根据业务不同内部的格式不同
+  string topic = 1;
+  string data  = 2;
 }
 
 
 message GetImMessageReq {
   uint64 groupId = 1;
-  uint64 ownerId = 2;//大V的id
+  uint64 ownerId = 2;
 }
 
 message ImMessage{
-  uint64          groupId         = 1; //
-  uint64          ownerId         = 2;  //
-  uint64          sendTime        = 3;  //
-  uint64          msgId           = 4; //
+  uint64          groupId         = 1;
+  uint64          ownerId         = 2;
+  uint64          sendTime        = 3;
+  uint64          msgId           = 4;
   string          clientMsgId     = 5;
   string          msgType         = 6;
   ImgContent      imgContent      = 7;
@@ -48,19 +48,38 @@ message ImMessage{
   ImMessage       replyMsg        = 15;
 }
 message ImgContent{
-  string url = 1;
+  string url    = 1;
+  uint32 height = 2;
+  uint32 width  = 3;
 }
 message VideoContent{
-  string url = 1;
+  string url      = 1;
+  string height   = 2;
+  string width    = 3;
+  uint64 duration = 4;
 }
 message TextContent{
   string text = 1;
 }
 message AudioContent{
-  string url = 1;
+  string url      = 1;
+  uint64 duration = 2;
 }
 message CCVideoContent{
-  string videoId = 1;
+
+  string videoId                    = 1;
+
+  string videoTitle                 = 2;
+
+  string videoDescribe              = 3;
+
+  double duration                   = 4;
+
+  uint32 width                      = 5;
+
+  uint32 height                     = 6;
+
+  string imgPreviewRemoteStorageUrl = 7;
 }
 message QuestionContent{
   TextContent textContent    = 1;
@@ -69,14 +88,15 @@ message QuestionContent{
   uint64      spark          = 4;
   uint64      diamond        = 5;
   bool        isPublic       = 6;
+  uint64      sendTime       = 7;
 }
 
 
 message SenderInfo{
-  uint64 senderId       = 1;  //发送者id
-  string senderName     = 2; //发送者名字
-  string senderAvatar   = 3; //发送者头像
-  string senderPlatform = 4;//发送终端类型
+  uint64 senderId       = 1;
+  string senderName     = 2;
+  string senderAvatar   = 3;
+  string senderPlatform = 4;
 }
 
 
@@ -91,7 +111,7 @@ message LeaveImGroupReply {
 message GetImHistoryMsgReq{
   uint64 groupId = 1;
   uint64 msgId   = 2;
-  uint64 ownerId = 3;//大V id
+  uint64 ownerId = 3;
 }
 
 message BatchMsg{
@@ -106,29 +126,14 @@ message Pong{
 
 service MsgApi{
 
-  /*
-  服务器向客户端推送当前实时变更的信息 比如+1的这种信息
-   */
   rpc ListenTopicData(stream ListenTopicReq) returns (stream ListenTopicReply){}
 
-  /*
-  收取group实时消息
-   */
   rpc GetImMessage(GetImMessageReq) returns (stream ImMessage){}
 
-  /*
-  不再收听房间（group）的消息0
-   */
   rpc LeaveImGroup(LeaveImGroupReq) returns (LeaveImGroupReply){}
 
-  /*
-  获取群的历史消息
-   */
   rpc GetGroupHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
 
-  /*
-  获取chat的历史消息
-   */
   rpc GetChatHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
 
   rpc Ping(PingReq) returns (Pong){}

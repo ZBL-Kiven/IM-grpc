@@ -55,6 +55,11 @@ private static final long serialVersionUID = 0L;
             url_ = s;
             break;
           }
+          case 16: {
+
+            duration_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -125,6 +130,17 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int DURATION_FIELD_NUMBER = 2;
+  private long duration_;
+  /**
+   * <code>uint64 duration = 2;</code>
+   * @return The duration.
+   */
+  @java.lang.Override
+  public long getDuration() {
+    return duration_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +158,9 @@ private static final long serialVersionUID = 0L;
     if (!getUrlBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
     }
+    if (duration_ != 0L) {
+      output.writeUInt64(2, duration_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +172,10 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getUrlBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
+    }
+    if (duration_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(2, duration_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +194,8 @@ private static final long serialVersionUID = 0L;
 
     if (!getUrl()
         .equals(other.getUrl())) return false;
+    if (getDuration()
+        != other.getDuration()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +209,9 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + URL_FIELD_NUMBER;
     hash = (53 * hash) + getUrl().hashCode();
+    hash = (37 * hash) + DURATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getDuration());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +347,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       url_ = "";
 
+      duration_ = 0L;
+
       return this;
     }
 
@@ -346,6 +376,7 @@ private static final long serialVersionUID = 0L;
     public AudioContent buildPartial() {
       AudioContent result = new AudioContent(this);
       result.url_ = url_;
+      result.duration_ = duration_;
       onBuilt();
       return result;
     }
@@ -397,6 +428,9 @@ private static final long serialVersionUID = 0L;
       if (!other.getUrl().isEmpty()) {
         url_ = other.url_;
         onChanged();
+      }
+      if (other.getDuration() != 0L) {
+        setDuration(other.getDuration());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -499,6 +533,37 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       url_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long duration_ ;
+    /**
+     * <code>uint64 duration = 2;</code>
+     * @return The duration.
+     */
+    @java.lang.Override
+    public long getDuration() {
+      return duration_;
+    }
+    /**
+     * <code>uint64 duration = 2;</code>
+     * @param value The duration to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDuration(long value) {
+      
+      duration_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 duration = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDuration() {
+      
+      duration_ = 0L;
       onChanged();
       return this;
     }

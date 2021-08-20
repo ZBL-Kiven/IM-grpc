@@ -8,36 +8,24 @@ public interface ImMessageOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 groupId = 1;</code>
    * @return The groupId.
    */
   long getGroupId();
 
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 ownerId = 2;</code>
    * @return The ownerId.
    */
   long getOwnerId();
 
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 sendTime = 3;</code>
    * @return The sendTime.
    */
   long getSendTime();
 
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 msgId = 4;</code>
    * @return The msgId.
    */

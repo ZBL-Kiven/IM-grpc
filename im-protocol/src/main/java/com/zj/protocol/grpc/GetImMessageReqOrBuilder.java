@@ -14,10 +14,6 @@ public interface GetImMessageReqOrBuilder extends
   long getGroupId();
 
   /**
-   * <pre>
-   *大V的id
-   * </pre>
-   *
    * <code>uint64 ownerId = 2;</code>
    * @return The ownerId.
    */

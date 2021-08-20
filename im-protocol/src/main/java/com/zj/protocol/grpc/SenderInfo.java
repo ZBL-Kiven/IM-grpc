@@ -109,10 +109,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDERID_FIELD_NUMBER = 1;
   private long senderId_;
   /**
-   * <pre>
-   *发送者id
-   * </pre>
-   *
    * <code>uint64 senderId = 1;</code>
    * @return The senderId.
    */
@@ -124,10 +120,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDERNAME_FIELD_NUMBER = 2;
   private volatile java.lang.Object senderName_;
   /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
    * <code>string senderName = 2;</code>
    * @return The senderName.
    */
@@ -145,10 +137,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
    * <code>string senderName = 2;</code>
    * @return The bytes for senderName.
    */
@@ -170,10 +158,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDERAVATAR_FIELD_NUMBER = 3;
   private volatile java.lang.Object senderAvatar_;
   /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
    * <code>string senderAvatar = 3;</code>
    * @return The senderAvatar.
    */
@@ -191,10 +175,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
    * <code>string senderAvatar = 3;</code>
    * @return The bytes for senderAvatar.
    */
@@ -216,10 +196,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDERPLATFORM_FIELD_NUMBER = 4;
   private volatile java.lang.Object senderPlatform_;
   /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
    * <code>string senderPlatform = 4;</code>
    * @return The senderPlatform.
    */
@@ -237,10 +213,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
    * <code>string senderPlatform = 4;</code>
    * @return The bytes for senderPlatform.
    */
@@ -615,10 +587,6 @@ private static final long serialVersionUID = 0L;
 
     private long senderId_ ;
     /**
-     * <pre>
-     *发送者id
-     * </pre>
-     *
      * <code>uint64 senderId = 1;</code>
      * @return The senderId.
      */
@@ -627,10 +595,6 @@ private static final long serialVersionUID = 0L;
       return senderId_;
     }
     /**
-     * <pre>
-     *发送者id
-     * </pre>
-     *
      * <code>uint64 senderId = 1;</code>
      * @param value The senderId to set.
      * @return This builder for chaining.
@@ -642,10 +606,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送者id
-     * </pre>
-     *
      * <code>uint64 senderId = 1;</code>
      * @return This builder for chaining.
      */
@@ -658,10 +618,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object senderName_ = "";
     /**
-     * <pre>
-     *发送者名字
-     * </pre>
-     *
      * <code>string senderName = 2;</code>
      * @return The senderName.
      */
@@ -678,10 +634,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送者名字
-     * </pre>
-     *
      * <code>string senderName = 2;</code>
      * @return The bytes for senderName.
      */
@@ -699,10 +651,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送者名字
-     * </pre>
-     *
      * <code>string senderName = 2;</code>
      * @param value The senderName to set.
      * @return This builder for chaining.
@@ -718,10 +666,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送者名字
-     * </pre>
-     *
      * <code>string senderName = 2;</code>
      * @return This builder for chaining.
      */
@@ -732,10 +676,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送者名字
-     * </pre>
-     *
      * <code>string senderName = 2;</code>
      * @param value The bytes for senderName to set.
      * @return This builder for chaining.
@@ -754,10 +694,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object senderAvatar_ = "";
     /**
-     * <pre>
-     *发送者头像
-     * </pre>
-     *
      * <code>string senderAvatar = 3;</code>
      * @return The senderAvatar.
      */
@@ -774,10 +710,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送者头像
-     * </pre>
-     *
      * <code>string senderAvatar = 3;</code>
      * @return The bytes for senderAvatar.
      */
@@ -795,10 +727,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送者头像
-     * </pre>
-     *
      * <code>string senderAvatar = 3;</code>
      * @param value The senderAvatar to set.
      * @return This builder for chaining.
@@ -814,10 +742,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送者头像
-     * </pre>
-     *
      * <code>string senderAvatar = 3;</code>
      * @return This builder for chaining.
      */
@@ -828,10 +752,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送者头像
-     * </pre>
-     *
      * <code>string senderAvatar = 3;</code>
      * @param value The bytes for senderAvatar to set.
      * @return This builder for chaining.
@@ -850,10 +770,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object senderPlatform_ = "";
     /**
-     * <pre>
-     *发送终端类型
-     * </pre>
-     *
      * <code>string senderPlatform = 4;</code>
      * @return The senderPlatform.
      */
@@ -870,10 +786,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送终端类型
-     * </pre>
-     *
      * <code>string senderPlatform = 4;</code>
      * @return The bytes for senderPlatform.
      */
@@ -891,10 +803,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *发送终端类型
-     * </pre>
-     *
      * <code>string senderPlatform = 4;</code>
      * @param value The senderPlatform to set.
      * @return This builder for chaining.
@@ -910,10 +818,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送终端类型
-     * </pre>
-     *
      * <code>string senderPlatform = 4;</code>
      * @return This builder for chaining.
      */
@@ -924,10 +828,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *发送终端类型
-     * </pre>
-     *
      * <code>string senderPlatform = 4;</code>
      * @param value The bytes for senderPlatform to set.
      * @return This builder for chaining.

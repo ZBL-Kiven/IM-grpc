@@ -237,9 +237,6 @@ public final class MsgApiGrpc {
   public static abstract class MsgApiImplBase implements io.grpc.BindableService {
 
     /**
-     * <pre>
-     *服务器向客户端推送当前实时变更的信息 比如+1的这种信息
-     * </pre>
      */
     public io.grpc.stub.StreamObserver<ListenTopicReq> listenTopicData(
         io.grpc.stub.StreamObserver<ListenTopicReply> responseObserver) {
@@ -247,9 +244,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *收取group实时消息
-     * </pre>
      */
     public void getImMessage(GetImMessageReq request,
                              io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
@@ -257,9 +251,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *不再收听房间（group）的消息0
-     * </pre>
      */
     public void leaveImGroup(LeaveImGroupReq request,
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
@@ -267,9 +258,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取群的历史消息
-     * </pre>
      */
     public void getGroupHistoryMessage(GetImHistoryMsgReq request,
                                        io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
@@ -277,9 +265,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取chat的历史消息
-     * </pre>
      */
     public void getChatHistoryMessage(GetImHistoryMsgReq request,
                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
@@ -344,9 +329,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *服务器向客户端推送当前实时变更的信息 比如+1的这种信息
-     * </pre>
      */
     public io.grpc.stub.StreamObserver<ListenTopicReq> listenTopicData(
         io.grpc.stub.StreamObserver<ListenTopicReply> responseObserver) {
@@ -355,9 +337,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *收取group实时消息
-     * </pre>
      */
     public void getImMessage(GetImMessageReq request,
                              io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
@@ -366,9 +345,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *不再收听房间（group）的消息0
-     * </pre>
      */
     public void leaveImGroup(LeaveImGroupReq request,
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
@@ -377,9 +353,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取群的历史消息
-     * </pre>
      */
     public void getGroupHistoryMessage(GetImHistoryMsgReq request,
                                        io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
@@ -388,9 +361,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取chat的历史消息
-     * </pre>
      */
     public void getChatHistoryMessage(GetImHistoryMsgReq request,
                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
@@ -422,9 +392,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *收取group实时消息
-     * </pre>
      */
     public java.util.Iterator<ImMessage> getImMessage(
         GetImMessageReq request) {
@@ -433,9 +400,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *不再收听房间（group）的消息0
-     * </pre>
      */
     public LeaveImGroupReply leaveImGroup(LeaveImGroupReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -443,9 +407,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取群的历史消息
-     * </pre>
      */
     public BatchMsg getGroupHistoryMessage(GetImHistoryMsgReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -453,9 +414,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取chat的历史消息
-     * </pre>
      */
     public BatchMsg getChatHistoryMessage(GetImHistoryMsgReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
@@ -485,9 +443,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *不再收听房间（group）的消息0
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<LeaveImGroupReply> leaveImGroup(
         LeaveImGroupReq request) {
@@ -496,9 +451,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取群的历史消息
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getGroupHistoryMessage(
         GetImHistoryMsgReq request) {
@@ -507,9 +459,6 @@ public final class MsgApiGrpc {
     }
 
     /**
-     * <pre>
-     *获取chat的历史消息
-     * </pre>
      */
     public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getChatHistoryMessage(
         GetImHistoryMsgReq request) {

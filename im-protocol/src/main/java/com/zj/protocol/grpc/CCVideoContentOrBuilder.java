@@ -18,4 +18,58 @@ public interface CCVideoContentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getVideoIdBytes();
+
+  /**
+   * <code>string videoTitle = 2;</code>
+   * @return The videoTitle.
+   */
+  java.lang.String getVideoTitle();
+  /**
+   * <code>string videoTitle = 2;</code>
+   * @return The bytes for videoTitle.
+   */
+  com.google.protobuf.ByteString
+      getVideoTitleBytes();
+
+  /**
+   * <code>string videoDescribe = 3;</code>
+   * @return The videoDescribe.
+   */
+  java.lang.String getVideoDescribe();
+  /**
+   * <code>string videoDescribe = 3;</code>
+   * @return The bytes for videoDescribe.
+   */
+  com.google.protobuf.ByteString
+      getVideoDescribeBytes();
+
+  /**
+   * <code>double duration = 4;</code>
+   * @return The duration.
+   */
+  double getDuration();
+
+  /**
+   * <code>uint32 width = 5;</code>
+   * @return The width.
+   */
+  int getWidth();
+
+  /**
+   * <code>uint32 height = 6;</code>
+   * @return The height.
+   */
+  int getHeight();
+
+  /**
+   * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+   * @return The imgPreviewRemoteStorageUrl.
+   */
+  java.lang.String getImgPreviewRemoteStorageUrl();
+  /**
+   * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+   * @return The bytes for imgPreviewRemoteStorageUrl.
+   */
+  com.google.protobuf.ByteString
+      getImgPreviewRemoteStorageUrlBytes();
 }

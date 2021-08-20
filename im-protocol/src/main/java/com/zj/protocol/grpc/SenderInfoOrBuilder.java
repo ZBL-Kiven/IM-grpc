@@ -8,29 +8,17 @@ public interface SenderInfoOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <pre>
-   *发送者id
-   * </pre>
-   *
    * <code>uint64 senderId = 1;</code>
    * @return The senderId.
    */
   long getSenderId();
 
   /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
    * <code>string senderName = 2;</code>
    * @return The senderName.
    */
   java.lang.String getSenderName();
   /**
-   * <pre>
-   *发送者名字
-   * </pre>
-   *
    * <code>string senderName = 2;</code>
    * @return The bytes for senderName.
    */
@@ -38,19 +26,11 @@ public interface SenderInfoOrBuilder extends
       getSenderNameBytes();
 
   /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
    * <code>string senderAvatar = 3;</code>
    * @return The senderAvatar.
    */
   java.lang.String getSenderAvatar();
   /**
-   * <pre>
-   *发送者头像
-   * </pre>
-   *
    * <code>string senderAvatar = 3;</code>
    * @return The bytes for senderAvatar.
    */
@@ -58,19 +38,11 @@ public interface SenderInfoOrBuilder extends
       getSenderAvatarBytes();
 
   /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
    * <code>string senderPlatform = 4;</code>
    * @return The senderPlatform.
    */
   java.lang.String getSenderPlatform();
   /**
-   * <pre>
-   *发送终端类型
-   * </pre>
-   *
    * <code>string senderPlatform = 4;</code>
    * @return The bytes for senderPlatform.
    */

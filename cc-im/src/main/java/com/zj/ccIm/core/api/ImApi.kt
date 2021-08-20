@@ -19,13 +19,16 @@ object ImApi {
     }
 
     fun getSenderApi(): BaseApi<SenderApi> {
-        return BaseApi.create<SenderApi>().baseUrl(baseUrl).header(header).build()
+        return BaseApi.create<SenderApi>(ErrorHandler()).baseUrl(baseUrl).header(header).build()
     }
-
 
     fun getFetcherApi(): BaseApi<FetcherApi> {
-        return BaseApi.create<FetcherApi>().baseUrl(baseUrl).header(header).build()
+        return BaseApi.create<FetcherApi>(ErrorHandler()).baseUrl(baseUrl).header(header).build()
     }
 
-
+    private class ErrorHandler : com.zj.api.interfaces.ErrorHandler {
+        override fun onError(throwable: Throwable?): Boolean {
+            return false
+        }
+    }
 }

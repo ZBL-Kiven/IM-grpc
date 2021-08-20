@@ -55,6 +55,16 @@ private static final long serialVersionUID = 0L;
             url_ = s;
             break;
           }
+          case 16: {
+
+            height_ = input.readUInt32();
+            break;
+          }
+          case 24: {
+
+            width_ = input.readUInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -125,6 +135,28 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int HEIGHT_FIELD_NUMBER = 2;
+  private int height_;
+  /**
+   * <code>uint32 height = 2;</code>
+   * @return The height.
+   */
+  @java.lang.Override
+  public int getHeight() {
+    return height_;
+  }
+
+  public static final int WIDTH_FIELD_NUMBER = 3;
+  private int width_;
+  /**
+   * <code>uint32 width = 3;</code>
+   * @return The width.
+   */
+  @java.lang.Override
+  public int getWidth() {
+    return width_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +174,12 @@ private static final long serialVersionUID = 0L;
     if (!getUrlBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
     }
+    if (height_ != 0) {
+      output.writeUInt32(2, height_);
+    }
+    if (width_ != 0) {
+      output.writeUInt32(3, width_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +191,14 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getUrlBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
+    }
+    if (height_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(2, height_);
+    }
+    if (width_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(3, width_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +217,10 @@ private static final long serialVersionUID = 0L;
 
     if (!getUrl()
         .equals(other.getUrl())) return false;
+    if (getHeight()
+        != other.getHeight()) return false;
+    if (getWidth()
+        != other.getWidth()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +234,10 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + URL_FIELD_NUMBER;
     hash = (53 * hash) + getUrl().hashCode();
+    hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
+    hash = (53 * hash) + getHeight();
+    hash = (37 * hash) + WIDTH_FIELD_NUMBER;
+    hash = (53 * hash) + getWidth();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +373,10 @@ private static final long serialVersionUID = 0L;
       super.clear();
       url_ = "";
 
+      height_ = 0;
+
+      width_ = 0;
+
       return this;
     }
 
@@ -346,6 +404,8 @@ private static final long serialVersionUID = 0L;
     public ImgContent buildPartial() {
       ImgContent result = new ImgContent(this);
       result.url_ = url_;
+      result.height_ = height_;
+      result.width_ = width_;
       onBuilt();
       return result;
     }
@@ -397,6 +457,12 @@ private static final long serialVersionUID = 0L;
       if (!other.getUrl().isEmpty()) {
         url_ = other.url_;
         onChanged();
+      }
+      if (other.getHeight() != 0) {
+        setHeight(other.getHeight());
+      }
+      if (other.getWidth() != 0) {
+        setWidth(other.getWidth());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -499,6 +565,68 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       url_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int height_ ;
+    /**
+     * <code>uint32 height = 2;</code>
+     * @return The height.
+     */
+    @java.lang.Override
+    public int getHeight() {
+      return height_;
+    }
+    /**
+     * <code>uint32 height = 2;</code>
+     * @param value The height to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHeight(int value) {
+      
+      height_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 height = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHeight() {
+      
+      height_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int width_ ;
+    /**
+     * <code>uint32 width = 3;</code>
+     * @return The width.
+     */
+    @java.lang.Override
+    public int getWidth() {
+      return width_;
+    }
+    /**
+     * <code>uint32 width = 3;</code>
+     * @param value The width to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWidth(int value) {
+      
+      width_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 width = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearWidth() {
+      
+      width_ = 0;
       onChanged();
       return this;
     }

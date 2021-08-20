@@ -17,6 +17,9 @@ private static final long serialVersionUID = 0L;
   }
   private CCVideoContent() {
     videoId_ = "";
+    videoTitle_ = "";
+    videoDescribe_ = "";
+    imgPreviewRemoteStorageUrl_ = "";
   }
 
   @java.lang.Override
@@ -53,6 +56,39 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             videoId_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            videoTitle_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            videoDescribe_ = s;
+            break;
+          }
+          case 33: {
+
+            duration_ = input.readDouble();
+            break;
+          }
+          case 40: {
+
+            width_ = input.readUInt32();
+            break;
+          }
+          case 48: {
+
+            height_ = input.readUInt32();
+            break;
+          }
+          case 58: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            imgPreviewRemoteStorageUrl_ = s;
             break;
           }
           default: {
@@ -125,6 +161,153 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int VIDEOTITLE_FIELD_NUMBER = 2;
+  private volatile java.lang.Object videoTitle_;
+  /**
+   * <code>string videoTitle = 2;</code>
+   * @return The videoTitle.
+   */
+  @java.lang.Override
+  public java.lang.String getVideoTitle() {
+    java.lang.Object ref = videoTitle_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      videoTitle_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string videoTitle = 2;</code>
+   * @return The bytes for videoTitle.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getVideoTitleBytes() {
+    java.lang.Object ref = videoTitle_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      videoTitle_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int VIDEODESCRIBE_FIELD_NUMBER = 3;
+  private volatile java.lang.Object videoDescribe_;
+  /**
+   * <code>string videoDescribe = 3;</code>
+   * @return The videoDescribe.
+   */
+  @java.lang.Override
+  public java.lang.String getVideoDescribe() {
+    java.lang.Object ref = videoDescribe_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      videoDescribe_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string videoDescribe = 3;</code>
+   * @return The bytes for videoDescribe.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getVideoDescribeBytes() {
+    java.lang.Object ref = videoDescribe_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      videoDescribe_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int DURATION_FIELD_NUMBER = 4;
+  private double duration_;
+  /**
+   * <code>double duration = 4;</code>
+   * @return The duration.
+   */
+  @java.lang.Override
+  public double getDuration() {
+    return duration_;
+  }
+
+  public static final int WIDTH_FIELD_NUMBER = 5;
+  private int width_;
+  /**
+   * <code>uint32 width = 5;</code>
+   * @return The width.
+   */
+  @java.lang.Override
+  public int getWidth() {
+    return width_;
+  }
+
+  public static final int HEIGHT_FIELD_NUMBER = 6;
+  private int height_;
+  /**
+   * <code>uint32 height = 6;</code>
+   * @return The height.
+   */
+  @java.lang.Override
+  public int getHeight() {
+    return height_;
+  }
+
+  public static final int IMGPREVIEWREMOTESTORAGEURL_FIELD_NUMBER = 7;
+  private volatile java.lang.Object imgPreviewRemoteStorageUrl_;
+  /**
+   * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+   * @return The imgPreviewRemoteStorageUrl.
+   */
+  @java.lang.Override
+  public java.lang.String getImgPreviewRemoteStorageUrl() {
+    java.lang.Object ref = imgPreviewRemoteStorageUrl_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      imgPreviewRemoteStorageUrl_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+   * @return The bytes for imgPreviewRemoteStorageUrl.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getImgPreviewRemoteStorageUrlBytes() {
+    java.lang.Object ref = imgPreviewRemoteStorageUrl_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      imgPreviewRemoteStorageUrl_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +325,24 @@ private static final long serialVersionUID = 0L;
     if (!getVideoIdBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, videoId_);
     }
+    if (!getVideoTitleBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, videoTitle_);
+    }
+    if (!getVideoDescribeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, videoDescribe_);
+    }
+    if (duration_ != 0D) {
+      output.writeDouble(4, duration_);
+    }
+    if (width_ != 0) {
+      output.writeUInt32(5, width_);
+    }
+    if (height_ != 0) {
+      output.writeUInt32(6, height_);
+    }
+    if (!getImgPreviewRemoteStorageUrlBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 7, imgPreviewRemoteStorageUrl_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +354,27 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getVideoIdBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, videoId_);
+    }
+    if (!getVideoTitleBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, videoTitle_);
+    }
+    if (!getVideoDescribeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, videoDescribe_);
+    }
+    if (duration_ != 0D) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeDoubleSize(4, duration_);
+    }
+    if (width_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(5, width_);
+    }
+    if (height_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(6, height_);
+    }
+    if (!getImgPreviewRemoteStorageUrlBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(7, imgPreviewRemoteStorageUrl_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +393,19 @@ private static final long serialVersionUID = 0L;
 
     if (!getVideoId()
         .equals(other.getVideoId())) return false;
+    if (!getVideoTitle()
+        .equals(other.getVideoTitle())) return false;
+    if (!getVideoDescribe()
+        .equals(other.getVideoDescribe())) return false;
+    if (java.lang.Double.doubleToLongBits(getDuration())
+        != java.lang.Double.doubleToLongBits(
+            other.getDuration())) return false;
+    if (getWidth()
+        != other.getWidth()) return false;
+    if (getHeight()
+        != other.getHeight()) return false;
+    if (!getImgPreviewRemoteStorageUrl()
+        .equals(other.getImgPreviewRemoteStorageUrl())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +419,19 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + VIDEOID_FIELD_NUMBER;
     hash = (53 * hash) + getVideoId().hashCode();
+    hash = (37 * hash) + VIDEOTITLE_FIELD_NUMBER;
+    hash = (53 * hash) + getVideoTitle().hashCode();
+    hash = (37 * hash) + VIDEODESCRIBE_FIELD_NUMBER;
+    hash = (53 * hash) + getVideoDescribe().hashCode();
+    hash = (37 * hash) + DURATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        java.lang.Double.doubleToLongBits(getDuration()));
+    hash = (37 * hash) + WIDTH_FIELD_NUMBER;
+    hash = (53 * hash) + getWidth();
+    hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
+    hash = (53 * hash) + getHeight();
+    hash = (37 * hash) + IMGPREVIEWREMOTESTORAGEURL_FIELD_NUMBER;
+    hash = (53 * hash) + getImgPreviewRemoteStorageUrl().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +567,18 @@ private static final long serialVersionUID = 0L;
       super.clear();
       videoId_ = "";
 
+      videoTitle_ = "";
+
+      videoDescribe_ = "";
+
+      duration_ = 0D;
+
+      width_ = 0;
+
+      height_ = 0;
+
+      imgPreviewRemoteStorageUrl_ = "";
+
       return this;
     }
 
@@ -346,6 +606,12 @@ private static final long serialVersionUID = 0L;
     public CCVideoContent buildPartial() {
       CCVideoContent result = new CCVideoContent(this);
       result.videoId_ = videoId_;
+      result.videoTitle_ = videoTitle_;
+      result.videoDescribe_ = videoDescribe_;
+      result.duration_ = duration_;
+      result.width_ = width_;
+      result.height_ = height_;
+      result.imgPreviewRemoteStorageUrl_ = imgPreviewRemoteStorageUrl_;
       onBuilt();
       return result;
     }
@@ -396,6 +662,27 @@ private static final long serialVersionUID = 0L;
       if (other == CCVideoContent.getDefaultInstance()) return this;
       if (!other.getVideoId().isEmpty()) {
         videoId_ = other.videoId_;
+        onChanged();
+      }
+      if (!other.getVideoTitle().isEmpty()) {
+        videoTitle_ = other.videoTitle_;
+        onChanged();
+      }
+      if (!other.getVideoDescribe().isEmpty()) {
+        videoDescribe_ = other.videoDescribe_;
+        onChanged();
+      }
+      if (other.getDuration() != 0D) {
+        setDuration(other.getDuration());
+      }
+      if (other.getWidth() != 0) {
+        setWidth(other.getWidth());
+      }
+      if (other.getHeight() != 0) {
+        setHeight(other.getHeight());
+      }
+      if (!other.getImgPreviewRemoteStorageUrl().isEmpty()) {
+        imgPreviewRemoteStorageUrl_ = other.imgPreviewRemoteStorageUrl_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -499,6 +786,327 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       videoId_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object videoTitle_ = "";
+    /**
+     * <code>string videoTitle = 2;</code>
+     * @return The videoTitle.
+     */
+    public java.lang.String getVideoTitle() {
+      java.lang.Object ref = videoTitle_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        videoTitle_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string videoTitle = 2;</code>
+     * @return The bytes for videoTitle.
+     */
+    public com.google.protobuf.ByteString
+        getVideoTitleBytes() {
+      java.lang.Object ref = videoTitle_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        videoTitle_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string videoTitle = 2;</code>
+     * @param value The videoTitle to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVideoTitle(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      videoTitle_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string videoTitle = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearVideoTitle() {
+      
+      videoTitle_ = getDefaultInstance().getVideoTitle();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string videoTitle = 2;</code>
+     * @param value The bytes for videoTitle to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVideoTitleBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      videoTitle_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object videoDescribe_ = "";
+    /**
+     * <code>string videoDescribe = 3;</code>
+     * @return The videoDescribe.
+     */
+    public java.lang.String getVideoDescribe() {
+      java.lang.Object ref = videoDescribe_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        videoDescribe_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string videoDescribe = 3;</code>
+     * @return The bytes for videoDescribe.
+     */
+    public com.google.protobuf.ByteString
+        getVideoDescribeBytes() {
+      java.lang.Object ref = videoDescribe_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        videoDescribe_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string videoDescribe = 3;</code>
+     * @param value The videoDescribe to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVideoDescribe(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      videoDescribe_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string videoDescribe = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearVideoDescribe() {
+      
+      videoDescribe_ = getDefaultInstance().getVideoDescribe();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string videoDescribe = 3;</code>
+     * @param value The bytes for videoDescribe to set.
+     * @return This builder for chaining.
+     */
+    public Builder setVideoDescribeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      videoDescribe_ = value;
+      onChanged();
+      return this;
+    }
+
+    private double duration_ ;
+    /**
+     * <code>double duration = 4;</code>
+     * @return The duration.
+     */
+    @java.lang.Override
+    public double getDuration() {
+      return duration_;
+    }
+    /**
+     * <code>double duration = 4;</code>
+     * @param value The duration to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDuration(double value) {
+      
+      duration_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>double duration = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDuration() {
+      
+      duration_ = 0D;
+      onChanged();
+      return this;
+    }
+
+    private int width_ ;
+    /**
+     * <code>uint32 width = 5;</code>
+     * @return The width.
+     */
+    @java.lang.Override
+    public int getWidth() {
+      return width_;
+    }
+    /**
+     * <code>uint32 width = 5;</code>
+     * @param value The width to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWidth(int value) {
+      
+      width_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 width = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearWidth() {
+      
+      width_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int height_ ;
+    /**
+     * <code>uint32 height = 6;</code>
+     * @return The height.
+     */
+    @java.lang.Override
+    public int getHeight() {
+      return height_;
+    }
+    /**
+     * <code>uint32 height = 6;</code>
+     * @param value The height to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHeight(int value) {
+      
+      height_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 height = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHeight() {
+      
+      height_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object imgPreviewRemoteStorageUrl_ = "";
+    /**
+     * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+     * @return The imgPreviewRemoteStorageUrl.
+     */
+    public java.lang.String getImgPreviewRemoteStorageUrl() {
+      java.lang.Object ref = imgPreviewRemoteStorageUrl_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        imgPreviewRemoteStorageUrl_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+     * @return The bytes for imgPreviewRemoteStorageUrl.
+     */
+    public com.google.protobuf.ByteString
+        getImgPreviewRemoteStorageUrlBytes() {
+      java.lang.Object ref = imgPreviewRemoteStorageUrl_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        imgPreviewRemoteStorageUrl_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+     * @param value The imgPreviewRemoteStorageUrl to set.
+     * @return This builder for chaining.
+     */
+    public Builder setImgPreviewRemoteStorageUrl(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      imgPreviewRemoteStorageUrl_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearImgPreviewRemoteStorageUrl() {
+      
+      imgPreviewRemoteStorageUrl_ = getDefaultInstance().getImgPreviewRemoteStorageUrl();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string imgPreviewRemoteStorageUrl = 7;</code>
+     * @param value The bytes for imgPreviewRemoteStorageUrl to set.
+     * @return This builder for chaining.
+     */
+    public Builder setImgPreviewRemoteStorageUrlBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      imgPreviewRemoteStorageUrl_ = value;
       onChanged();
       return this;
     }

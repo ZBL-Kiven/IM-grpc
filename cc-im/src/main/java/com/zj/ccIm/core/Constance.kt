@@ -23,7 +23,7 @@ internal object Constance {
     const val CALL_ID_REGISTER_CHAT = INTERNAL_CALL_ID_PREFIX + "_register_chat_room"
     const val CALL_ID_REGISTERED_CHAT = INTERNAL_CALL_ID_PREFIX + "_registered_chat_room"
 
-    const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline_"
+    const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline"
     const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_chat_messages"
     const val CALL_ID_GET_OFFLINE_GROUP_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_group_messages"
 
@@ -43,7 +43,7 @@ internal object Constance {
     const val CONNECT_TYPE_MESSAGE = 0xf1367
     const val RECONNECTION_TIME = 2000L
     const val RECONNECTION_TIME_5000 = 5000L
-    const val CONNECTION_TIME_OUT = 3000
+    const val CONNECTION_TIME_OUT = 3000L
 
     const val HEART_BEATS_EVENT = 0xf1365
     const val HEART_BEATS_BASE_TIME = 5000L

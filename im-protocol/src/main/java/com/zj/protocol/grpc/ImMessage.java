@@ -226,9 +226,6 @@ private static final long serialVersionUID = 0L;
   public static final int GROUPID_FIELD_NUMBER = 1;
   private long groupId_;
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 groupId = 1;</code>
    * @return The groupId.
    */
@@ -240,9 +237,6 @@ private static final long serialVersionUID = 0L;
   public static final int OWNERID_FIELD_NUMBER = 2;
   private long ownerId_;
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 ownerId = 2;</code>
    * @return The ownerId.
    */
@@ -254,9 +248,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDTIME_FIELD_NUMBER = 3;
   private long sendTime_;
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 sendTime = 3;</code>
    * @return The sendTime.
    */
@@ -268,9 +259,6 @@ private static final long serialVersionUID = 0L;
   public static final int MSGID_FIELD_NUMBER = 4;
   private long msgId_;
   /**
-   * <pre>
-   * </pre>
-   *
    * <code>uint64 msgId = 4;</code>
    * @return The msgId.
    */
@@ -1225,9 +1213,6 @@ private static final long serialVersionUID = 0L;
 
     private long groupId_ ;
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 groupId = 1;</code>
      * @return The groupId.
      */
@@ -1236,9 +1221,6 @@ private static final long serialVersionUID = 0L;
       return groupId_;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 groupId = 1;</code>
      * @param value The groupId to set.
      * @return This builder for chaining.
@@ -1250,9 +1232,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 groupId = 1;</code>
      * @return This builder for chaining.
      */
@@ -1265,9 +1244,6 @@ private static final long serialVersionUID = 0L;
 
     private long ownerId_ ;
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @return The ownerId.
      */
@@ -1276,9 +1252,6 @@ private static final long serialVersionUID = 0L;
       return ownerId_;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @param value The ownerId to set.
      * @return This builder for chaining.
@@ -1290,9 +1263,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @return This builder for chaining.
      */
@@ -1305,9 +1275,6 @@ private static final long serialVersionUID = 0L;
 
     private long sendTime_ ;
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 sendTime = 3;</code>
      * @return The sendTime.
      */
@@ -1316,9 +1283,6 @@ private static final long serialVersionUID = 0L;
       return sendTime_;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 sendTime = 3;</code>
      * @param value The sendTime to set.
      * @return This builder for chaining.
@@ -1330,9 +1294,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 sendTime = 3;</code>
      * @return This builder for chaining.
      */
@@ -1345,9 +1306,6 @@ private static final long serialVersionUID = 0L;
 
     private long msgId_ ;
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 msgId = 4;</code>
      * @return The msgId.
      */
@@ -1356,9 +1314,6 @@ private static final long serialVersionUID = 0L;
       return msgId_;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 msgId = 4;</code>
      * @param value The msgId to set.
      * @return This builder for chaining.
@@ -1370,9 +1325,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     * </pre>
-     *
      * <code>uint64 msgId = 4;</code>
      * @return This builder for chaining.
      */

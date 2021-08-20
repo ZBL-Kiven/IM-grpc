@@ -104,10 +104,6 @@ private static final long serialVersionUID = 0L;
   public static final int OWNERID_FIELD_NUMBER = 2;
   private long ownerId_;
   /**
-   * <pre>
-   *大V的id
-   * </pre>
-   *
    * <code>uint64 ownerId = 2;</code>
    * @return The ownerId.
    */
@@ -470,10 +466,6 @@ private static final long serialVersionUID = 0L;
 
     private long ownerId_ ;
     /**
-     * <pre>
-     *大V的id
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @return The ownerId.
      */
@@ -482,10 +474,6 @@ private static final long serialVersionUID = 0L;
       return ownerId_;
     }
     /**
-     * <pre>
-     *大V的id
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @param value The ownerId to set.
      * @return This builder for chaining.
@@ -497,10 +485,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *大V的id
-     * </pre>
-     *
      * <code>uint64 ownerId = 2;</code>
      * @return This builder for chaining.
      */

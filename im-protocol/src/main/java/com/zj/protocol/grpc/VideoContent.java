@@ -17,6 +17,8 @@ private static final long serialVersionUID = 0L;
   }
   private VideoContent() {
     url_ = "";
+    height_ = "";
+    width_ = "";
   }
 
   @java.lang.Override
@@ -53,6 +55,23 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             url_ = s;
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            height_ = s;
+            break;
+          }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            width_ = s;
+            break;
+          }
+          case 32: {
+
+            duration_ = input.readUInt64();
             break;
           }
           default: {
@@ -125,6 +144,93 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int HEIGHT_FIELD_NUMBER = 2;
+  private volatile java.lang.Object height_;
+  /**
+   * <code>string height = 2;</code>
+   * @return The height.
+   */
+  @java.lang.Override
+  public java.lang.String getHeight() {
+    java.lang.Object ref = height_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      height_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string height = 2;</code>
+   * @return The bytes for height.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getHeightBytes() {
+    java.lang.Object ref = height_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      height_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int WIDTH_FIELD_NUMBER = 3;
+  private volatile java.lang.Object width_;
+  /**
+   * <code>string width = 3;</code>
+   * @return The width.
+   */
+  @java.lang.Override
+  public java.lang.String getWidth() {
+    java.lang.Object ref = width_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      width_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string width = 3;</code>
+   * @return The bytes for width.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getWidthBytes() {
+    java.lang.Object ref = width_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      width_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int DURATION_FIELD_NUMBER = 4;
+  private long duration_;
+  /**
+   * <code>uint64 duration = 4;</code>
+   * @return The duration.
+   */
+  @java.lang.Override
+  public long getDuration() {
+    return duration_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -142,6 +248,15 @@ private static final long serialVersionUID = 0L;
     if (!getUrlBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 1, url_);
     }
+    if (!getHeightBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, height_);
+    }
+    if (!getWidthBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, width_);
+    }
+    if (duration_ != 0L) {
+      output.writeUInt64(4, duration_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -153,6 +268,16 @@ private static final long serialVersionUID = 0L;
     size = 0;
     if (!getUrlBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, url_);
+    }
+    if (!getHeightBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, height_);
+    }
+    if (!getWidthBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, width_);
+    }
+    if (duration_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(4, duration_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -171,6 +296,12 @@ private static final long serialVersionUID = 0L;
 
     if (!getUrl()
         .equals(other.getUrl())) return false;
+    if (!getHeight()
+        .equals(other.getHeight())) return false;
+    if (!getWidth()
+        .equals(other.getWidth())) return false;
+    if (getDuration()
+        != other.getDuration()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -184,6 +315,13 @@ private static final long serialVersionUID = 0L;
     hash = (19 * hash) + getDescriptor().hashCode();
     hash = (37 * hash) + URL_FIELD_NUMBER;
     hash = (53 * hash) + getUrl().hashCode();
+    hash = (37 * hash) + HEIGHT_FIELD_NUMBER;
+    hash = (53 * hash) + getHeight().hashCode();
+    hash = (37 * hash) + WIDTH_FIELD_NUMBER;
+    hash = (53 * hash) + getWidth().hashCode();
+    hash = (37 * hash) + DURATION_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getDuration());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -319,6 +457,12 @@ private static final long serialVersionUID = 0L;
       super.clear();
       url_ = "";
 
+      height_ = "";
+
+      width_ = "";
+
+      duration_ = 0L;
+
       return this;
     }
 
@@ -346,6 +490,9 @@ private static final long serialVersionUID = 0L;
     public VideoContent buildPartial() {
       VideoContent result = new VideoContent(this);
       result.url_ = url_;
+      result.height_ = height_;
+      result.width_ = width_;
+      result.duration_ = duration_;
       onBuilt();
       return result;
     }
@@ -397,6 +544,17 @@ private static final long serialVersionUID = 0L;
       if (!other.getUrl().isEmpty()) {
         url_ = other.url_;
         onChanged();
+      }
+      if (!other.getHeight().isEmpty()) {
+        height_ = other.height_;
+        onChanged();
+      }
+      if (!other.getWidth().isEmpty()) {
+        width_ = other.width_;
+        onChanged();
+      }
+      if (other.getDuration() != 0L) {
+        setDuration(other.getDuration());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -499,6 +657,189 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       url_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object height_ = "";
+    /**
+     * <code>string height = 2;</code>
+     * @return The height.
+     */
+    public java.lang.String getHeight() {
+      java.lang.Object ref = height_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        height_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string height = 2;</code>
+     * @return The bytes for height.
+     */
+    public com.google.protobuf.ByteString
+        getHeightBytes() {
+      java.lang.Object ref = height_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        height_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string height = 2;</code>
+     * @param value The height to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHeight(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      height_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string height = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearHeight() {
+      
+      height_ = getDefaultInstance().getHeight();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string height = 2;</code>
+     * @param value The bytes for height to set.
+     * @return This builder for chaining.
+     */
+    public Builder setHeightBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      height_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object width_ = "";
+    /**
+     * <code>string width = 3;</code>
+     * @return The width.
+     */
+    public java.lang.String getWidth() {
+      java.lang.Object ref = width_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        width_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string width = 3;</code>
+     * @return The bytes for width.
+     */
+    public com.google.protobuf.ByteString
+        getWidthBytes() {
+      java.lang.Object ref = width_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        width_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string width = 3;</code>
+     * @param value The width to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWidth(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      width_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string width = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearWidth() {
+      
+      width_ = getDefaultInstance().getWidth();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string width = 3;</code>
+     * @param value The bytes for width to set.
+     * @return This builder for chaining.
+     */
+    public Builder setWidthBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      width_ = value;
+      onChanged();
+      return this;
+    }
+
+    private long duration_ ;
+    /**
+     * <code>uint64 duration = 4;</code>
+     * @return The duration.
+     */
+    @java.lang.Override
+    public long getDuration() {
+      return duration_;
+    }
+    /**
+     * <code>uint64 duration = 4;</code>
+     * @param value The duration to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDuration(long value) {
+      
+      duration_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 duration = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDuration() {
+      
+      duration_ = 0L;
       onChanged();
       return this;
     }

@@ -86,6 +86,11 @@ private static final long serialVersionUID = 0L;
             isPublic_ = input.readBool();
             break;
           }
+          case 56: {
+
+            sendTime_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -199,6 +204,17 @@ private static final long serialVersionUID = 0L;
     return isPublic_;
   }
 
+  public static final int SENDTIME_FIELD_NUMBER = 7;
+  private long sendTime_;
+  /**
+   * <code>uint64 sendTime = 7;</code>
+   * @return The sendTime.
+   */
+  @java.lang.Override
+  public long getSendTime() {
+    return sendTime_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -230,6 +246,9 @@ private static final long serialVersionUID = 0L;
     }
     if (isPublic_ != false) {
       output.writeBool(6, isPublic_);
+    }
+    if (sendTime_ != 0L) {
+      output.writeUInt64(7, sendTime_);
     }
     unknownFields.writeTo(output);
   }
@@ -264,6 +283,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeBoolSize(6, isPublic_);
     }
+    if (sendTime_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(7, sendTime_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -294,6 +317,8 @@ private static final long serialVersionUID = 0L;
         != other.getDiamond()) return false;
     if (getIsPublic()
         != other.getIsPublic()) return false;
+    if (getSendTime()
+        != other.getSendTime()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -323,6 +348,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + ISPUBLIC_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
         getIsPublic());
+    hash = (37 * hash) + SENDTIME_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getSendTime());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -472,6 +500,8 @@ private static final long serialVersionUID = 0L;
 
       isPublic_ = false;
 
+      sendTime_ = 0L;
+
       return this;
     }
 
@@ -508,6 +538,7 @@ private static final long serialVersionUID = 0L;
       result.spark_ = spark_;
       result.diamond_ = diamond_;
       result.isPublic_ = isPublic_;
+      result.sendTime_ = sendTime_;
       onBuilt();
       return result;
     }
@@ -573,6 +604,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getIsPublic() != false) {
         setIsPublic(other.getIsPublic());
+      }
+      if (other.getSendTime() != 0L) {
+        setSendTime(other.getSendTime());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -870,6 +904,37 @@ private static final long serialVersionUID = 0L;
     public Builder clearIsPublic() {
       
       isPublic_ = false;
+      onChanged();
+      return this;
+    }
+
+    private long sendTime_ ;
+    /**
+     * <code>uint64 sendTime = 7;</code>
+     * @return The sendTime.
+     */
+    @java.lang.Override
+    public long getSendTime() {
+      return sendTime_;
+    }
+    /**
+     * <code>uint64 sendTime = 7;</code>
+     * @param value The sendTime to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSendTime(long value) {
+      
+      sendTime_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 sendTime = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSendTime() {
+      
+      sendTime_ = 0L;
       onChanged();
       return this;
     }

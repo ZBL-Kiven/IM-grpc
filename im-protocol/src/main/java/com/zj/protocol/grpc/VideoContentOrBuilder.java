@@ -18,4 +18,34 @@ public interface VideoContentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getUrlBytes();
+
+  /**
+   * <code>string height = 2;</code>
+   * @return The height.
+   */
+  java.lang.String getHeight();
+  /**
+   * <code>string height = 2;</code>
+   * @return The bytes for height.
+   */
+  com.google.protobuf.ByteString
+      getHeightBytes();
+
+  /**
+   * <code>string width = 3;</code>
+   * @return The width.
+   */
+  java.lang.String getWidth();
+  /**
+   * <code>string width = 3;</code>
+   * @return The bytes for width.
+   */
+  com.google.protobuf.ByteString
+      getWidthBytes();
+
+  /**
+   * <code>uint64 duration = 4;</code>
+   * @return The duration.
+   */
+  long getDuration();
 }

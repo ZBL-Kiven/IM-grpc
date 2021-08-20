@@ -33,7 +33,7 @@ internal class DataStore<T> {
 
     fun put(info: BaseMsgInfo<T>): Int {
         when (info.type) {
-            MessageHandleType.SOCKET_STATE -> {
+            MessageHandleType.CONNECT_STATE -> {
                 connectStateChanged.addOnly(info)
             }
             MessageHandleType.SEND_MSG -> {

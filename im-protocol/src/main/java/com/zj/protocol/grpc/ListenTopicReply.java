@@ -97,10 +97,6 @@ private static final long serialVersionUID = 0L;
   public static final int TOPIC_FIELD_NUMBER = 1;
   private volatile java.lang.Object topic_;
   /**
-   * <pre>
-   *具体的topic key
-   * </pre>
-   *
    * <code>string topic = 1;</code>
    * @return The topic.
    */
@@ -118,10 +114,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *具体的topic key
-   * </pre>
-   *
    * <code>string topic = 1;</code>
    * @return The bytes for topic.
    */
@@ -143,10 +135,6 @@ private static final long serialVersionUID = 0L;
   public static final int DATA_FIELD_NUMBER = 2;
   private volatile java.lang.Object data_;
   /**
-   * <pre>
-   *由业务推送过来的json信息，根据业务不同内部的格式不同
-   * </pre>
-   *
    * <code>string data = 2;</code>
    * @return The data.
    */
@@ -164,10 +152,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *由业务推送过来的json信息，根据业务不同内部的格式不同
-   * </pre>
-   *
    * <code>string data = 2;</code>
    * @return The bytes for data.
    */
@@ -507,10 +491,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object topic_ = "";
     /**
-     * <pre>
-     *具体的topic key
-     * </pre>
-     *
      * <code>string topic = 1;</code>
      * @return The topic.
      */
@@ -527,10 +507,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *具体的topic key
-     * </pre>
-     *
      * <code>string topic = 1;</code>
      * @return The bytes for topic.
      */
@@ -548,10 +524,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *具体的topic key
-     * </pre>
-     *
      * <code>string topic = 1;</code>
      * @param value The topic to set.
      * @return This builder for chaining.
@@ -567,10 +539,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key
-     * </pre>
-     *
      * <code>string topic = 1;</code>
      * @return This builder for chaining.
      */
@@ -581,10 +549,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *具体的topic key
-     * </pre>
-     *
      * <code>string topic = 1;</code>
      * @param value The bytes for topic to set.
      * @return This builder for chaining.
@@ -603,10 +567,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object data_ = "";
     /**
-     * <pre>
-     *由业务推送过来的json信息，根据业务不同内部的格式不同
-     * </pre>
-     *
      * <code>string data = 2;</code>
      * @return The data.
      */
@@ -623,10 +583,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *由业务推送过来的json信息，根据业务不同内部的格式不同
-     * </pre>
-     *
      * <code>string data = 2;</code>
      * @return The bytes for data.
      */
@@ -644,10 +600,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *由业务推送过来的json信息，根据业务不同内部的格式不同
-     * </pre>
-     *
      * <code>string data = 2;</code>
      * @param value The data to set.
      * @return This builder for chaining.
@@ -663,10 +615,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *由业务推送过来的json信息，根据业务不同内部的格式不同
-     * </pre>
-     *
      * <code>string data = 2;</code>
      * @return This builder for chaining.
      */
@@ -677,10 +625,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *由业务推送过来的json信息，根据业务不同内部的格式不同
-     * </pre>
-     *
      * <code>string data = 2;</code>
      * @param value The bytes for data to set.
      * @return This builder for chaining.

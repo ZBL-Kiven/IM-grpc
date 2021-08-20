@@ -51,4 +51,10 @@ public interface QuestionContentOrBuilder extends
    * @return The isPublic.
    */
   boolean getIsPublic();
+
+  /**
+   * <code>uint64 sendTime = 7;</code>
+   * @return The sendTime.
+   */
+  long getSendTime();
 }

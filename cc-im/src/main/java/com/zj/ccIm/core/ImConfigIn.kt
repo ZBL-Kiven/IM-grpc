@@ -8,7 +8,7 @@ interface ImConfigIn {
 
     fun getToken(): String
 
-    fun getGrpcAddress(): URL
+    fun getGrpcAddress(): Pair<String, Int>
 
     fun getIMHost(): String
 }

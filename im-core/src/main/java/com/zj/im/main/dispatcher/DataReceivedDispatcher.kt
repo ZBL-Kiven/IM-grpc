@@ -69,8 +69,8 @@ internal object DataReceivedDispatcher {
     }
 
     fun onConnectionStateChange(connState: ConnectionState) {
-        val con = connState == ConnectionState.CONNECTED_ERROR || connState == ConnectionState.NETWORK_STATE_CHANGE
-        val rec = StatusHub.curConnectionState.canConnect()
+        val con = connState == ConnectionState.CONNECTED_ERROR || connState == ConnectionState.NETWORK_STATE_CHANGE || connState == ConnectionState.RECONNECT
+        val rec = StatusHub.curConnectionState.canConnect() || connState == ConnectionState.RECONNECT
         if (con && rec) {
             getServer("connection need to reconnect")?.reConnect(connState.name)
         }

@@ -18,4 +18,10 @@ public interface AudioContentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getUrlBytes();
+
+  /**
+   * <code>uint64 duration = 2;</code>
+   * @return The duration.
+   */
+  long getDuration();
 }
