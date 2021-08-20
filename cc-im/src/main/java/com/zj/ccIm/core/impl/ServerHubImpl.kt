@@ -1,11 +1,11 @@
-package com.zj.im.core.impl
+package com.zj.ccIm.core.impl
 
 import android.util.Log
-import com.zj.im.core.bean.SendMessageReqEn
+import com.zj.ccIm.core.bean.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
-import com.zj.im.core.Constance
-import com.zj.im.core.api.ImApi
-import com.zj.im.core.bean.SendMessageRespEn
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.protocol.grpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
@@ -66,7 +66,7 @@ class ServerHubImpl : ServerImplGrpc() {
                 }
             }
             Constance.CONNECT_TYPE_MESSAGE -> {
-
+                postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, null, true, 0)
             }
         }
     }
@@ -146,8 +146,6 @@ class ServerHubImpl : ServerImplGrpc() {
         val observer = object : CusObserver<BatchMsg>() {
             override fun onResult(isOk: Boolean, data: BatchMsg?, t: Throwable?) {
                 if (isOk && data != null) {
-                    val groupId = rq.groupId
-
                     val size = data.serializedSize * 1L
                     postReceivedMessage(type, data.imMessageList, true, size)
                 } else onParseError(t)

@@ -1,4 +1,4 @@
-package com.zj.im.core
+package com.zj.ccIm.core
 
 import android.app.Application
 import java.security.MessageDigest
@@ -21,6 +21,7 @@ internal object Constance {
     const val CALL_ID_SUBSCRIBE_REMOVE_TOPIC = INTERNAL_CALL_ID_PREFIX + "_subscribe_remove_topic_type"
     const val CALL_ID_LEAVE_CHAT_ROOM = INTERNAL_CALL_ID_PREFIX + "_leave_chat_room"
     const val CALL_ID_REGISTER_CHAT = INTERNAL_CALL_ID_PREFIX + "_register_chat_room"
+    const val CALL_ID_REGISTERED_CHAT = INTERNAL_CALL_ID_PREFIX + "_registered_chat_room"
 
     const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline_"
     const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_chat_messages"
@@ -54,8 +55,8 @@ internal object Constance {
     const val PRIMARY_LOCAL_ID_NORMAL = "message_primary_local_id_normal"
 
     /**-------------------------- EVENT CODE -------------------------------------------*/
-    const val FETCH_SESSION_CODE = "fetch session"
-
+    const val FETCH_SESSION_CODE = "fetch_session"
+    const val FETCH_OFFLINE_MSG_CODE = "fetch_offline_message"
 
     fun String.toMd5(): String {
         try {

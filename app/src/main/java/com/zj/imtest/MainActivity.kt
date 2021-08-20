@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.im.core.IMHelper
+import com.zj.ccIm.core.IMHelper
 
 
 class MainActivity : AppCompatActivity() {

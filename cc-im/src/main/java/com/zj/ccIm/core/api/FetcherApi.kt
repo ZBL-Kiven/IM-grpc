@@ -1,7 +1,7 @@
-package com.zj.im.core.api
+package com.zj.ccIm.core.api
 
 import com.zj.database.entity.FetchSessionMsgInfo
-import com.zj.im.core.bean.FetcherSessionBean
+import com.zj.ccIm.core.bean.FetcherSessionBean
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

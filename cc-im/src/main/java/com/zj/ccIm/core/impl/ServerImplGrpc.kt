@@ -1,4 +1,4 @@
-package com.zj.im.core.impl
+package com.zj.ccIm.core.impl
 
 import android.app.Application
 import android.os.Handler
@@ -6,8 +6,8 @@ import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.utils.nio
-import com.zj.im.core.Constance
-import com.zj.im.core.IMHelper
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.IMHelper
 import com.zj.protocol.Grpc
 import com.zj.protocol.grpc.*
 import io.grpc.StatusRuntimeException

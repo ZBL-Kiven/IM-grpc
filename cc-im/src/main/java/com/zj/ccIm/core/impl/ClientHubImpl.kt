@@ -1,13 +1,14 @@
-package com.zj.im.core.impl
+package com.zj.ccIm.core.impl
 
 import android.util.Log
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.im.core.bean.SendMessageRespEn
+import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
-import com.zj.im.core.Constance
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.IMHelper
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
 
@@ -56,9 +57,11 @@ class ClientHubImpl : ClientHub<Any?>() {
      * @return true is no longer push
      * */
     private fun isInterruptData(callId: String?): Boolean {
+        if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
+            IMHelper.onMsgRegistered()
+        }
         if (callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-
-            //todo open the msg queue?
+            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
             return false
         }
         return callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true

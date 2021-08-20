@@ -1,4 +1,4 @@
-package com.zj.im.core
+package com.zj.ccIm.core
 
 import java.net.URL
 

@@ -66,7 +66,6 @@ internal object TimeOutUtils {
                                 }
                             }
                         }
-
                         ADD -> {
                             (msg.obj as? SentMsgInfo<*>)?.let { data ->
                                 sentMessages.runSync {

@@ -1,15 +1,15 @@
-package com.zj.im.core.sender
+package com.zj.ccIm.core.sender
 
 import android.content.Context
 import com.zj.im.sender.OnStatus
-import com.zj.im.core.Constance
-import com.zj.im.core.Constance.toMd5
-import com.zj.im.core.bean.SendMessageReqEn
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.Constance.toMd5
+import com.zj.ccIm.core.bean.SendMessageReqEn
 import com.zj.protocol.sender.MsgSender
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import com.google.gson.Gson
-import com.zj.im.core.IMHelper
+import com.zj.ccIm.core.IMHelper
 import java.net.URL
 
 class FileUploader(private val context: Context, private val d: SendMessageReqEn, private val callId: String, private val isDeleteFileAfterUpload: Boolean, private var onStatus: OnStatus?) {

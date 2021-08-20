@@ -1,9 +1,9 @@
-package com.zj.im.core.api
+package com.zj.ccIm.core.api
 
 import com.zj.api.BaseApi
 import com.zj.api.interceptor.HeaderProvider
 import com.zj.api.interceptor.UrlProvider
-import com.zj.im.core.IMHelper
+import com.zj.ccIm.core.IMHelper
 
 object ImApi {
 

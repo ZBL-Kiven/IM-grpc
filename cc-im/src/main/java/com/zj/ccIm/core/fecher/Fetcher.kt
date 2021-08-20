@@ -1,13 +1,13 @@
-package com.zj.im.core.fecher
+package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
 import com.zj.database.DbHelper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.poster.log
-import com.zj.im.core.Constance
-import com.zj.im.core.IMHelper
-import com.zj.im.core.api.ImApi
-import com.zj.im.core.sp.SPHelper
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.sp.SPHelper
 import io.reactivex.schedulers.Schedulers
 
 object Fetcher {

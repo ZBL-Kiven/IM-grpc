@@ -1,7 +1,7 @@
-package com.zj.im.core.api
+package com.zj.ccIm.core.api
 
-import com.zj.im.core.bean.SendMessageReqEn
-import com.zj.im.core.bean.SendMessageRespEn
+import com.zj.ccIm.core.bean.SendMessageReqEn
+import com.zj.ccIm.core.bean.SendMessageRespEn
 import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST

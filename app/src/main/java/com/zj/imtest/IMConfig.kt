@@ -1,6 +1,6 @@
 package com.zj.imtest
 
-import com.zj.im.core.ImConfigIn
+import com.zj.ccIm.core.ImConfigIn
 import java.net.URL
 
 object IMConfig : ImConfigIn {
