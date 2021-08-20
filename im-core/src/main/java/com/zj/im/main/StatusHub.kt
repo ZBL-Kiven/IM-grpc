@@ -4,7 +4,6 @@ import com.zj.im.chat.enums.LifeType
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.modle.IMLifecycle
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
-import com.zj.im.utils.log.logger.printInFile
 
 internal object StatusHub {
 
@@ -14,7 +13,7 @@ internal object StatusHub {
 
     var curConnectionState: ConnectionState = ConnectionState.INIT
 
-    private var lifeType = IMLifecycle(LifeType.START, 0)
+    private var lifeType = IMLifecycle(LifeType.START, "")
         set(value) {
             if (field != value) {
                 field = value
