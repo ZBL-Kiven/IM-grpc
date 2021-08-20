@@ -1,11 +1,14 @@
-package com.zj.imtest.core
+package com.zj.im.core
 
-import java.net.URL
+import android.app.Application
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
 
-object Constance {
+internal object Constance {
+
+    var app: Application? = null
+
     /**-------------------------- HINT MSG ------------------------------*/
 
     const val CONNECTION_RESET: String = "reconnection because the connection is already terminate!"
@@ -45,26 +48,14 @@ object Constance {
     const val HEART_BEATS_BASE_TIME = 5000L
     const val CALL_ID_HEART_BEATS = "call_heart_beats"
 
-    /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
+    /**-------------------------- LOCAL DATABASE EVENT ------------------------------*/
 
     const val PRIMARY_LOCAL_ID_V = "message_primary_local_id_v_said"
     const val PRIMARY_LOCAL_ID_NORMAL = "message_primary_local_id_normal"
 
-    fun getUserId(): Int {
-        return 120539
-    }
+    /**-------------------------- EVENT CODE -------------------------------------------*/
+    const val FETCH_SESSION_CODE = "fetch session"
 
-    fun getToken(): String {
-        return "ZDU2OTk4ODctMGI1Yi00MjdmLWFhYTUtMTU1ODMxOWY3ZmVh"
-    }
-
-    fun getGrpcAddress(): URL {
-        return URL("grpc.ccdev.lerjin.com:50003")
-    }
-
-    fun getIMHost(): String {
-        return "https://im.ccdev.lerjin.com"
-    }
 
     fun String.toMd5(): String {
         try {

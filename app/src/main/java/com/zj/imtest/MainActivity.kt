@@ -5,7 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.imtest.core.IMHelper
+import com.zj.im.core.IMHelper
 
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        IMHelper.init(this.application)
+        IMHelper.init(this.application, IMConfig)
 
 
         IMHelper.addReceiveObserver<String>(0x1123).listen { r, lr, payload ->
@@ -25,10 +25,6 @@ class MainActivity : AppCompatActivity() {
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1122).listen { m, list, s ->
             Log.e("------ ", "on message ==> d = ${m?.textContent?.text}   lstD = $list  s = $s")
         }
-    }
-
-    fun resume(view: View) {
-        IMHelper.resume(0)
     }
 
     fun registerMsg(view: View) {

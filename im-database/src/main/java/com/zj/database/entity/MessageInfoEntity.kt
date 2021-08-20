@@ -94,7 +94,8 @@ class MessageInfoEntity {
     /**
      * 合并服务端消息 id
      * */
-    val serverMsgId: String; get() = "$groupId.$msgId"
+    @Suppress("SuspiciousVarProperty") var serverMsgId: String = ""
+        get() = "$groupId.$msgId"
 
     /**
      * 标记存储类型的 id

@@ -1,14 +1,11 @@
-package com.zj.imtest.core.impl
+package com.zj.im.core.impl
 
 import android.util.Log
-import com.zj.api.BaseApi
-import com.zj.api.interceptor.HeaderProvider
-import com.zj.api.interceptor.UrlProvider
-import com.zj.imtest.core.bean.SendMessageReqEn
+import com.zj.im.core.bean.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
-import com.zj.imtest.core.Constance
-import com.zj.imtest.core.bean.SendMessageRespEn
-import com.zj.imtest.core.sender.SenderApi
+import com.zj.im.core.Constance
+import com.zj.im.core.api.ImApi
+import com.zj.im.core.bean.SendMessageRespEn
 import com.zj.protocol.grpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
@@ -83,17 +80,8 @@ class ServerHubImpl : ServerImplGrpc() {
             return 0
         }
         if (d.clientMsgId != callId) d.clientMsgId = callId
-        val baseUrl = object : UrlProvider() {
-            override fun url(): String {
-                return Constance.getIMHost()
-            }
-        }
-        val header = object : HeaderProvider {
-            override fun headers(): Map<out String, String> {
-                return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${Constance.getUserId()}", "token" to Constance.getToken())
-            }
-        }
-        BaseApi.create<SenderApi>().baseUrl(baseUrl).header(header).build().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
+
+        ImApi.getSenderApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
             var isOk = isSuccess
             if (isSuccess && data != null) {
                 isOk = data.success && !data.black
@@ -158,6 +146,8 @@ class ServerHubImpl : ServerImplGrpc() {
         val observer = object : CusObserver<BatchMsg>() {
             override fun onResult(isOk: Boolean, data: BatchMsg?, t: Throwable?) {
                 if (isOk && data != null) {
+                    val groupId = rq.groupId
+
                     val size = data.serializedSize * 1L
                     postReceivedMessage(type, data.imMessageList, true, size)
                 } else onParseError(t)

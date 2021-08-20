@@ -1,4 +1,4 @@
-package com.zj.imtest.core.bean
+package com.zj.im.core.bean
 
 class SendMessageReqEn {
 

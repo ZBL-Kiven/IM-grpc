@@ -1,13 +1,13 @@
-package com.zj.imtest.core.impl
+package com.zj.im.core.impl
 
 import android.util.Log
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.imtest.core.bean.SendMessageRespEn
+import com.zj.im.core.bean.SendMessageRespEn
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
-import com.zj.imtest.core.Constance
+import com.zj.im.core.Constance
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
 

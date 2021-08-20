@@ -1,6 +1,7 @@
 package com.zj.database.entity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 
@@ -46,5 +47,20 @@ class SessionInfoEntity {
      * 群组状态 0正常 1停用
      */
     var groupStatus: Int = 0
+
+    /**
+     * 总收入
+     * */
+    var income: Int = 0
+
+    /**
+     * 问题数
+     * */
+    var questionNum: Int = 0
+
+    /**
+     * 忽略数据库字段，由推送时拼装
+     * */
+    @Ignore var sessionMsgInfo: FetchSessionMsgInfo? = null
 
 }

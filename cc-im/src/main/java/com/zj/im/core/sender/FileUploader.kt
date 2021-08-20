@@ -1,14 +1,15 @@
-package com.zj.imtest.core.sender
+package com.zj.im.core.sender
 
 import android.content.Context
 import com.zj.im.sender.OnStatus
-import com.zj.imtest.core.Constance
-import com.zj.imtest.core.Constance.toMd5
-import com.zj.imtest.core.bean.SendMessageReqEn
+import com.zj.im.core.Constance
+import com.zj.im.core.Constance.toMd5
+import com.zj.im.core.bean.SendMessageReqEn
 import com.zj.protocol.sender.MsgSender
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import com.google.gson.Gson
+import com.zj.im.core.IMHelper
 import java.net.URL
 
 class FileUploader(private val context: Context, private val d: SendMessageReqEn, private val callId: String, private val isDeleteFileAfterUpload: Boolean, private var onStatus: OnStatus?) {
@@ -55,9 +56,9 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
         if (d.msgType == Constance.MsgType.text.name) {
             observer.onError(callId, IllegalArgumentException("the send msg type is not supported from text !!"));return
         }
-        val serverUploadUrl = URL("${Constance.getIMHost()}/im/upload/file")
-        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${Constance.getUserId()}", "token" to Constance.getToken(), "timeStamp" to "$timeStamp")
-        val sign = "{$timeStamp;${Constance.getUserId()};${d.msgType}".toMd5()
+        val serverUploadUrl = URL("${IMHelper.imConfig.getIMHost()}/im/upload/file")
+        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig.getUserId()}", "token" to IMHelper.imConfig.getToken(), "timeStamp" to "$timeStamp")
+        val sign = "{$timeStamp;${IMHelper.imConfig.getUserId()};${d.msgType}".toMd5()
         val fileInfo = MsgSender.FileInfo(path, "file", "")
         val params = mapOf("sign" to sign, "type" to d.msgType)
         sendingToken = MsgSender.with(context.applicationContext, serverUploadUrl).callId(callId).addHeader(headers).addParams(params).addFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)

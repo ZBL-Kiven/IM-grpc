@@ -1,5 +1,6 @@
 package com.zj.im.main.impl
 
+import android.app.Application
 import android.app.Notification
 import android.app.Service
 import android.content.ComponentName
@@ -158,16 +159,24 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         getService("IMInterface.resend", false)?.send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore)
     }
 
-    fun pause(code: Int) {
+    fun pause(code: String) {
         getClient("IMInterface.pause")?.pause(code)
     }
 
-    fun resume(code: Int) {
+    fun resume(code: String) {
         getClient("IMInterface.resume")?.resume(code)
     }
 
     fun reconnect(case: String) {
         getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.CONNECTED_ERROR, case)
+    }
+
+    fun getAppContext(): Application? {
+        return option?.context
+    }
+
+    protected open fun postToUi(data: Any?, payload: String? = null, onFinish: () -> Unit) {
+        postToUIObservers(data, payload, onFinish)
     }
 
     open fun shutdown(case: String) {

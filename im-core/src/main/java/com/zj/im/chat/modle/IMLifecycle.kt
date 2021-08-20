@@ -15,5 +15,5 @@ import com.zj.im.chat.enums.LifeType
  *
  **/
 
-data class IMLifecycle(val type: LifeType, val what: Int)
+data class IMLifecycle(val type: LifeType, val what: String)
 

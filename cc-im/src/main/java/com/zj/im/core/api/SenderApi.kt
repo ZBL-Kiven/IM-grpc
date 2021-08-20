@@ -1,7 +1,7 @@
-package com.zj.imtest.core.sender
+package com.zj.im.core.api
 
-import com.zj.imtest.core.bean.SendMessageReqEn
-import com.zj.imtest.core.bean.SendMessageRespEn
+import com.zj.im.core.bean.SendMessageReqEn
+import com.zj.im.core.bean.SendMessageRespEn
 import io.reactivex.Observable
 import retrofit2.http.Body
 import retrofit2.http.POST

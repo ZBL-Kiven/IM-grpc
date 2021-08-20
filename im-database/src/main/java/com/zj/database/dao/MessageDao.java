@@ -12,7 +12,6 @@ import com.zj.database.entity.MessageInfoEntity;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
 @Dao
 public interface MessageDao {
 
@@ -40,9 +39,14 @@ public interface MessageDao {
     /**
      * 查询本地最后一条交互消息
      */
-    @Query("SELECT * FROM messages WHERE groupId == :groupId AND sendingState < 0 AND (ownerId = senderId OR replyId = :userId) ORDER BY sendTime DESC LIMIT 1")
+    @Query("SELECT * FROM messages WHERE groupId == :groupId AND (sendingState = 0 OR sendingState =3) AND (ownerId = senderId OR replyId = :userId) ORDER BY sendTime DESC LIMIT 1")
     MessageInfoEntity findLastInteractiveMsg(long groupId, int userId);
 
+    /**
+     * 获取所有未发送成功的 Msg
+     * */
+    @Query("SELECT * FROM messages WHERE sendingState = 1")
+    List<MessageInfoEntity> getAllSendingMsg();
 
     @Query("SELECT * FROM messages WHERE groupId = :groupId")
     List<MessageInfoEntity> getAllMessages(long groupId);

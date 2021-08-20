@@ -1,4 +1,4 @@
-package com.zj.imtest.core.impl
+package com.zj.im.core.impl
 
 import android.app.Application
 import android.os.Handler
@@ -6,7 +6,8 @@ import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.utils.nio
-import com.zj.imtest.core.Constance
+import com.zj.im.core.Constance
+import com.zj.im.core.IMHelper
 import com.zj.protocol.Grpc
 import com.zj.protocol.grpc.*
 import io.grpc.StatusRuntimeException
@@ -35,7 +36,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     override fun init(context: Application?) {
         super.init(context)
-        defaultHeader = mapOf("token" to Constance.getToken(), "userid" to "${Constance.getUserId()}")
+        defaultHeader = mapOf("token" to IMHelper.imConfig.getToken(), "userid" to "${IMHelper.imConfig.getUserId()}")
         conn()
     }
 
@@ -53,7 +54,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
         try {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
-                val url = Constance.getGrpcAddress()
+                val url = IMHelper.imConfig.getGrpcAddress()
                 channel = Grpc.get(url.host, url.port).defaultHeader(defaultHeader)
             }
             onConnection()
