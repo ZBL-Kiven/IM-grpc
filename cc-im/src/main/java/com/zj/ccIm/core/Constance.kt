@@ -32,8 +32,8 @@ internal object Constance {
 
     const val TOPIC_CONN_SUCCESS = "cc://im-rpc-req/ListenTopicData"
     const val TOPIC_MSG_REGISTRATION = "cc://im-rpc-req/GetImMessage"
-    const val TOPIC_OWNER_GROUP_TOPIC = "cc://owner-topic"
-    const val TOPIC_GROUP_INFO_TOPIC = "cc://group-info-topic"
+    const val TOPIC_IM_MSG = "cc://im-msg-topic/"
+    const val TOPIC_GROUP_INFO = "cc://group-info-topic"
     const val TOPIC_CC_USER = "cc://user" // in test
 
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
@@ -47,12 +47,6 @@ internal object Constance {
 
     const val HEART_BEATS_EVENT = 0xf1365
     const val HEART_BEATS_BASE_TIME = 5000L
-    const val CALL_ID_HEART_BEATS = "call_heart_beats"
-
-    /**-------------------------- LOCAL DATABASE EVENT ------------------------------*/
-
-    const val PRIMARY_LOCAL_ID_V = "message_primary_local_id_v_said"
-    const val PRIMARY_LOCAL_ID_NORMAL = "message_primary_local_id_normal"
 
     /**-------------------------- EVENT CODE -------------------------------------------*/
     const val FETCH_SESSION_CODE = "fetch_session"
@@ -78,7 +72,7 @@ internal object Constance {
         return ""
     }
 
-    enum class MsgType {
-        text, img, audio, video
+    enum class MsgType(val type: String) {
+        TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question")
     }
 }

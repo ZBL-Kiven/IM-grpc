@@ -61,6 +61,6 @@ class SessionInfoEntity {
     /**
      * 忽略数据库字段，由推送时拼装
      * */
-    @Ignore var sessionMsgInfo: FetchSessionMsgInfo? = null
+    @Ignore var sessionMsgInfo: SessionLastMsgInfo? = null
 
 }

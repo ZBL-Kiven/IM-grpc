@@ -8,25 +8,30 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
+import com.zj.database.entity.MessageInfoEntity;
 import com.zj.database.entity.SessionInfoEntity;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Dao
 public interface SessionDao {
+
+    @Query("SELECT * FROM sessions")
+    List<SessionInfoEntity> findAll();
 
     /**
      * Query by session id
      */
     @WorkerThread
-    @Query("SELECT * FROM sessions WHERE 'sessionId' = :sessionId")
+    @Query("SELECT * FROM sessions WHERE groupId = :sessionId")
     SessionInfoEntity findSessionById(long sessionId);
 
     /**
      * Query by owner id
      */
     @WorkerThread
-    @Query("SELECT * FROM sessions WHERE 'ownerId' = :ownerId")
+    @Query("SELECT * FROM sessions WHERE ownerId = :ownerId")
     SessionInfoEntity findSessionByOwnerId(long ownerId);
 
 

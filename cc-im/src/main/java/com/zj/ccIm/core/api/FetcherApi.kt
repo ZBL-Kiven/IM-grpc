@@ -1,6 +1,6 @@
 package com.zj.ccIm.core.api
 
-import com.zj.database.entity.FetchSessionMsgInfo
+import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.ccIm.core.bean.FetcherSessionBean
 import io.reactivex.Observable
 import retrofit2.http.GET
@@ -13,6 +13,6 @@ interface FetcherApi {
 
 
     @GET("/im/message/read/last/message")
-    fun fetchSessionLastMessage(@Query("groupId") groupIds: List<Long>?): Observable<List<FetchSessionMsgInfo>?>
+    fun fetchSessionLastMessage(@Query("groupId") groupIds: List<Long>?): Observable<List<SessionLastMsgInfo>?>
 
 }

@@ -49,11 +49,13 @@ abstract class ClientHub<T> {
     }
 
     internal fun pause(code: String) {
+        if (StatusHub.isPaused()) return
         printInFile("on pause called ", "$code --- onPause")
         StatusHub.onLifecycle(IMLifecycle(LifeType.PAUSE, code))
     }
 
     internal fun resume(code: String) {
+        if (StatusHub.isRunning()) return
         printInFile("on resume called ", "$code --- onResume")
         StatusHub.onLifecycle(IMLifecycle(LifeType.RESUME, code))
     }

@@ -7,7 +7,7 @@ import androidx.room.TypeConverters
 import com.zj.database.converter.MessageConverter
 
 @Entity(tableName = "SessionMsgInfo")
-class FetchSessionMsgInfo {
+class SessionLastMsgInfo {
 
     @PrimaryKey var groupId: Long = -1
 

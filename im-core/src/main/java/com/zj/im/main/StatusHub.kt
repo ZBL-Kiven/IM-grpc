@@ -29,6 +29,10 @@ internal object StatusHub {
         return lifeType.type != LifeType.STOP
     }
 
+    fun isPaused(): Boolean {
+        return lifeType.type == LifeType.PAUSE
+    }
+
     fun onLifecycle(state: IMLifecycle) {
         lifeType = state
     }

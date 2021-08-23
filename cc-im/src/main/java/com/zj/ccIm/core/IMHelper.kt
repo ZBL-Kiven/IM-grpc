@@ -12,6 +12,7 @@ import com.zj.im.main.impl.IMInterface
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
+import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.protocol.grpc.GetImHistoryMsgReq
 import com.zj.protocol.grpc.GetImMessageReq
@@ -49,10 +50,12 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun refreshChatMsg() {
+        pause(Constance.FETCH_OFFLINE_MSG_CODE)
         lastMsgRegister?.let { getOfflineChatMsg(it.groupId, it.ownerId) }
     }
 
     fun refreshGroupMsg() {
+        pause(Constance.FETCH_OFFLINE_MSG_CODE)
         lastMsgRegister?.let { getOfflineGroupMsg(it.groupId, it.ownerId) }
     }
 
@@ -102,8 +105,18 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     internal fun onMsgRegistered() {
+        pause(Constance.FETCH_OFFLINE_MSG_CODE)
         refreshChatMsg()
         refreshGroupMsg()
+        val gid = lastMsgRegister?.groupId ?: return
+        getAppContext()?.let {
+            val resendMsg = DbHelper.get(it)?.db?.sendMsgDao()?.findAllBySessionId(gid)
+            resendMsg?.forEach { msg ->
+                when (msg.msgType) {
+                    Constance.MsgType.TEXT.type -> Sender.resendText(msg)
+                }
+            }
+        }
     }
 
     fun close() {

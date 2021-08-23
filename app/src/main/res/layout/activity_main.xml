@@ -4,26 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="#bba"
-        android:onClick="registerMsg"
-        android:padding="10dp"
-        android:text="register msg" />
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#acc"
+            android:gravity="center"
+            android:onClick="registerMsg"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="registerMsg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#cac"
+            android:gravity="center"
+            android:onClick="leaveChatRoom"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="leaveRoom" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#cca"
+            android:gravity="center"
+            android:onClick="queryCurrent"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="queryDB" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#baf"
+            android:gravity="center"
+            android:onClick="sendText"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="sendText" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#efc">
+
+        <TextView
+            android:id="@+id/main_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="#cac"
-        android:onClick="leaveChatRoom"
-        android:padding="10dp"
-        android:text="leave chat room" />
+        android:layout_gravity="center"
+        android:onClick="clearText"
+        android:text="clear" />
 
 </LinearLayout>

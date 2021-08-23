@@ -1,13 +1,16 @@
-package com.zj.ccIm.core.bean
+package com.zj.database.entity
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.zj.database.converter.MessageConverter
+
+@Entity(tableName = "sendingMsg")
 class SendMessageReqEn {
 
     var groupId: Long? = null
 
-    /**
-     * 客户端信息id
-     */
-    var clientMsgId: String? = null
+    @PrimaryKey var clientMsgId: String = ""
 
     /**
      * text/img/audio/video
@@ -22,7 +25,12 @@ class SendMessageReqEn {
     /**
      *回复的信息id
      */
-    var replyMsgId: Long = 0
+    var replyMsgId: Long? = null
+
+    /**
+     * 需要回复消息体的类型
+     * */
+    var answerMsgType: String? = null
 
     /**
      * 文件
@@ -42,12 +50,12 @@ class SendMessageReqEn {
     /**
      * 文件（语音，视频）时长
      */
-    var duration = 0
+    var duration = 0L
 
     /**
      * 是否公开消息 false否 tru是
      */
-    var isPublic = true
+    var public = true
 
     /**
      * 钻石数
@@ -63,4 +71,13 @@ class SendMessageReqEn {
      * 文件
      */
     var localFilePath: String? = null
+
+    /**
+     *回复的消息,不参与上传，但是参与存储
+     */
+    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
+        set(value) {
+            replyMsgId = value?.msgId
+            field = value
+        }
 }

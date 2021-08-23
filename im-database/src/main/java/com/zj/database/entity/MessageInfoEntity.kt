@@ -26,7 +26,11 @@ class MessageInfoEntity {
     /**
      * 发送时间
      */
-    var sendTime: Long? = null
+    var sendTime: Long = 0
+        set(value) {
+            if (createTs <= 0) createTs = value
+            field = value
+        }
 
     /**
      * 信息id
@@ -116,4 +120,9 @@ class MessageInfoEntity {
      * 本地组装的重要参数，需要在发送、收到消息时都为其赋值。
      * */
     var replyId: Int? = null
+
+    /**
+     * 本地新增的辅助参数，用于在服务器时间和本地时间有较大偏差时，能保持正确的收发展示顺序
+     * */
+    var createTs: Long = 0
 }

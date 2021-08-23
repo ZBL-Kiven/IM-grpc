@@ -48,7 +48,8 @@ abstract class MessageInterface<T> {
                 }
             }
             onFinish()
-            if (!isUsed) debugLog("the data ${data.javaClass.simpleName}.class has been abandon with none consumer")
+            val cls = if (data is Collection<*>) data.firstOrNull()?.javaClass else data.javaClass
+            if (!isUsed) debugLog("the data ${cls?.simpleName}.class has been abandon with none consumer")
         }
     }
 

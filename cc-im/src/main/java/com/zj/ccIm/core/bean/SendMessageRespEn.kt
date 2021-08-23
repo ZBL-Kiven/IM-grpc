@@ -3,11 +3,6 @@ package com.zj.ccIm.core.bean
 class SendMessageRespEn {
 
     /**
-     * 发送状态
-     */
-    var success = false
-
-    /**
      * true 黑名单
      */
     var black = false

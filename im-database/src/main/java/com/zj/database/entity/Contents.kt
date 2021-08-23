@@ -19,7 +19,7 @@ class CCVideoContent : BaseFileContent() {
 
 class QuestionContent : BaseFileContent() {
     var textContent: TextContent? = null
-    //0 正常   1 已回复  2 已过期
+    //0 正常   1 已回复   2 已过期
     var questionStatus: Int = 0
     var questionId: Int = 0
     var spark: Int = 0

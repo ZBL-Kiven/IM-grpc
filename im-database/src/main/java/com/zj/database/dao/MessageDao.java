@@ -12,12 +12,16 @@ import com.zj.database.entity.MessageInfoEntity;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Dao
 public interface MessageDao {
 
     /**
      * Query by session id
      */
+    @Query("SELECT * FROM messages")
+    List<MessageInfoEntity> findAll();
+
     @WorkerThread
     @Query("SELECT * FROM messages WHERE serverMsgId = :msgId")
     MessageInfoEntity findMsgById(String msgId);
@@ -44,7 +48,7 @@ public interface MessageDao {
 
     /**
      * 获取所有未发送成功的 Msg
-     * */
+     */
     @Query("SELECT * FROM messages WHERE sendingState = 1")
     List<MessageInfoEntity> getAllSendingMsg();
 
@@ -59,5 +63,8 @@ public interface MessageDao {
 
     @Query("DELETE FROM messages WHERE saveInfoId = :sid")
     void deleteMsgBySaveInfoId(String sid);
+
+    @Query("DELETE FROM messages WHERE groupId = :sessionId")
+    void deleteAllBySessionId(long sessionId);
 
 }

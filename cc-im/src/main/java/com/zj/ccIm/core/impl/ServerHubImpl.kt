@@ -1,7 +1,7 @@
 package com.zj.ccIm.core.impl
 
 import android.util.Log
-import com.zj.ccIm.core.bean.SendMessageReqEn
+import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.api.ImApi
@@ -84,7 +84,7 @@ class ServerHubImpl : ServerImplGrpc() {
         ImApi.getSenderApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
             var isOk = isSuccess
             if (isSuccess && data != null) {
-                isOk = data.success && !data.black
+                isOk = !data.black
             }
             callBack.result(isOk, data, throwable)
         }
@@ -118,7 +118,7 @@ class ServerHubImpl : ServerImplGrpc() {
         requestStreamObserver = withChannel(true) {
             it.listenTopicData(object : CusObserver<ListenTopicReply>() {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-                    print("on connecting result", "topic = ${data?.topic}")
+                    print("on topic", "topic = ${data?.topic}")
                     if (isOk && data != null) {
                         when (data.topic) {
                             Constance.TOPIC_CONN_SUCCESS -> {

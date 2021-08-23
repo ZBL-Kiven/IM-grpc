@@ -6,16 +6,21 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.zj.database.entity.FetchSessionMsgInfo;
+import com.zj.database.entity.SessionLastMsgInfo;
+
+import java.util.List;
 
 @SuppressWarnings("unused")
 @Dao
 public interface SessionLastMessageDao {
 
+    @Query("SELECT * FROM sessionmsginfo")
+    List<SessionLastMsgInfo> findAll();
+
     @Query("SELECT * FROM sessionmsginfo WHERE groupId = :groupId")
-    FetchSessionMsgInfo findSessionMsgInfoBySessionId(long groupId);
+    SessionLastMsgInfo findSessionMsgInfoBySessionId(long groupId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertOrUpdateSessionMsgInfo(FetchSessionMsgInfo info);
+    void insertOrUpdateSessionMsgInfo(SessionLastMsgInfo info);
 
 }

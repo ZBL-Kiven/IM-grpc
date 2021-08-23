@@ -4,7 +4,7 @@ import android.content.Context
 import com.zj.im.sender.OnStatus
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.Constance.toMd5
-import com.zj.ccIm.core.bean.SendMessageReqEn
+import com.zj.database.entity.SendMessageReqEn
 import com.zj.protocol.sender.MsgSender
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
@@ -53,7 +53,7 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
         if (path.isNullOrEmpty()) {
             observer.onError(callId, NullPointerException("file path is null or empty !!"));return
         }
-        if (d.msgType == Constance.MsgType.text.name) {
+        if (d.msgType == Constance.MsgType.TEXT.type) {
             observer.onError(callId, IllegalArgumentException("the send msg type is not supported from text !!"));return
         }
         val serverUploadUrl = URL("${IMHelper.imConfig.getIMHost()}/im/upload/file")

@@ -1,7 +1,5 @@
 package com.zj.ccIm.core
 
-import java.net.URL
-
 interface ImConfigIn {
 
     fun getUserId(): Int

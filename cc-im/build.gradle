@@ -39,3 +39,5 @@ dependencies {
     api project(':im-core')
     implementation project(':im-protocol')
 }
+
+apply from: "upload.gradle"
