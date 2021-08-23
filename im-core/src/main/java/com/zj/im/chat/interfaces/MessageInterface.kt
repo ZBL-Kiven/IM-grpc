@@ -15,18 +15,18 @@ abstract class MessageInterface<T> {
     @Suppress("unused")
     companion object {
 
-        private var msgObservers: HashMap<Any, UIOptions<*, *>>? = null
+        private var msgObservers: HashMap<Any, UIOptions<*, *, *>>? = null
             get() {
                 if (field == null) field = hashMapOf()
                 return field
             }
 
-        internal fun putAnObserver(option: UIOptions<*, *>?) {
+        internal fun putAnObserver(option: UIOptions<*, *, *>?) {
             if (option == null) return
             msgObservers?.put(option.getUnique(), option)
         }
 
-        internal fun removeAnObserver(option: UIOptions<*, *>?) {
+        internal fun removeAnObserver(option: UIOptions<*, *, *>?) {
             if (option == null) return
             msgObservers?.remove(option.getUnique())
         }

@@ -4,11 +4,13 @@ package com.zj.im.sender
  * Created by ZJJ
  */
 
-interface OnSendBefore {
-    fun call(onStatus: OnStatus)
-
+interface OnSendBefore<T> {
+    fun call(onStatus: OnStatus<T>)
 }
 
-interface OnStatus {
-    fun call(callId: String, progress: Int, isOK: Boolean, isCancel: Boolean)
+interface OnStatus<T> {
+
+    fun call(isFinish: Boolean, callId: String, progress: Int, isOK: Boolean, e: Throwable?)
+
+    fun onSendingInfoChanged(callId: String, data: T)
 }

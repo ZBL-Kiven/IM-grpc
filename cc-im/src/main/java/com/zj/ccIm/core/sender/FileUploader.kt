@@ -2,7 +2,6 @@ package com.zj.ccIm.core.sender
 
 import android.content.Context
 import com.zj.im.sender.OnStatus
-import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.Constance.toMd5
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.protocol.sender.MsgSender
@@ -10,9 +9,10 @@ import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import com.google.gson.Gson
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MsgType
 import java.net.URL
 
-class FileUploader(private val context: Context, private val d: SendMessageReqEn, private val callId: String, private val isDeleteFileAfterUpload: Boolean, private var onStatus: OnStatus?) {
+class FileUploader(private val context: Context, private val d: SendMessageReqEn, private val callId: String, private val isDeleteFileAfterUpload: Boolean, private var onStatus: OnStatus<Any?>?) {
 
     private var sendingToken: MsgSender.UploadTask? = null
     private var inRunning = false
@@ -29,11 +29,11 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
 
         override fun onError(uploadId: String, exception: Throwable) {
             exception.printStackTrace()
-            onStatus?.call(uploadId, 0, isOK = false, isCancel = false)
+            onStatus?.call(true, uploadId, 0, isOK = false, exception)
         }
 
         override fun onProgress(uploadId: String, progress: Int) {
-            onStatus?.call(uploadId, progress, isOK = false, isCancel = false)
+            onStatus?.call(false, uploadId, progress, isOK = false, null)
         }
 
         override fun onSuccess(uploadId: String, body: String, totalBytes: Long) {
@@ -41,7 +41,9 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
             if (resp.success) {
                 d.uploadDataTotalByte = totalBytes
                 d.url = resp.url
-                onStatus?.call(uploadId, 100, isOK = true, isCancel = false)
+                d.localFilePath = null
+                onStatus?.onSendingInfoChanged(callId, d)
+                onStatus?.call(true, uploadId, 100, isOK = true, null)
             } else onError(callId, Exception("The upload may have been successful, but the server still returns failure !"))
         }
     }
@@ -53,7 +55,7 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
         if (path.isNullOrEmpty()) {
             observer.onError(callId, NullPointerException("file path is null or empty !!"));return
         }
-        if (d.msgType == Constance.MsgType.TEXT.type) {
+        if (d.msgType == MsgType.TEXT.type) {
             observer.onError(callId, IllegalArgumentException("the send msg type is not supported from text !!"));return
         }
         val serverUploadUrl = URL("${IMHelper.imConfig.getIMHost()}/im/upload/file")
@@ -65,7 +67,7 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
     }
 
     fun cancel() {
-        onStatus?.call(callId, 0, isOK = false, isCancel = true)
+        onStatus?.call(true, callId, 0, isOK = false, null)
         sendingToken?.cancel()
     }
 

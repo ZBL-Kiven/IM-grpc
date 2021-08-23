@@ -28,6 +28,10 @@ object ImApi {
         return BaseApi.create<SenderApi>(EH).baseUrl(baseUrl).header(header).build()
     }
 
+    fun getOptionApi(): BaseApi<OptionApi> {
+        return BaseApi.create<OptionApi>(EH).baseUrl(baseUrl).header(header).build()
+    }
+
     fun getFetcherApi(): BaseApi<FetcherApi> {
         return BaseApi.create<FetcherApi>(EH).baseUrl(baseUrl).header(header).build()
     }

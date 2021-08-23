@@ -13,6 +13,7 @@ import com.zj.database.entity.*
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
+import com.zj.ccIm.core.MsgType
 import com.zj.im.chat.poster.log
 
 class ClientHubImpl : ClientHub<Any?>() {
@@ -134,10 +135,10 @@ class ClientHubImpl : ClientHub<Any?>() {
             this.senderId = IMHelper.imConfig.getUserId()
         }
         when (sen.msgType) {
-            Constance.MsgType.TEXT.type -> {
+            MsgType.TEXT.type -> {
                 msg.textContent = TextContent(sen.content)
             }
-            Constance.MsgType.IMG.type -> {
+            MsgType.IMG.type -> {
                 msg.imgContent = ImgContent().apply {
                     this.url = sen.localFilePath
                     this.duration = sen.duration
@@ -145,13 +146,13 @@ class ClientHubImpl : ClientHub<Any?>() {
                     this.height = sen.height
                 }
             }
-            Constance.MsgType.AUDIO.type -> {
+            MsgType.AUDIO.type -> {
                 msg.audioContent = AudioContent().apply {
                     this.url = sen.localFilePath
                     this.duration = sen.duration
                 }
             }
-            Constance.MsgType.VIDEO.type -> {
+            MsgType.VIDEO.type -> {
                 msg.videoContent = VideoContent().apply {
                     this.url = sen.localFilePath
                     this.thumbnail = sen.localFilePath
@@ -160,7 +161,7 @@ class ClientHubImpl : ClientHub<Any?>() {
                     this.height = sen.height
                 }
             }
-            Constance.MsgType.QUESTION.type -> {
+            MsgType.QUESTION.type -> {
                 msg.questionContent = QuestionContent().apply {
                     this.diamond = sen.diamondNum ?: 0
                     this.isPublic = sen.public
@@ -251,6 +252,11 @@ class ClientHubImpl : ClientHub<Any?>() {
         val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
         val exists = sessionDb?.findSessionById(info.groupId) == null
+        val local = sessionDb?.findSessionById(info.groupId)
+        if (local != null) {
+            info.disturbStatus = local.disturbStatus
+            info.top = local.top
+        }
         sessionDb?.insertOrChangeSession(info)
         val lastMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(info.groupId)
         info.sessionMsgInfo = lastMsgInfo

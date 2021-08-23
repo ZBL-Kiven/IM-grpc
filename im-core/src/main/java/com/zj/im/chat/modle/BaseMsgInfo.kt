@@ -40,7 +40,7 @@ internal class BaseMsgInfo<T> private constructor() {
 
     var timeOut = Constance.DEFAULT_TIMEOUT
 
-    var onSendBefore: OnSendBefore? = null
+    var onSendBefore: OnSendBefore<T>? = null
 
     var sendingUp: SendingUp = SendingUp.NORMAL
 
@@ -59,13 +59,6 @@ internal class BaseMsgInfo<T> private constructor() {
      * */
     var callId: String = ""
 
-    private fun getSendingState(): SendingUp {
-        return when {
-            onSendBefore != null -> SendingUp.WAIT
-            sendingUp != SendingUp.NORMAL -> SendingUp.READY
-            else -> SendingUp.NORMAL
-        }
-    }
 
     companion object {
 
@@ -103,7 +96,7 @@ internal class BaseMsgInfo<T> private constructor() {
             return baseInfo
         }
 
-        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore?, joinInTop: Boolean): BaseMsgInfo<T> {
+        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, joinInTop: Boolean): BaseMsgInfo<T> {
             return BaseMsgInfo<T>().apply {
                 this.data = data
                 this.callId = callId
@@ -111,7 +104,7 @@ internal class BaseMsgInfo<T> private constructor() {
                 this.isResend = isResend
                 this.joinInTop = joinInTop
                 this.onSendBefore = sendBefore
-                this.sendingUp = getSendingState()
+                this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
                 this.isSpecialData = isSpecialData
                 this.createdTs = getIncrementNumber()
                 this.type = MessageHandleType.SEND_MSG

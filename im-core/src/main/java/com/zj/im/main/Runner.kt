@@ -31,7 +31,7 @@ import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, Boolean, BaseMsgInfo<T>, Throwable?) -> Unit {
+internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Boolean, BaseMsgInfo<T>, Throwable?) -> Unit {
 
     private var dataStore: DataStore<T>? = null
     private var msgLooper: MsgLooper? = null
@@ -127,7 +127,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, Boole
     /**
      * send a msg
      * */
-    fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore?) {
+    fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
         DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
         DataReceivedDispatcher.pushData(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, false))
     }
@@ -186,13 +186,20 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, Boole
         sendingPool?.unLock()
     }
 
-    override fun call(callId: String, progress: Int, isOK: Boolean, isCancel: Boolean) {
-        if (isOK) {
-            val sendState = if (!DataReceivedDispatcher.isDataEnable()) SendingUp.WAIT else SendingUp.CANCEL
-            sendingPool?.setSendState(sendState, isCancel, callId)
+    override fun call(isFinish: Boolean, callId: String, progress: Int, isOK: Boolean, e: Throwable?) {
+        if (isFinish) {
+            if (isOK) {
+                sendingPool?.setSendState(SendingUp.READY, true, callId)
+            } else {
+                sendingPool?.setSendState(SendingUp.CANCEL, true, callId)
+            }
         } else {
             enqueue(BaseMsgInfo.onProgressChange<T>(progress, callId))
         }
+    }
+
+    override fun onSendingInfoChanged(callId: String, data: T) {
+        sendingPool?.setSendState(SendingUp.READY, true, callId, data)
     }
 
     private fun onLayerChanged(isHidden: Boolean) {
@@ -207,7 +214,6 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus, (Boolean, Boole
         errorCollector.printInFile("postError", e.message, true)
         when (e) {
             is LooperInterruptedException -> {
-                println("----- LooperInterruptedException!!!")
                 if (!isFinishing(curRunningKey)) initHandler()
                 else printInFile("ChatBase.IM.LooperInterrupted", " the MsgLooper was stopped by SDK shutDown")
             }

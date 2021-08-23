@@ -23,10 +23,10 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
         }
 
         try {
-            when (SendingUp.CANCEL) {
-                info.sendingUp -> {
+            when (info.sendingUp) {
+                SendingUp.CANCEL -> {
                     clearTimeout()
-                    done(false, true, info, exc)
+                    done(false, false, info, exc)
                 }
                 else -> {
                     val data = info.data ?: throw NullPointerException("what's the point you are sending an empty message?")

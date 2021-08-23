@@ -9,7 +9,7 @@ import com.zj.im.chat.interfaces.MessageInterface
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class UIOptions<T : Any, R : Any>(private val uniqueCode: Any, private val creator: UIHelperCreator<T, R>, private val result: (R?, List<R>?, String?) -> Unit) {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val creator: UIHelperCreator<T, R, L>, private val result: (R?, List<R>?, String?) -> Unit) {
 
     init {
         MessageInterface.putAnObserver(this)
@@ -41,7 +41,7 @@ internal class UIOptions<T : Any, R : Any>(private val uniqueCode: Any, private 
     }
 
     override fun equals(other: Any?): Boolean {
-        if (other !is UIOptions<*, *>) return false
+        if (other !is UIOptions<*, *, *>) return false
         return other.uniqueCode == uniqueCode
     }
 

@@ -44,6 +44,7 @@ internal object Constance {
     const val RECONNECTION_TIME = 2000L
     const val RECONNECTION_TIME_5000 = 5000L
     const val CONNECTION_TIME_OUT = 3000L
+    const val SEND_MSG_DEFAULT_TIMEOUT = 10000L
 
     const val HEART_BEATS_EVENT = 0xf1365
     const val HEART_BEATS_BASE_TIME = 5000L
@@ -71,8 +72,8 @@ internal object Constance {
         }
         return ""
     }
+}
 
-    enum class MsgType(val type: String) {
-        TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question")
-    }
+enum class MsgType(val type: String) {
+    TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question")
 }

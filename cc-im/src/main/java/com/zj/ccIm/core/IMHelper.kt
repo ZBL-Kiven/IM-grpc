@@ -3,6 +3,7 @@ package com.zj.ccIm.core
 import android.app.Application
 import android.app.Notification
 import android.util.Log
+import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
@@ -14,9 +15,12 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
+import com.zj.database.entity.SessionInfoEntity
 import com.zj.protocol.grpc.GetImHistoryMsgReq
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
+import io.reactivex.schedulers.Schedulers
+
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object IMHelper : IMInterface<Any?>() {
@@ -45,6 +49,17 @@ object IMHelper : IMInterface<Any?>() {
         Log.e("------ ", "IM Error case : ${e.message}")
     }
 
+    override fun onNewListenerRegistered(cls: Class<*>) {
+        if (cls == SessionInfoEntity::class.java) {
+            Thread {
+                getAppContext()?.let {
+                    val sessions = DbHelper.get(it)?.db?.sessionDao()?.findAll()
+                    postToUiObservers(sessions, null) {}
+                }
+            }.start()
+        }
+    }
+
     fun refreshSessions() {
         Fetcher.onFetchSessions(true)
     }
@@ -57,6 +72,22 @@ object IMHelper : IMInterface<Any?>() {
     fun refreshGroupMsg() {
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         lastMsgRegister?.let { getOfflineGroupMsg(it.groupId, it.ownerId) }
+    }
+
+    fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {
+        ImApi.getOptionApi().call({ it.updateSessionInfo(groupId, disturbType, top, des, groupName) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
+            if (i && d != null) {
+                getAppContext()?.let {
+                    val sd = DbHelper.get(it)?.db?.sessionDao()
+                    val local = sd?.findSessionById(d.groupId)
+                    local?.updateConfigs(disturbType, top, groupName, des)
+                    if (local != null) {
+                        sd.insertOrChangeSession(local)
+                        postToUiObservers(local, ClientHubImpl.PAYLOAD_CHANGED) {}
+                    }
+                }
+            }
+        }
     }
 
     fun registerMsgObserver(groupId: Long, ownerId: Long) {
@@ -113,7 +144,8 @@ object IMHelper : IMInterface<Any?>() {
             val resendMsg = DbHelper.get(it)?.db?.sendMsgDao()?.findAllBySessionId(gid)
             resendMsg?.forEach { msg ->
                 when (msg.msgType) {
-                    Constance.MsgType.TEXT.type -> Sender.resendText(msg)
+                    MsgType.TEXT.type -> Sender.resendText(msg)
+                    MsgType.TEXT.type -> Sender.resendText(msg)
                 }
             }
         }

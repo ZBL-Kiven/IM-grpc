@@ -44,6 +44,11 @@ class SessionInfoEntity {
     var disturbStatus: Int = 0
 
     /**
+     * 消息是否置顶 1 = 置顶， 0 非置顶
+     * */
+    var top: Int = 0
+
+    /**
      * 群组状态 0正常 1停用
      */
     var groupStatus: Int = 0
@@ -62,5 +67,12 @@ class SessionInfoEntity {
      * 忽略数据库字段，由推送时拼装
      * */
     @Ignore var sessionMsgInfo: SessionLastMsgInfo? = null
+
+    fun updateConfigs(disturbType: Int?, top: Int?, groupName: String?, des: String?) {
+        if (disturbType != null) this.disturbStatus = disturbType
+        if (top != null) this.top = top
+        if (groupName != null) this.groupName = groupName
+        if (des != null) this.description = des
+    }
 
 }

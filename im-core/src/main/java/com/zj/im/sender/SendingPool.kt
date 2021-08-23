@@ -8,16 +8,17 @@ import com.zj.im.utils.cusListOf
 /**
  * Created by ZJJ
  */
-internal class SendingPool<T>(private val onStateChange: OnStatus) {
+internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
 
     private var sending = false
 
     private val sendMsgQueue = cusListOf<BaseMsgInfo<T>>()
 
-    fun setSendState(state: SendingUp, isCancel: Boolean, callId: String) {
+    fun setSendState(state: SendingUp, isFinish: Boolean, callId: String, data: T? = null) {
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = state
-            if (!isCancel) this.onSendBefore = null
+            this.data = data
+            if (isFinish) this.onSendBefore = null else DataReceivedDispatcher.pushData(this)
         }
     }
 
@@ -55,10 +56,8 @@ internal class SendingPool<T>(private val onStateChange: OnStatus) {
             }
         }
         firstInStay?.let {
-            if (it.sendingUp != SendingUp.CANCEL) {
-                sendMsgQueue.remove(it)
-                return it
-            }
+            sendMsgQueue.remove(it)
+            return it
         }
         return null
     }

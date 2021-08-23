@@ -47,10 +47,12 @@ import com.zj.im.utils.log.logger.logUtils
 abstract class IMInterface<T> : MessageInterface<T>() {
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any): UIHandlerCreator<T, R> {
+        onNewListenerRegistered(R::class.java)
         return UIHandlerCreator(uniqueCode, T::class.java, R::class.java)
     }
 
-    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any): UIHelperCreator<T, T> {
+    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any): UIHelperCreator<T, T, *> {
+        onNewListenerRegistered(T::class.java)
         return UIHelperCreator(uniqueCode, T::class.java, T::class.java, null)
     }
 
@@ -144,6 +146,8 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     open fun onServiceDisConnected() {}
 
+    open fun onNewListenerRegistered(cls: Class<*>) {}
+
     fun postError(e: Throwable) {
         onError(e)
     }
@@ -151,11 +155,11 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     /**
      * send a msg
      * */
-    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore?) {
+    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
         getService("IMInterface.send", false)?.send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore)
     }
 
-    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore?) {
+    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
         getService("IMInterface.resend", false)?.send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore)
     }
 

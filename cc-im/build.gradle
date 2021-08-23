@@ -35,6 +35,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.cc.android:api:1.1.1'
+    implementation 'com.cc.android:compress:1.0.9'
     api project(':im-database')
     api project(':im-core')
     implementation project(':im-protocol')
