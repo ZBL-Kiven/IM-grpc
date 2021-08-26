@@ -4,6 +4,10 @@ interface ImConfigIn {
 
     fun getUserId(): Int
 
+    fun getUserName(): String
+
+    fun getUserHeadPic(): String
+
     fun getToken(): String
 
     fun getGrpcAddress(): Pair<String, Int>

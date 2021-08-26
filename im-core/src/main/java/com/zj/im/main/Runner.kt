@@ -186,12 +186,12 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
         sendingPool?.unLock()
     }
 
-    override fun call(isFinish: Boolean, callId: String, progress: Int, isOK: Boolean, e: Throwable?) {
+    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?) {
         if (isFinish) {
             if (isOK) {
-                sendingPool?.setSendState(SendingUp.READY, true, callId)
+                sendingPool?.setSendState(SendingUp.READY, true, callId, data)
             } else {
-                sendingPool?.setSendState(SendingUp.CANCEL, true, callId)
+                sendingPool?.setSendState(SendingUp.CANCEL, true, callId, data)
             }
         } else {
             enqueue(BaseMsgInfo.onProgressChange<T>(progress, callId))

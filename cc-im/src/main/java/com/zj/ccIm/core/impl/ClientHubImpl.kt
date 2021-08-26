@@ -10,11 +10,12 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
-import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.bean.ClearSessionBadgeBean
 import com.zj.im.chat.poster.log
+import com.zj.protocol.grpc.ImMessage
 
 class ClientHubImpl : ClientHub<Any?>() {
 
@@ -44,10 +45,25 @@ class ClientHubImpl : ClientHub<Any?>() {
         var d = data
         var payload: String? = callId
         when (callId) {
+            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
+                d as ClearSessionBadgeBean
+                val deal = when (d.pageType) {
+                    0 -> clearChatBadge(d.groupId)
+                    1 -> clearGroupBadge(d.groupId)
+                    else -> null
+                }
+                payload = deal?.first
+                d = deal?.second
+            }
             Constance.TOPIC_IM_MSG -> {
-                val deal = onDealSessionLastMsgInfo(d?.toString())
-                payload = deal?.first ?: callId
-                d = if (deal?.second == null) d else deal.second
+                val info = try {
+                    Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
+                } catch (e: Exception) {
+                    log("parse session error with : ${e.message} \n data = $d");return
+                }
+                val deal = onDealSessionLastMsgInfo(info)
+                payload = deal.first
+                d = if (deal.second == null) d else deal.second
             }
             Constance.TOPIC_GROUP_INFO -> {
                 val deal = onDealSessionInfo(d?.toString())
@@ -77,11 +93,10 @@ class ClientHubImpl : ClientHub<Any?>() {
      * */
     private fun isInterruptData(callId: String?, b: Boolean): Boolean {
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            IMHelper.onMsgRegistered()
+            IMHelper.onMsgRegistered();return true
         }
         if (!b && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
-            return true
+            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE);return false
         }
         return callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
     }
@@ -123,57 +138,70 @@ class ClientHubImpl : ClientHub<Any?>() {
     }
 
     private fun onDealSendingInfo(sen: SendMessageReqEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
-        if (sendingState != SendMsgState.SENDING) return null
-        val msg = MessageInfoEntity()
-        msg.groupId = sen.groupId ?: return null
-        msg.msgType = sen.msgType
-        msg.sendingState = sendingState.type
-        msg.clientMsgId = sen.clientMsgId
-        msg.sendTime = getLastCreateTs()
-        msg.replyMsg = sen.replyMsg
-        msg.sender = SenderInfo().apply {
-            this.senderId = IMHelper.imConfig.getUserId()
+        if (sendingState == SendMsgState.SENDING) {
+            val msg = MessageInfoEntity()
+            msg.groupId = sen.groupId
+            msg.msgType = sen.msgType
+            msg.sendingState = sendingState.type
+            msg.clientMsgId = sen.clientMsgId
+            msg.sendTime = getLastCreateTs()
+            msg.replyMsg = sen.replyMsg
+            msg.sender = SenderInfo().apply {
+                this.senderId = IMHelper.imConfig.getUserId()
+                this.senderAvatar = IMHelper.imConfig.getUserHeadPic()
+                this.senderName = IMHelper.imConfig.getUserName()
+            }
+            when (sen.msgType) {
+                MsgType.TEXT.type -> {
+                    msg.textContent = TextContent().apply {
+                        this.text = sen.content
+                    }
+                }
+                MsgType.IMG.type -> {
+                    msg.imgContent = ImgContent().apply {
+                        this.url = sen.localFilePath
+                        this.duration = sen.duration
+                        this.width = sen.width
+                        this.height = sen.height
+                    }
+                }
+                MsgType.AUDIO.type -> {
+                    msg.audioContent = AudioContent().apply {
+                        this.url = sen.localFilePath
+                        this.duration = sen.duration
+                    }
+                }
+                MsgType.VIDEO.type -> {
+                    msg.videoContent = VideoContent().apply {
+                        this.url = sen.localFilePath
+                        this.thumbnail = sen.localFilePath
+                        this.duration = sen.duration
+                        this.width = sen.width
+                        this.height = sen.height
+                    }
+                }
+                MsgType.QUESTION.type -> {
+                    msg.questionContent = QuestionContent().apply {
+                        this.diamond = sen.diamondNum ?: 0
+                        this.isPublic = sen.public
+                        this.textContent = TextContent().apply {
+                            this.text = sen.content
+                        }
+                    }
+                }
+            }
+            context?.let {
+                val db = DbHelper.get(it)?.db?.sendMsgDao()
+                db?.insertOrChange(sen)
+            }
+            return onDealMessages(msg, callId, sendingState)
+        } else {
+            val resp = SendMessageRespEn()
+            resp.clientMsgId = sen.clientMsgId
+            resp.groupId = sen.groupId
+            resp.black = false
+            return onDealMsgSendInfo(resp, callId, sendingState)
         }
-        when (sen.msgType) {
-            MsgType.TEXT.type -> {
-                msg.textContent = TextContent(sen.content)
-            }
-            MsgType.IMG.type -> {
-                msg.imgContent = ImgContent().apply {
-                    this.url = sen.localFilePath
-                    this.duration = sen.duration
-                    this.width = sen.width
-                    this.height = sen.height
-                }
-            }
-            MsgType.AUDIO.type -> {
-                msg.audioContent = AudioContent().apply {
-                    this.url = sen.localFilePath
-                    this.duration = sen.duration
-                }
-            }
-            MsgType.VIDEO.type -> {
-                msg.videoContent = VideoContent().apply {
-                    this.url = sen.localFilePath
-                    this.thumbnail = sen.localFilePath
-                    this.duration = sen.duration
-                    this.width = sen.width
-                    this.height = sen.height
-                }
-            }
-            MsgType.QUESTION.type -> {
-                msg.questionContent = QuestionContent().apply {
-                    this.diamond = sen.diamondNum ?: 0
-                    this.isPublic = sen.public
-                    this.textContent = TextContent(sen.content)
-                }
-            }
-        }
-        context?.let {
-            val db = DbHelper.get(it)?.db?.sendMsgDao()
-            db?.insertOrChange(sen)
-        }
-        return onDealMessages(msg, callId, sendingState)
     }
 
     private fun getLastCreateTs(): Long {
@@ -193,6 +221,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
         val localMsg = msgDb?.findMsgByClientId(callId)
         localMsg?.sendingState = sendingState.type
+        localMsg?.msgId = d.msgId
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
@@ -263,12 +292,29 @@ class ClientHubImpl : ClientHub<Any?>() {
         return Pair(if (exists) PAYLOAD_ADD else PAYLOAD_CHANGED, info)
     }
 
-    private fun onDealSessionLastMsgInfo(d: String?): Pair<String, Any?>? {
-        val info = try {
-            Gson().fromJson(d, SessionLastMsgInfo::class.java)
-        } catch (e: Exception) {
-            log("parse session error with : ${e.message} \n data = $d"); return null
+    private fun clearChatBadge(groupId: Long): Pair<String, Any?>? {
+        return IMHelper.withDb {
+            val last = it?.sessionMsgDao()?.findSessionMsgInfoBySessionId(groupId)
+            last?.ownerMsgId = null
+            last?.ownerReplyMsgId = null
+            last?.replyMeQuesMsgId = null
+            last
+        }?.let {
+            onDealSessionLastMsgInfo(it)
         }
+    }
+
+    private fun clearGroupBadge(groupId: Long): Pair<String, Any?>? {
+        return IMHelper.withDb {
+            val last = it?.sessionMsgDao()?.findSessionMsgInfoBySessionId(groupId)
+            last?.replyMeMsgId = null;last
+        }?.let {
+            onDealSessionLastMsgInfo(it)
+        }
+    }
+
+
+    private fun onDealSessionLastMsgInfo(info: SessionLastMsgInfo): Pair<String, Any?> {
         val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
         val exists = sessionDb?.findSessionById(info.groupId) == null
@@ -281,27 +327,4 @@ class ClientHubImpl : ClientHub<Any?>() {
     override fun progressUpdate(progress: Int, callId: String) {
         Log.e("------ ", "sending progress change , callId = $callId ===> $progress")
     }
-
-    //                    val isSelfMsg = msg.senderId == Constance.getUserId()
-    //                    val isReplyMeMsg = msg.replyMsg?.senderId == Constance.getUserId()
-    //                    val isFromOwner = msg.ownerId == msg.senderId && !isSelfMsg
-    //
-    //                    //Whether it is a common message, that is, the type that is saved and displayed in the main state, and not saved in the guest state
-    //                    val isNormalMsg = !isFromOwner && !isReplyMeMsg
-    //
-    //                    //Is need to save and display what the V said as the last message
-    //                    val isOwnerPublic = (isFromOwner && msg.replyId == null) || (isFromOwner && msg.replyMsg?.let {
-    //                        it.questionContent?.isPublic == true || it.senderId == Constance.getUserId()
-    //                    } == true)
-    //
-    //                    val nextReplaceId = when {
-    //                        isNormalMsg && msg.ownerId == Constance.getUserId() -> Constance.PRIMARY_LOCAL_ID_NORMAL
-    //                        isOwnerPublic -> Constance.PRIMARY_LOCAL_ID_V
-    //                        else -> ""
-    //                    }
-    //                    if (nextReplaceId.isNotEmpty()) {
-    //                        msg.saveInfoId = nextReplaceId //mark as a save info id
-    //                        db?.deleteMsgBySaveInfoId(nextReplaceId)
-    //                        db?.insertOrChangeMessage(msg)
-    //                    }
 }

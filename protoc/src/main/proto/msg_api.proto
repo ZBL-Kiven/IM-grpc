@@ -46,7 +46,9 @@ message ImMessage{
   SenderInfo      sender          = 13;
   uint64          replyMsgId      = 14;
   ImMessage       replyMsg        = 15;
+  uint64          expireTime      = 16;
 }
+
 message ImgContent{
   string url    = 1;
   uint32 height = 2;

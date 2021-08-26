@@ -20,6 +20,12 @@ class SessionLastMsgInfo {
     // Person reply to me
     var replyMeMsgId: Long? = null
 
+    //V last common message
+    var ownerMsgId: Long? = null
+
+    //V @my message
+    var ownerReplyMsgId: Long? = null
+
     // unread messages count
     var msgNum: Int = 0
 

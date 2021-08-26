@@ -41,10 +41,6 @@ object Sender {
         IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
-    fun resendText(info: SendMessageReqEn) {
-        IMHelper.send(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
-    }
-
     fun sendImg(filePath: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
@@ -57,11 +53,6 @@ object Sender {
         IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
-    fun resendImg(info: SendMessageReqEn) {
-        val sendBefore = if (!info.url.isNullOrEmpty()) null else MsgFileUploader(info)
-        IMHelper.send(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = sendBefore)
-    }
-
     fun sendAudio(filePath: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
@@ -71,11 +62,6 @@ object Sender {
         sen.duration = duration
         sen.replyMsg = replyMsg
         IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
-    }
-
-    fun resendAudio(info: SendMessageReqEn) {
-        val sendBefore = if (!info.url.isNullOrEmpty()) null else MsgFileUploader(info)
-        IMHelper.send(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = sendBefore)
     }
 
     fun sendVideo(filePath: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
@@ -91,7 +77,13 @@ object Sender {
         IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
-    fun resendVideo(info: SendMessageReqEn) {
+    fun resendMessage(clientId: String) {
+        IMHelper.withDb {
+            it?.sendMsgDao()?.findByCallId(clientId)
+        }?.let { resendMessage(it) }
+    }
+
+    internal fun resendMessage(info: SendMessageReqEn) {
         val sendBefore = if (!info.url.isNullOrEmpty()) null else MsgFileUploader(info)
         IMHelper.send(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = sendBefore)
     }
@@ -113,7 +105,7 @@ object Sender {
             }
 
             override fun onError(e: Throwable?) {
-                onStatus?.call(true, d.clientMsgId, 0, false, e)
+                onStatus?.call(true, d.clientMsgId, 0, d, false, e)
             }
         }
 
@@ -131,7 +123,7 @@ object Sender {
             override fun onProgress(p0: Float) {}
 
             override fun onError(p0: Int, case: String) {
-                onStatus?.call(true, d.clientMsgId, 0, false, IllegalArgumentException(case))
+                onStatus?.call(true, d.clientMsgId, 0, d, false, IllegalArgumentException(case))
             }
 
             override fun onFilePatched(p0: String?): Boolean {

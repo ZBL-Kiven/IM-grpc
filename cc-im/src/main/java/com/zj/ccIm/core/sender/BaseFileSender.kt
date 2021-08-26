@@ -19,7 +19,7 @@ open class BaseFileSender(protected val context: Context?, private val d: SendMe
 
     protected open fun startUpload(isDeleteFileAfterUpload: Boolean) {
         if (isDeleteFileAfterUpload) onStatus?.onSendingInfoChanged(callId, d)
-        context?.let { uploader = FileUploader(it, d, callId, isDeleteFileAfterUpload, this.onStatus) } ?: onStatus?.call(true, callId, 0, isOK = false, NullPointerException("context should not be null !!"))
+        context?.let { uploader = FileUploader(it, d, callId, isDeleteFileAfterUpload, this.onStatus) } ?: onStatus?.call(true, callId, 0, d, isOK = false, NullPointerException("context should not be null !!"))
     }
 
     open fun cancel() {

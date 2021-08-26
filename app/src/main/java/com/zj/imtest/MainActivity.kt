@@ -1,10 +1,15 @@
 package com.zj.imtest
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.sender.Sender
@@ -12,6 +17,13 @@ import com.zj.database.DbHelper
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.poster.DataHandler
 import java.lang.StringBuilder
+import java.util.*
+import com.zj.album.AlbumIns
+import com.zj.album.nModule.FileInfo
+import com.zj.album.nutils.MimeType
+import com.zj.album.options.AlbumOptions
+import com.zj.album.ui.preview.images.transformer.TransitionEffect
+import com.zj.album.ui.views.image.easing.ScaleEffect
 
 
 @Suppress("UNUSED_PARAMETER")
@@ -19,12 +31,22 @@ class MainActivity : AppCompatActivity() {
 
 
     private lateinit var text: TextView
-    private val userId = 1
+    private lateinit var et: EditText
+    private val userId = IMConfig.getUserId()
+    private val groupId = 6L
+    private var lastSelectData: FileInfo? = null
+        set(value) {
+            et.setText(value?.path ?: "")
+            field = value
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         text = findViewById(R.id.main_text)
+        et = findViewById(R.id.main_edit)
+
+        /**====================================================== READ ME ⬇️️ ===========================================================*/
 
         //初始化 IM 聊天 模块，（异步完成）
         IMHelper.init(this.application, IMConfig)
@@ -67,14 +89,14 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerMsgObserver(6, 117656)
+        IMHelper.registerChatRoom(groupId, 117656)
     }
 
     fun leaveChatRoom(view: View) {
         /**
          * 离开聊天页面，调用此接口后，即时聊天消息接收停止工作
          * */
-        IMHelper.leaveChatRoom(6)
+        IMHelper.leaveChatRoom(groupId)
     }
 
     fun sendText(view: View) {
@@ -83,8 +105,19 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        Sender.sendText("好说，好说", 6, null)
+        Sender.sendText("好说，好说", groupId, null)
     }
+
+    fun sendImg(view: View) {
+        lastSelectData?.let {
+            val path = it.path
+            val duration = it.duration
+            if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
+            if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
+        }
+    }
+
+    /**====================================================== READ ME ⬆️ ===========================================================*/
 
     fun queryCurrent(view: View) {
         val sb = StringBuilder()
@@ -105,5 +138,24 @@ class MainActivity : AppCompatActivity() {
         override fun handle(data: String): MessageInfoEntity {
             return MessageInfoEntity()
         }
+    }
+
+    /*================= file test ===================*/
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        start()
+    }
+
+    private fun start() {
+        AlbumIns.with(this).setOriginalPolymorphism(true).simultaneousSelection(true).maxSelectedCount(9).mutableTypeSize().addNewRule("Image", 3, AlbumOptions.ofStaticImage()).addNewRule("Gif", 1, EnumSet.of(MimeType.GIF)).addNewRule("Video", 2, AlbumOptions.ofVideo()).set().mimeTypes(AlbumOptions.pairOf(AlbumOptions.ofImage(), AlbumOptions.ofVideo())).sortWithDesc(true).useOriginDefault(false).imgSizeRange(1, 20000000).videoSizeRange(1, 200000000).imageScaleEffect(ScaleEffect.QUAD).pagerTransitionEffect(TransitionEffect.Zoom).start { _, data ->
+            lastSelectData = data?.firstOrNull()
+        }
+    }
+
+    fun startAlbum(@Suppress("UNUSED_PARAMETER") v: View?) {
+        val i = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (i != PackageManager.PERMISSION_GRANTED) {
+            start()
+        } else ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
     }
 }

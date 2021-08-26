@@ -7,11 +7,13 @@ import com.zj.database.entity.TextContent;
 public class TxtContentConverter {
     @TypeConverter
     public static TextContent revertText(String value) {
-        return new TextContent(value);
+        TextContent content = new TextContent();
+        content.setText(value);
+        return content;
     }
 
     @TypeConverter
     public static String convertText(TextContent value) {
-        return value.getText();
+        return value == null ? null : value.getText();
     }
 }

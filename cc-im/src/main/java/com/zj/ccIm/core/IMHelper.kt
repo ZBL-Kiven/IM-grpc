@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.Notification
 import android.util.Log
 import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.bean.ClearSessionBadgeBean
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
@@ -15,11 +16,14 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
+import com.zj.database.IMDb
 import com.zj.database.entity.SessionInfoEntity
+import com.zj.im.chat.poster.log
 import com.zj.protocol.grpc.GetImHistoryMsgReq
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
 import io.reactivex.schedulers.Schedulers
+import java.lang.NullPointerException
 
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
@@ -90,13 +94,20 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun registerMsgObserver(groupId: Long, ownerId: Long) {
+    fun registerChatRoom(groupId: Long, ownerId: Long) {
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
         this.lastMsgRegister = LastMsgReqBean(groupId, ownerId)
-        IMHelper.send(data.build(), callId, Constance.CONNECTION_TIME_OUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+    }
+
+    fun clearSessionBadge(groupId: Long, vararg clearType: Int) {
+        clearType.forEach {
+            val cb = ClearSessionBadgeBean(groupId, it)
+            IMHelper.send(cb, Constance.CALL_ID_CLEAR_SESSION_BADGE, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = true, sendBefore = null)
+        }
     }
 
     fun leaveChatRoom(groupId: Long) {
@@ -104,7 +115,7 @@ object IMHelper : IMInterface<Any?>() {
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
         this.lastMsgRegister = null
-        IMHelper.send(data.build(), callId, Constance.CONNECTION_TIME_OUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     private fun getOfflineChatMsg(groupId: Long, ownerId: Long) {
@@ -112,7 +123,7 @@ object IMHelper : IMInterface<Any?>() {
         val data = GetImHistoryMsgReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        IMHelper.send(data.build(), callId, Constance.CONNECTION_TIME_OUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     private fun getOfflineGroupMsg(groupId: Long, ownerId: Long) {
@@ -125,7 +136,7 @@ object IMHelper : IMInterface<Any?>() {
 
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerMsgObserver(it.groupId, it.ownerId)
+            registerChatRoom(it.groupId, it.ownerId)
             return true
         }
         return false
@@ -140,13 +151,10 @@ object IMHelper : IMInterface<Any?>() {
         refreshChatMsg()
         refreshGroupMsg()
         val gid = lastMsgRegister?.groupId ?: return
-        getAppContext()?.let {
-            val resendMsg = DbHelper.get(it)?.db?.sendMsgDao()?.findAllBySessionId(gid)
+        withDb {
+            val resendMsg = it?.sendMsgDao()?.findAllBySessionId(gid)
             resendMsg?.forEach { msg ->
-                when (msg.msgType) {
-                    MsgType.TEXT.type -> Sender.resendText(msg)
-                    MsgType.TEXT.type -> Sender.resendText(msg)
-                }
+                Sender.resendMessage(msg)
             }
         }
     }
@@ -163,7 +171,16 @@ object IMHelper : IMInterface<Any?>() {
         close()
         SPHelper.clear()
         Thread {
-            DbHelper.get(app)?.db?.clearAllTables()
+            withDb(app) { it?.clearAllTables() }
         }.start()
+    }
+
+    fun <R> withDb(app: Application? = null, run: (IMDb?) -> R?): R? {
+        return try {
+            val ctx = app ?: getAppContext() ?: throw NullPointerException()
+            run(DbHelper.get(ctx)?.db)
+        } catch (e: Exception) {
+            log("failed to open db ,case : ${e.message}");null
+        }
     }
 }

@@ -8,7 +8,7 @@ import com.zj.database.converter.MessageConverter
 @Entity(tableName = "sendingMsg")
 class SendMessageReqEn {
 
-    var groupId: Long? = null
+    var groupId: Long = 0
 
     @PrimaryKey var clientMsgId: String = ""
 

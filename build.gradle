@@ -15,6 +15,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        jcenter()
         mavenCentral()
         maven {
             credentials {
@@ -22,6 +23,13 @@ allprojects {
                 password 'fMTKbe0WP6'
             }
             url 'https://repo.rdc.aliyun.com/repository/129757-release-BhhDH6/'
+        }
+        maven {
+            credentials {
+                username 'usr'
+                password '123456'
+            }
+            url 'http://www.jqyard.cn:8081/repository/zjj-release/'
         }
     }
 }

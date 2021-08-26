@@ -24,8 +24,8 @@ object ImApi {
         }
     }
 
-    fun getSenderApi(): BaseApi<SenderApi> {
-        return BaseApi.create<SenderApi>(EH).baseUrl(baseUrl).header(header).build()
+    fun getSenderApi(h: HeaderProvider? = null): BaseApi<SenderApi> {
+        return BaseApi.create<SenderApi>(EH).baseUrl(baseUrl).header(h ?: header).build()
     }
 
     fun getOptionApi(): BaseApi<OptionApi> {
@@ -47,7 +47,7 @@ object ImApi {
                 if (errorBodyCode == SERVER_ERROR) {
                     val errorBody = Gson().fromJson(errorString, HttpErrorBody::class.java)
                     errorBody?.throwable = throwable
-                    if (!resolveProfError(errorBody)) return true
+                    if (resolveProfError(errorBody)) return true
                 }
                 Log.e("request error", " ----- case: $errorInfo \ndetail = $errorString  \nerrorCode = $errorCode \nerrorBodyCode = $errorBodyCode")
             } else {
