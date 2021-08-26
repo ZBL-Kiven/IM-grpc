@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-/** Responsible for starting compress and managing active and cached resources. */
+/**
+ * Responsible for starting compress and managing active and cached resources.
+ */
 class Engine {
     private ExifInterface srcExif;
     private final String srcImg;
@@ -64,9 +66,7 @@ class Engine {
 
         Matrix matrix = new Matrix();
         int angle = 0;
-        int orientation =
-                srcExif.getAttributeInt(
-                        ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+        int orientation = srcExif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
         switch (orientation) {
             case ExifInterface.ORIENTATION_ROTATE_90:
                 angle = 90;
@@ -81,8 +81,7 @@ class Engine {
 
         matrix.postRotate(angle);
 
-        return Bitmap.createBitmap(
-                bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     File compress() throws IOException {

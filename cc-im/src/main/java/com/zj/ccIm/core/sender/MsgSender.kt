@@ -1,7 +1,6 @@
 package com.zj.ccIm.core.sender
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.zj.api.base.BaseRetrofit
@@ -10,6 +9,7 @@ import com.zj.api.okhttp3.ProgressListener
 import com.zj.api.okhttp3.ProgressRequestBody
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.UploadRespEn
+import com.zj.compress.FileUtils
 import io.reactivex.schedulers.Schedulers
 import okhttp3.*
 import java.io.File
@@ -35,8 +35,7 @@ object MsgSender {
         }
 
         private fun upload() {
-            val files = builder.fileInfo
-            val part = files.firstOrNull()?.let {
+            val part = builder.fileInfo?.let {
                 val f = File(it.path)
                 val rq = RequestBody.create(MediaType.parse(builder.contentType), f)
                 val progressBody = ProgressRequestBody(rq, it.uploadIndex, this)
@@ -55,10 +54,8 @@ object MsgSender {
                 }
             }
             reqCompo = ImApi.getSenderApi(header).call({ it.upload(map, part) }, Schedulers.io(), Schedulers.newThread()) { isSuccess, data, throwable ->
-
-                Log.e("------ ", "   $isSuccess    ${data.toString()}    ${throwable?.message}")
-
                 if (isSuccess && data?.success == true) {
+                    if (builder.deleteCompressFile) FileUtils.delete(builder.fileInfo?.path)
                     observer.onSuccess(builder.callId, data, totalBytes)
                 } else {
                     observer.onError(builder.callId, throwable)
@@ -90,7 +87,7 @@ object MsgSender {
         var callId: String = UUID.randomUUID().toString()
         var headers: MutableMap<String, String>? = null
         var req: Map<String, String?>? = null
-        var fileInfo = mutableListOf<FileInfo>()
+        var fileInfo: FileInfo? = null
         var contentType: String = "multipart/form-data"
         lateinit var uploadTask: UploadTask
 
@@ -109,8 +106,8 @@ object MsgSender {
             return this
         }
 
-        fun addFileInfo(info: FileInfo): Builder {
-            fileInfo.add(info)
+        fun setFileInfo(info: FileInfo): Builder {
+            fileInfo = info
             return this
         }
 
@@ -130,8 +127,8 @@ object MsgSender {
         }
 
         internal fun invalid() {
-            fileInfo.clear()
             headers?.clear()
+            fileInfo = null
             req = null
             callId = "-recycled-"
         }

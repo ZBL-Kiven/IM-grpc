@@ -9,7 +9,6 @@ import java.lang.NullPointerException
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.UploadRespEn
-import com.zj.im.chat.poster.log
 import java.io.File
 import java.net.URL
 
@@ -64,7 +63,7 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
         val sign = "$timeStamp;${IMHelper.imConfig.getUserId()};${d.msgType}".toMd5()
         val fileInfo = MsgSender.FileInfo(f.name, "file", path = path)
         val params = mapOf("sign" to sign, "type" to d.msgType)
-        sendingToken = MsgSender.with(context.applicationContext, serverUploadUrl).callId(callId).addHeader(headers).addParams(params).addFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)
+        sendingToken = MsgSender.with(context.applicationContext, serverUploadUrl).callId(callId).addHeader(headers).addParams(params).setFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)
     }
 
 
