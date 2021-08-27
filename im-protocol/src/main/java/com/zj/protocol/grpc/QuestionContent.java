@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private QuestionContent() {
+    answerMsgType_ = "";
   }
 
   @java.lang.Override
@@ -89,6 +90,17 @@ private static final long serialVersionUID = 0L;
           case 56: {
 
             sendTime_ = input.readUInt64();
+            break;
+          }
+          case 64: {
+
+            expireTime_ = input.readUInt64();
+            break;
+          }
+          case 74: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            answerMsgType_ = s;
             break;
           }
           default: {
@@ -215,6 +227,55 @@ private static final long serialVersionUID = 0L;
     return sendTime_;
   }
 
+  public static final int EXPIRETIME_FIELD_NUMBER = 8;
+  private long expireTime_;
+  /**
+   * <code>uint64 expireTime = 8;</code>
+   * @return The expireTime.
+   */
+  @java.lang.Override
+  public long getExpireTime() {
+    return expireTime_;
+  }
+
+  public static final int ANSWERMSGTYPE_FIELD_NUMBER = 9;
+  private volatile java.lang.Object answerMsgType_;
+  /**
+   * <code>string answerMsgType = 9;</code>
+   * @return The answerMsgType.
+   */
+  @java.lang.Override
+  public java.lang.String getAnswerMsgType() {
+    java.lang.Object ref = answerMsgType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      answerMsgType_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string answerMsgType = 9;</code>
+   * @return The bytes for answerMsgType.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getAnswerMsgTypeBytes() {
+    java.lang.Object ref = answerMsgType_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      answerMsgType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -249,6 +310,12 @@ private static final long serialVersionUID = 0L;
     }
     if (sendTime_ != 0L) {
       output.writeUInt64(7, sendTime_);
+    }
+    if (expireTime_ != 0L) {
+      output.writeUInt64(8, expireTime_);
+    }
+    if (!getAnswerMsgTypeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 9, answerMsgType_);
     }
     unknownFields.writeTo(output);
   }
@@ -287,6 +354,13 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(7, sendTime_);
     }
+    if (expireTime_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(8, expireTime_);
+    }
+    if (!getAnswerMsgTypeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, answerMsgType_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -319,6 +393,10 @@ private static final long serialVersionUID = 0L;
         != other.getIsPublic()) return false;
     if (getSendTime()
         != other.getSendTime()) return false;
+    if (getExpireTime()
+        != other.getExpireTime()) return false;
+    if (!getAnswerMsgType()
+        .equals(other.getAnswerMsgType())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -351,6 +429,11 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + SENDTIME_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getSendTime());
+    hash = (37 * hash) + EXPIRETIME_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getExpireTime());
+    hash = (37 * hash) + ANSWERMSGTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getAnswerMsgType().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -502,6 +585,10 @@ private static final long serialVersionUID = 0L;
 
       sendTime_ = 0L;
 
+      expireTime_ = 0L;
+
+      answerMsgType_ = "";
+
       return this;
     }
 
@@ -539,6 +626,8 @@ private static final long serialVersionUID = 0L;
       result.diamond_ = diamond_;
       result.isPublic_ = isPublic_;
       result.sendTime_ = sendTime_;
+      result.expireTime_ = expireTime_;
+      result.answerMsgType_ = answerMsgType_;
       onBuilt();
       return result;
     }
@@ -607,6 +696,13 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getSendTime() != 0L) {
         setSendTime(other.getSendTime());
+      }
+      if (other.getExpireTime() != 0L) {
+        setExpireTime(other.getExpireTime());
+      }
+      if (!other.getAnswerMsgType().isEmpty()) {
+        answerMsgType_ = other.answerMsgType_;
+        onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -935,6 +1031,113 @@ private static final long serialVersionUID = 0L;
     public Builder clearSendTime() {
       
       sendTime_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long expireTime_ ;
+    /**
+     * <code>uint64 expireTime = 8;</code>
+     * @return The expireTime.
+     */
+    @java.lang.Override
+    public long getExpireTime() {
+      return expireTime_;
+    }
+    /**
+     * <code>uint64 expireTime = 8;</code>
+     * @param value The expireTime to set.
+     * @return This builder for chaining.
+     */
+    public Builder setExpireTime(long value) {
+      
+      expireTime_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint64 expireTime = 8;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearExpireTime() {
+      
+      expireTime_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object answerMsgType_ = "";
+    /**
+     * <code>string answerMsgType = 9;</code>
+     * @return The answerMsgType.
+     */
+    public java.lang.String getAnswerMsgType() {
+      java.lang.Object ref = answerMsgType_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        answerMsgType_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string answerMsgType = 9;</code>
+     * @return The bytes for answerMsgType.
+     */
+    public com.google.protobuf.ByteString
+        getAnswerMsgTypeBytes() {
+      java.lang.Object ref = answerMsgType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        answerMsgType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string answerMsgType = 9;</code>
+     * @param value The answerMsgType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAnswerMsgType(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      answerMsgType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string answerMsgType = 9;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearAnswerMsgType() {
+      
+      answerMsgType_ = getDefaultInstance().getAnswerMsgType();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string answerMsgType = 9;</code>
+     * @param value The bytes for answerMsgType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setAnswerMsgTypeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      answerMsgType_ = value;
       onChanged();
       return this;
     }

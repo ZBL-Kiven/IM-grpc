@@ -57,4 +57,22 @@ public interface QuestionContentOrBuilder extends
    * @return The sendTime.
    */
   long getSendTime();
+
+  /**
+   * <code>uint64 expireTime = 8;</code>
+   * @return The expireTime.
+   */
+  long getExpireTime();
+
+  /**
+   * <code>string answerMsgType = 9;</code>
+   * @return The answerMsgType.
+   */
+  java.lang.String getAnswerMsgType();
+  /**
+   * <code>string answerMsgType = 9;</code>
+   * @return The bytes for answerMsgType.
+   */
+  com.google.protobuf.ByteString
+      getAnswerMsgTypeBytes();
 }

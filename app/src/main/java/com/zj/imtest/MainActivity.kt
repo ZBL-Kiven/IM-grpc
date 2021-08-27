@@ -10,12 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.zj.database.entity.MessageInfoEntity
-import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.sender.Sender
-import com.zj.database.DbHelper
-import com.zj.database.entity.SessionInfoEntity
-import com.zj.im.chat.poster.DataHandler
 import java.lang.StringBuilder
 import java.util.*
 import com.zj.album.AlbumIns
@@ -24,6 +18,12 @@ import com.zj.album.nutils.MimeType
 import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
+import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.sender.Sender
+import com.zj.database.DbHelper
+import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.SessionInfoEntity
+import com.zj.im.chat.poster.DataHandler
 
 
 @Suppress("UNUSED_PARAMETER")

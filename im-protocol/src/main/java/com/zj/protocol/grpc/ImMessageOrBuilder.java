@@ -180,10 +180,4 @@ public interface ImMessageOrBuilder extends
    * <code>.app.ImMessage replyMsg = 15;</code>
    */
   ImMessageOrBuilder getReplyMsgOrBuilder();
-
-  /**
-   * <code>uint64 expireTime = 16;</code>
-   * @return The expireTime.
-   */
-  long getExpireTime();
 }

@@ -191,11 +191,6 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
-          case 128: {
-
-            expireTime_ = input.readUInt64();
-            break;
-          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -567,17 +562,6 @@ private static final long serialVersionUID = 0L;
     return getReplyMsg();
   }
 
-  public static final int EXPIRETIME_FIELD_NUMBER = 16;
-  private long expireTime_;
-  /**
-   * <code>uint64 expireTime = 16;</code>
-   * @return The expireTime.
-   */
-  @java.lang.Override
-  public long getExpireTime() {
-    return expireTime_;
-  }
-
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -636,9 +620,6 @@ private static final long serialVersionUID = 0L;
     }
     if (replyMsg_ != null) {
       output.writeMessage(15, getReplyMsg());
-    }
-    if (expireTime_ != 0L) {
-      output.writeUInt64(16, expireTime_);
     }
     unknownFields.writeTo(output);
   }
@@ -706,10 +687,6 @@ private static final long serialVersionUID = 0L;
     if (replyMsg_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(15, getReplyMsg());
-    }
-    if (expireTime_ != 0L) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeUInt64Size(16, expireTime_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -780,8 +757,6 @@ private static final long serialVersionUID = 0L;
       if (!getReplyMsg()
           .equals(other.getReplyMsg())) return false;
     }
-    if (getExpireTime()
-        != other.getExpireTime()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -844,9 +819,6 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + REPLYMSG_FIELD_NUMBER;
       hash = (53 * hash) + getReplyMsg().hashCode();
     }
-    hash = (37 * hash) + EXPIRETIME_FIELD_NUMBER;
-    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-        getExpireTime());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -1042,8 +1014,6 @@ private static final long serialVersionUID = 0L;
         replyMsg_ = null;
         replyMsgBuilder_ = null;
       }
-      expireTime_ = 0L;
-
       return this;
     }
 
@@ -1117,7 +1087,6 @@ private static final long serialVersionUID = 0L;
       } else {
         result.replyMsg_ = replyMsgBuilder_.build();
       }
-      result.expireTime_ = expireTime_;
       onBuilt();
       return result;
     }
@@ -1212,9 +1181,6 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasReplyMsg()) {
         mergeReplyMsg(other.getReplyMsg());
-      }
-      if (other.getExpireTime() != 0L) {
-        setExpireTime(other.getExpireTime());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -2478,37 +2444,6 @@ private static final long serialVersionUID = 0L;
         replyMsg_ = null;
       }
       return replyMsgBuilder_;
-    }
-
-    private long expireTime_ ;
-    /**
-     * <code>uint64 expireTime = 16;</code>
-     * @return The expireTime.
-     */
-    @java.lang.Override
-    public long getExpireTime() {
-      return expireTime_;
-    }
-    /**
-     * <code>uint64 expireTime = 16;</code>
-     * @param value The expireTime to set.
-     * @return This builder for chaining.
-     */
-    public Builder setExpireTime(long value) {
-      
-      expireTime_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>uint64 expireTime = 16;</code>
-     * @return This builder for chaining.
-     */
-    public Builder clearExpireTime() {
-      
-      expireTime_ = 0L;
-      onChanged();
-      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

@@ -46,7 +46,6 @@ message ImMessage{
   SenderInfo      sender          = 13;
   uint64          replyMsgId      = 14;
   ImMessage       replyMsg        = 15;
-  uint64          expireTime      = 16;
 }
 
 message ImgContent{
@@ -91,6 +90,8 @@ message QuestionContent{
   uint64      diamond        = 5;
   bool        isPublic       = 6;
   uint64      sendTime       = 7;
+  uint64      expireTime     = 8;
+  string      answerMsgType   = 9;
 }
 
 

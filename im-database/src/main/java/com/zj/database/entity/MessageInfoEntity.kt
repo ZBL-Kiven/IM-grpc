@@ -125,9 +125,4 @@ class MessageInfoEntity {
      * 本地新增的辅助参数，用于在服务器时间和本地时间有较大偏差时，能保持正确的收发展示顺序
      * */
     var createTs: Long = 0
-
-    /**
-     * 过期时间
-     */
-    var expireTime: Long? = null
 }

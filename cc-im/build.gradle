@@ -36,9 +36,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.cc.android:api:1.1.2'
     implementation 'com.cc.android:compress:1.0.9'
-    implementation 'com.cc.android:cc-im-protoc:1.0.2'
-    implementation 'com.cc.android:cc-im-db:1.0.2'
-    implementation 'com.cc.android:cc-im-core:1.0.2'
+
+    implementation 'com.cc.android:cc-im-protoc:1.0.3'
+    implementation 'com.cc.android:cc-im-db:1.0.3'
+    implementation 'com.cc.android:cc-im-core:1.0.3'
 
 //    api project(':im-database')
 //    api project(':im-core')

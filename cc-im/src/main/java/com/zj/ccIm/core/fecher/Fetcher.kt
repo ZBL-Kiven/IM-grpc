@@ -18,17 +18,17 @@ internal object Fetcher {
 
     fun init() {
         IMHelper.registerConnectionStateChangeListener("main_fetcher_observer") {
-//            when (it) {
-//                ConnectionState.CONNECTED -> {
-//                    IMHelper.pause(Constance.FETCH_SESSION_CODE)
-//                    onFetchSessions()
-//                }
-//                ConnectionState.CONNECTED_ERROR, ConnectionState.NETWORK_STATE_CHANGE -> {
-//                    cancel()
-//                }
-//                else -> {
-//                }
-//            }
+            when (it) {
+                ConnectionState.CONNECTED -> {
+                    IMHelper.pause(Constance.FETCH_SESSION_CODE)
+                    onFetchSessions()
+                }
+                ConnectionState.CONNECTED_ERROR, ConnectionState.NETWORK_STATE_CHANGE -> {
+                    cancel()
+                }
+                else -> {
+                }
+            }
         }
     }
 

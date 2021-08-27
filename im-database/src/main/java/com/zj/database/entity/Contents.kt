@@ -1,5 +1,7 @@
 package com.zj.database.entity
 
+
+
 class TextContent {
     var text: String? = null
 }
@@ -20,6 +22,7 @@ class CCVideoContent : BaseFileContent() {
 }
 
 class QuestionContent : BaseFileContent() {
+
     var textContent: TextContent? = null
 
     //0 正常   1 已回复   2 已过期
@@ -29,6 +32,8 @@ class QuestionContent : BaseFileContent() {
     var diamond: Int = 0
     var isPublic: Boolean = true
     var sendTime: Long = 0
+    var expireTime: Long = 0
+    var answerMsgType: String? = null
 }
 
 
