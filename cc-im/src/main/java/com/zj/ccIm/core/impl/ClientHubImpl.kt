@@ -183,7 +183,7 @@ class ClientHubImpl : ClientHub<Any?>() {
                 MsgType.QUESTION.type -> {
                     msg.questionContent = QuestionContent().apply {
                         this.diamond = sen.diamondNum ?: 0
-                        this.isPublic = sen.public
+                        this.published = sen.public
                         this.textContent = TextContent().apply {
                             this.text = sen.content
                         }

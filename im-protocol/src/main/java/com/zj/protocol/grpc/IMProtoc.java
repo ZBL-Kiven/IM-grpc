@@ -134,31 +134,31 @@ public final class IMProtoc {
       "oContent\022\017\n\007videoId\030\001 \001(\t\022\022\n\nvideoTitle\030" +
       "\002 \001(\t\022\025\n\rvideoDescribe\030\003 \001(\t\022\020\n\010duration" +
       "\030\004 \001(\001\022\r\n\005width\030\005 \001(\r\022\016\n\006height\030\006 \001(\r\022\"\n" +
-      "\032imgPreviewRemoteStorageUrl\030\007 \001(\t\"\323\001\n\017Qu" +
+      "\032imgPreviewRemoteStorageUrl\030\007 \001(\t\"\351\001\n\017Qu" +
       "estionContent\022%\n\013textContent\030\001 \001(\0132\020.app" +
       ".TextContent\022\026\n\016questionStatus\030\002 \001(\r\022\022\n\n" +
       "questionId\030\003 \001(\004\022\r\n\005spark\030\004 \001(\004\022\017\n\007diamo" +
-      "nd\030\005 \001(\004\022\020\n\010isPublic\030\006 \001(\010\022\020\n\010sendTime\030\007" +
-      " \001(\004\022\022\n\nexpireTime\030\010 \001(\004\022\025\n\ranswerMsgTyp" +
-      "e\030\t \001(\t\"`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022" +
-      "\022\n\nsenderName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(" +
-      "\t\022\026\n\016senderPlatform\030\004 \001(\t\"\"\n\017LeaveImGrou" +
-      "pReq\022\017\n\007groupId\030\001 \001(\004\"$\n\021LeaveImGroupRep" +
-      "ly\022\017\n\007success\030\001 \001(\010\"E\n\022GetImHistoryMsgRe" +
-      "q\022\017\n\007groupId\030\001 \001(\004\022\r\n\005msgId\030\002 \001(\004\022\017\n\007own" +
-      "erId\030\003 \001(\004\"-\n\010BatchMsg\022!\n\timMessage\030\001 \003(" +
-      "\0132\016.app.ImMessage\"\t\n\007PingReq\"\006\n\004Pong2\361\002\n" +
-      "\006MsgApi\022C\n\017ListenTopicData\022\023.app.ListenT" +
-      "opicReq\032\025.app.ListenTopicReply\"\000(\0010\001\0228\n\014" +
-      "GetImMessage\022\024.app.GetImMessageReq\032\016.app" +
-      ".ImMessage\"\0000\001\022>\n\014LeaveImGroup\022\024.app.Lea" +
-      "veImGroupReq\032\026.app.LeaveImGroupReply\"\000\022B" +
-      "\n\026GetGroupHistoryMessage\022\027.app.GetImHist" +
-      "oryMsgReq\032\r.app.BatchMsg\"\000\022A\n\025GetChatHis" +
-      "toryMessage\022\027.app.GetImHistoryMsgReq\032\r.a" +
-      "pp.BatchMsg\"\000\022!\n\004Ping\022\014.app.PingReq\032\t.ap" +
-      "p.Pong\"\000B\033\n\rcom.zj.im.genB\010IMProtocP\001b\006p" +
-      "roto3"
+      "nd\030\005 \001(\004\022\021\n\tpublished\030\006 \001(\010\022\020\n\010sendTime\030" +
+      "\007 \001(\004\022\022\n\nexpireTime\030\010 \001(\004\022\025\n\ranswerMsgTy" +
+      "pe\030\t \001(\t\022\023\n\013contentType\030\n \001(\t\"`\n\nSenderI" +
+      "nfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\nsenderName\030\002 \001(" +
+      "\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026\n\016senderPlatfor" +
+      "m\030\004 \001(\t\"\"\n\017LeaveImGroupReq\022\017\n\007groupId\030\001 " +
+      "\001(\004\"$\n\021LeaveImGroupReply\022\017\n\007success\030\001 \001(" +
+      "\010\"E\n\022GetImHistoryMsgReq\022\017\n\007groupId\030\001 \001(\004" +
+      "\022\r\n\005msgId\030\002 \001(\004\022\017\n\007ownerId\030\003 \001(\004\"-\n\010Batc" +
+      "hMsg\022!\n\timMessage\030\001 \003(\0132\016.app.ImMessage\"" +
+      "\t\n\007PingReq\"\006\n\004Pong2\361\002\n\006MsgApi\022C\n\017ListenT" +
+      "opicData\022\023.app.ListenTopicReq\032\025.app.List" +
+      "enTopicReply\"\000(\0010\001\0228\n\014GetImMessage\022\024.app" +
+      ".GetImMessageReq\032\016.app.ImMessage\"\0000\001\022>\n\014" +
+      "LeaveImGroup\022\024.app.LeaveImGroupReq\032\026.app" +
+      ".LeaveImGroupReply\"\000\022B\n\026GetGroupHistoryM" +
+      "essage\022\027.app.GetImHistoryMsgReq\032\r.app.Ba" +
+      "tchMsg\"\000\022A\n\025GetChatHistoryMessage\022\027.app." +
+      "GetImHistoryMsgReq\032\r.app.BatchMsg\"\000\022!\n\004P" +
+      "ing\022\014.app.PingReq\032\t.app.Pong\"\000B\033\n\rcom.zj" +
+      ".im.genB\010IMProtocP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -223,7 +223,7 @@ public final class IMProtoc {
     internal_static_app_QuestionContent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_QuestionContent_descriptor,
-        new java.lang.String[] { "TextContent", "QuestionStatus", "QuestionId", "Spark", "Diamond", "IsPublic", "SendTime", "ExpireTime", "AnswerMsgType", });
+        new java.lang.String[] { "TextContent", "QuestionStatus", "QuestionId", "Spark", "Diamond", "Published", "SendTime", "ExpireTime", "AnswerMsgType", "ContentType", });
     internal_static_app_SenderInfo_descriptor =
       getDescriptor().getMessageTypes().get(10);
     internal_static_app_SenderInfo_fieldAccessorTable = new

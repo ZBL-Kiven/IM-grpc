@@ -1,7 +1,6 @@
 package com.zj.database.entity
 
 
-
 class TextContent {
     var text: String? = null
 }
@@ -30,10 +29,11 @@ class QuestionContent : BaseFileContent() {
     var questionId: Int = 0
     var spark: Int = 0
     var diamond: Int = 0
-    var isPublic: Boolean = true
+    var published: Boolean = true
     var sendTime: Long = 0
     var expireTime: Long = 0
     var answerMsgType: String? = null
+    var contentType: String? = null
 }
 
 

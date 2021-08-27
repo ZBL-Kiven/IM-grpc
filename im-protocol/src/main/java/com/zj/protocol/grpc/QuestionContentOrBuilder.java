@@ -47,10 +47,10 @@ public interface QuestionContentOrBuilder extends
   long getDiamond();
 
   /**
-   * <code>bool isPublic = 6;</code>
-   * @return The isPublic.
+   * <code>bool published = 6;</code>
+   * @return The published.
    */
-  boolean getIsPublic();
+  boolean getPublished();
 
   /**
    * <code>uint64 sendTime = 7;</code>
@@ -75,4 +75,16 @@ public interface QuestionContentOrBuilder extends
    */
   com.google.protobuf.ByteString
       getAnswerMsgTypeBytes();
+
+  /**
+   * <code>string contentType = 10;</code>
+   * @return The contentType.
+   */
+  java.lang.String getContentType();
+  /**
+   * <code>string contentType = 10;</code>
+   * @return The bytes for contentType.
+   */
+  com.google.protobuf.ByteString
+      getContentTypeBytes();
 }

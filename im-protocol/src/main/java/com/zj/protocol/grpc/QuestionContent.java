@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private QuestionContent() {
     answerMsgType_ = "";
+    contentType_ = "";
   }
 
   @java.lang.Override
@@ -84,7 +85,7 @@ private static final long serialVersionUID = 0L;
           }
           case 48: {
 
-            isPublic_ = input.readBool();
+            published_ = input.readBool();
             break;
           }
           case 56: {
@@ -101,6 +102,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             answerMsgType_ = s;
+            break;
+          }
+          case 82: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            contentType_ = s;
             break;
           }
           default: {
@@ -205,15 +212,15 @@ private static final long serialVersionUID = 0L;
     return diamond_;
   }
 
-  public static final int ISPUBLIC_FIELD_NUMBER = 6;
-  private boolean isPublic_;
+  public static final int PUBLISHED_FIELD_NUMBER = 6;
+  private boolean published_;
   /**
-   * <code>bool isPublic = 6;</code>
-   * @return The isPublic.
+   * <code>bool published = 6;</code>
+   * @return The published.
    */
   @java.lang.Override
-  public boolean getIsPublic() {
-    return isPublic_;
+  public boolean getPublished() {
+    return published_;
   }
 
   public static final int SENDTIME_FIELD_NUMBER = 7;
@@ -276,6 +283,44 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int CONTENTTYPE_FIELD_NUMBER = 10;
+  private volatile java.lang.Object contentType_;
+  /**
+   * <code>string contentType = 10;</code>
+   * @return The contentType.
+   */
+  @java.lang.Override
+  public java.lang.String getContentType() {
+    java.lang.Object ref = contentType_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      contentType_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string contentType = 10;</code>
+   * @return The bytes for contentType.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getContentTypeBytes() {
+    java.lang.Object ref = contentType_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      contentType_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -305,8 +350,8 @@ private static final long serialVersionUID = 0L;
     if (diamond_ != 0L) {
       output.writeUInt64(5, diamond_);
     }
-    if (isPublic_ != false) {
-      output.writeBool(6, isPublic_);
+    if (published_ != false) {
+      output.writeBool(6, published_);
     }
     if (sendTime_ != 0L) {
       output.writeUInt64(7, sendTime_);
@@ -316,6 +361,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getAnswerMsgTypeBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 9, answerMsgType_);
+    }
+    if (!getContentTypeBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 10, contentType_);
     }
     unknownFields.writeTo(output);
   }
@@ -346,9 +394,9 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(5, diamond_);
     }
-    if (isPublic_ != false) {
+    if (published_ != false) {
       size += com.google.protobuf.CodedOutputStream
-        .computeBoolSize(6, isPublic_);
+        .computeBoolSize(6, published_);
     }
     if (sendTime_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
@@ -360,6 +408,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getAnswerMsgTypeBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, answerMsgType_);
+    }
+    if (!getContentTypeBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, contentType_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -389,14 +440,16 @@ private static final long serialVersionUID = 0L;
         != other.getSpark()) return false;
     if (getDiamond()
         != other.getDiamond()) return false;
-    if (getIsPublic()
-        != other.getIsPublic()) return false;
+    if (getPublished()
+        != other.getPublished()) return false;
     if (getSendTime()
         != other.getSendTime()) return false;
     if (getExpireTime()
         != other.getExpireTime()) return false;
     if (!getAnswerMsgType()
         .equals(other.getAnswerMsgType())) return false;
+    if (!getContentType()
+        .equals(other.getContentType())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -423,9 +476,9 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + DIAMOND_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getDiamond());
-    hash = (37 * hash) + ISPUBLIC_FIELD_NUMBER;
+    hash = (37 * hash) + PUBLISHED_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
-        getIsPublic());
+        getPublished());
     hash = (37 * hash) + SENDTIME_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getSendTime());
@@ -434,6 +487,8 @@ private static final long serialVersionUID = 0L;
         getExpireTime());
     hash = (37 * hash) + ANSWERMSGTYPE_FIELD_NUMBER;
     hash = (53 * hash) + getAnswerMsgType().hashCode();
+    hash = (37 * hash) + CONTENTTYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getContentType().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -581,13 +636,15 @@ private static final long serialVersionUID = 0L;
 
       diamond_ = 0L;
 
-      isPublic_ = false;
+      published_ = false;
 
       sendTime_ = 0L;
 
       expireTime_ = 0L;
 
       answerMsgType_ = "";
+
+      contentType_ = "";
 
       return this;
     }
@@ -624,10 +681,11 @@ private static final long serialVersionUID = 0L;
       result.questionId_ = questionId_;
       result.spark_ = spark_;
       result.diamond_ = diamond_;
-      result.isPublic_ = isPublic_;
+      result.published_ = published_;
       result.sendTime_ = sendTime_;
       result.expireTime_ = expireTime_;
       result.answerMsgType_ = answerMsgType_;
+      result.contentType_ = contentType_;
       onBuilt();
       return result;
     }
@@ -691,8 +749,8 @@ private static final long serialVersionUID = 0L;
       if (other.getDiamond() != 0L) {
         setDiamond(other.getDiamond());
       }
-      if (other.getIsPublic() != false) {
-        setIsPublic(other.getIsPublic());
+      if (other.getPublished() != false) {
+        setPublished(other.getPublished());
       }
       if (other.getSendTime() != 0L) {
         setSendTime(other.getSendTime());
@@ -702,6 +760,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getAnswerMsgType().isEmpty()) {
         answerMsgType_ = other.answerMsgType_;
+        onChanged();
+      }
+      if (!other.getContentType().isEmpty()) {
+        contentType_ = other.contentType_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -973,33 +1035,33 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private boolean isPublic_ ;
+    private boolean published_ ;
     /**
-     * <code>bool isPublic = 6;</code>
-     * @return The isPublic.
+     * <code>bool published = 6;</code>
+     * @return The published.
      */
     @java.lang.Override
-    public boolean getIsPublic() {
-      return isPublic_;
+    public boolean getPublished() {
+      return published_;
     }
     /**
-     * <code>bool isPublic = 6;</code>
-     * @param value The isPublic to set.
+     * <code>bool published = 6;</code>
+     * @param value The published to set.
      * @return This builder for chaining.
      */
-    public Builder setIsPublic(boolean value) {
+    public Builder setPublished(boolean value) {
       
-      isPublic_ = value;
+      published_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>bool isPublic = 6;</code>
+     * <code>bool published = 6;</code>
      * @return This builder for chaining.
      */
-    public Builder clearIsPublic() {
+    public Builder clearPublished() {
       
-      isPublic_ = false;
+      published_ = false;
       onChanged();
       return this;
     }
@@ -1138,6 +1200,82 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       answerMsgType_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object contentType_ = "";
+    /**
+     * <code>string contentType = 10;</code>
+     * @return The contentType.
+     */
+    public java.lang.String getContentType() {
+      java.lang.Object ref = contentType_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        contentType_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string contentType = 10;</code>
+     * @return The bytes for contentType.
+     */
+    public com.google.protobuf.ByteString
+        getContentTypeBytes() {
+      java.lang.Object ref = contentType_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        contentType_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string contentType = 10;</code>
+     * @param value The contentType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContentType(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      contentType_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string contentType = 10;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearContentType() {
+      
+      contentType_ = getDefaultInstance().getContentType();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string contentType = 10;</code>
+     * @param value The bytes for contentType to set.
+     * @return This builder for chaining.
+     */
+    public Builder setContentTypeBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      contentType_ = value;
       onChanged();
       return this;
     }

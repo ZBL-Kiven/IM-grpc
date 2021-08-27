@@ -62,26 +62,29 @@ class MainActivity : AppCompatActivity() {
          *
          * s : 即 Payload， 此值在 List 返回时无意义。其他情况 ：[add,change,delete] / 特殊结构体情况下其值默认为 CallId 。
          *
-         * */
-        IMHelper.addReceiveObserver<MessageInfoEntity>(0x1122).listen { d, list, pl ->
-            text.append("\non message ==> d = ${d?.textContent?.text}   lstD = $list  s = $pl")
-        }
+         * */ //        IMHelper.addReceiveObserver<MessageInfoEntity>(0x1122).listen { d, list, pl ->
+        //            text.append("\non message ==> d = ${d?.textContent?.text}   lstD = $list  s = $pl")
+        //        }
 
         /**
          * 同上，此处附加展示了监听器的新功能。 即消息过滤 ，
          * 如下例子所示，filterIn 返回值代表 '非我本人是群组' ，
          * 所以此监听器所能收到的消息为 ：「 类型为 [SessionInfoEntity] 且 非我本人是群组 的所有消息 」
          * s ： payload
-         * */
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1124).filterIn { i, _ -> i.ownerId != userId }.listen { d, list, pl ->
-            text.append("\non sessions got ==> d = ${d?.groupId}   lstD = $list  s = $pl")
-        }
+         * */ //        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1124).filterIn { i, _ -> i.ownerId != userId }.listen { d, list, pl ->
+        //            text.append("\n其他群组消息 d = ${d?.groupId}   lstD = $list  s = $pl")
+        //        }
 
         /**
          * 同上，此处采用的是 addTransferObserver 。则需要为其指定 DataHandler 的转换规则，并可分别为转换前后的数据设置过滤
-         * */
-        IMHelper.addTransferObserver<String, MessageInfoEntity>(0x1125).addHandler(MsgDataHandler::class.java).filterIn { string, _ -> string.isNotEmpty() }.filterOut { messageInfo, _ -> messageInfo.msgType == "text" }.listen { d, list, pl ->
-            text.append("\non sessions got ==> d = ${d?.groupId}   lstD = $list  s = $pl")
+         * */ //        IMHelper.addTransferObserver<String, MessageInfoEntity>(0x1125).addHandler(MsgDataHandler::class.java).filterIn { string, _ -> string.isNotEmpty() }.filterOut { messageInfo, _ -> messageInfo.msgType == "text" }.listen { d, list, pl ->
+        //            text.append("\non sessions got ==> d = ${d?.groupId}   lstD = $list  s = $pl")
+        //        }
+
+
+        IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
+            if (d != null) text.append("\nreceive a msg${d.msgType},${d.textContent?.text},${d.groupId}, ${d.clientMsgId}  , $pl")
+            if (!list.isNullOrEmpty()) text.append("\nreceive a list -> $list     ==============")
         }
     }
 
