@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -70,10 +71,10 @@
             android:id="@+id/main_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:editable="false"
-            android:onClick="startAlbum"
             android:layout_weight="1"
-            android:hint="input your path" />
+            android:editable="false"
+            android:hint="input your path"
+            android:onClick="startAlbum" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -87,17 +88,12 @@
 
     </LinearLayout>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/main_erv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#efc">
-
-        <TextView
-            android:id="@+id/main_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </ScrollView>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <TextView
         android:layout_width="wrap_content"

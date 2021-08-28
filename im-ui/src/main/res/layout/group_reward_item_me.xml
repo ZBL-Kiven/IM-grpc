@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="30dp"
+    android:orientation="horizontal"
+    android:id="@+id/ll"
+    android:background="@drawable/bg_moren_me"
+    android:gravity="center"
+    >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_reduce"
+            android:text="-"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/reward_text_color_not_reply"
+            />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rewardNumber"
+            android:id="@+id/tv_rewardnumber"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="@color/reward_text_color_not_reply"
+            />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_marginStart="@dimen/spark_margin_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/img_spark"
+            android:src="@drawable/icon_diamond_normal"
+            />
+</LinearLayout>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--    群主 我回复群员消息 图片-->
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/group_message_textSize"
+        android:id="@+id/tv_message_normal_replygroupmember_img"
+        tools:src="@drawable/ic_launcher"
+        android:textStyle="bold"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="12dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="12dp"
+        >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/group_message_textSize"
+            android:id="@+id/tv_nickname"
+            android:maxLines="1"
+            android:maxWidth="80dp"
+            android:ellipsize="end"
+            android:textColor="@color/message_textColor_me"
+            tools:text="Do you think you are joking with me？"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:textSize="@dimen/group_message_textSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=":"
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textColor="@color/message_textColor_me"
+            />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:textStyle="bold"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/group_message_textSize"
+            android:id="@+id/tv_message_normal_replyme_text"
+            android:textColor="@color/message_textColor_me"
+            tools:text="Do you think you are joking with me？"
+            />
+
+    </LinearLayout>
+</LinearLayout>

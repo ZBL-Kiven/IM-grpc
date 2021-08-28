@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    tools:background="@color/message_textColor_me">
+
+
+    <ImageView
+        android:id="@+id/img_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginTop="@dimen/content_margin_top"
+        app:layout_constraintBottom_toTopOf="@id/img_question"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/icon_huida_bai" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/content_margin_end"
+        android:includeFontPadding="false"
+        android:text="How Are You: "
+        android:textColor="@color/message_textColor_meReplyOthers"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toEndOf="@id/img_reply"
+        app:layout_constraintTop_toTopOf="@id/img_reply" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/im_msg_type_reward_barrier"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="img_reply,tv_text" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/img_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginTop="@dimen/content_margin_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/im_msg_type_reward_barrier"
+        app:srcCompat="@drawable/icon_wenti_normal" />
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/ll"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:layout_marginStart="4dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        app:layout_constraintHorizontal_weight="1"-->
+    <!--        app:layout_constraintRight_toRightOf="parent"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toEndOf="@+id/img_question"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tv_text"-->
+    <!--        >-->
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_4"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxWidth="80dp"
+        android:maxLines="1"
+        android:textColor="@color/bg_color_white"
+        android:textSize="@dimen/group_message_textSize"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/img_question"
+        app:layout_constraintTop_toTopOf="@+id/img_question"
+        tools:text="Do you think you are joking with me？" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_question"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/content_margin_end"
+        android:layout_marginBottom="4dp"
+        android:includeFontPadding="false"
+        android:text="Let's go hiking together🏃🏻‍♀️ asdfsdfsddfsdf！dadfsdfsfgsdfsfsfgregsvasdafadsfsdfa"
+        android:textColor="@color/message_textColor_meReplyOthers"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@+id/img_question" />
+
+    <!--    </LinearLayout>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

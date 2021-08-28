@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_message"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    tools:layout_height="180dp"
+    tools:background="@color/tt_skip_red"
+    android:clipChildren="false"
+    >
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_marginStart="12dp"
+        android:id="@+id/img_header"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintEnd_toStartOf="@+id/group_message_item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.zj.rebuild.chat.widget.GroupMessageItem
+        android:id="@+id/group_message_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="6dp"
+        >
+
+    </com.zj.rebuild.chat.widget.GroupMessageItem>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/icon_sendlose"
+        android:id="@+id/img_resend"
+        android:layout_marginEnd="@dimen/dp_4"
+        app:layout_constraintRight_toLeftOf="@id/group_message_item"
+        app:layout_constraintBottom_toBottomOf="@+id/group_message_item"
+        android:visibility="gone"/>
+
+   <com.zj.rebuild.chat.widget.loading.AVLoadingIndicatorView
+       android:layout_width="18dp"
+       android:layout_height="18dp"
+      android:id="@+id/view_loading"
+       app:layout_constraintRight_toLeftOf="@id/img_resend"
+       app:layout_constraintBottom_toBottomOf="@+id/group_message_item"
+       android:visibility="gone"/>
+
+
+    <TextView
+        android:id="@+id/tv_reply_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.4"
+        android:background="@drawable/message_widget_replied_cornors_bg"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingTop="@dimen/dp_4"
+        android:paddingRight="@dimen/dp_10"
+        android:paddingBottom="@dimen/dp_4"
+        android:rotation="-25"
+        android:text="Responded"
+        android:textColor="@color/replied_textview"
+        android:textStyle="bold"
+        android:visibility="visible"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toBottomOf="@+id/group_message_item"
+        app:layout_constraintEnd_toEndOf="@+id/group_message_item" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

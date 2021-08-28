@@ -148,7 +148,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             msg.replyMsg = sen.replyMsg
             msg.sender = SenderInfo().apply {
                 this.senderId = IMHelper.imConfig.getUserId()
-                this.senderAvatar = IMHelper.imConfig.getUserHeadPic()
+                this.senderAvatar = IMHelper.imConfig.getUserAvatar()
                 this.senderName = IMHelper.imConfig.getUserName()
             }
             when (sen.msgType) {

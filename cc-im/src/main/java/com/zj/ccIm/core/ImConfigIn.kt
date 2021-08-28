@@ -6,7 +6,7 @@ interface ImConfigIn {
 
     fun getUserName(): String
 
-    fun getUserHeadPic(): String
+    fun getUserAvatar(): String
 
     fun getToken(): String
 

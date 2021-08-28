@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="true"
+    xmlns:tools="http://schemas.android.com/tools">
+
+<!--    群主/群员 我回复群员消息 文字-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_normal_replygroupmember_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginTop="@dimen/content_margin_top"
+        tools:text="Just kidding, don't take it seriously😄iuefhqufqhefqheifhqepfhqewufqe9fqehpfqehfqioehfuqiweuf"
+        android:textColor="@color/message_textColor_meReplyOthers"
+        android:textSize="@dimen/group_message_textSize"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:textColor="@color/black" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_normal_needreply_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Do you think you are joking with me？i am seriously ! okmdadadadadad"
+        android:textColor="@color/message_textColor_replyOthers_others"
+        android:textStyle="bold"
+        android:textSize="@dimen/group_message_textSize"
+        app:layout_constraintStart_toEndOf="@id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:textColor="@color/message_textColor_replyOthers_others"
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/group_message_textSize"
+        android:textStyle="bold"
+        android:text="nickname"
+        android:maxWidth="80dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_message_normal_replygroupmember_text" />
+</androidx.constraintlayout.widget.ConstraintLayout>

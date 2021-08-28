@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/content_margin_top"
+    android:paddingLeft="@dimen/content_margin_start">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_normal_reply_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/message_textColor_me"
+        android:textSize="@dimen/group_message_textSize"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Do you think you are joking with me？" />
+
+    <com.zj.rebuild.chat.widget.GroupMessageRecordItem
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:id="@+id/tv_message_normal_reply_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/message_textColor_meReplyOthers"
+        android:textSize="@dimen/group_message_textSize"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/tv_flag"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_normal_reply_text"
+        tools:src="@drawable/ic_launcher" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_flag"
+        android:textSize="@dimen/group_message_textSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textStyle="bold"
+        android:textColor="@color/message_textColor_me"
+        app:layout_constraintStart_toEndOf="@+id/tv_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_normal_reply_text"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_marginEnd="@dimen/dp_4"
+        android:layout_marginTop="12dp"
+
+        />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_marginTop="12dp"
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Joker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_message_normal_reply_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

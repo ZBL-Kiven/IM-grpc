@@ -95,12 +95,13 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun registerChatRoom(groupId: Long, ownerId: Long) {
+        pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
         this.lastMsgRegister = LastMsgReqBean(groupId, ownerId)
-        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
     }
 
     fun clearSessionBadge(groupId: Long, vararg clearType: Int) {
@@ -115,7 +116,7 @@ object IMHelper : IMInterface<Any?>() {
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
         this.lastMsgRegister = null
-        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
     }
 
     private fun getOfflineChatMsg(groupId: Long, ownerId: Long) {
@@ -147,7 +148,6 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     internal fun onMsgRegistered() {
-        pause(Constance.FETCH_OFFLINE_MSG_CODE)
         refreshChatMsg()
         refreshGroupMsg()
         val gid = lastMsgRegister?.groupId ?: return
