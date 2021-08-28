@@ -6,7 +6,6 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.sender.compress.ImgCompress
-import com.zj.ccIm.core.sender.compress.OnCompressListener
 import com.zj.compress.CompressListener
 import com.zj.compress.VideoCompressUtils
 import com.zj.database.entity.MessageInfoEntity
@@ -92,7 +91,7 @@ object Sender {
 
         private val mVideoOutputPath = "/compress/im/${System.currentTimeMillis()}.mp4"
 
-        private val onImgCompressListener = object : OnCompressListener {
+        private val onImgCompressListener = object : com.zj.ccIm.core.sender.compress.OnCompressListener {
 
             override fun onStart() {
                 log("image start compress ... ")

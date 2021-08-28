@@ -1,6 +1,6 @@
 package com.zj.ccIm.core.impl
 
-import android.util.Log
+
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.ccIm.core.Constance
@@ -66,6 +66,7 @@ class ServerHubImpl : ServerImplGrpc() {
                 }
             }
             Constance.CONNECT_TYPE_MESSAGE -> {
+                postReceivedMessage(Constance.CALL_ID_CLEAR_SESSION_BADGE, null, true, 0)
                 postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, null, true, 0)
             }
         }
@@ -162,7 +163,7 @@ class ServerHubImpl : ServerImplGrpc() {
 
     /**
      * Listen for Topic type messages, and update subscriptions by passing in new topic types.
-     * [subscribeTopics] all types that need to be subscribed, such as [Constance.TOPIC_CC_USER]
+     * [subscribeTopics] all types that need to be subscribed
      * */
     private fun registerTopicListener() {
         requestStreamObserver?.let {
@@ -189,16 +190,14 @@ class ServerHubImpl : ServerImplGrpc() {
         withChannel(false) {
             it.leaveImGroup(rq, object : StreamObserver<LeaveImGroupReply> {
                 override fun onNext(value: LeaveImGroupReply?) {
-                    Log.e("------ ", "success !! ${value?.success}")
+                    postReceivedMessage(Constance.CALL_ID_CLEAR_SESSION_BADGE, null, true, 0)
                 }
 
                 override fun onError(t: Throwable?) {
                     onParseError(t)
                 }
 
-                override fun onCompleted() {
-                    Log.e("------ ", " onCompleted ")
-                }
+                override fun onCompleted() {}
             })
         }
     }

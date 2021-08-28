@@ -13,7 +13,7 @@ import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
 import com.zj.ccIm.core.MsgType
-import com.zj.ccIm.core.bean.ClearSessionBadgeBean
+import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.im.chat.poster.log
 import com.zj.protocol.grpc.ImMessage
 
@@ -46,12 +46,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         var payload: String? = callId
         when (callId) {
             Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                d as ClearSessionBadgeBean
-                val deal = when (d.pageType) {
-                    0 -> clearChatBadge(d.groupId)
-                    1 -> clearGroupBadge(d.groupId)
-                    else -> null
-                }
+                val deal = clearGroupBadge(d as Long)
                 payload = deal?.first
                 d = deal?.second
             }
@@ -286,42 +281,37 @@ class ClientHubImpl : ClientHub<Any?>() {
             info.disturbStatus = local.disturbStatus
             info.top = local.top
         }
-        sessionDb?.insertOrChangeSession(info)
         val lastMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(info.groupId)
         info.sessionMsgInfo = lastMsgInfo
+        sessionDb?.insertOrChangeSession(info)
         return Pair(if (exists) PAYLOAD_ADD else PAYLOAD_CHANGED, info)
     }
 
-    private fun clearChatBadge(groupId: Long): Pair<String, Any?>? {
+    private fun clearGroupBadge(groupId: Long): Pair<String, Any?>? {
         return IMHelper.withDb {
             val last = it?.sessionMsgDao()?.findSessionMsgInfoBySessionId(groupId)
             last?.ownerMsgId = null
             last?.ownerReplyMsgId = null
             last?.replyMeQuesMsgId = null
+            last?.replyMeMsgId = null
+            last?.msgNum = 0
             last
         }?.let {
             onDealSessionLastMsgInfo(it)
         }
     }
 
-    private fun clearGroupBadge(groupId: Long): Pair<String, Any?>? {
-        return IMHelper.withDb {
-            val last = it?.sessionMsgDao()?.findSessionMsgInfoBySessionId(groupId)
-            last?.replyMeMsgId = null;last
-        }?.let {
-            onDealSessionLastMsgInfo(it)
-        }
-    }
-
-
     private fun onDealSessionLastMsgInfo(info: SessionLastMsgInfo): Pair<String, Any?> {
         val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        val exists = sessionDb?.findSessionById(info.groupId) == null
-        lastMsgDb?.insertOrUpdateSessionMsgInfo(info)
         val sessionInfo = sessionDb?.findSessionById(info.groupId)
+        val exists = sessionInfo != null
+        lastMsgDb?.insertOrUpdateSessionMsgInfo(info)
         sessionInfo?.sessionMsgInfo = info
-        return Pair(if (exists) PAYLOAD_ADD else PAYLOAD_CHANGED, sessionInfo)
+        var allDots = sessionDb?.allSessions?.sumOf { it.questionNum } ?: 0
+        allDots += lastMsgDb?.findAll()?.sumOf { it.msgNum } ?: 0
+        super.onMsgPatch(MessageTotalDots(allDots), "", false, null, false) {}
+        return Pair(if (!exists) PAYLOAD_ADD else PAYLOAD_CHANGED, sessionInfo)
     }
 
     override fun progressUpdate(progress: Int, callId: String) {

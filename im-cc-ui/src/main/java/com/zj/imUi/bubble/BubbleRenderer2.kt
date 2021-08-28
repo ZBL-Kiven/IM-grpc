@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 
-object BubbleRenderer : BaseBubbleRenderer {
+object BubbleRenderer2 : BaseBubbleRenderer {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
@@ -18,8 +18,8 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
     override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int) {
-        val rect = Rect(0 + 10, 0 + 10, width - 10, height - 10)
-        paint.color = Color.CYAN
+        val rect = Rect(0, 0, width, height)
+        paint.color = Color.RED
         canvas.drawRect(rect, paint)
     }
 }

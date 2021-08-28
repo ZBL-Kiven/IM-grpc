@@ -35,7 +35,6 @@ internal object Constance {
     const val TOPIC_MSG_REGISTRATION = "cc://im-rpc-req/GetImMessage"
     const val TOPIC_IM_MSG = "cc://im-msg-topic/"
     const val TOPIC_GROUP_INFO = "cc://group-info-topic"
-    const val TOPIC_CC_USER = "cc://user" // in test
 
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
 

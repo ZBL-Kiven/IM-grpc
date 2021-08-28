@@ -1,20 +1,36 @@
 package com.zj.imtest.ui
 
 import android.content.Context
+import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.bubble.BubbleRenderer1
+import com.zj.imUi.bubble.BubbleRenderer2
+import com.zj.imtest.IMConfig
 import com.zj.views.ut.DPUtils
-import kotlin.random.Random
+import java.lang.IllegalArgumentException
 
 class ImMsgView(context: Context) : BaseImItem<ImEntityConverter>(context) {
 
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(1080, h, oldw, h)
+    }
+
     override fun getBubbleLayoutParams(d: ImEntityConverter): LayoutParams {
-        return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            ivAvatar?.let {
-                addRule(RIGHT_OF, it.id)
+        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
+            if (d.getSenderId() == IMConfig.getUserId()) {
+                ivAvatar?.visibility = View.GONE
+                gravity = Gravity.END
+            } else {
+                gravity = Gravity.START
+                ivAvatar?.let {
+                    it.visibility = View.VISIBLE
+                    addRule(ALIGN_START, it.id)
+                }
             }
         }
     }
@@ -30,8 +46,11 @@ class ImMsgView(context: Context) : BaseImItem<ImEntityConverter>(context) {
     }
 
     override fun getBubbleRenderer(data: ImEntityConverter): BaseBubbleRenderer? {
-        return if (Random.nextBoolean()) {
-            BubbleRenderer1
-        } else super.getBubbleRenderer(data)
+        return when (data.getSendState()) {
+            -2, -1 -> BubbleRenderer2
+            1, 2 -> BubbleRenderer1
+            0, 3 -> super.getBubbleRenderer(data)
+            else -> throw IllegalArgumentException()
+        }
     }
 }

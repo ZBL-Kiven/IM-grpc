@@ -12,7 +12,7 @@ object IMConfig : ImConfigIn {
         return "油王"
     }
 
-    override fun getUserHeadPic(): String {
+    override fun getUserAvatar(): String {
         return "https://img1.baidu.com/it/u=2693627099,4115094120&fm=26&fmt=auto&gp=0.jpg"
     }
 
@@ -22,9 +22,9 @@ object IMConfig : ImConfigIn {
 
     override fun getGrpcAddress(): Pair<String, Int> {
 
-        //        return Pair("grpc.ccdev.lerjin.com", 50003)
+        return Pair("grpc.ccdev.lerjin.com", 50003)
 
-        return Pair("172.16.1.75", 50003)
+        //        return Pair("172.16.1.75", 50003)
     }
 
     override fun getIMHost(): String {

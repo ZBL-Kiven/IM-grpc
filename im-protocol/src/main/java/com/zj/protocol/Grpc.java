@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.grpc.ClientInterceptor;
 import io.grpc.ConnectivityState;
@@ -28,20 +29,20 @@ public final class Grpc {
         cachedChannels = new HashMap<>();
     }
 
-    public static CachedChannel get(String host, int port) {
+    public static CachedChannel get(GrpcConfig config) {
         if (current == null) {
             synchronized (Grpc.class) {
                 if (current == null) current = new Grpc();
             }
         }
-        return current.create(host, port);
+        return current.create(config);
     }
 
-    private CachedChannel create(String host, int port) {
-        String key = host + port;
+    private CachedChannel create(GrpcConfig config) {
+        String key = config.getHost() + config.getPort();
         CachedChannel c = cachedChannels.get(key);
         if (c == null) {
-            c = new CachedChannel(key, host, port);
+            c = new CachedChannel(key, config);
             cachedChannels.put(key, c);
         }
         return c;
@@ -53,9 +54,9 @@ public final class Grpc {
         private final String key;
         private Map<String, String> headerDefault;
 
-        private CachedChannel(String key, String host, int port) {
+        private CachedChannel(String key, GrpcConfig config) {
             this.key = key;
-            channel = ManagedChannelBuilder.forAddress(host, port).usePlaintext().build();
+            this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).keepAliveTimeout(config.getKeepAliveTimeOut(), TimeUnit.MILLISECONDS).keepAliveWithoutCalls(true).idleTimeout(config.getIdleTimeOut(), TimeUnit.MILLISECONDS).usePlaintext().build();
         }
 
         public CachedChannel defaultHeader(Map<String, String> h) {

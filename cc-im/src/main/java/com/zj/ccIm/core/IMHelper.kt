@@ -4,7 +4,6 @@ import android.app.Application
 import android.app.Notification
 import android.util.Log
 import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.ClearSessionBadgeBean
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
@@ -102,13 +101,6 @@ object IMHelper : IMInterface<Any?>() {
         data.ownerId = ownerId
         this.lastMsgRegister = LastMsgReqBean(groupId, ownerId)
         IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-    }
-
-    fun clearSessionBadge(groupId: Long, vararg clearType: Int) {
-        clearType.forEach {
-            val cb = ClearSessionBadgeBean(groupId, it)
-            IMHelper.send(cb, Constance.CALL_ID_CLEAR_SESSION_BADGE, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = true, sendBefore = null)
-        }
     }
 
     fun leaveChatRoom(groupId: Long) {
