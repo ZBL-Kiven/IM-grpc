@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
+import com.zj.imUi.R
 
 @Suppress("unused")
 abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
@@ -34,7 +35,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initAvatar(data: T) {
-        if (ivAvatar == null) ivAvatar = ImageView(context)
+        if (ivAvatar == null) ivAvatar = ImageView(context).apply { id = R.id.im_item_message_avatar }
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
     }
