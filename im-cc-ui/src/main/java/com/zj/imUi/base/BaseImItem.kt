@@ -71,6 +71,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun onDestroyed() {
+        onStop()
         bubbleView?.onDestroyed()
         removeAllViews()
     }

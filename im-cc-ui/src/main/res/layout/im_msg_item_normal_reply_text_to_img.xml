@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:maxWidth="280dp"
+    tools:background="@color/bg_origin"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/content_margin_start"
+    android:paddingTop="@dimen/content_margin_top"
+    android:paddingBottom="@dimen/content_margin_bottom"
+    android:paddingEnd="@dimen/content_margin_end"
+    >
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_normal_reply_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/content_margin_end"
+        android:textSize="@dimen/group_message_textSize"
+        tools:text="这是回复的内容"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="12dp"
+        >
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="80dp"
+            android:maxLines="1"
+            android:text="Joker"
+            android:textColor="@color/reward_text_color_reply"
+            android:textSize="16sp" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dp_4"
+            android:layout_marginEnd="@dimen/dp_4"
+            android:text=":"
+            android:textColor="@color/reward_text_color_reply"
+            android:textSize="@dimen/group_message_textSize"
+            android:textStyle="bold"
+
+            />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/tv_message_normal_reply_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            tools:src="@drawable/ic_launcher" />
+
+    </LinearLayout>
+</LinearLayout>

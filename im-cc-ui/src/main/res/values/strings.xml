@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="rewardNumber" translatable="false">500</string>
+
+    <string name="im_ui_private">Private</string>
+    <string name="im_ui_public">Public</string>
+    <string name="im_ui_reply_by">REPLY BY </string>
+
+    <string name="im_ui_min_ago">minutes ago</string>
+    <string name="im_ui_hours_ago">hours ago</string>
+
+    <string name="im_ui_msg_type_text">Text</string>
+    <string name="im_ui_msg_type_image">Image</string>
+    <string name="im_ui_msg_type_audio">Audio</string>
+
+    <string name="im_ui_msg_reward_type_text">Audio</string>
+    <string name="im_ui_msg_reward_type_image">Audio</string>
+    <string name="im_ui_msg_reward_type_audio">Audio</string>
+
+</resources>

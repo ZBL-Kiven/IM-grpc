@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <solid
+        android:color="@color/reward_ll_color_reply"
+        />
+    <corners
+        android:topLeftRadius="0dp"
+        android:topRightRadius="8dp"
+        android:bottomLeftRadius="12dp"
+        android:bottomRightRadius="0dp">
+    </corners>
+</shape>
+

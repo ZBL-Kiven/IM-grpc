@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginStart="@dimen/content_margin_start"
+    android:layout_marginTop="@dimen/content_margin_top">
+
+    <!-- 左侧  群主回复我的消息 图片-->
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/group_message_textSize"
+        android:id="@+id/tv_message_normal_ownerreplyme_img"
+        android:textColor="@color/message_textColor_meReplyOthers"
+        tools:src="@drawable/ic_launcher"
+        android:textStyle="bold"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/group_message_textSize"
+        android:id="@+id/tv_message_normal_needreply_text"
+        android:textColor="@color/message_textColor_me"
+        tools:text="Do you think you are joking with me？"
+        />
+</LinearLayout>

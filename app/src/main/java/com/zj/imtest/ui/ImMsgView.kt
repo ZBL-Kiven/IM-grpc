@@ -4,12 +4,9 @@ import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
-import com.zj.imUi.bubble.BubbleRenderer1
-import com.zj.imUi.bubble.BubbleRenderer2
 import com.zj.imtest.IMConfig
 import com.zj.views.ut.DPUtils
 import java.lang.IllegalArgumentException

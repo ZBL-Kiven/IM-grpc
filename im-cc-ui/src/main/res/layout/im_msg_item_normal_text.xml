@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="@string/nick_name"
+        android:id="@+id/im_msg_item_normal_text_tv_nickname"
+        />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/group_message_textSize"
+        android:id="@+id/im_msg_item_normal_text_tv_content"
+        tools:text="This is a normal message!"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginBottom="@dimen/content_margin_bottom"
+        android:layout_marginEnd="@dimen/content_margin_end"
+        />
+</LinearLayout>
+

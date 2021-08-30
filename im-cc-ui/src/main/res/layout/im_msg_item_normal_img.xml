@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/im_msg_item_normal_img_tv_nickname"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="@dimen/content_margin_top"
+        tools:text = "@string/nick_name"
+        />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/im_msg_item_normal_img_img_content"
+        android:src="@mipmap/ic_launcher_round"
+        android:scaleType="centerInside"
+        android:layout_marginStart="@dimen/content_margin_start"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="@dimen/content_margin_top"
+        android:layout_marginBottom="12dp"
+        />
+</LinearLayout>

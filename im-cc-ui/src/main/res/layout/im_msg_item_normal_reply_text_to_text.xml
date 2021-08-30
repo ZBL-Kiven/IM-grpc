@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="true"
+    android:orientation="vertical"
+    android:maxWidth="280dp"
+    tools:background="@color/bg_origin"
+    android:paddingStart="@dimen/content_margin_start"
+    android:paddingTop="@dimen/content_margin_top"
+    android:paddingBottom="@dimen/content_margin_bottom"
+    android:paddingEnd="@dimen/content_margin_end"
+    >
+
+    <!--    群主/群员 我回复群员消息 文字-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_normal_replygroupmember_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/message_textColor_meReplyOthers"
+        tools:text="这是回复内容"
+        android:textSize="@dimen/group_message_textSize"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/content_margin_top"
+        android:orientation="horizontal">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="80dp"
+            android:maxLines="1"
+            android:text="nickname"
+            android:textColor="@color/message_textColor_replyOthers_others"
+            android:textSize="@dimen/group_message_textSize"
+            android:textStyle="bold" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:includeFontPadding="false"
+            android:id="@+id/tv_message_normal_needreply_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Do you think you are joking with me？i am seriously ! okmdadadadadad"
+            android:textColor="@color/message_textColor_replyOthers_others"
+            android:textSize="@dimen/group_message_textSize"
+            android:textStyle="bold" />
+
+
+
+
+    </LinearLayout>
+
+</LinearLayout>

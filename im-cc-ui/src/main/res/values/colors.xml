@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="reward_text_color_not_reply">#FFF0723B</color>
+    <color name="reward_text_color_reply">#FFA6ACBF</color>
+    <color name="reward_text_color_timeout">#FFEAECF3</color>
+    <color name="reward_text_color_member_waitReply">#FF8277E1</color>
+    <color name="popWindow_bg">#FF333333</color>
+    <color name="popWindow_line">#17000000</color>
+
+
+    <color name="reward_ll_color_not_reply">#FFFBEA72</color>
+    <color name="reward_ll_color_reply">#FFF5F7F9</color>
+    <color name="reward_ll_color_timeout">#FFA6ACBF</color>
+
+
+    <color name="message_textColor_me">#FFFEA30F</color>
+    <color name="bg_origin">#FFFEA30F</color>
+    <color name="bg_green">#FF3EC093</color>
+    <color name="bg_purple">#FF9636FF</color>
+    <color name="message_textColor_replyMe">#FF333333</color>
+    <color name="message_textColor_meReplyOthers">#FFFFFFFF</color>
+    <color name="text_color_white">#FFFFFFFF</color>
+    <color name="bg_color_white">#FFFEFEFE</color>
+    <color name="text_color_purple_private">#FFB36EFF</color>
+    <color name="text_color_origin_private">#FFF0723B</color>
+    <color name="text_color_member_type">#FFFE6F0F</color>
+    <color name="message_textColor_replyOthers_others">#FFA56807</color>
+
+
+    <color name="frame_textview">#80FFFFFF</color>
+    <color name="frame_textview_private">#FFA6ACBF</color>
+    <color name="frame_textview_brown">#FFD3870A</color>
+    <color name="frame_textview_gray">#80B8B8B8</color>
+    <color name="frame_textview_chengse">#FFF0723B</color>
+    <color name="replied_textview">#FF3EC093</color>
+    <color name="replied_bg">#FFE2E5EF</color>
+    <color name="nickname_color_black">#FF262628</color>
+    <color name="text_color_black">#FF262628</color>
+\    <color name="text_color_gray">#FFA6ACBF</color>
+
+    <color name="message_item_private">#33944DE3</color>
+    <color name="message_item_timeout_add_replied">#FFE2E5EF</color>
+    <color name="message_item_need_reply">#FFFEA30F</color>
+    <color name="recycleview_bg">#FFF5F7F9</color>
+    <color name="item_bg_white">#E6FFFFFF</color>
+
+</resources>

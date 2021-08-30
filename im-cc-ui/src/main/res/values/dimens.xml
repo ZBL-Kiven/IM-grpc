@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="group_message_textSize">16sp</dimen>
+    <dimen name="spark_margin_left">6dp</dimen>
+    <dimen name="content_margin_top">12dp</dimen>
+    <dimen name="content_margin_start">12dp</dimen>
+    <dimen name="content_margin_end">12dp</dimen>
+    <dimen name="content_margin_bottom">12dp</dimen>
+
+</resources>
