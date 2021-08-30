@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:maxWidth="280dp"
@@ -7,13 +8,14 @@
 
     <TextView
         android:id="@+id/im_msg_item_bottom_tv_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
+        android:layout_toStartOf="@id/im_msg_item_bottom_group_reward_item"
         android:textColor="@color/nickname_color_black"
         android:textStyle="bold"
-        android:text="12 mins ago"/>
+        tools:text="12 m ago" />
 
     <com.zj.imUi.widget.GroupRewardMeItem
         android:id="@+id/im_msg_item_bottom_group_reward_item"

@@ -18,9 +18,8 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_bottom, this, true)
-        textRewardNumber = findViewById(R.id.tv_rewardnumber)
+        textRewardNumber = findViewById(R.id.tv_reward_number)
         textRewardTime = findViewById(R.id.tv_tIme)
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -31,12 +30,11 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
 
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..359999) {
-            StringBuilder(timeParse(sendTime)).append(" mins ago")
+            StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
         } else if (sendTime > 360000 && sendTime < 360000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(" hours ago")
+            StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
-
 
     private fun timeParseHour(duration: Long): String {
         val time: String?

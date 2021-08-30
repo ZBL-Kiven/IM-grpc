@@ -69,7 +69,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             } else {
                 textResponseType.text = context.getString(R.string.im_ui_private)
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_purple_private))
-                textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_roundcornor_4dp)
+                textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getQuestionContentType().toString().let { setReplyTypeText(it) }
 
@@ -87,10 +87,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
                     //回答方式背景
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-                    textResponseType.setBackgroundResource(R.drawable.textview_frame_white_roundcornor) //有效期 图标
+                    textResponseType.setBackgroundResource(R.drawable.text_view_frame_white_round_corner) //有效期 图标
                     tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                     imgCountdown.setImageResource(R.drawable.icon_countdown_send)
-                    llCountDown.setBackgroundResource(R.drawable.textview_frame_white_roundcornor)
+                    llCountDown.setBackgroundResource(R.drawable.text_view_frame_white_round_corner)
 
                 } else {
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_purple_private))

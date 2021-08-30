@@ -1,90 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:layout_margin="12dp"
-        android:layout_marginStart="12dp"
+        android:id="@+id/im_msg_item_normal_text_tv_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@string/nick_name"
-        android:id="@+id/im_msg_item_normal_text_tv_nickname"
-        />
+        android:layout_margin="12dp"
+        android:layout_marginStart="12dp"
+        tools:text="nick_name" />
 
     <LinearLayout
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="12dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_wenti_normal"
             android:id="@+id/im_msg_item_normal_icon_question"
-            />
-
-        <ViewStub
-            android:layout_marginStart="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:src="@drawable/icon_question_normal" />
+
+        <FrameLayout
             android:id="@+id/im_msg_bubble_viewstub"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp" />
 
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp"
         android:layout_marginStart="12dp"
-        >
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/im_msg_item_normal_icon_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_huida_normal"
-            android:id="@+id/im_msg_item_normal_icon_reply"
-            />
+            android:src="@drawable/icon_huida_normal" />
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
-            >
+            android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/im_msg_item_normal_text_replied_tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/im_msg_item_normal_text_replied_tv_nickname"
-                tools:text="@string/nick_name"
-                android:textColor="@color/text_color_gray"
+                android:ellipsize="end"
                 android:maxWidth="80dp"
-                />
+                android:maxLines="1"
+                android:textColor="@color/text_color_gray"
+                tools:text="nick_name" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/im_msg_item_normal_text_replied_tv_flag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" : "
-                android:textColor="@color/text_color_gray"
+                android:text="@string/im_ui_user_nickname_split"
+                android:textColor="@color/text_color_gray" />
 
-                />
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/im_msg_item_normal_text_replied_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/im_msg_item_normal_text_replied_content"
-                tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测"
                 android:textColor="@color/text_color_gray"
-                />
+                tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测" />
 
         </LinearLayout>
 
@@ -92,11 +85,9 @@
     </LinearLayout>
 
     <com.zj.imUi.widget.GroupRewardOwnerMeItem
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/im_msg_item_normal_text_replied_time"
-        />
-
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

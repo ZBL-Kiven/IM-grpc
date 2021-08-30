@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewStub
+import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -24,7 +24,7 @@ import com.zj.imUi.widget.GroupRewardOwnerMeItem
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
 
     private val tvName: AppCompatTextView
-    private val bubbleContent: ViewStub
+    private val bubbleContent: FrameLayout
     private val tvQuestionName: AppCompatTextView
     private val tvFlag: AppCompatTextView
     private val tvQuestionContent: AppCompatTextView
@@ -102,25 +102,27 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setViewStub(data: ImMsgIn) {
+        bubbleContent.removeAllViews()
         when (data.getType()) {
             Constance.MSG_TYPE_TEXT -> {
-                bubbleContent.layoutResource = R.layout.im_msg_item_normal_text
-                bubbleContent.inflate()
+                View.inflate(context, R.layout.im_msg_item_normal_text, bubbleContent)
                 val textContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_text_tv_content)
+                textContent.setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
+                    Color.WHITE
+                } else {
+                    ContextCompat.getColor(context, R.color.message_textColor_replyMe)
+                })
                 textContent.text = data.getTextContent()
-                if (data.getSelfUserId() == data.getSenderId()) textContent.setTextColor(Color.WHITE)
             }
 
             Constance.MSG_TYPE_IMG -> {
-                bubbleContent.layoutResource = R.layout.im_msg_item_normal_img
-                bubbleContent.inflate()
+                View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
                 val imgContent: AppCompatImageView = findViewById(R.id.im_msg_item_normal_img_img_content)
                 setImg(imgContent, data)
             }
 
             Constance.MSG_TYPE_AUDIO -> {
-                bubbleContent.layoutResource = R.layout.im_msg_item_normal_audio
-                bubbleContent.inflate()
+                View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
                 val imgContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_audio_content)
             }
         }

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="rewardNumber" translatable="false">500</string>
+    <string name="im_ui_user_nickname_split" translatable="false"> : </string>
 
     <string name="im_ui_private">Private</string>
     <string name="im_ui_public">Public</string>
     <string name="im_ui_reply_by">REPLY BY </string>
+
+    <string name="im_ui_replied">Replied</string>
 
     <string name="im_ui_min_ago">minutes ago</string>
     <string name="im_ui_hours_ago">hours ago</string>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="190dp"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -12,23 +12,20 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_record_time"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/tv_record_icon"
         android:textColor="@color/reward_text_color_not_reply"
         android:textSize="14sp"
         tools:text="22''" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_record_justtext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/reward_text_color_not_reply"
-        tools:text=" ---------------" />
-
     <Button
+        android:id="@+id/tv_record_icon"
         android:layout_width="25dp"
         android:layout_height="25dp"
+        android:layout_alignParentEnd="true"
         android:background="@color/reward_text_color_not_reply" />
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.imUi.ui.ImMsgView
+import com.zj.rebuild.im.uiConfig.ImEntityConverter
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener

@@ -14,12 +14,10 @@ import com.zj.imUi.interfaces.ImMsgIn
 class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
 
     private var tvTime: AppCompatTextView
-    private var tvText: AppCompatTextView
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_widget_record, this, true)
         tvTime = findViewById(R.id.tv_record_time)
-        tvText = findViewById(R.id.tv_record_justtext)
     }
 
     fun setData(userId: Int, messageBean: ImMsgIn?) {

@@ -1,4 +1,4 @@
-package com.zj.imtest.ui
+package com.zj.rebuild.im.uiConfig
 
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
@@ -6,49 +6,48 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.IMConfig
 
 class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
+    override fun getOwnerId(): Int? {
+        return info?.ownerId
+    }
+
+    override fun getGroupId(): Long {
+        return info?.groupId ?: 0
+    }
+
+    override fun getMsgId(): String {
+        return info?.clientMsgId ?: ""
+    }
+
+    override fun getReplyId(): Int? {
+        return info?.replyId
+    }
+
+    override fun getReplyMsgId(): Long? {
+        return info?.replyMsgId
+    }
+
+    override fun getSendingState(): Int {
+        return info?.sendingState ?: 0
+    }
 
     override fun getSendState(): Int {
         return info?.sendingState ?: SendMsgState.NONE.type
     }
 
-    override fun getSenderId(): Int {
-        return IMConfig.getUserId()
+    override fun getSenderId(): Int? {
+        return info?.senderId
     }
 
     override fun getSenderName(): String? {
         return info?.sender?.senderName
     }
 
+    override fun getSendTime(): Long {
+        return info?.sendTime ?: 0
+    }
+
     override fun getTextContent(): String? {
         return info?.textContent?.text
-    }
-
-    override fun getSendTime(): Long {
-        TODO("Not yet implemented")
-    }
-
-    override fun getOwnerId(): Int? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getGroupId(): Long {
-        TODO("Not yet implemented")
-    }
-
-    override fun getMsgId(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyId(): Int? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyMsgId(): Long? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getSendingState(): Int {
-        TODO("Not yet implemented")
     }
 
     override fun getType(): String? {
@@ -60,108 +59,113 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getImgContentUrl(): String? {
-        TODO("Not yet implemented")
+        return info?.imgContent?.url
     }
 
     override fun getImgContentWidth(): Int? {
-        TODO("Not yet implemented")
+        return info?.imgContent?.width
     }
 
     override fun getImgContentHeight(): Int? {
-        TODO("Not yet implemented")
+        return info?.imgContent?.height
+
     }
 
     override fun getAudioContentUrl(): String? {
-        TODO("Not yet implemented")
+        return info?.audioContent?.url
     }
 
     override fun getAudioContentDuration(): Long? {
-        TODO("Not yet implemented")
+        return info?.audioContent?.duration
     }
 
+    //打赏相关
+
     override fun getAnswerMsgType(): String? {
-        TODO("Not yet implemented")
+        return info?.questionContent?.answerMsgType
     }
 
     override fun getQuestionContentType(): String? {
-        TODO("Not yet implemented")
+        return info?.questionContent?.contentType
     }
 
     override fun getDiamonds(): Int {
-        TODO("Not yet implemented")
+        return info?.questionContent?.diamond ?: 0
     }
 
     override fun getExpireTime(): Long {
-        TODO("Not yet implemented")
+        return info?.questionContent?.expireTime ?: 0
     }
 
     override fun getSpark(): Int {
-        TODO("Not yet implemented")
+        return info?.questionContent?.spark ?: 0
     }
 
     override fun getPublished(): Boolean {
-        TODO("Not yet implemented")
+        return info?.questionContent?.published ?: true
     }
 
     override fun getQuestionId(): Int {
-        TODO("Not yet implemented")
+        return info?.questionContent?.questionId ?: 0
     }
 
     override fun getQuestionStatus(): Int {
-        TODO("Not yet implemented")
+        return info?.questionContent?.questionStatus ?: -1
     }
 
     override fun getQuestionTextContent(): String? {
-        TODO("Not yet implemented")
+        return info?.questionContent?.textContent?.text
     }
 
     override fun getQuestionSendTime(): Long {
-        TODO("Not yet implemented")
+        return info?.questionContent?.sendTime ?: 0
     }
 
-    override fun getReplyMsgContent(): MessageReplyIn? {
-        TODO("Not yet implemented")
-    }
 
     override fun getReplyMsgTextContent(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyMsgClientMsgId(): String? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyMsgCreateTs(): Long? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyMsgGroupId(): Long? {
-        TODO("Not yet implemented")
-    }
-
-    override fun getReplyMsgMsgId(): Long? {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.textContent?.text
     }
 
     override fun getReplyMsgType(): String? {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.msgType
     }
 
+
+    override fun getReplyMsgClientMsgId(): String? {
+        return info?.replyMsg?.clientMsgId
+    }
+
+    override fun getReplyMsgCreateTs(): Long? {
+        return info?.replyMsg?.createTs
+    }
+
+    override fun getReplyMsgGroupId(): Long? {
+        return info?.replyMsg?.groupId
+    }
+
+    override fun getReplyMsgMsgId(): Long? {
+        return info?.replyMsg?.msgId
+    }
+
+
     override fun getReplyMsgOwnerId(): Int? {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.ownerId
     }
 
     override fun getReplySendState(): Int {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.sendingState ?: 0
     }
 
     override fun getReplySenderId(): Int {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.senderId ?: 0
     }
 
     override fun getReplySenderName(): String? {
-        TODO("Not yet implemented")
+        return info?.replyMsg?.sender?.senderName
     }
 
+    override fun getSelfUserId(): Int {
+        return IMConfig.getUserId()
+    }
 
 }
