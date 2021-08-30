@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
@@ -24,9 +25,9 @@ class ImMsgView(context: Context) : BaseImItem<ImEntityConverter>(context) {
         return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
             if (d.getSenderId() == IMConfig.getUserId()) {
                 ivAvatar?.visibility = View.GONE
-                gravity = Gravity.END
+                this@ImMsgView.gravity = Gravity.END
             } else {
-                gravity = Gravity.START
+                this@ImMsgView.gravity = Gravity.START
                 ivAvatar?.let {
                     it.visibility = View.VISIBLE
                     addRule(ALIGN_START, it.id)

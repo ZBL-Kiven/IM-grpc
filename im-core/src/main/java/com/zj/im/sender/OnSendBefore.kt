@@ -9,8 +9,5 @@ interface OnSendBefore<T> {
 }
 
 interface OnStatus<T> {
-
     fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?)
-
-    fun onSendingInfoChanged(callId: String, data: T)
 }

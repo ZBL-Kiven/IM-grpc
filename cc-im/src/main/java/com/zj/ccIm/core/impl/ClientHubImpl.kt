@@ -7,13 +7,12 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
-import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.sender.Converter
 import com.zj.im.chat.poster.log
 import com.zj.protocol.grpc.ImMessage
 
@@ -23,7 +22,6 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_ADD = "add"
         const val PAYLOAD_DELETE = "delete"
         const val PAYLOAD_CHANGED = "change"
-        private const val SP_LAST_CREATE_TS = "last_create_ts"
     }
 
     /**
@@ -91,7 +89,8 @@ class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.onMsgRegistered();return true
         }
         if (!b && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE);return false
+            if (IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)) IMHelper.onOfflineMsgPatched()
+            return false
         }
         return callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
     }
@@ -133,77 +132,16 @@ class ClientHubImpl : ClientHub<Any?>() {
     }
 
     private fun onDealSendingInfo(sen: SendMessageReqEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
-        if (sendingState == SendMsgState.SENDING) {
-            val msg = MessageInfoEntity()
-            msg.groupId = sen.groupId
-            msg.msgType = sen.msgType
-            msg.sendingState = sendingState.type
-            msg.clientMsgId = sen.clientMsgId
-            msg.sendTime = getLastCreateTs()
-            msg.replyMsg = sen.replyMsg
-            msg.sender = SenderInfo().apply {
-                this.senderId = IMHelper.imConfig.getUserId()
-                this.senderAvatar = IMHelper.imConfig.getUserAvatar()
-                this.senderName = IMHelper.imConfig.getUserName()
-            }
-            when (sen.msgType) {
-                MsgType.TEXT.type -> {
-                    msg.textContent = TextContent().apply {
-                        this.text = sen.content
-                    }
-                }
-                MsgType.IMG.type -> {
-                    msg.imgContent = ImgContent().apply {
-                        this.url = sen.localFilePath
-                        this.duration = sen.duration
-                        this.width = sen.width
-                        this.height = sen.height
-                    }
-                }
-                MsgType.AUDIO.type -> {
-                    msg.audioContent = AudioContent().apply {
-                        this.url = sen.localFilePath
-                        this.duration = sen.duration
-                    }
-                }
-                MsgType.VIDEO.type -> {
-                    msg.videoContent = VideoContent().apply {
-                        this.url = sen.localFilePath
-                        this.thumbnail = sen.localFilePath
-                        this.duration = sen.duration
-                        this.width = sen.width
-                        this.height = sen.height
-                    }
-                }
-                MsgType.QUESTION.type -> {
-                    msg.questionContent = QuestionContent().apply {
-                        this.diamond = sen.diamondNum ?: 0
-                        this.published = sen.public
-                        this.textContent = TextContent().apply {
-                            this.text = sen.content
-                        }
-                    }
-                }
-            }
-            context?.let {
-                val db = DbHelper.get(it)?.db?.sendMsgDao()
-                db?.insertOrChange(sen)
-            }
-            return onDealMessages(msg, callId, sendingState)
+        return if (sendingState == SendMsgState.SENDING) {
+            val msg = Converter.exchangeMsgInfoBySendingInfo(sen, sendingState)
+            onDealMessages(msg, callId, sendingState)
         } else {
             val resp = SendMessageRespEn()
             resp.clientMsgId = sen.clientMsgId
             resp.groupId = sen.groupId
             resp.black = false
-            return onDealMsgSendInfo(resp, callId, sendingState)
+            onDealMsgSendInfo(resp, callId, sendingState)
         }
-    }
-
-    private fun getLastCreateTs(): Long {
-        var ts = SPHelper[SP_LAST_CREATE_TS, 0L] ?: 0L
-        ts += 1
-        SPHelper.put(SP_LAST_CREATE_TS, ts)
-        return ts
     }
 
     /**

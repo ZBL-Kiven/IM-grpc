@@ -1,5 +1,6 @@
 package com.zj.im.sender
 
+import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.modle.SendingUp
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
@@ -14,11 +15,18 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
 
     private val sendMsgQueue = cusListOf<BaseMsgInfo<T>>()
 
-    fun setSendState(state: SendingUp, isFinish: Boolean, callId: String, data: T? = null) {
+    fun setSendState(state: SendingUp, callId: String, data: T? = null) {
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = state
             this.data = data
-            if (isFinish) this.onSendBefore = null else DataReceivedDispatcher.pushData(this)
+            var sendState = this.sendingState
+            if (state != SendingUp.CANCEL) {
+                this.onSendBefore = null
+            } else {
+                sendState = SendMsgState.FAIL
+            }
+            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend)
+            DataReceivedDispatcher.pushData(notifyState)
         }
     }
 

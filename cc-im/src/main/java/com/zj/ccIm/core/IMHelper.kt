@@ -142,6 +142,9 @@ object IMHelper : IMInterface<Any?>() {
     internal fun onMsgRegistered() {
         refreshChatMsg()
         refreshGroupMsg()
+    }
+
+    internal fun onOfflineMsgPatched() {
         val gid = lastMsgRegister?.groupId ?: return
         withDb {
             val resendMsg = it?.sendMsgDao()?.findAllBySessionId(gid)

@@ -5,7 +5,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 117656
+        return 117658
     }
 
     override fun getUserName(): String {
@@ -32,6 +32,14 @@ object IMConfig : ImConfigIn {
         return "https://im.ccdev.lerjin.com"
 
         //                return "http://172.16.1.75:8085"
+    }
+
+    override fun getHeatBeatsTimeOut(): Long {
+        return 5000
+    }
+
+    override fun getIdleTimeOut(): Long {
+        return 24 * 60 * 60 * 1000
     }
 
 }

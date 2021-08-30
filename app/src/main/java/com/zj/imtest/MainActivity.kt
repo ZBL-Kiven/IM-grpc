@@ -31,7 +31,10 @@ import com.zj.imtest.ui.MsgAdapter
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
-
+    private var incId = 0
+        get() {
+            return field++
+        }
     private lateinit var rv: RecyclerView
     private lateinit var et: EditText
     private var adapter: MsgAdapter? = null
@@ -72,7 +75,7 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        Sender.sendText("好说，好说", groupId, null)
+        Sender.sendText("Test Message $incId", groupId, null)
     }
 
     fun sendImg(view: View) {
@@ -135,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                 ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeAll(d)
             }
-            if (!list.isNullOrEmpty()) adapter?.change(list)
+            if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_chat_messages") adapter?.change(list)
         }
 
         IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, _ ->

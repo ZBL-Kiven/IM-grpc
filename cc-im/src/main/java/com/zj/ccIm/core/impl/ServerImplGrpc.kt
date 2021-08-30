@@ -9,6 +9,7 @@ import com.zj.im.utils.nio
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.protocol.Grpc
+import com.zj.protocol.GrpcConfig
 import com.zj.protocol.grpc.*
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
@@ -55,7 +56,10 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
                 val url = IMHelper.imConfig.getGrpcAddress()
-                channel = Grpc.get(url.first, url.second).defaultHeader(defaultHeader)
+                val keepAliveTimeOut = IMHelper.imConfig.getHeatBeatsTimeOut()
+                val idleTimeOut = IMHelper.imConfig.getIdleTimeOut()
+                val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
+                channel = Grpc.get(config).defaultHeader(defaultHeader)
             }
             onConnection()
         } catch (e: Exception) {

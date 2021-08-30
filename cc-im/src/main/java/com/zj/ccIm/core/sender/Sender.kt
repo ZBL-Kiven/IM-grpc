@@ -27,7 +27,7 @@ object Sender {
         sen.answerMsgType = rewardMsgType.type
         sen.diamondNum = diamondNum
         sen.public = isPublic
-        IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     fun sendText(content: String, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
@@ -37,7 +37,7 @@ object Sender {
         sen.groupId = groupId
         sen.clientMsgId = callId
         sen.replyMsg = replyMsg
-        IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     fun sendImg(filePath: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
@@ -49,7 +49,7 @@ object Sender {
         sen.width = width
         sen.height = height
         sen.replyMsg = replyMsg
-        IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
     fun sendAudio(filePath: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
@@ -60,7 +60,7 @@ object Sender {
         sen.clientMsgId = callId
         sen.duration = duration
         sen.replyMsg = replyMsg
-        IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
     fun sendVideo(filePath: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
@@ -73,7 +73,7 @@ object Sender {
         sen.height = height
         sen.duration = duration
         sen.replyMsg = replyMsg
-        IMHelper.resend(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
     fun resendMessage(clientId: String) {
@@ -83,8 +83,10 @@ object Sender {
     }
 
     internal fun resendMessage(info: SendMessageReqEn) {
-        val sendBefore = if (!info.url.isNullOrEmpty()) null else MsgFileUploader(info)
-        IMHelper.send(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = sendBefore)
+        val sendBefore = if (MsgType.hasUploadType(info.msgType)) {
+            if (!info.url.isNullOrEmpty()) null else MsgFileUploader(info)
+        } else null
+        IMHelper.resend(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = sendBefore)
     }
 
     class MsgFileUploader(private val d: SendMessageReqEn) : BaseFileSender(Constance.app, d, d.clientMsgId) {

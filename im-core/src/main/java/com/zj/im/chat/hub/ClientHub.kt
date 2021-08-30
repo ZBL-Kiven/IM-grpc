@@ -48,16 +48,18 @@ abstract class ClientHub<T> {
         return StatusHub.isAlive() && DataReceivedDispatcher.isDataEnable()
     }
 
-    internal fun pause(code: String) {
-        if (StatusHub.isPaused()) return
+    internal fun pause(code: String): Boolean {
+        if (StatusHub.isPaused()) return false
         printInFile("on pause called ", "$code --- onPause")
         StatusHub.onLifecycle(IMLifecycle(LifeType.PAUSE, code))
+        return true
     }
 
-    internal fun resume(code: String) {
-        if (StatusHub.isRunning()) return
+    internal fun resume(code: String): Boolean {
+        if (StatusHub.isRunning()) return false
         printInFile("on resume called ", "$code --- onResume")
         StatusHub.onLifecycle(IMLifecycle(LifeType.RESUME, code))
+        return true
     }
 
     internal fun shutdown() {

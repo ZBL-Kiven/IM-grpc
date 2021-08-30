@@ -13,4 +13,8 @@ interface ImConfigIn {
     fun getGrpcAddress(): Pair<String, Int>
 
     fun getIMHost(): String
+
+    fun getHeatBeatsTimeOut(): Long
+
+    fun getIdleTimeOut(): Long
 }

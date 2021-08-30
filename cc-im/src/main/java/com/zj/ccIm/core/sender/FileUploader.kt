@@ -37,7 +37,6 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
                 d.uploadDataTotalByte = totalBytes
                 d.url = body.url
                 d.localFilePath = null
-                onStatus?.onSendingInfoChanged(callId, d)
                 onStatus?.call(true, uploadId, 100, d, isOK = true, null)
             } else onError(callId, Exception("The upload may have been successful, but the server still returns failure !"))
         }
@@ -51,8 +50,8 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
         inRunning = true
         val timeStamp = System.currentTimeMillis()
         val path = d.localFilePath
-        val f = File(path ?: "")
-        if (path.isNullOrEmpty() || !f.exists()) {
+        val f = if (path.isNullOrEmpty()) null else File(path)
+        if (path.isNullOrEmpty() || f == null || !f.exists()) {
             observer.onError(callId, NullPointerException("the path $path can not be attach to a file"));return
         }
         if (d.msgType == MsgType.TEXT.type) {

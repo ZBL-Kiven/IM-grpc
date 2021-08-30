@@ -11,9 +11,11 @@ class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder 
 
     fun update(infoEntity: MessageInfoEntity) {
         val index = data.indexOfLast { equalsOf(it, infoEntity) }
-        if (index in 0 .. maxPosition) {
+        if (index in 0..maxPosition) {
             data[index] = infoEntity
             notifyItemChanged(index)
+        } else {
+            add(infoEntity)
         }
     }
 
@@ -31,7 +33,7 @@ class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder 
     }
 
     private fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {
-        return f.clientMsgId == s.clientMsgId || f.serverMsgId == s.serverMsgId
+        return (f.clientMsgId.isNotEmpty() && f.clientMsgId == s.clientMsgId) || (f.serverMsgId.isNotEmpty() && f.serverMsgId == s.serverMsgId)
     }
 
 }

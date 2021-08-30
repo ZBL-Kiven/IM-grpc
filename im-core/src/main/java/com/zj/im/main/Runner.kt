@@ -156,7 +156,6 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
             return try {
                 return block()
             } catch (e: Exception) {
-                println("----- eeee run -- & ${e.message}")
                 postError(e)
                 null
             }
@@ -180,6 +179,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
     override fun invoke(isSuccess: Boolean, inRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
         if (isSuccess) {
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
+            DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
         } else {
             if (!inRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
         }
@@ -188,18 +188,10 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
 
     override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?) {
         if (isFinish) {
-            if (isOK) {
-                sendingPool?.setSendState(SendingUp.READY, true, callId, data)
-            } else {
-                sendingPool?.setSendState(SendingUp.CANCEL, true, callId, data)
-            }
+            sendingPool?.setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data)
         } else {
             enqueue(BaseMsgInfo.onProgressChange<T>(progress, callId))
         }
-    }
-
-    override fun onSendingInfoChanged(callId: String, data: T) {
-        sendingPool?.setSendState(SendingUp.READY, true, callId, data)
     }
 
     private fun onLayerChanged(isHidden: Boolean) {

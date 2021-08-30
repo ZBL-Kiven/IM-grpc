@@ -163,12 +163,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         getService("IMInterface.resend", false)?.send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore)
     }
 
-    fun pause(code: String) {
-        getClient("IMInterface.pause")?.pause(code)
+    fun pause(code: String): Boolean {
+        return getClient("IMInterface.pause")?.pause(code) ?: false
     }
 
-    fun resume(code: String) {
-        getClient("IMInterface.resume")?.resume(code)
+    fun resume(code: String): Boolean {
+        return getClient("IMInterface.resume")?.resume(code) ?: false
     }
 
     fun reconnect(case: String) {
