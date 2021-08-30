@@ -110,7 +110,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getQuestionStatus(): Int {
-        return info?.questionContent?.questionStatus ?: -1
+        return info?.questionContent?.questionStatus ?: 0
     }
 
     override fun getQuestionTextContent(): String? {
