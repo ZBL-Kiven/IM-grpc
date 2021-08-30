@@ -1,13 +1,26 @@
 package com.zj.imtest.ui
 
 import android.content.Context
+import android.view.View
+import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
+import com.zj.views.list.listeners.ItemClickListener
 
 class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder { _, _, _ ->
     ImMsgView(context)
 }) {
+
+    init {
+        setOnItemClickListener(object : ItemClickListener<MessageInfoEntity?>() {
+            override fun onItemClick(position: Int, v: View?, m: MessageInfoEntity?) {
+                if (m != null && m.sendingState < 0) {
+                    Sender.resendMessage(m.clientMsgId)
+                }
+            }
+        })
+    }
 
     fun update(infoEntity: MessageInfoEntity) {
         val index = data.indexOfLast { equalsOf(it, infoEntity) }

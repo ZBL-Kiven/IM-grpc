@@ -31,4 +31,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.sender?.senderAvatar
     }
 
+    override fun getThumb(): String? {
+        return info?.imgContent?.url
+    }
+
 }

@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.items.ImItemDispatcher
+import com.zj.imUi.ImItemDispatcher
 
 @Suppress("unused")
 abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {

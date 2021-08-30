@@ -39,7 +39,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
     implementation 'com.cc.android:views:2.0.2'
 
-//    implementation 'com.cc.android:cc-im:1.0.6'
+    implementation 'com.cc.android:cc-im:1.0.7'
     implementation project(':im-cc-ui')
-    implementation project(':cc-im')
+//    implementation project(':cc-im')
 }

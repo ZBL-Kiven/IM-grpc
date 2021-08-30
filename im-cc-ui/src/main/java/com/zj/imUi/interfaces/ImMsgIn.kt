@@ -13,4 +13,6 @@ interface ImMsgIn {
     fun getType(): String?
 
     fun getSenderAvatar(): String?
+
+    fun getThumb(): String?
 }
