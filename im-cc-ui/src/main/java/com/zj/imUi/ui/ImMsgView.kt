@@ -57,16 +57,14 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     override fun getSendingLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
         return LayoutParams(size, size).apply {
+            amSending?.visibility = View.GONE
             if (d.getSenderId() == d.getSelfUserId()) {
-                amSending?.visibility = View.VISIBLE
                 when (d.getSendingState()) {
                     1, 2 -> {
                         amSending?.visibility = View.VISIBLE
-                        amSending?.indicator?.start()
                     }
                     else -> {
                         amSending?.visibility = View.GONE
-                        amSending?.indicator?.stop()
                     }
                 }
                 addRule(ALIGN_PARENT_BOTTOM)
