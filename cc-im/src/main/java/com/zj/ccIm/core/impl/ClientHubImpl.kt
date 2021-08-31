@@ -156,7 +156,6 @@ class ClientHubImpl : ClientHub<Any?>() {
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
         localMsg?.sendTime = d.sendTime
-        Converter.updateLocalLastTs(d.sendTime)
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
@@ -189,8 +188,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
         }
         if (msg != null) {
-            if (msg.sendTime <= 0) msg.sendTime = Converter.getLastCreateTs()
-            else Converter.updateLocalLastTs(msg.sendTime)
+            if (msg.sendTime <= 0) msg.sendTime = System.currentTimeMillis()
             val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
             val localMsg = if (callId.isNullOrEmpty()) null else msgDb?.findMsgByClientId(callId)
             if (localMsg == null && sendingState == SendMsgState.SENDING) {

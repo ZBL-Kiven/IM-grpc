@@ -21,7 +21,7 @@ object Sender {
     fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.content = content
-        sen.msgType = MsgType.TEXT.type
+        sen.msgType = MsgType.QUESTION.type
         sen.groupId = groupId
         sen.clientMsgId = callId
         sen.answerMsgType = rewardMsgType.type

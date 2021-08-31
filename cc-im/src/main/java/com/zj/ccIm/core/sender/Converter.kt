@@ -2,7 +2,6 @@ package com.zj.ccIm.core.sender
 
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.entity.*
 import com.zj.im.chat.enums.SendMsgState
 
@@ -68,16 +67,4 @@ object Converter {
     private fun selectValidString(s1: String?, s2: String?, default: String? = null): String? {
         return if (s1.isNullOrEmpty()) (if (s2.isNullOrEmpty()) default else s2) else s1
     }
-
-    fun updateLocalLastTs(ts: Long) {
-        SPHelper.put("last_create_ts", ts)
-    }
-
-    fun getLastCreateTs(): Long {
-        var ts = SPHelper["last_create_ts", System.currentTimeMillis()] ?: System.currentTimeMillis()
-        ts += 1
-        SPHelper.put("last_create_ts", ts)
-        return ts
-    }
-
 }
