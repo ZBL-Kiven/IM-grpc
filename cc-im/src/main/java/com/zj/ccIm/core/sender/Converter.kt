@@ -14,7 +14,6 @@ object Converter {
         msg.msgType = sen.msgType
         msg.sendingState = sendingState.type
         msg.clientMsgId = sen.clientMsgId
-        msg.sendTime = getLastCreateTs()
         msg.replyMsg = sen.replyMsg
         msg.sender = SenderInfo().apply {
             this.senderId = IMHelper.imConfig.getUserId()
@@ -70,8 +69,12 @@ object Converter {
         return if (s1.isNullOrEmpty()) (if (s2.isNullOrEmpty()) default else s2) else s1
     }
 
-    private fun getLastCreateTs(): Long {
-        var ts = SPHelper["last_create_ts", 0L] ?: 0L
+    fun updateLocalLastTs(ts: Long) {
+        SPHelper.put("last_create_ts", ts)
+    }
+
+    fun getLastCreateTs(): Long {
+        var ts = SPHelper["last_create_ts", System.currentTimeMillis()] ?: System.currentTimeMillis()
         ts += 1
         SPHelper.put("last_create_ts", ts)
         return ts

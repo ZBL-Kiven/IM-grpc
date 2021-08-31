@@ -109,7 +109,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             }
             SendMessageRespEn::class.java -> {
                 if (d != null) {
-                    val r = onDealMsgSendInfo(d as SendMessageRespEn, callId, sendingState)
+                    val r = onDealMsgSentInfo(d as SendMessageRespEn, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
@@ -140,7 +140,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             resp.clientMsgId = sen.clientMsgId
             resp.groupId = sen.groupId
             resp.black = false
-            onDealMsgSendInfo(resp, callId, sendingState)
+            onDealMsgSentInfo(resp, callId, sendingState)
         }
     }
 
@@ -148,13 +148,15 @@ class ClientHubImpl : ClientHub<Any?>() {
      * When the message is sent, the state callback event,
      * here is the message that the database already exists in the database and is sent to the UI.
      * */
-    private fun onDealMsgSendInfo(d: SendMessageRespEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
+    private fun onDealMsgSentInfo(d: SendMessageRespEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
         if (sendingState == null) return null
         val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
         val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
         val localMsg = msgDb?.findMsgByClientId(callId)
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
+        localMsg?.sendTime = d.sendTime
+        Converter.updateLocalLastTs(d.sendTime)
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
@@ -187,6 +189,8 @@ class ClientHubImpl : ClientHub<Any?>() {
             ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
         }
         if (msg != null) {
+            if (msg.sendTime <= 0) msg.sendTime = Converter.getLastCreateTs()
+            else Converter.updateLocalLastTs(msg.sendTime)
             val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
             val localMsg = if (callId.isNullOrEmpty()) null else msgDb?.findMsgByClientId(callId)
             if (localMsg == null && sendingState == SendMsgState.SENDING) {

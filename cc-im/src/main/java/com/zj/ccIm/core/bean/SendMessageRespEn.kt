@@ -22,4 +22,9 @@ class SendMessageRespEn {
      */
     var clientMsgId: String? = null
 
+    /**
+     * 服务器时间
+     * */
+    var sendTime: Long = 0
+
 }

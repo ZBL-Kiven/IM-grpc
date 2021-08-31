@@ -133,7 +133,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getReplyMsgCreateTs(): Long? {
-        return info?.replyMsg?.createTs
+        return info?.replyMsg?.sendTime
     }
 
     override fun getReplyMsgGroupId(): Long? {

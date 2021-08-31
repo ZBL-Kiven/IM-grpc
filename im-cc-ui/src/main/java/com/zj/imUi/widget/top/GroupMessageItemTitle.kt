@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.zj.imUi.Constance
+import com.zj.imUi.UiMsgType
 
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
@@ -34,7 +34,7 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context, attribut
     fun setData(userId: Int, messageBean: ImMsgIn?) {
         if (messageBean == null) return
         mGroupRewardItem.visibility = View.GONE //消息为打赏消息，且接收者为大V，打赏控件可见
-        if (messageBean.getType() == Constance.MSG_TYPE_QUESTION && userId == messageBean.getOwnerId()) {
+        if (messageBean.getType() == UiMsgType.MSG_TYPE_QUESTION && userId == messageBean.getOwnerId()) {
             mGroupRewardItem.visibility = View.VISIBLE
             mGroupRewardItem.setBackGround(messageBean)
         } //消息发送者为大V

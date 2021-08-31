@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.zj.imUi.Constance
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
@@ -66,7 +66,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setTime(data: ImMsgIn) {
         timeBottom.visibility = View.GONE
-        if (data.getSelfUserId() == data.getOwnerId() && data.getReplyMsgType() == Constance.MSG_TYPE_QUESTION) {
+        if (data.getSelfUserId() == data.getOwnerId() && data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
             timeBottom.setData(data)
             timeBottom.visibility = View.VISIBLE
         }
@@ -76,14 +76,14 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         if (data.getReplySenderId() == data.getSelfUserId()) { //被回复人是自己
             tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
             tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-            if (data.getReplyMsgType() == Constance.MSG_TYPE_TEXT) {
+            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
             } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
         }
     }
 
     private fun setIconVisibility(data: ImMsgIn) {
-        if (data.getReplyMsgType() == Constance.MSG_TYPE_QUESTION) {
+        if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
             if (data.getOwnerId() == data.getSelfUserId()) {
                 imgReply.setImageResource(R.drawable.icon_huida_bai)
             }
@@ -102,18 +102,18 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             tvQuestionName.text = it
         }
         when (data.getReplyMsgType()) {
-            Constance.MSG_TYPE_TEXT -> {
+            UiMsgType.MSG_TYPE_TEXT -> {
                 tvQuestionContent.text = data.getReplyMsgTextContent()
             }
-            Constance.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
-            Constance.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
+            UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
+            UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
         }
     }
 
     private fun setViewStub(data: ImMsgIn) {
         bubbleContent.removeAllViews()
         when (data.getType()) {
-            Constance.MSG_TYPE_TEXT -> {
+            UiMsgType.MSG_TYPE_TEXT -> {
                 View.inflate(context, R.layout.im_msg_item_normal_text, bubbleContent)
                 val textContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_text_tv_content)
                 textContent.setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
@@ -124,13 +124,13 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 textContent.text = data.getTextContent()
             }
 
-            Constance.MSG_TYPE_IMG -> {
+            UiMsgType.MSG_TYPE_IMG -> {
                 View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
                 val imgContent: AppCompatImageView = findViewById(R.id.im_msg_item_normal_img_img_content)
                 setImg(imgContent, data)
             }
 
-            Constance.MSG_TYPE_AUDIO -> {
+            UiMsgType.MSG_TYPE_AUDIO -> {
                 View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
                 val imgContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_audio_content)
             }

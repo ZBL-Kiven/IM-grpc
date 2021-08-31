@@ -1,8 +1,6 @@
 package com.zj.imUi.ui
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide

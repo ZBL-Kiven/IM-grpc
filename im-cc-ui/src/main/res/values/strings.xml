@@ -20,4 +20,16 @@
     <string name="im_ui_msg_reward_type_image">Audio</string>
     <string name="im_ui_msg_reward_type_audio">Audio</string>
 
+    <string name="im_ui_sunday">sunday</string>
+    <string name="im_ui_monday">monday</string>
+    <string name="im_ui_tuesday">tuesday</string>
+    <string name="im_ui_wednesday">wednesday</string>
+    <string name="im_ui_thursday">thursday</string>
+    <string name="im_ui_friday">friday</string>
+    <string name="im_ui_saturday">saturday</string>
+    <string name="im_ui_hour_time_format">HH:mm</string>
+    <string name="im_ui_month_time_format">M month d HH: mm</string>
+    <string name="im_ui_year_time_format">yyyy year M month d HH: mm</string>
+    <string name="im_ui_yesterday">yesterday</string>
+
 </resources>

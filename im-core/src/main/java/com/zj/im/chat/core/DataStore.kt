@@ -18,16 +18,22 @@ internal class DataStore<T> {
 
     //PRI = 0
     private val netWorkStateChanged = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 4
     private val sendMsg = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 2
     private val connectStateChanged = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 3
     private val sendStateChanged = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 5
     private val receivedMsg = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 1
     private val simpleStatusFound = cusListOf<BaseMsgInfo<T>>()
+
     //PRI = 6
     private val sendingProgress = cusListOf<BaseMsgInfo<T>>()
 
@@ -77,18 +83,18 @@ internal class DataStore<T> {
                 }
             }
             /**
-             * when heartbeats / auth received
-             * */
-            simpleStatusFound.isNotEmpty() -> {
-                return getFirst(simpleStatusFound) { it, lst ->
-                    lst.remove(it)
-                }
-            }
-            /**
              * when connection status changed
              */
             connectStateChanged.isNotEmpty() -> {
                 return getFirst(connectStateChanged) { it, lst ->
+                    lst.remove(it)
+                }
+            }
+            /**
+             * when heartbeats / auth received
+             * */
+            simpleStatusFound.isNotEmpty() -> {
+                return getFirst(simpleStatusFound) { it, lst ->
                     lst.remove(it)
                 }
             }

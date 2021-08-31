@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import com.zj.imUi.Constance
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
@@ -138,9 +138,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private fun setReplyTypeText(type: String): String? {
         var text: String? = null
         when (type) {
-            Constance.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_type_text)
-            Constance.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_type_image)
-            Constance.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_type_audio)
+            UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_type_text)
+            UiMsgType.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_type_image)
+            UiMsgType.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_type_audio)
         }
         return text
     }
