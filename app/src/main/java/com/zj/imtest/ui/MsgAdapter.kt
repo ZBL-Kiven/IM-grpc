@@ -2,6 +2,7 @@ package com.zj.imtest.ui
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.ui.ImMsgView
@@ -11,7 +12,9 @@ import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
 
 class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder { _, _, _ ->
-    ImMsgView(context)
+    ImMsgView(context).apply {
+        ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
 }) {
 
     init {

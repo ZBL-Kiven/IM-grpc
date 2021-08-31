@@ -1,10 +1,12 @@
 package com.zj.imUi.ui
 
 import android.content.Context
-import android.view.Gravity
+import android.graphics.Color
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.bubble.BubbleRenderer
@@ -16,12 +18,14 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
             if (d.getSenderId() == d.getSelfUserId()) {
                 ivAvatar?.visibility = View.GONE
-                gravity = Gravity.END
+                addRule(ALIGN_PARENT_END)
             } else {
-                gravity = Gravity.START
-                ivAvatar?.let {
-                    it.visibility = View.VISIBLE
-                    addRule(ALIGN_START, it.id)
+                val avatar = ivAvatar
+                if (avatar != null) {
+                    addRule(RIGHT_OF, R.id.im_item_message_avatar)
+                    avatar.visibility = View.VISIBLE
+                } else {
+                    addRule(ALIGN_PARENT_START)
                 }
             }
         }

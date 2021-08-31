@@ -26,8 +26,8 @@ object BubbleRenderer : BaseBubbleRenderer {
 
     private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int) {
         val mBgColorOrigin = ContextCompat.getColor(context, R.color.bg_origin)
-        if (data.getSelfUserId() == data.getSenderId()) isSelfMessage = true
-        if (data.getSelfUserId() == data.getOwnerId()) isOwner = true
+        isSelfMessage = data.getSelfUserId() == data.getSenderId()
+        isOwner = data.getSelfUserId() == data.getOwnerId()
         if (!data.getPublished()) !isOwnerReplyQuestionIsPublic
 
         val path = Path()
