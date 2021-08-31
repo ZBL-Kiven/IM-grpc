@@ -5,13 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/im_msg_bubble_ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
@@ -45,7 +44,7 @@
             android:id="@+id/im_msg_item_normal_icon_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
+            android:layout_marginEnd="4dp"
             android:src="@drawable/icon_huida_normal" />
 
         <FrameLayout
@@ -72,7 +71,7 @@
             android:id="@+id/im_msg_item_normal_icon_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="3dp"
+            android:layout_marginEnd="4dp"
             android:src="@drawable/icon_question_normal" />
 
         <LinearLayout
@@ -88,6 +87,7 @@
                 android:maxWidth="80dp"
                 android:maxLines="1"
                 android:textColor="@color/text_color_gray"
+                android:textSize="16sp"
                 tools:text="nick_name" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -95,13 +95,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/im_ui_user_nickname_split"
-                android:textColor="@color/text_color_gray" />
+                android:textColor="@color/text_color_gray"
+                android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/im_msg_item_normal_text_replied_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
                 android:textColor="@color/text_color_gray"
+                android:textSize="16sp"
                 tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测" />
 
         </LinearLayout>

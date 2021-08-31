@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
 
@@ -24,15 +25,16 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
 
     @SuppressLint("SetTextI18n")
     fun setData(imMsgIn: ImMsgIn) {
-        textRewardNumber.text = "+ " + imMsgIn.getSpark()
+        textRewardNumber.text = "+ " + imMsgIn.getReplyMsgQuestionSpark()
         textRewardTime.text = setTimeText(imMsgIn.getSendTime())
+        textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
     }
 
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..359999) {
-            StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
+            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
         } else if (sendTime > 360000 && sendTime < 360000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
+            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
 

@@ -59,6 +59,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
+        if (data.getType() == UiMsgType.MSG_TYPE_AUDIO&&data.getSenderId() == data.getSelfUserId()&&data.getReplyMsgClientMsgId() == null) return null
         return BubbleRenderer
     }
 
