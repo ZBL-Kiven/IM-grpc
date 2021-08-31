@@ -6,6 +6,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.IMConfig
 
 class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
+
     override fun getOwnerId(): Int? {
         return info?.ownerId
     }
@@ -16,10 +17,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getMsgId(): String {
         return info?.clientMsgId ?: ""
-    }
-
-    override fun getReplyId(): Int? {
-        return info?.replyId
     }
 
     override fun getReplyMsgId(): Long? {
@@ -35,7 +32,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getSenderId(): Int? {
-        return info?.senderId
+        return info?.sender?.senderId
     }
 
     override fun getSenderName(): String? {
@@ -147,7 +144,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.msgId
     }
 
-
     override fun getReplyMsgOwnerId(): Int? {
         return info?.replyMsg?.ownerId
     }
@@ -157,7 +153,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getReplySenderId(): Int {
-        return info?.replyMsg?.senderId ?: 0
+        return info?.replyMsg?.sender?.senderId ?: 0
     }
 
     override fun getReplySenderName(): String? {

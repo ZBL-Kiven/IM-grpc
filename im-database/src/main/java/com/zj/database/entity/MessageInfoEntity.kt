@@ -76,9 +76,6 @@ class MessageInfoEntity {
      * 发送者信息
      */
     @TypeConverters(SenderContentConverter::class) var sender: SenderInfo? = null
-        set(value) {
-            senderId = value?.senderId;field = value
-        }
 
     /**
      * 回复消息id
@@ -89,9 +86,6 @@ class MessageInfoEntity {
      * 回复消息
      */
     @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
-        set(value) {
-            replyId = value?.ownerId;field = value
-        }
 
     //----------------------------------------------------------------- 本地辅助字段 ⬇️--------------------------------------------------------------
 
@@ -110,16 +104,6 @@ class MessageInfoEntity {
      * 本地状态，是否发送成功 , 0 无状态，比如收到新消息
      * */
     var sendingState: Int = 0
-
-    /**
-     * 本地组装的重要参数，需要在发送、收到消息时都为其赋值。
-     * */
-    var senderId: Int? = null
-
-    /**
-     * 本地组装的重要参数，需要在发送、收到消息时都为其赋值。
-     * */
-    var replyId: Int? = null
 
     /**
      * 本地新增的辅助参数，用于在服务器时间和本地时间有较大偏差时，能保持正确的收发展示顺序

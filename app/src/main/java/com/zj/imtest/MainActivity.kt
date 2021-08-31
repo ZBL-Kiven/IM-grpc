@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         rv = findViewById(R.id.main_erv)
         et = findViewById(R.id.main_edit)
-        adapter = MsgAdapter(this)
+        adapter = MsgAdapter(rv, this)
         rv.adapter = adapter
         initIm()
     }

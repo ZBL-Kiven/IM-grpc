@@ -3,6 +3,7 @@ package com.zj.imtest.ui
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.ui.ImMsgView
@@ -11,7 +12,7 @@ import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
 
-class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder { _, _, _ ->
+class MsgAdapter(private val recyclerView: RecyclerView?, context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder { _, _, _ ->
     ImMsgView(context).apply {
         ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
@@ -27,6 +28,16 @@ class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder 
         })
     }
 
+    override fun add(info: MessageInfoEntity?) {
+        super.add(info)
+        recyclerView?.post { recyclerView.scrollToPosition(maxPosition) }
+    }
+
+    override fun add(data: MutableList<MessageInfoEntity>?) {
+        super.add(data)
+        recyclerView?.post { recyclerView.scrollToPosition(maxPosition) }
+    }
+
     fun update(infoEntity: MessageInfoEntity) {
         val index = data.indexOfLast { equalsOf(it, infoEntity) }
         if (index in 0..maxPosition) {
@@ -34,7 +45,13 @@ class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder 
             notifyItemChanged(index)
         } else {
             add(infoEntity)
+            recyclerView?.post { recyclerView.scrollToPosition(maxPosition) }
         }
+    }
+
+    override fun change(d: List<MessageInfoEntity>?) {
+        super.change(d)
+        recyclerView?.post { recyclerView.scrollToPosition(maxPosition) }
     }
 
     fun removeAll(infoEntity: MessageInfoEntity) {
