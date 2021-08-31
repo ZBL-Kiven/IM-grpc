@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity() {
                 ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeAll(d)
             }
-            if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_chat_messages") adapter?.change(list)
+            if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }
 
         IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, _ ->
