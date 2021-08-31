@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.ui.ImMsgView
-import com.zj.rebuild.im.uiConfig.ImEntityConverter
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
@@ -47,7 +46,7 @@ class MsgAdapter(context: Context) : BaseAdapter<MessageInfoEntity>(ViewBuilder 
     }
 
     override fun initData(holder: BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
-        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module))
+        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module, null))
     }
 
     private fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {

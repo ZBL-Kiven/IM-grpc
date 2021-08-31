@@ -70,4 +70,13 @@ interface ImMsgIn {
 
     fun getSelfUserId(): Int?
 
+    fun getCurrentAudioTime(): Int?
+
+    fun getMsgListener(): ImMsgListener?
+
+}
+
+interface ImMsgListener {
+    fun playAudio()
+    fun reply(id: Long)
 }

@@ -18,6 +18,7 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
+import com.zj.imUi.widget.GroupMessageRecordItem
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
 
 
@@ -123,7 +124,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
             Constance.MSG_TYPE_AUDIO -> {
                 View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
-                val imgContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_audio_content)
+                val audioItem: GroupMessageRecordItem = findViewById(R.id.im_msg_item_normal_audio_content)
+                audioItem.setData(data)
             }
         }
     }
