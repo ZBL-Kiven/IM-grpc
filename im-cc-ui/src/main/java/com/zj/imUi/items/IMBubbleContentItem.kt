@@ -1,6 +1,7 @@
 package com.zj.imUi.items
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -22,7 +23,6 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.imUi.widget.GroupMessageRecordItem
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
-import com.zj.views.ut.DPUtils
 
 
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
@@ -49,8 +49,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         tvQuestionContent = findViewById(R.id.im_msg_item_normal_text_replied_content)
         tvFlag = findViewById(R.id.im_msg_item_normal_text_replied_tv_flag)
         tvQuestionName = findViewById(R.id.im_msg_item_normal_text_replied_tv_nickname) //question Icon
-        imgReply = findViewById(R.id.im_msg_item_normal_icon_question)
-        imgQuestion = findViewById(R.id.im_msg_item_normal_icon_reply)
+        imgQuestion  = findViewById(R.id.im_msg_item_normal_icon_question)
+        imgReply= findViewById(R.id.im_msg_item_normal_icon_reply)
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
         llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
         llName = findViewById(R.id.im_msg_bubble_ll_title)
@@ -82,27 +82,58 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setContentColor(data: ImMsgIn) {
-        if (data.getReplySenderId() == data.getSelfUserId()) { //被回复人是自己
-            tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-            tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
-                tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-            } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
-        } else { //    被回复人是其他人
-            tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
-            tvFlag.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
-            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
-                tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
-            } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+        if(data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION){
+            if (data.getSenderId() == data.getSelfUserId()&&data.getSelfUserId()==data.getOwnerId()){
+                tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+                tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+            }else if (data.getSenderId() == data.getOwnerId()){
+                if (data.getReplyMsgQuestionIsPublished() == false) {
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
+                    tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
+                }else if(data.getReplySenderId() == data.getSelfUserId()&&data.getReplyMsgQuestionIsPublished() == true){
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                    tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                }else{
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                    tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                }
+            }
+        }else{
+             if (data.getReplySenderId() == data.getSelfUserId()) { //被回复人是自己
+                 tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                 tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                 if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
+                     tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+             }else{//    被回复人是其他人
+                if (data.getSenderId() == data.getSelfUserId()){
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.text_color_self_reply_others))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.text_color_self_reply_others))
+                    if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
+                        tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.text_color_self_reply_others))
+                    } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+                }else{
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                    if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
+                         tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+                    } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+                }
+             }
         }
     }
 
     private fun setIconVisibility(data: ImMsgIn) {
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getOwnerId() == data.getSelfUserId()) {
-                imgReply.setImageResource(R.drawable.icon_huida_bai)
-            }
-            if (!data.getPublished()) {
+            imgQuestion.visibility = View.VISIBLE
+            imgReply.visibility = View.VISIBLE
+            if (data.getSenderId() == data.getSelfUserId()) {
+                if (data.getOwnerId() == data.getSelfUserId()) imgReply.setImageResource(R.drawable.icon_huida_bai)
+            }else if (data.getReplyMsgQuestionIsPublished()==false&&data.getSenderId()==data.getOwnerId()) {
                 imgReply.setImageResource(R.drawable.icon_simihuida_normal)
             }
         } else {
@@ -122,6 +153,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             }
             UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
             UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
+            UiMsgType.MSG_TYPE_QUESTION->tvQuestionContent.text = data.getReplyMsgQuestionContent()
         }
     }
 
@@ -166,8 +198,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
-            val maxW = DPUtils.dp2px(201f)
-            val maxH = DPUtils.dp2px(132f)
+            val maxW = (0.5f + 201 * Resources.getSystem().displayMetrics.density).toInt()
+            val maxH = (0.5f + 132 * Resources.getSystem().displayMetrics.density).toInt()
             val dataWidth = data.getImgContentWidth() ?: maxH
             val dataHeight = data.getImgContentHeight() ?: maxH
             AutomationImageCalculateUtils.proportionalWH(dataWidth, dataHeight, maxW, maxH, 0.5f)

@@ -5,18 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="6dp"
         android:layout_marginStart="12dp"
         android:id="@+id/im_msg_bubble_ll_title"
         android:visibility="gone"
         tools:visibility="visible"
         >
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_normal_text_tv_nickname"
             android:layout_width="wrap_content"
@@ -49,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_huida_normal"
-            android:layout_marginEnd="3dp"/>
+            android:layout_marginEnd="4dp"/>
 
         <FrameLayout
             android:id="@+id/im_msg_bubble_viewstub"
@@ -77,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_question_normal"
-            android:layout_marginEnd="3dp"/>
+            android:layout_marginEnd="4dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,6 +83,7 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="16sp"
                 android:id="@+id/im_msg_item_normal_text_replied_tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -95,6 +94,7 @@
                 tools:text="nick_name" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:textSize="16sp"
                 android:id="@+id/im_msg_item_normal_text_replied_tv_flag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -102,6 +102,8 @@
                 android:textColor="@color/text_color_gray" />
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:layout_marginLeft="6dp"
+                android:textSize="16sp"
                 android:id="@+id/im_msg_item_normal_text_replied_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

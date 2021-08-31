@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.content.ContextCompat
 
 class VoicePlayView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {
 
@@ -71,6 +72,10 @@ class VoicePlayView @JvmOverloads constructor(context: Context, attributeSet: At
             maxHeight / 2,
             maxHeight / 4,
         )
+    }
+
+    fun setPaintColor(color: Int){
+        paint.color =color
     }
 
     fun play() {
