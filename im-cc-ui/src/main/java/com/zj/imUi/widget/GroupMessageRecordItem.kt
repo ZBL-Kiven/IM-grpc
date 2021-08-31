@@ -38,7 +38,9 @@ class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attribu
         audioPlayView.isAnim = messageBean.isAudioPlaying() == true
         setOnClickListener {
             if (!audioPlayView.isAnim) {
-                messageBean.getMsgListener()?.playAudio()
+                messageBean.playAudio()
+            } else {
+                messageBean.stopAudio()
             }
         }
     }

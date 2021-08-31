@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import com.bumptech.glide.Glide
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
@@ -51,23 +50,24 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     private fun initBubble(data: T) {
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)
-            bubbleView!!.id = R.id.im_item_message_bubble
+            bubbleView?.id = R.id.im_item_message_bubble
         }
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData(data)
-        if (!(data.getType() != UiMsgType.MSG_TYPE_TEXT && data.getSelfUserId() == data.getSenderId())) {
-            bubbleView?.setOnLongClickListener {
+        bubbleView?.setOnLongClickListener {
+            val isNotSelf = data.getSelfUserId() != data.getSenderId()
+            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
                 MsgPop(context, data).show(it)
-                true
             }
+            true
         }
     }
 
     private fun initSendStatus(data: T) {
         if (ivSendStatusNo == null) ivSendStatusNo = ImageView(context).apply { id = R.id.im_item_message_send_lose }
         addViewToSelf(ivSendStatusNo, getSendStatusLayoutParams(data))
-        Glide.with(ivSendStatusNo!!).load(R.drawable.icon_sendlose).into(ivSendStatusNo!!)
+        ivSendStatusNo?.setImageResource(R.drawable.icon_sendlose)
     }
 
     private fun initAmSending(data: T) {
@@ -83,8 +83,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             needAdd = if (it != this@BaseImItem) {
                 removeView(view);true
             } else false
-        } //列表item外边距，仅作测试
-        layoutParams.setMargins(12, 12, 12, 0)
+        }
         view.layoutParams = layoutParams
         if (needAdd) addView(view)
     }

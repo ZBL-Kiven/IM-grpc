@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="280dp"
     android:layout_height="wrap_content"
+    android:clipChildren="false"
     android:orientation="vertical"
     tools:background="@color/message_textColor_me">
 
@@ -106,21 +107,36 @@
         tools:text="REPLY BY TEXT"
         tools:visibility="visible" />
 
-        <com.zj.imUi.widget.GroupMessageRepliedFlag
-            android:layout_width="80dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginStart="196dp"
-            android:visibility="gone"
-            android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
-            />
-    <com.zj.imUi.widget.bottom.GroupMessageItemTime
-        android:id="@+id/im_msg_item_owner_reward_question_bottom_time"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:clipToPadding="false">
 
+        <com.zj.imUi.widget.bottom.GroupMessageItemTime
+            android:id="@+id/im_msg_item_owner_reward_question_bottom_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="40dp"
+            android:alpha="0.4"
+            android:background="@drawable/message_widget_replied_cornors_bg"
+            android:paddingLeft="20dp"
+            android:paddingTop="4dp"
+            android:paddingRight="20dp"
+            android:rotation="-35"
+            android:text="@string/im_ui_replied"
+            android:textColor="@color/replied_textview"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

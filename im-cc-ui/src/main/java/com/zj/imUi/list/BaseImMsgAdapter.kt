@@ -5,9 +5,11 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.imUi.R
+import com.zj.imUi.ui.ImMsgView
 import com.zj.imUi.utils.ImMessageDecoration
 import com.zj.imUi.utils.TimeLineInflateModel
 import com.zj.views.list.adapters.BaseAdapter
+import com.zj.views.list.holders.BaseViewHolder
 import com.zj.views.list.listeners.ItemClickListener
 import com.zj.views.ut.DPUtils
 
@@ -45,6 +47,21 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
         }
         recyclerView.itemAnimator = null
         recyclerView.addItemDecoration(imDecoration)
+    }
+
+    override fun onViewRecycled(holder: BaseViewHolder<T>) {
+        super.onViewRecycled(holder)
+        (holder.itemView as? ImMsgView)?.onDestroyed()
+    }
+
+    override fun onViewAttachedToWindow(holder: BaseViewHolder<T>) {
+        super.onViewAttachedToWindow(holder)
+        (holder.itemView as? ImMsgView)?.onResume()
+    }
+
+    override fun onViewDetachedFromWindow(holder: BaseViewHolder<T>) {
+        super.onViewDetachedFromWindow(holder)
+        (holder.itemView as? ImMsgView)?.onStop()
     }
 
     override fun add(info: T) {
@@ -102,15 +119,11 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
         val res = context?.let { ctx ->
             TimeLineInflateModel.inflateTimeLine(ctx, curTime, lastTime)
         }
-        lastTime = curTime
+        if (!res.isNullOrEmpty()) lastTime = curTime
         setTimeLine(res, d)
     }
 
     override fun getTopMargin(): Int {
-        return DPUtils.dp2px(40f)
-    }
-
-    override fun getBottomMargin(): Int {
         return DPUtils.dp2px(40f)
     }
 
@@ -121,5 +134,4 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     override fun getTextColor(): Int {
         return ContextCompat.getColor(context ?: return 0, R.color.text_color_gray)
     }
-
 }

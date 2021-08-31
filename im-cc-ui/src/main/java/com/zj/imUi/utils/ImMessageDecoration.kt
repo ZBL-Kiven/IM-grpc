@@ -21,7 +21,7 @@ abstract class ImMessageDecoration<R, T : ImMessageDecoration.TimeLineViewBuilde
         val data = getItem(pos)
         var top = topDividerWidth
         if (!tli.getTimeLine(data).isNullOrEmpty()) {
-            top += (tli.getTopMargin() + tli.getTextSize())
+            top += tli.getTopMargin() + tli.getTextSize()
         }
         outRect.set(leftDividerWidth, top, rightDividerWidth, bottomDividerWidth)
     }
@@ -38,7 +38,7 @@ abstract class ImMessageDecoration<R, T : ImMessageDecoration.TimeLineViewBuilde
                 paint.textSize = tli.getTextSize().toFloat()
                 paint.color = tli.getTextColor()
                 paint.textAlign = Paint.Align.CENTER
-                val top = view.top - tli.getBottomMargin() * 1.0f
+                val top = view.top - (tli.getTopMargin() + topDividerWidth + tli.getTextSize()) / 2f
                 c.drawText(tlTxt, left, top, paint)
             }
         }
@@ -51,8 +51,6 @@ abstract class ImMessageDecoration<R, T : ImMessageDecoration.TimeLineViewBuilde
     interface TimeLineViewBuilder<R> {
 
         fun getTopMargin(): Int
-
-        fun getBottomMargin(): Int
 
         fun getTimeLine(d: R?): String?
 

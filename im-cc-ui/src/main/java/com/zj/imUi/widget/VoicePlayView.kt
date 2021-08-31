@@ -7,11 +7,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-class VoicePlayView @JvmOverloads constructor(
-    context: Context,
-    attributeSet: AttributeSet? = null,
-    defStyle: Int = 0
-) : View(context, attributeSet, defStyle) {
+class VoicePlayView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {
 
 
     private val itemWidth = 4.px(context)
@@ -78,20 +74,24 @@ class VoicePlayView @JvmOverloads constructor(
     }
 
     fun play() {
-//        VoicePlayer.play(file) {
-//            isAnim = false
-//            completion?.invoke()
-//        }
+
+        //        VoicePlayer.play(file) {
+        //            isAnim = false
+        //            completion?.invoke()
+        //        }
+
         isAnim = true
     }
 
     fun pause() {
-//        VoicePlayer.pause()
+
+        //        VoicePlayer.pause()
         isAnim = false
     }
 
     fun stop() {
-//        VoicePlayer.stop()
+
+        //        VoicePlayer.stop()
         isAnim = false
     }
 
