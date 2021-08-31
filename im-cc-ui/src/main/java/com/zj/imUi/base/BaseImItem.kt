@@ -61,11 +61,11 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData(data)
-        if (!(data.getType() != Constance.MSG_TYPE_TEXT && data.getSelfUserId() == data.getSenderId())) {
-            bubbleView?.setOnLongClickListener {
+        bubbleView?.setOnLongClickListener {
+            if (!(data.getType() != Constance.MSG_TYPE_TEXT && data.getSelfUserId() == data.getSenderId())) {
                 MsgPop(context, data).show(it)
-                true
             }
+            true
         }
     }
 
