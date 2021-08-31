@@ -22,24 +22,19 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context, attribut
 
     private var mNickname: TextView
     private var mGroupRewardItem: GroupRewardItem
-    private var mVlog: ImageView
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_title, this, true)
         mGroupRewardItem = findViewById(R.id.im_msg_item_title_group_reward_item)
         mNickname = findViewById(R.id.im_msg_item_title_tv_nickname)
-        mVlog = findViewById(R.id.im_msg_item_title_img_flag)
     }
 
-    fun setData(userId: Int, messageBean: ImMsgIn?) {
-        if (messageBean == null) return
+    fun setData(userId: Int?, messageBean: ImMsgIn?) {
+        if (messageBean == null ||userId ==null ) return
         mGroupRewardItem.visibility = View.GONE //消息为打赏消息，且接收者为大V，打赏控件可见
         if (messageBean.getType() == UiMsgType.MSG_TYPE_QUESTION && userId == messageBean.getOwnerId()) {
             mGroupRewardItem.visibility = View.VISIBLE
             mGroupRewardItem.setBackGround(messageBean)
-        } //消息发送者为大V
-        if (messageBean.getSenderId() == messageBean.getOwnerId()) {
-            mVlog.visibility = View.VISIBLE
         }
         mNickname.text = messageBean.getSenderName()
     }

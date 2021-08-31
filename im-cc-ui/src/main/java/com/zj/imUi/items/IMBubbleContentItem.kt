@@ -134,9 +134,11 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setReplyContent(data: ImMsgIn) {
-        data.getReplySenderName()?.let {
-            llQuestionContent.visibility = View.VISIBLE
-            tvQuestionName.text = it
+        data.getReplyMsgType()?.let {
+            data.getReplySenderName()?.let {
+                llQuestionContent.visibility = View.VISIBLE
+                tvQuestionName.text = it
+            }
         }
         when (data.getReplyMsgType()) {
             UiMsgType.MSG_TYPE_TEXT -> {

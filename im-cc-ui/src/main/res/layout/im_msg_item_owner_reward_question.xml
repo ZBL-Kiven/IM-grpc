@@ -11,6 +11,7 @@
         android:id="@+id/im_msg_item_owner_reward_question_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         tools:text="nickname" />
 
     <LinearLayout
@@ -51,7 +52,7 @@
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginStart="32dp"
-            android:background="@drawable/text_view_frame_white_round_corner"
+            android:background="@drawable/im_msg_item_reward_white_frame_bg"
             android:gravity="center"
             android:maxWidth="130dp"
             android:paddingStart="16dp"
@@ -66,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
-            android:background="@drawable/text_view_frame_white_round_corner"
+            android:background="@drawable/im_msg_item_reward_white_frame_bg"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingEnd="8dp">
@@ -75,6 +76,7 @@
                 android:id="@+id/im_msg_item_owner_reward_question_img_countdown"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_marginLeft="4dp"
                 android:src="@drawable/icon_countdown_normal" />
 
             <androidx.appcompat.widget.AppCompatTextView
