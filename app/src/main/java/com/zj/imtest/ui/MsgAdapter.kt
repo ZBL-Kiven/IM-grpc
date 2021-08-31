@@ -1,11 +1,11 @@
 package com.zj.imtest.ui
 
+
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.list.BaseImMsgAdapter
 import com.zj.imUi.ui.ImMsgView
-import com.zj.rebuild.im.uiConfig.ImEntityConverter
 
 class MsgAdapter(recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(recyclerView, ViewBuilder { _, _, _ ->
     ImMsgView(recyclerView.context).apply {
@@ -14,7 +14,7 @@ class MsgAdapter(recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntit
 }) {
 
     override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
-        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module))
+        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module,false,null))
     }
 
     override fun exchangeWhenUpdate(new: MessageInfoEntity, old: MessageInfoEntity) {
@@ -27,6 +27,7 @@ class MsgAdapter(recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntit
 
     override fun setTimeLine(ts: String?, d: MessageInfoEntity) {
         d.diffInCreateTime = ts
+
     }
 
     override fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {

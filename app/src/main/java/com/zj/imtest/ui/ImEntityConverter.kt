@@ -1,11 +1,12 @@
-package com.zj.rebuild.im.uiConfig
+package com.zj.imtest.ui
 
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.interfaces.ImMsgListener
 import com.zj.imtest.IMConfig
 
-class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
+class ImEntityConverter(private val info: MessageInfoEntity?, private val isAudioPlaying: Boolean?, private val listener: ImMsgListener? = null) : ImMsgIn {
 
     override fun getOwnerId(): Int? {
         return info?.ownerId
@@ -164,4 +165,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return IMConfig.getUserId()
     }
 
+    override fun isAudioPlaying(): Boolean? {
+        return isAudioPlaying
+    }
+
+    override fun getMsgListener(): ImMsgListener? {
+        return listener
+    }
 }

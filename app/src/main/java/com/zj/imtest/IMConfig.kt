@@ -9,7 +9,7 @@ object IMConfig : ImConfigIn {
     }
 
     override fun getUserName(): String {
-        return "油王"
+        return "abcd"
     }
 
     override fun getUserAvatar(): String {

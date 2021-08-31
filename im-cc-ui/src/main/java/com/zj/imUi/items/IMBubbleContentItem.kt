@@ -19,15 +19,17 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
+import com.zj.imUi.widget.GroupMessageRecordItem
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
+import com.zj.views.ut.DPUtils
 
 
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
 
     private val tvName: AppCompatTextView
-    private val iconIsOwner:AppCompatImageView
-    private val llQuestionContent:LinearLayout
-    private val llName:LinearLayout
+    private val iconIsOwner: AppCompatImageView
+    private val llQuestionContent: LinearLayout
+    private val llName: LinearLayout
     private val bubbleContent: FrameLayout
     private val tvQuestionName: AppCompatTextView
     private val tvFlag: AppCompatTextView
@@ -35,6 +37,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private val imgQuestion: AppCompatImageView
     private val imgReply: AppCompatImageView
     private val timeBottom: GroupRewardOwnerMeItem
+    private val llContent: LinearLayout
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
@@ -47,16 +50,19 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         imgQuestion = findViewById(R.id.im_msg_item_normal_icon_reply)
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
         llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
-        llName=findViewById(R.id.im_msg_bubble_ll_title)
+        llName = findViewById(R.id.im_msg_bubble_ll_title)
         iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
+        llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
     override fun init(data: ImMsgIn) {
         tvName.text = data.getSenderName()
-        if (data.getSenderId() ==data.getOwnerId()){ iconIsOwner.visibility = View.VISIBLE }
+        if (data.getSenderId() == data.getOwnerId()) {
+            iconIsOwner.visibility = View.VISIBLE
+        }
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
-        }else llName.visibility = View.VISIBLE
+        } else llName.visibility = View.VISIBLE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -78,6 +84,12 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
             if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+            } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+        } else { //    被回复人是其他人
+            tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+            tvFlag.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
+                tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
             } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
         }
     }
@@ -121,18 +133,33 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 } else {
                     ContextCompat.getColor(context, R.color.message_textColor_replyMe)
                 })
+
+                //                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                //                lp.setMargins(12,12,12,12)
+                //                llContent.layoutParams = lp
                 textContent.text = data.getTextContent()
             }
 
             UiMsgType.MSG_TYPE_IMG -> {
                 View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
                 val imgContent: AppCompatImageView = findViewById(R.id.im_msg_item_normal_img_img_content)
+
+                //                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+                //                if(data.getReplyMsgId()==null) {
+                //                    lp.setMargins(0, 0, 0, 0)
+                //                }else   lp.setMargins(12,12,12,12)
+                //                llContent.layoutParams = lp
                 setImg(imgContent, data)
             }
 
             UiMsgType.MSG_TYPE_AUDIO -> {
                 View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
-                val imgContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_audio_content)
+                val audioItem: GroupMessageRecordItem = findViewById(R.id.im_msg_item_normal_audio_content)
+
+                //                val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+                //                lp.setMargins(12,12,12,12)
+                //                llContent.layoutParams = lp
+                audioItem.setData(data)
             }
         }
     }
@@ -140,17 +167,20 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private fun setImg(imgView: AppCompatImageView, data: ImMsgIn) {
         val arrayInt: Array<Int>? = setImgLp(data)
         if (arrayInt != null) {
+            val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
             data.getImgContentUrl()?.let {
-                val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
-                Glide.with(imgView).load(it).centerInside().override(width, height).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgView)
+                Glide.with(imgView).load(it).centerInside().override(arrayInt[0], arrayInt[1]).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgView)
             }
         }
     }
 
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
-            // TODO: 2021/8/30
-            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 0.5f)
+            val maxW = DPUtils.dp2px(201f)
+            val maxH = DPUtils.dp2px(132f)
+            val dataWidth = data.getImgContentWidth() ?: maxH
+            val dataHeight = data.getImgContentHeight() ?: maxH
+            AutomationImageCalculateUtils.proportionalWH(dataWidth, dataHeight, maxW, maxH, 0.5f)
         } else null
     }
 

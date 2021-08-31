@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="190dp"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:paddingLeft="14dp"
-    android:paddingTop="7dp"
-    android:paddingRight="14dp"
-    android:paddingBottom="7dp">
+<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="190dp"
+		android:layout_height="wrap_content"
+		android:gravity="center_vertical"
+		android:orientation="horizontal"
+		android:paddingLeft="14dp"
+		android:paddingTop="7dp"
+		android:paddingRight="14dp"
+		android:paddingBottom="7dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_record_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toStartOf="@id/tv_record_icon"
-        android:textColor="@color/reward_text_color_not_reply"
-        android:textSize="14sp"
-        tools:text="22''" />
+	<com.zj.imUi.widget.VoicePlayView
+			android:id="@+id/im_msg_item_audio_play_view"
+			android:layout_width="24dp"
+			android:layout_height="24dp"
+			android:layout_marginEnd="4dp"/>
 
-    <Button
-        android:id="@+id/tv_record_icon"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_alignParentEnd="true"
-        android:background="@color/reward_text_color_not_reply" />
+	<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/im_msg_item_audio_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:textColor="@android:color/white"
+			android:textSize="14sp"/>
 
 
-</RelativeLayout>
+</LinearLayout>
