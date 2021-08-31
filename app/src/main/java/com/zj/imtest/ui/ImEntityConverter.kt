@@ -161,6 +161,18 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.sender?.senderName
     }
 
+    override fun getReplyMsgQuestionContent(): String? {
+        return info?.replyMsg?.questionContent?.textContent?.text
+    }
+
+    override fun getReplyMsgQuestionSpark(): Int? {
+        return info?.replyMsg?.questionContent?.spark
+    }
+
+    override fun getReplyMsgQuestionIsPublished(): Boolean? {
+        return info?.replyMsg?.questionContent?.published
+    }
+
     override fun getSelfUserId(): Int {
         return IMConfig.getUserId()
     }
