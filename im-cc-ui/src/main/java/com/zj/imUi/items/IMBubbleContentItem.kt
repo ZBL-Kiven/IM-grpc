@@ -152,7 +152,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
             // TODO: 2021/8/30
-            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 0.5f)
+            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 200, 132, 0.5f)
         } else null
     }
 
