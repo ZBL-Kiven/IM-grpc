@@ -19,10 +19,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?, private val curren
         return info?.clientMsgId ?: ""
     }
 
-    override fun getReplyId(): Int? {
-        return info?.replyId
-    }
-
     override fun getReplyMsgId(): Long? {
         return info?.replyMsgId
     }
@@ -36,7 +32,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?, private val curren
     }
 
     override fun getSenderId(): Int? {
-        return info?.senderId
+        return info?.sender?.senderId
     }
 
     override fun getSenderName(): String? {
@@ -148,7 +144,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?, private val curren
         return info?.replyMsg?.msgId
     }
 
-
     override fun getReplyMsgOwnerId(): Int? {
         return info?.replyMsg?.ownerId
     }
@@ -158,7 +153,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?, private val curren
     }
 
     override fun getReplySenderId(): Int {
-        return info?.replyMsg?.senderId ?: 0
+        return info?.replyMsg?.sender?.senderId ?: 0
     }
 
     override fun getReplySenderName(): String? {
