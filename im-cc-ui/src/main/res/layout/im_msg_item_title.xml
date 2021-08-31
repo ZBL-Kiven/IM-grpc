@@ -16,7 +16,6 @@
         android:maxLines="1"
         android:textColor="@color/nickname_color_black"
         android:textSize="14sp"
-        android:textStyle="bold"
         tools:text="Nickname" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -26,7 +25,7 @@
         android:layout_marginStart="3dp"
         android:layout_marginTop="4dp"
         android:layout_toEndOf="@+id/im_msg_item_title_tv_nickname"
-        android:src="@drawable/icon_renzheng_normal"
+        android:src="@drawable/icon_is_owner_normal"
         android:visibility="gone" />
 
     <com.zj.imUi.widget.GroupRewardItem

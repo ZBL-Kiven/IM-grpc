@@ -14,7 +14,6 @@
         android:layout_marginTop="8dp"
         android:layout_toStartOf="@id/im_msg_item_bottom_group_reward_item"
         android:textColor="@color/nickname_color_black"
-        android:textStyle="bold"
         tools:text="12 m ago" />
 
     <com.zj.imUi.widget.GroupRewardMeItem

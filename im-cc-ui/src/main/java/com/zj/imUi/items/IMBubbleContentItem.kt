@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -24,6 +25,9 @@ import com.zj.imUi.widget.GroupRewardOwnerMeItem
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
 
     private val tvName: AppCompatTextView
+    private val iconIsOwner:AppCompatImageView
+    private val llQuestionContent:LinearLayout
+    private val llName:LinearLayout
     private val bubbleContent: FrameLayout
     private val tvQuestionName: AppCompatTextView
     private val tvFlag: AppCompatTextView
@@ -42,13 +46,17 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         imgReply = findViewById(R.id.im_msg_item_normal_icon_question)
         imgQuestion = findViewById(R.id.im_msg_item_normal_icon_reply)
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
+        llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
+        llName=findViewById(R.id.im_msg_bubble_ll_title)
+        iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
     }
 
     override fun init(data: ImMsgIn) {
-        tvName.text = data.getSenderName() //如果发送者为自己，不展示昵称
+        tvName.text = data.getSenderName()
+        if (data.getSenderId() ==data.getOwnerId()){ iconIsOwner.visibility = View.VISIBLE }
         if (data.getSelfUserId() == data.getSenderId()) {
-            tvName.visibility = View.GONE
-        }
+            llName.visibility = View.GONE
+        }else llName.visibility = View.VISIBLE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -90,6 +98,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setReplyContent(data: ImMsgIn) {
         data.getReplySenderName()?.let {
+            llQuestionContent.visibility = View.VISIBLE
             tvQuestionName.text = it
         }
         when (data.getReplyMsgType()) {
@@ -140,7 +149,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
-            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 1F)
+            // TODO: 2021/8/30
+            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 0.5f)
         } else null
     }
 
