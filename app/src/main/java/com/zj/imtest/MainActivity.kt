@@ -25,6 +25,7 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -132,6 +133,7 @@ class MainActivity : AppCompatActivity() {
             if (d != null) when (pl) {
                 ClientHubImpl.PAYLOAD_ADD -> adapter?.add(d)
                 ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+                ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
             }
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)

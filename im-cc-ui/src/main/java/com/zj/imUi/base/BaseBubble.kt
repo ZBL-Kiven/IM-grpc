@@ -9,23 +9,25 @@ import kotlin.math.min
 
 abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def) {
 
-    protected var curData: ImMsgIn? = null
+    protected var curData: (() -> ImMsgIn?)? = null
+
     private var baseBubbleRenderer: BaseBubbleRenderer? = null
 
-    internal fun onSetData(data: ImMsgIn) {
+    internal fun onSetData(data: () -> ImMsgIn?) {
+        val d = data.invoke() ?: return
         this.curData = data
-        init(data)
+        init(d)
         postInvalidate()
     }
 
     fun setBubbleRenderer(renderer: BaseBubbleRenderer?) {
         this.baseBubbleRenderer = renderer
-        if (curData != null) invalidate()
+        if (curData?.invoke() != null) invalidate()
     }
 
     override fun dispatchDraw(canvas: Canvas?) {
         if (canvas == null || width <= 0 || height <= 0) return
-        curData?.let { d ->
+        curData?.invoke()?.let { d ->
             baseBubbleRenderer?.let {
                 it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context, canvas, d, width, height)
             }

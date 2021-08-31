@@ -151,13 +151,13 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
 
     override fun onResume() {
-        curData?.let {
+        curData?.invoke()?.let {
             RewardTimeCountdownUtils.registerCountdownObserver(it.getMsgId(), it.getExpireTime(), this)
         }
     }
 
     override fun onStop() {
-        curData?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId()) }
+        curData?.invoke()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId()) }
     }
 
     override fun onDestroy() {
@@ -165,7 +165,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     }
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
-        if (msgId == this.curData?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
+        if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
     }
 
     private fun timeParseHour(duration: Long): String? {

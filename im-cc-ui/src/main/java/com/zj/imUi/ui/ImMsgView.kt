@@ -16,17 +16,6 @@ import com.zj.imUi.interfaces.ImMsgIn
 
 class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
-    companion object {
-
-        const val NOTIFY_CHANGE_AUDIO = "notify_change_audio"
-        const val NOTIFY_CHANGE_VIDEO = "notify_change_video"
-        const val NOTIFY_CHANGE_SENDING_STATE = "notify_change_send_state"
-    }
-
-    fun notifyChange(pl: Any?) {
-        bubbleView?.notifyChange(pl)
-    }
-
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
             if (d.getSenderId() == d.getSelfUserId()) {
@@ -44,42 +33,14 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         }
     }
 
-    override fun getSendStatusLayoutParams(d: ImMsgIn): LayoutParams {
-        val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
-        return LayoutParams(size, size).apply {
-            ivSendStatusNo?.visibility = View.GONE
-            if (d.getSenderId() == d.getSelfUserId()) {
-                when (d.getSendingState()) {
-                    -2, -1 -> ivSendStatusNo?.visibility = View.VISIBLE
-                    else -> {
-                        ivSendStatusNo?.visibility = View.GONE
-                    }
-                }
-                addRule(ALIGN_PARENT_BOTTOM)
-                addRule(START_OF, R.id.im_item_message_bubble)
-            }
-        }
-    }
 
     override fun getSendingLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
         return LayoutParams(size, size).apply {
-            amSending?.visibility = View.GONE
-            if (d.getSenderId() == d.getSelfUserId()) {
-                when (d.getSendingState()) {
-                    1, 2 -> {
-                        amSending?.visibility = View.VISIBLE
-                    }
-                    else -> {
-                        amSending?.visibility = View.GONE
-                    }
-                }
-                addRule(ALIGN_PARENT_BOTTOM)
-                addRule(START_OF, R.id.im_item_message_bubble)
-            }
+            addRule(ALIGN_PARENT_BOTTOM)
+            addRule(START_OF, R.id.im_item_message_bubble)
         }
     }
-
 
     override fun getAvatarLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 40f + 0.5f).toInt()

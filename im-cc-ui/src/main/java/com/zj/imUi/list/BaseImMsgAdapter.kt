@@ -67,31 +67,25 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     override fun add(info: T) {
         onChangeTimeline(info)
         super.add(info)
-        recyclerView.post { recyclerView.scrollToPosition(maxPosition) }
     }
 
     override fun add(data: MutableList<T>?) {
         data?.forEach { onChangeTimeline(it) }
         super.add(data)
-        recyclerView.post { recyclerView.scrollToPosition(maxPosition) }
     }
 
     override fun add(info: List<T>, position: Int) {
         data?.forEach { onChangeTimeline(it) }
         super.add(info, position)
-        val pos = position + info.size
-        if (pos in 0..maxPosition) {
-            recyclerView.post { recyclerView.scrollToPosition(pos) }
-        }
     }
 
-    fun update(infoEntity: T) {
+    fun update(infoEntity: T, pl: Any? = null) {
         val index = data.indexOfLast { equalsOf(it, infoEntity) }
         if (index in 0..maxPosition) {
             val local = data[index]
             exchangeWhenUpdate(infoEntity, local)
             data[index] = infoEntity
-            notifyItemChanged(index)
+            notifyItemChanged(index, pl)
         } else {
             add(infoEntity)
         }
@@ -100,7 +94,6 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     override fun change(d: List<T>?) {
         d?.forEach { onChangeTimeline(it) }
         super.change(d)
-        recyclerView.post { recyclerView.scrollToPosition(maxPosition) }
     }
 
     fun removeIfEquals(infoEntity: T) {

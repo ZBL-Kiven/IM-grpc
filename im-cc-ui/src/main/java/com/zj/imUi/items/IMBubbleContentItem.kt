@@ -17,6 +17,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
+import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.imUi.widget.GroupMessageRecordItem
@@ -173,8 +174,15 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         } else null
     }
 
+    override fun notifyChange(pl: Any?) {
+        super.notifyChange( pl)
+        when (pl) {
+            BaseImItem.NOTIFY_CHANGE_AUDIO, BaseImItem.NOTIFY_CHANGE_VIDEO -> onResume()
+        }
+    }
+
     override fun onResume() {
-        if (curData?.isAudioPlaying() == true) {
+        if (curData?.invoke()?.isAudioPlaying() == true) {
             audioItem?.startAnim()
         } else {
             audioItem?.stopAnim()
