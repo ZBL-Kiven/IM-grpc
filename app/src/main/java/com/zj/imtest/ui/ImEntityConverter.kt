@@ -6,11 +6,8 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.interfaces.ImMsgListener
 import com.zj.imtest.IMConfig
 
-class ImEntityConverter(
-    private val info: MessageInfoEntity?,
-    private val isAudioPlaying: Boolean?,
-    private val listener: ImMsgListener? = null
-) : ImMsgIn {
+class ImEntityConverter(private val info: MessageInfoEntity?, private val isAudioPlaying: Boolean?, private val listener: ImMsgListener? = null) : ImMsgIn {
+
     override fun getOwnerId(): Int? {
         return info?.ownerId
     }
@@ -137,7 +134,7 @@ class ImEntityConverter(
     }
 
     override fun getReplyMsgCreateTs(): Long? {
-        return info?.replyMsg?.createTs
+        return info?.replyMsg?.sendTime
     }
 
     override fun getReplyMsgGroupId(): Long? {

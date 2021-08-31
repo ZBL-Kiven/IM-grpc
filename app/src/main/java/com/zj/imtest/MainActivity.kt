@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         rv = findViewById(R.id.main_erv)
         et = findViewById(R.id.main_edit)
-        adapter = MsgAdapter(rv, this)
+        adapter = MsgAdapter(rv)
         rv.adapter = adapter
         initIm()
     }
@@ -130,13 +130,9 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
             if (d != null) when (pl) {
-                ClientHubImpl.PAYLOAD_ADD -> {
-                    adapter?.let {
-                        it.add(d);rv.scrollToPosition(it.maxPosition)
-                    }
-                }
+                ClientHubImpl.PAYLOAD_ADD -> adapter?.add(d)
                 ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
-                ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeAll(d)
+                ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
             }
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }

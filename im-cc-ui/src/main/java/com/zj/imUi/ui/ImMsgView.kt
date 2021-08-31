@@ -1,18 +1,14 @@
 package com.zj.imUi.ui
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.zj.imUi.Constance
 import com.zj.imUi.R
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.bubble.BubbleRenderer
@@ -86,8 +82,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
-        if (data.getSenderId() == data.getSelfUserId()&&data.getType() ==Constance.MSG_TYPE_IMG&&data.getReplyMsgClientMsgId() == null)
-            return null
+        if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         return BubbleRenderer
     }
 

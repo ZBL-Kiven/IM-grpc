@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import com.zj.imUi.Constance
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
@@ -35,7 +35,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
-    private var tvReliedFLag:TextView?=null
+    private var tvReliedFLag:AppCompatTextView
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, true)
@@ -48,12 +48,14 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
         textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
         timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
+        tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
     }
 
     override fun init(data: ImMsgIn) {
 
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
+        tvReliedFLag.visibility = View.GONE
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent()
@@ -82,9 +84,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             timeBottom.setData(data)
         }
         if (data.getQuestionStatus() == 0) {
-            if (data.getSenderId() == data.getSelfUserId()) {
+            if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
 
-                //消息发送者是自己
                 if (data.getPublished()) {
 
                     //回答方式背景
@@ -118,20 +119,13 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.frame_textview_private))
             imgCountdown.setImageResource(R.drawable.icon_countdown_ex)
             llCountDown.setBackgroundResource(R.drawable.textview_frame_gray2_roundcornor)
+            tvReliedFLag.visibility = View.VISIBLE
 
         } else if (data.getQuestionStatus() == 2) {
             setOutTimeBg()
         }
-
-        setRepliedFlag(data)
     }
 
-    private fun setRepliedFlag(data: ImMsgIn) {
-        if (data.getQuestionStatus() == 1)
-        {
-            // TODO: 2021/8/31 已回复标志 
-        }
-    }
 
     private fun setOutTimeBg() { //超时 的提问字体颜色不同
         textQuestion.setTextColor(ContextCompat.getColor(context, R.color.reward_ll_color_timeout))
@@ -149,9 +143,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private fun setReplyTypeText(type: String): String? {
         var text: String? = null
         when (type) {
-            Constance.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_type_text)
-            Constance.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_type_image)
-            Constance.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_type_audio)
+            UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_type_text)
+            UiMsgType.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_type_image)
+            UiMsgType.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_type_audio)
         }
         return text
     }

@@ -10,7 +10,7 @@ object ImItemDispatcher {
 
     inline fun <reified R : BaseBubble> getItemWithData(imIn: ImMsgIn, context: Context): R? {
         return when (imIn.getType()) {
-            Constance.MSG_TYPE_QUESTION-> IMRewardItem(context) as R?
+            UiMsgType.MSG_TYPE_QUESTION-> IMRewardItem(context) as R?
             else -> IMBubbleContentItem(context) as R?
         }
     }

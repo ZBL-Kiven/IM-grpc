@@ -21,7 +21,7 @@ object Sender {
     fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.content = content
-        sen.msgType = MsgType.TEXT.type
+        sen.msgType = MsgType.QUESTION.type
         sen.groupId = groupId
         sen.clientMsgId = callId
         sen.answerMsgType = rewardMsgType.type
@@ -91,7 +91,8 @@ object Sender {
 
     class MsgFileUploader(private val d: SendMessageReqEn) : BaseFileSender(Constance.app, d, d.clientMsgId) {
 
-        private val mVideoOutputPath = "/compress/im/${System.currentTimeMillis()}.mp4"
+        private val mVideoOutputPath = "/compress/im/${d.clientMsgId}.mp4"
+        private val mImageOutputPath = "/compress/im/${d.clientMsgId}.jpg"
 
         private val onImgCompressListener = object : com.zj.ccIm.core.sender.compress.OnCompressListener {
 
@@ -136,7 +137,7 @@ object Sender {
             val c = (context?.applicationContext as? Application) ?: throw NullPointerException("context should not be null !!")
             when (d.msgType) {
                 MsgType.IMG.type -> {
-                    ImgCompress.with(c).setCompressListener(onImgCompressListener).ignoreBy(1024 * 1024).load(d.localFilePath).launch()
+                    ImgCompress.with(c).ignoreBy(1024 * 1024).load(d.localFilePath).setTargetPath(mImageOutputPath).setCompressListener(onImgCompressListener).start()
                 }
 
                 MsgType.VIDEO.type -> {

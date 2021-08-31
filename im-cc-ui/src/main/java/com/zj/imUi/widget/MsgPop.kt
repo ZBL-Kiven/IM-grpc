@@ -11,8 +11,8 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getSystemService
-import com.zj.imUi.Constance
 import com.zj.imUi.R
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.interfaces.ImMsgIn
 import kotlin.math.max
 
@@ -20,19 +20,18 @@ import kotlin.math.max
 class MsgPop(context: Context, data: ImMsgIn) {
 
 
-    private val popWindow: PopupWindow
+    private val popWindow: PopupWindow = PopupWindow(context)
 
     init {
-        popWindow = PopupWindow(context)
         val view = LayoutInflater.from(context).inflate(R.layout.im_msg_pop, null, false)
         val copy = view.findViewById<TextView>(R.id.im_msg_pop_copy).apply {
-            visibility = if (data.getType() == Constance.MSG_TYPE_TEXT) View.VISIBLE else View.GONE
+            visibility = if (data.getType() == UiMsgType.MSG_TYPE_TEXT) View.VISIBLE else View.GONE
             setOnClickListener {
                 val cm = getSystemService(context, ClipboardManager::class.java)
                 val mClipData = ClipData.newPlainText("cc", data.getTextContent())
                 cm?.setPrimaryClip(mClipData)
                 popWindow.dismiss()
-            }   
+            }
         }
         val reply = view.findViewById<TextView>(R.id.im_msg_pop_reply).apply {
             visibility = if (data.getSelfUserId() != data.getSenderId()) View.VISIBLE else View.GONE
@@ -69,10 +68,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
     }
 
     fun show(anchor: View) {
-        popWindow.contentView.measure(
-            makeDropDownMeasureSpec(popWindow.width),
-            makeDropDownMeasureSpec(popWindow.height)
-        )
+        popWindow.contentView.measure(makeDropDownMeasureSpec(popWindow.width), makeDropDownMeasureSpec(popWindow.height))
         val x = max((anchor.width - popWindow.contentView.measuredWidth) / 2, 0)
         val y = max((anchor.height - popWindow.contentView.measuredHeight) / 2, 0)
         popWindow.showAsDropDown(anchor, x, -popWindow.contentView.measuredHeight - y, Gravity.BOTTOM or Gravity.START)

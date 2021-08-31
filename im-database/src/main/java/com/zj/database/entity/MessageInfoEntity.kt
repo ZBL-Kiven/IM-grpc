@@ -1,6 +1,7 @@
 package com.zj.database.entity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.TypeConverters
 import com.zj.database.converter.*
 import java.util.*
@@ -27,10 +28,6 @@ class MessageInfoEntity {
      * 发送时间
      */
     var sendTime: Long = 0
-        set(value) {
-            if (createTs <= 0) createTs = value
-            field = value
-        }
 
     /**
      * 信息id
@@ -106,7 +103,7 @@ class MessageInfoEntity {
     var sendingState: Int = 0
 
     /**
-     * 本地新增的辅助参数，用于在服务器时间和本地时间有较大偏差时，能保持正确的收发展示顺序
+     * 本地新增的辅助参数，用于展示拥有差值的消息时间
      * */
-    var createTs: Long = 0
+    @Ignore var diffInCreateTime: String? = null
 }

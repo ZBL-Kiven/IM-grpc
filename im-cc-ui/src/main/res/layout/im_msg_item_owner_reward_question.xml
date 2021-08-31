@@ -10,8 +10,6 @@
         android:id="@+id/im_msg_item_owner_reward_question_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
         tools:text="nickname" />
 
     <LinearLayout
@@ -108,11 +106,21 @@
         tools:text="REPLY BY TEXT"
         tools:visibility="visible" />
 
+        <com.zj.imUi.widget.GroupMessageRepliedFlag
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginStart="196dp"
+            android:visibility="gone"
+            android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
+            />
     <com.zj.imUi.widget.bottom.GroupMessageItemTime
         android:id="@+id/im_msg_item_owner_reward_question_bottom_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         tools:visibility="visible" />
+
 
 </LinearLayout>
