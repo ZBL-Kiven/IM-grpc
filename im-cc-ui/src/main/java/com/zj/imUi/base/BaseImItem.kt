@@ -14,9 +14,14 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.widget.MsgPop
+import com.zj.imUi.widget.loading.AVLoadingIndicatorView
 
 @Suppress("unused")
-abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
+abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0
+) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
 
     companion object {
 
@@ -28,6 +33,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     open var bubbleView: BaseBubble? = null
     open var ivAvatar: ImageView? = null
     open var ivSendStatusNo:ImageView?=null
+    open var amSending:AVLoadingIndicatorView?=null
 
     fun setData(data: T?) {
         if (data == null) {
@@ -41,7 +47,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initAvatar(data: T) {
-        if (ivAvatar == null) ivAvatar = ImageView(context).apply { id = R.id.im_item_message_avatar }
+        if (ivAvatar == null) ivAvatar =
+            ImageView(context).apply { id = R.id.im_item_message_avatar }
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
     }
@@ -49,9 +56,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     private fun initBubble(data: T) {
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)
-        }
-        if (bubbleView!=null){
-            bubbleView!!.id= R.id.im_item_message_bubble
+            bubbleView!!.id = R.id.im_item_message_bubble
         }
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
@@ -65,11 +70,15 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initSendStatus(data: T) {
-        if (ivSendStatusNo == null) ivSendStatusNo =ImageView(context).apply { id  = R.id.im_item_message_send_lose}
-        addViewToSelf(ivSendStatusNo,getSendStatusLayoutParams(data))
+        if (ivSendStatusNo == null) ivSendStatusNo =
+            ImageView(context).apply { id = R.id.im_item_message_send_lose }
+        addViewToSelf(ivSendStatusNo, getSendStatusLayoutParams(data))
         Glide.with(ivSendStatusNo!!).load(R.drawable.icon_sendlose).into(ivSendStatusNo!!)
     }
     private fun initAmSending(data: T){
+        if (amSending == null) amSending =AVLoadingIndicatorView(context).apply { id  = R.id.im_item_message_sending}
+        amSending?.setIndicator( "com.zj.imUi.widget.loading.BallSpinFadeLoaderIndicator")
+        addViewToSelf(amSending,getSendingLayoutParams(data))
     }
 
     private fun addViewToSelf(view: View?, layoutParams: LayoutParams) {
@@ -80,7 +89,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
                 removeView(view);true
             } else false
         }//列表item外边距，仅作测试
-        layoutParams.setMargins(12,12,12,0)
+        layoutParams.setMargins(12, 12, 12, 0)
         view.layoutParams = layoutParams
         if (needAdd) addView(view)
     }

@@ -42,9 +42,8 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
             ivSendStatusNo?.visibility = View.GONE
             if (d.getSenderId() == d.getSelfUserId()) {
                 when (d.getSendingState()) {
-//                    1, 2 ->
                     -2, -1 -> ivSendStatusNo?.visibility = View.VISIBLE
-                    0, 3 -> {
+                    else -> {
                         ivSendStatusNo?.visibility = View.GONE
                     }
                 }
@@ -54,11 +53,32 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         }
     }
 
+    override fun getSendingLayoutParams(d: ImMsgIn): LayoutParams {
+        val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
+        return LayoutParams(size, size).apply {
+            if (d.getSenderId() == d.getSelfUserId()) {
+                amSending?.visibility = View.VISIBLE
+                when (d.getSendingState()) {
+                    1, 2 -> {
+                        amSending?.visibility = View.VISIBLE
+                        amSending?.indicator?.start()
+                    }
+                    else -> {
+                        amSending?.visibility = View.GONE
+                        amSending?.indicator?.stop()
+                    }
+                }
+                addRule(ALIGN_PARENT_BOTTOM)
+                addRule(START_OF, R.id.im_item_message_bubble)
+            }
+        }
+    }
+
+
     override fun getAvatarLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 40f + 0.5f).toInt()
         return LayoutParams(size, size)
     }
-
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return

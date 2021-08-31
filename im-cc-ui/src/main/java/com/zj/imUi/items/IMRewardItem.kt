@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -34,6 +35,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
+    private var tvReliedFLag:TextView?=null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, true)
@@ -119,6 +121,15 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
         } else if (data.getQuestionStatus() == 2) {
             setOutTimeBg()
+        }
+
+        setRepliedFlag(data)
+    }
+
+    private fun setRepliedFlag(data: ImMsgIn) {
+        if (data.getQuestionStatus() == 1)
+        {
+            // TODO: 2021/8/31 已回复标志 
         }
     }
 

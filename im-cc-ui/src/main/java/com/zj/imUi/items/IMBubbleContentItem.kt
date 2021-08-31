@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
@@ -23,12 +24,16 @@ import com.zj.imUi.widget.GroupMessageRecordItem
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
 
 
-class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMBubbleContentItem @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0
+) : BaseBubble(context, attrs, def) {
 
     private val tvName: AppCompatTextView
-    private val iconIsOwner:AppCompatImageView
-    private val llQuestionContent:LinearLayout
-    private val llName:LinearLayout
+    private val iconIsOwner: AppCompatImageView
+    private val llQuestionContent: LinearLayout
+    private val llName: LinearLayout
     private val bubbleContent: FrameLayout
     private val tvQuestionName: AppCompatTextView
     private val tvFlag: AppCompatTextView
@@ -36,6 +41,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private val imgQuestion: AppCompatImageView
     private val imgReply: AppCompatImageView
     private val timeBottom: GroupRewardOwnerMeItem
+    private val llContent:LinearLayout
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
@@ -43,21 +49,25 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         bubbleContent = findViewById(R.id.im_msg_bubble_viewstub) //被回复的内容
         tvQuestionContent = findViewById(R.id.im_msg_item_normal_text_replied_content)
         tvFlag = findViewById(R.id.im_msg_item_normal_text_replied_tv_flag)
-        tvQuestionName = findViewById(R.id.im_msg_item_normal_text_replied_tv_nickname) //question Icon
+        tvQuestionName =
+            findViewById(R.id.im_msg_item_normal_text_replied_tv_nickname) //question Icon
         imgReply = findViewById(R.id.im_msg_item_normal_icon_question)
         imgQuestion = findViewById(R.id.im_msg_item_normal_icon_reply)
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
         llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
-        llName=findViewById(R.id.im_msg_bubble_ll_title)
+        llName = findViewById(R.id.im_msg_bubble_ll_title)
         iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
+        llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
     override fun init(data: ImMsgIn) {
         tvName.text = data.getSenderName()
-        if (data.getSenderId() ==data.getOwnerId()){ iconIsOwner.visibility = View.VISIBLE }
+        if (data.getSenderId() == data.getOwnerId()) {
+            iconIsOwner.visibility = View.VISIBLE
+        }
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
-        }else llName.visibility = View.VISIBLE
+        } else llName.visibility = View.VISIBLE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -106,8 +116,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             Constance.MSG_TYPE_TEXT -> {
                 tvQuestionContent.text = data.getReplyMsgTextContent()
             }
-            Constance.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
-            Constance.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
+            Constance.MSG_TYPE_IMG -> tvQuestionContent.text =
+                context.getString(R.string.im_ui_msg_reward_type_image)
+            Constance.MSG_TYPE_AUDIO -> tvQuestionContent.text =
+                context.getString(R.string.im_ui_msg_reward_type_audio)
         }
     }
 
@@ -116,24 +128,41 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         when (data.getType()) {
             Constance.MSG_TYPE_TEXT -> {
                 View.inflate(context, R.layout.im_msg_item_normal_text, bubbleContent)
-                val textContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_text_tv_content)
-                textContent.setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
-                    Color.WHITE
-                } else {
-                    ContextCompat.getColor(context, R.color.message_textColor_replyMe)
-                })
+                val textContent: AppCompatTextView =
+                    findViewById(R.id.im_msg_item_normal_text_tv_content)
+                textContent.setTextColor(
+                    if (data.getSelfUserId() == data.getSenderId()) {
+                        Color.WHITE
+                    } else {
+                        ContextCompat.getColor(context, R.color.message_textColor_replyMe)
+                    }
+                )
+//                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+//                lp.setMargins(12,12,12,12)
+//                llContent.layoutParams = lp
                 textContent.text = data.getTextContent()
             }
 
             Constance.MSG_TYPE_IMG -> {
                 View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
-                val imgContent: AppCompatImageView = findViewById(R.id.im_msg_item_normal_img_img_content)
+                val imgContent: AppCompatImageView =
+                    findViewById(R.id.im_msg_item_normal_img_img_content)
+//                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
+//                if(data.getReplyMsgId()==null) {
+//                    lp.setMargins(0, 0, 0, 0)
+//                }else   lp.setMargins(12,12,12,12)
+//                llContent.layoutParams = lp
                 setImg(imgContent, data)
             }
 
             Constance.MSG_TYPE_AUDIO -> {
                 View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
-                val audioItem: GroupMessageRecordItem = findViewById(R.id.im_msg_item_normal_audio_content)
+                val audioItem: GroupMessageRecordItem =
+                    findViewById(R.id.im_msg_item_normal_audio_content)
+//                val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
+//
+//                lp.setMargins(12,12,12,12)
+//                llContent.layoutParams = lp
                 audioItem.setData(data)
             }
         }
@@ -142,9 +171,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private fun setImg(imgView: AppCompatImageView, data: ImMsgIn) {
         val arrayInt: Array<Int>? = setImgLp(data)
         if (arrayInt != null) {
+            val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
             data.getImgContentUrl()?.let {
-                val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
-                Glide.with(imgView).load(it).centerInside().override(width, height).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgView)
+                Glide.with(imgView).load(it).centerInside().override(arrayInt[0], arrayInt[1]).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgView)
             }
         }
     }
@@ -152,7 +181,13 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
             // TODO: 2021/8/30
-            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 200, 132, 0.5f)
+            AutomationImageCalculateUtils.proportionalWH(
+                data.getImgContentWidth()!!,
+                data.getImgContentHeight()!!,
+                280,
+                200,
+                0.5f
+            )
         } else null
     }
 

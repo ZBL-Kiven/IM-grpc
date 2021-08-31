@@ -40,7 +40,9 @@
         android:layout_marginStart="12dp"
         android:layout_marginBottom="12dp"
         android:layout_marginEnd="12dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/im_msg_bubble_img_ll_content"
+        >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_icon_reply"

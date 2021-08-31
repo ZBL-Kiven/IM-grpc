@@ -9,6 +9,7 @@ interface BaseBubbleConfig<T> {
     fun getBubbleLayoutParams(d: T): RelativeLayout.LayoutParams
 
     fun getSendStatusLayoutParams(d: T): RelativeLayout.LayoutParams
+    fun getSendingLayoutParams(d: T): RelativeLayout.LayoutParams
 
     fun getAvatarLayoutParams(d: T): RelativeLayout.LayoutParams
 
