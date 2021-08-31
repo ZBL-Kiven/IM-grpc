@@ -5,7 +5,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 117658
+        return 120365
     }
 
     override fun getUserName(): String {
@@ -17,7 +17,7 @@ object IMConfig : ImConfigIn {
     }
 
     override fun getToken(): String {
-        return "sanhe12345"
+        return "MTA3M2Y1ZWMtZjQyNC00ZTY5LWEzYzEtNzc2NTUzN2E0NWU5"
     }
 
     override fun getGrpcAddress(): Pair<String, Int> {

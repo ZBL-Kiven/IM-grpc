@@ -1,7 +1,6 @@
 package com.zj.imUi.list
 
 
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.imUi.R
@@ -10,7 +9,6 @@ import com.zj.imUi.utils.ImMessageDecoration
 import com.zj.imUi.utils.TimeLineInflateModel
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
-import com.zj.views.list.listeners.ItemClickListener
 import com.zj.views.ut.DPUtils
 
 
@@ -21,25 +19,12 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     abstract fun getSendTime(d: T): Long
     abstract fun setTimeLine(ts: String?, d: T)
     abstract fun equalsOf(f: T, s: T): Boolean
-    open fun onItemClick(position: Int, v: View?, m: T?) {}
-    open fun onItemLongClick(position: Int, v: View?, m: T?): Boolean {
-        return false
-    }
 
     init {
         initRecycler()
     }
 
     private fun initRecycler() {
-        setOnItemClickListener(object : ItemClickListener<T>() {
-            override fun onItemClick(position: Int, v: View?, m: T?) {
-                this@BaseImMsgAdapter.onItemClick(position, v, m)
-            }
-
-            override fun onItemLongClick(position: Int, v: View?, m: T?): Boolean {
-                return this@BaseImMsgAdapter.onItemLongClick(position, v, m)
-            }
-        })
         val imDecoration = object : ImMessageDecoration<T, BaseImMsgAdapter<T>>(this) {
             override fun getItem(p: Int): T? {
                 return this@BaseImMsgAdapter.getItem(p)

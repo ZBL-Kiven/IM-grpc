@@ -45,7 +45,7 @@ internal object Fetcher {
         log("start fetch sessions  by onlyRefresh = $onlyRefresh ,with last ts : $lastTs")
         compo = ImApi.getFetcherApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
             try {
-                if (b && d != null) {
+                if (b && d != null && !d.groupList.isNullOrEmpty()) {
                     log("fetch sessions success , new ts is ${d.timeStamp}, changed group is [${d.groupList?.joinToString { "${it.groupName} , " }}]")
                     SPHelper.put(SP_FETCH_SESSIONS_TS, d.timeStamp)
                     val sl = d.groupList
@@ -67,7 +67,7 @@ internal object Fetcher {
                 } else {
                     if (!b && !onlyRefresh) IMHelper.reconnect("fetch sessions group failed with:${e?.message} !!")
                     onFetching = false
-                    if (b && d?.groupList.isNullOrEmpty()) {
+                    if (b && lastTs <= 0 && d?.groupList.isNullOrEmpty()) {
                         IMHelper.postToUiObservers(IMError("Fetch session group is null"), ClientHubImpl.PAYLOAD_FETCH_SESSION_NULL) {}
                     }
                 }
