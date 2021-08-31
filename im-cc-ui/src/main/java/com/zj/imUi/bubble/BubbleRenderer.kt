@@ -69,7 +69,7 @@ object BubbleRenderer : BaseBubbleRenderer {
 
     private fun setColor(context: Context, data: ImMsgIn): Int {
         return if (isSelfMessage) {
-            if (data.getQuestionStatus() != 0) {
+            if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
                 ContextCompat.getColor(context, R.color.replied_bg)
             } else {
                 if (!data.getPublished()) {
@@ -77,7 +77,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                     else ContextCompat.getColor(context, R.color.message_item_private)
                 } else ContextCompat.getColor(context, R.color.bg_origin)
             }
-        } else if (data.getQuestionStatus() != 0) {
+        } else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
             ContextCompat.getColor(context, R.color.replied_bg)
         } else {
             if (!data.getPublished()) ContextCompat.getColor(context, R.color.message_item_private)

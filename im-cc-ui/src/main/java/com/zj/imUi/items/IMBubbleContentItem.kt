@@ -47,7 +47,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         imgQuestion = findViewById(R.id.im_msg_item_normal_icon_reply)
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
         llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
-        llName=findViewById(R.id.im_msg_bubble_ll_time)
+        llName=findViewById(R.id.im_msg_bubble_ll_title)
         iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
     }
 
@@ -56,7 +56,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         if (data.getSenderId() ==data.getOwnerId()){ iconIsOwner.visibility = View.VISIBLE }
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
-        }
+        }else llName.visibility = View.VISIBLE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -149,7 +149,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setImgLp(data: ImMsgIn): Array<Int>? {
         return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
-            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 1F)
+            // TODO: 2021/8/30
+            AutomationImageCalculateUtils.proportionalWH(data.getImgContentWidth()!!, data.getImgContentHeight()!!, 201, 398, 0.5f)
         } else null
     }
 
