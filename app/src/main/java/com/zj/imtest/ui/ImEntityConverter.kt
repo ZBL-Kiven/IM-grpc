@@ -3,10 +3,9 @@ package com.zj.imtest.ui
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.interfaces.ImMsgListener
 import com.zj.imtest.IMConfig
 
-class ImEntityConverter(private val info: MessageInfoEntity?, private val isAudioPlaying: Boolean?, private val listener: ImMsgListener? = null) : ImMsgIn {
+class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getOwnerId(): Int? {
         return info?.ownerId
@@ -165,11 +164,26 @@ class ImEntityConverter(private val info: MessageInfoEntity?, private val isAudi
         return IMConfig.getUserId()
     }
 
-    override fun isAudioPlaying(): Boolean? {
-        return isAudioPlaying
+    /** ==================================================== 主动数据接口 ⬇️ ======================================================*/
+
+    override fun isAudioPlaying(): Boolean {
+        return true
     }
 
-    override fun getMsgListener(): ImMsgListener? {
-        return listener
+    override fun playAudio() {
+
     }
+
+    override fun stopAudio() {
+
+    }
+
+    override fun reply(id: String) {
+
+    }
+
+    override fun block(userId: Int) {
+
+    }
+
 }

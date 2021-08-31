@@ -1,5 +1,6 @@
 package com.zj.imUi.widget
 
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -17,8 +18,8 @@ import com.zj.imUi.interfaces.ImMsgIn
 import kotlin.math.max
 
 
+@SuppressLint("InflateParams")
 class MsgPop(context: Context, data: ImMsgIn) {
-
 
     private val popWindow: PopupWindow = PopupWindow(context)
 
@@ -36,7 +37,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
         val reply = view.findViewById<TextView>(R.id.im_msg_pop_reply).apply {
             visibility = if (data.getSelfUserId() != data.getSenderId()) View.VISIBLE else View.GONE
             setOnClickListener {
-                data.getMsgListener()?.reply(data.getMsgId())
+                data.reply(data.getMsgId())
                 popWindow.dismiss()
             }
         }
@@ -47,7 +48,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
                 View.GONE
             }
             setOnClickListener {
-                data.getSenderId()?.let { data.getMsgListener()?.block(it) }
+                data.getSenderId()?.let { data.block(it) }
                 popWindow.dismiss()
             }
         }
@@ -64,7 +65,6 @@ class MsgPop(context: Context, data: ImMsgIn) {
         popWindow.setBackgroundDrawable(ColorDrawable())
         popWindow.isOutsideTouchable = true
         popWindow.isTouchable = true
-
     }
 
     fun show(anchor: View) {

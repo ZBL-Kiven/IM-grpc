@@ -38,6 +38,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private val imgReply: AppCompatImageView
     private val timeBottom: GroupRewardOwnerMeItem
     private val llContent: LinearLayout
+    private var imgContent: AppCompatImageView? = null
+    private var audioItem: GroupMessageRecordItem? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
@@ -133,38 +135,25 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 } else {
                     ContextCompat.getColor(context, R.color.message_textColor_replyMe)
                 })
-
-                //                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                //                lp.setMargins(12,12,12,12)
-                //                llContent.layoutParams = lp
                 textContent.text = data.getTextContent()
             }
 
             UiMsgType.MSG_TYPE_IMG -> {
                 View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
-                val imgContent: AppCompatImageView = findViewById(R.id.im_msg_item_normal_img_img_content)
-
-                //                val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT)
-                //                if(data.getReplyMsgId()==null) {
-                //                    lp.setMargins(0, 0, 0, 0)
-                //                }else   lp.setMargins(12,12,12,12)
-                //                llContent.layoutParams = lp
+                if (imgContent == null) imgContent = findViewById(R.id.im_msg_item_normal_img_img_content)
                 setImg(imgContent, data)
             }
 
             UiMsgType.MSG_TYPE_AUDIO -> {
                 View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
-                val audioItem: GroupMessageRecordItem = findViewById(R.id.im_msg_item_normal_audio_content)
-
-                //                val lp = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
-                //                lp.setMargins(12,12,12,12)
-                //                llContent.layoutParams = lp
-                audioItem.setData(data)
+                if (audioItem == null) audioItem = findViewById(R.id.im_msg_item_normal_audio_content)
+                audioItem?.setData(data)
             }
         }
     }
 
-    private fun setImg(imgView: AppCompatImageView, data: ImMsgIn) {
+    private fun setImg(imgView: AppCompatImageView?, data: ImMsgIn) {
+        if (imgView == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
         if (arrayInt != null) {
             val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
@@ -184,9 +173,20 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         } else null
     }
 
-    override fun onResume() {}
-    override fun onStop() {}
+    override fun onResume() {
+        if (curData?.isAudioPlaying() == true) {
+            audioItem?.startAnim()
+        } else {
+            audioItem?.stopAnim()
+        }
+    }
+
+    override fun onStop() {
+        audioItem?.stopAnim()
+    }
+
     override fun onDestroy() {
-        removeAllViews()
+        audioItem?.stopAnim()
+        bubbleContent.removeAllViews()
     }
 }

@@ -16,6 +16,17 @@ import com.zj.imUi.interfaces.ImMsgIn
 
 class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
+    companion object {
+
+        const val NOTIFY_CHANGE_AUDIO = "notify_change_audio"
+        const val NOTIFY_CHANGE_VIDEO = "notify_change_video"
+        const val NOTIFY_CHANGE_SENDING_STATE = "notify_change_send_state"
+    }
+
+    fun notifyChange(pl: Any?) {
+        bubbleView?.notifyChange(pl)
+    }
+
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
             if (d.getSenderId() == d.getSelfUserId()) {

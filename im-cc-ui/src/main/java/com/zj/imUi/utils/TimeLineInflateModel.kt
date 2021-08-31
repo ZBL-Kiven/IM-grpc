@@ -8,7 +8,7 @@ import kotlin.math.abs
 
 object TimeLineInflateModel {
 
-    private const val maximumDiffDisplayTime: Long = 4 * 60 * 1000
+    private const val maximumDiffDisplayTime: Long = 2 * 60 * 1000
 
     fun inflateTimeLine(ctx: Context, dataTime: Long, lastTime: Long, maxDiffTimeStamp: Long = maximumDiffDisplayTime): String? {
         return if (abs(lastTime - dataTime) > maxDiffTimeStamp) {

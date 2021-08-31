@@ -14,7 +14,10 @@ class MsgAdapter(recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntit
 }) {
 
     override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
-        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module,false,null))
+        (holder?.itemView as? ImMsgView)?.let {
+            if (payloads.isNullOrEmpty()) it.setData(ImEntityConverter(module))
+            else it.notifyChange(payloads.firstOrNull())
+        }
     }
 
     override fun exchangeWhenUpdate(new: MessageInfoEntity, old: MessageInfoEntity) {
