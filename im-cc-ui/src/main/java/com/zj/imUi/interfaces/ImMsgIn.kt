@@ -68,7 +68,7 @@ interface ImMsgIn {
 
     fun getSelfUserId(): Int?
 
-    fun getCurrentAudioTime(): Int?
+    fun isAudioPlaying(): Boolean?
 
     fun getMsgListener(): ImMsgListener?
 
@@ -76,5 +76,6 @@ interface ImMsgIn {
 
 interface ImMsgListener {
     fun playAudio()
-    fun reply(id: Long)
+    fun reply(id: String)
+    fun block(userId: Int)
 }

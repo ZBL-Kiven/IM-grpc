@@ -1,11 +1,13 @@
 package com.zj.imtest.ui
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.imUi.interfaces.ImMsgListener
 import com.zj.imUi.ui.ImMsgView
 import com.zj.views.list.adapters.BaseAdapter
 import com.zj.views.list.holders.BaseViewHolder
@@ -63,7 +65,19 @@ class MsgAdapter(private val recyclerView: RecyclerView?, context: Context) : Ba
     }
 
     override fun initData(holder: BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
-        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module, null))
+        (holder?.itemView as? ImMsgView)?.setData(ImEntityConverter(module, null, object : ImMsgListener {
+            override fun playAudio() {
+                Log.e("zhaow", "playAudio")
+            }
+
+            override fun reply(id: String) {
+                Log.e("zhaow", "reply  $id")
+            }
+
+            override fun block(userId: Int) {
+                Log.e("zhaow", "block  $userId")
+            }
+        }))
     }
 
     private fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {

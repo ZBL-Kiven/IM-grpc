@@ -40,7 +40,7 @@ class GroupMessageRecordItem @JvmOverloads constructor(
             audioTime.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
         }
         audioTime.text = "${messageBean.getAudioContentDuration() ?: 0}\""
-        audioPlayView.isAnim = messageBean.getCurrentAudioTime() != null
+        audioPlayView.isAnim = messageBean.isAudioPlaying() == true
         setOnClickListener {
             if (!audioPlayView.isAnim) {
                 messageBean.getMsgListener()?.playAudio()

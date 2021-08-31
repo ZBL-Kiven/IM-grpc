@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import com.zj.imUi.bubble.BubbleRenderer
-import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.Constance
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
+import com.zj.imUi.bubble.BubbleRenderer
+import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
 abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
@@ -45,6 +47,12 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData(data)
+        if (!(data.getType() != Constance.MSG_TYPE_TEXT && data.getSelfUserId() == data.getSenderId())) {
+            bubbleView?.setOnLongClickListener {
+                MsgPop(context, data).show(it)
+                true
+            }
+        }
     }
 
     private fun addViewToSelf(view: View?, layoutParams: LayoutParams) {
