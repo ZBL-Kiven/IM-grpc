@@ -7,7 +7,9 @@ import com.zj.im.chat.poster.log
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
+import com.zj.ccIm.error.IMError
 import io.reactivex.schedulers.Schedulers
 
 internal object Fetcher {
@@ -65,6 +67,9 @@ internal object Fetcher {
                 } else {
                     if (!b && !onlyRefresh) IMHelper.reconnect("fetch sessions group failed with:${e?.message} !!")
                     onFetching = false
+                    if (b && d?.groupList.isNullOrEmpty()) {
+                        IMHelper.postToUiObservers(IMError("Fetch session group is null"), ClientHubImpl.PAYLOAD_FETCH_SESSION_NULL) {}
+                    }
                 }
             } finally {
                 compos.remove(compo)

@@ -12,7 +12,7 @@ import com.zj.imUi.UiMsgType
 import com.zj.imUi.interfaces.ImMsgIn
 
 
-class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
+open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
 
     private val audioTime: AppCompatTextView
     private val audioPlayView: VoicePlayView
@@ -24,8 +24,8 @@ class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attribu
     }
 
     @SuppressLint("SetTextI18n")
-    fun setData(messageBean: ImMsgIn?) {
-        if (messageBean == null) return
+    fun setData(messageBean: ImMsgIn?): GroupMessageRecordItem {
+        if (messageBean == null) return this
         audioTime.text = StringBuilder(messageBean.getAudioContentDuration().toString()).append("''")
         if (!(messageBean.getSenderId() != messageBean.getOwnerId() || messageBean.getReplyMsgId() != 0L)) { //发送者为大V 且不是回复消息
             audioTime.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
@@ -43,6 +43,7 @@ class GroupMessageRecordItem @JvmOverloads constructor(context: Context, attribu
                 messageBean.stopAudio()
             }
         }
+        return this
     }
 
     fun startAnim() {

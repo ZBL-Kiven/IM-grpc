@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -37,12 +37,12 @@ class MainActivity : AppCompatActivity() {
             return field++
         }
     private lateinit var rv: RecyclerView
-    private lateinit var et: EditText
+    private lateinit var et: TextView
     private var adapter: MsgAdapter? = null
     private val groupId = 6L
     private var lastSelectData: FileInfo? = null
         set(value) {
-            et.setText(value?.path ?: "")
+            et.text = value?.path ?: ""
             field = value
         }
 
@@ -86,6 +86,11 @@ class MainActivity : AppCompatActivity() {
             if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
             if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
         }
+    }
+
+    fun sendUrlImg(view: View) {
+        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
+        Sender.sendUrlImg(url, 640, 426, groupId)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/

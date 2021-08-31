@@ -1,5 +1,6 @@
 package com.zj.imtest.ui
 
+import android.util.Log
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
@@ -171,19 +172,19 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun playAudio() {
-
+        Log.e("----- ", " playAudio")
     }
 
     override fun stopAudio() {
-
+        Log.e("----- ", " stopAudio")
     }
 
     override fun reply(id: String) {
-
+        Log.e("----- ", " reply")
     }
 
     override fun block(userId: Int) {
-
+        Log.e("----- ", " block")
     }
 
 }

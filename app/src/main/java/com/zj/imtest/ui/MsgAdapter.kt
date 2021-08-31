@@ -1,6 +1,8 @@
 package com.zj.imtest.ui
 
 
+import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.database.entity.MessageInfoEntity
@@ -61,5 +63,15 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
 
     override fun getTimeLine(d: MessageInfoEntity?): String? {
         return d?.diffInCreateTime
+    }
+
+    override fun onItemClick(position: Int, v: View?, m: MessageInfoEntity?) {
+        Log.e("------- ", "onItemClick")
+        super.onItemClick(position, v, m)
+    }
+
+    override fun onItemLongClick(position: Int, v: View?, m: MessageInfoEntity?): Boolean {
+        Log.e("------- ", "onItemLongClick")
+        return super.onItemLongClick(position, v, m)
     }
 }

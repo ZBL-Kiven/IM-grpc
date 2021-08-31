@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
@@ -83,7 +82,6 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         if (ivSendStatusNo == null) ivSendStatusNo = ImageView(context).apply { id = R.id.im_item_message_send_lose }
         if (amSending == null) {
             amSending = ProgressBar(context).apply { id = R.id.im_item_message_sending }
-            amSending?.indeterminateDrawable = ContextCompat.getDrawable(context, R.drawable.icon_countdown_ex)
         }
         val loadingLp = getSendingLayoutParams(data)
         addViewToSelf(ivSendStatusNo, loadingLp)

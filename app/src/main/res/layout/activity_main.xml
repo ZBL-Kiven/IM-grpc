@@ -69,6 +69,16 @@
         android:layout_marginBottom="10dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="#dda"
+            android:gravity="center"
+            android:onClick="sendUrlImg"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:text="send url img" />
+
+        <TextView
             android:id="@+id/main_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

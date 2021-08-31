@@ -1,6 +1,8 @@
 package com.zj.imUi.ui
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -33,7 +35,6 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         }
     }
 
-
     override fun getSendingLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
         return LayoutParams(size, size).apply {
@@ -44,13 +45,16 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getAvatarLayoutParams(d: ImMsgIn): LayoutParams {
         val size = (context.resources.displayMetrics.density * 40f + 0.5f).toInt()
-        return LayoutParams(size, size)
+        val lpS = (context.resources.displayMetrics.density * 8f + 0.5f).toInt()
+        val lp = LayoutParams(size, size)
+        lp.marginEnd = lpS
+        return lp
     }
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
         val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
-        Glide.with(iv).load(d.getSenderAvatar()).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(iv)
+        Glide.with(iv).load(d.getSenderAvatar()).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).error(ColorDrawable(Color.GRAY)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {

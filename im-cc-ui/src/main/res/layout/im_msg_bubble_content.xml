@@ -7,15 +7,14 @@
 
 
     <LinearLayout
+        android:id="@+id/im_msg_bubble_ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="12dp"
-        android:id="@+id/im_msg_bubble_ll_title"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal"
         android:visibility="gone"
-        tools:visibility="visible"
-        >
+        tools:visibility="visible">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_normal_text_tv_nickname"
@@ -24,38 +23,35 @@
             tools:text="nick_name" />
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/im_msg_bubble_img_owner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_is_owner_normal"
             android:layout_marginStart="3dp"
-            android:id="@+id/im_msg_bubble_img_owner"
-            />
+            android:src="@drawable/icon_is_owner_normal" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/im_msg_bubble_img_ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
-        android:orientation="horizontal"
-        android:id="@+id/im_msg_bubble_img_ll_content"
-        >
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_icon_reply"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_huida_normal"
-            android:layout_marginEnd="3dp"/>
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/icon_huida_normal" />
 
         <FrameLayout
             android:id="@+id/im_msg_bubble_viewstub"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -65,8 +61,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
@@ -76,8 +72,8 @@
             android:id="@+id/im_msg_item_normal_icon_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_question_normal"
-            android:layout_marginEnd="3dp"/>
+            android:layout_marginEnd="3dp"
+            android:src="@drawable/icon_question_normal" />
 
         <LinearLayout
             android:layout_width="match_parent"

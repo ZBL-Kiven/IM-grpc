@@ -1,9 +1,7 @@
 package com.zj.imUi.items
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -11,18 +9,12 @@ import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.utils.AutomationImageCalculateUtils
-import com.zj.imUi.widget.GroupMessageRecordItem
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
-import com.zj.views.ut.DPUtils
 
 
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
@@ -39,8 +31,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private val imgReply: AppCompatImageView
     private val timeBottom: GroupRewardOwnerMeItem
     private val llContent: LinearLayout
-    private var imgContent: AppCompatImageView? = null
-    private var audioItem: GroupMessageRecordItem? = null
+    private var curContentIn: ImContentIn? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
@@ -126,75 +117,52 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setViewStub(data: ImMsgIn) {
-        bubbleContent.removeAllViews()
-        when (data.getType()) {
-            UiMsgType.MSG_TYPE_TEXT -> {
-                View.inflate(context, R.layout.im_msg_item_normal_text, bubbleContent)
-                val textContent: AppCompatTextView = findViewById(R.id.im_msg_item_normal_text_tv_content)
-                textContent.setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
-                    Color.WHITE
-                } else {
-                    ContextCompat.getColor(context, R.color.message_textColor_replyMe)
-                })
-                textContent.text = data.getTextContent()
+        var isSameType = false
+        val v: View? = when (data.getType()) {
+            UiMsgType.MSG_TYPE_AUDIO -> {
+                isSameType = curContentIn is IMContentTextView
+                if (isSameType) null else IMContentTextView(context)
             }
 
             UiMsgType.MSG_TYPE_IMG -> {
-                View.inflate(context, R.layout.im_msg_item_normal_img, bubbleContent)
-                if (imgContent == null) imgContent = findViewById(R.id.im_msg_item_normal_img_img_content)
-                setImg(imgContent, data)
+                isSameType = curContentIn is IMContentImageView
+                if (isSameType) null else IMContentImageView(context)
             }
 
-            UiMsgType.MSG_TYPE_AUDIO -> {
-                View.inflate(context, R.layout.im_msg_item_normal_audio, bubbleContent)
-                if (audioItem == null) audioItem = findViewById(R.id.im_msg_item_normal_audio_content)
-                audioItem?.setData(data)
+            UiMsgType.MSG_TYPE_TEXT -> {
+                isSameType = curContentIn is IMContentAudioView
+                if (isSameType) null else IMContentAudioView(context)
             }
+            else -> null
         }
-    }
-
-    private fun setImg(imgView: AppCompatImageView?, data: ImMsgIn) {
-        if (imgView == null) return
-        val arrayInt: Array<Int>? = setImgLp(data)
-        if (arrayInt != null) {
-            val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
-            data.getImgContentUrl()?.let {
-                Glide.with(imgView).load(it).centerInside().override(arrayInt[0], arrayInt[1]).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgView)
-            }
+        if (!isSameType) {
+            bubbleContent.removeAllViews()
+            curContentIn = v as? ImContentIn
+            bubbleContent.addView(v, LayoutParams(-1, -1))
+            curContentIn?.onSetData(data)
+        } else {
+            curContentIn?.onSetData(data)
         }
-    }
-
-    private fun setImgLp(data: ImMsgIn): Array<Int>? {
-        return if (data.getImgContentWidth() != null && data.getImgContentWidth() != null) {
-            val maxW = DPUtils.dp2px(201f)
-            val maxH = DPUtils.dp2px(132f)
-            val dataWidth = data.getImgContentWidth() ?: maxH
-            val dataHeight = data.getImgContentHeight() ?: maxH
-            AutomationImageCalculateUtils.proportionalWH(dataWidth, dataHeight, maxW, maxH, 0.5f)
-        } else null
     }
 
     override fun notifyChange(pl: Any?) {
-        super.notifyChange( pl)
+        super.notifyChange(pl)
         when (pl) {
             BaseImItem.NOTIFY_CHANGE_AUDIO, BaseImItem.NOTIFY_CHANGE_VIDEO -> onResume()
         }
     }
 
     override fun onResume() {
-        if (curData?.invoke()?.isAudioPlaying() == true) {
-            audioItem?.startAnim()
-        } else {
-            audioItem?.stopAnim()
-        }
+        curContentIn?.onResume(curData?.invoke())
     }
 
     override fun onStop() {
-        audioItem?.stopAnim()
+        curContentIn?.onStop(curData?.invoke())
     }
 
     override fun onDestroy() {
-        audioItem?.stopAnim()
+        curContentIn?.onDestroy(curData?.invoke())
         bubbleContent.removeAllViews()
+        curContentIn = null
     }
 }
