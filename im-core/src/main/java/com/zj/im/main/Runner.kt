@@ -181,7 +181,8 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
             DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
         } else {
-            if (!inRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
+            if (!inRecent && DataReceivedDispatcher.isDataEnable()) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
+            else enqueue(info)
         }
         sendingPool?.unLock()
     }

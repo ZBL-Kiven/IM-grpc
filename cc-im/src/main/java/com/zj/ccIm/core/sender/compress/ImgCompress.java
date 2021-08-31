@@ -24,7 +24,7 @@ public class ImgCompress implements Handler.Callback {
     private static final int MSG_COMPRESS_START = 1;
     private static final int MSG_COMPRESS_ERROR = 2;
     private static final int MSG_COMPRESS_MULTIPLE_SUCCESS = 3;
-    private String mTargetDir;
+    private final String mTargetPath;
     private final String mPath;
     private final int mLeastCompressSize;
     private final OnCompressListener mCompressListener;
@@ -32,7 +32,7 @@ public class ImgCompress implements Handler.Callback {
 
     private ImgCompress(Builder builder) {
         this.mPath = builder.mPath;
-        this.mTargetDir = builder.mTargetDir;
+        this.mTargetPath = builder.mTargetPath;
         this.mCompressListener = builder.mCompressListener;
         this.mLeastCompressSize = builder.mLeastCompressSize;
         mHandler = new Handler(Looper.getMainLooper(), this);
@@ -48,17 +48,12 @@ public class ImgCompress implements Handler.Callback {
      * @param context A context.
      */
     private File getImageCacheFile(Context context, String suffix) {
-        if (TextUtils.isEmpty(mTargetDir)) {
-            File cache = getImageCacheDir(context);
-            if (cache == null) {
-                mCompressListener.onError(new FileNotFoundException("no target cached file found"));
-            } else {
-                mTargetDir = cache.getAbsolutePath();
-            }
+        File cache = getImageCacheDir(context);
+        if (cache == null) {
+            mCompressListener.onError(new FileNotFoundException("no target cached file found"));
+            return null;
         }
-
-        String cacheBuilder = mTargetDir + "/" + System.currentTimeMillis() + (int) (Math.random() * 1000) + (TextUtils.isEmpty(suffix) ? ".jpg" : suffix);
-
+        String cacheBuilder = cache.getAbsolutePath() + "/" + mTargetPath + (TextUtils.isEmpty(suffix) ? ".jpg" : suffix);
         return new File(cacheBuilder);
     }
 
@@ -159,7 +154,7 @@ public class ImgCompress implements Handler.Callback {
     @SuppressWarnings("unused")
     public static class Builder {
         private final Context context;
-        private String mTargetDir;
+        private String mTargetPath;
         private String mPath;
         private int mLeastCompressSize = 100;
         private OnCompressListener mCompressListener;
@@ -187,8 +182,8 @@ public class ImgCompress implements Handler.Callback {
             return this;
         }
 
-        public Builder setTargetDir(String targetDir) {
-            this.mTargetDir = targetDir;
+        public Builder setTargetPath(String targetPath) {
+            this.mTargetPath = targetPath;
             return this;
         }
 
@@ -205,7 +200,7 @@ public class ImgCompress implements Handler.Callback {
         /**
          * begin compress image with asynchronous
          */
-        public void launch() {
+        public void start() {
             build().launch(context);
         }
 

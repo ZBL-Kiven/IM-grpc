@@ -36,4 +36,4 @@ dependencies {
     implementation 'com.cc.android:views:2.0.4'
 }
 
-//apply from: 'upload.gradle'
+apply from: 'upload.gradle'
