@@ -90,6 +90,12 @@ class IMBubbleContentItem @JvmOverloads constructor(
             if (data.getReplyMsgType() == Constance.MSG_TYPE_TEXT) {
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
             } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
+        }else{//    被回复人是其他人
+            tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+            tvFlag.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+            if (data.getReplyMsgType() == Constance.MSG_TYPE_TEXT) {
+                tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply))
+            } else tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.bg_green))
         }
     }
 
