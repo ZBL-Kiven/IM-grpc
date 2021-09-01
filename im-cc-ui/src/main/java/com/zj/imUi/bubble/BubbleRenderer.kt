@@ -57,7 +57,7 @@ object BubbleRenderer : BaseBubbleRenderer {
     private fun drawRect(context: Context, width: Int, height: Int): Path {
         val path = Path()
         val rectF = RectF(1f, 1f, width.toFloat() - 1, height.toFloat() - 1)
-        val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 12f), dpToPx(context, 12f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
+        val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
         path.addRoundRect(rectF, radii, Path.Direction.CW)
         return path
     }
