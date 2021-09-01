@@ -87,8 +87,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         textReplyType.setOnClickListener { curData?.invoke()?.resend() }
 
 
-
-
         if (data.getQuestionStatus() == 0) {
             if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
                 if (data.getPublished()) {
@@ -136,11 +134,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
 
         tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
-
         if (data.getSelfUserId() == data.getSenderId() && data.getSelfUserId() != data.getOwnerId()) {
             timeBottom.visibility = View.VISIBLE
             timeBottom.setData(data)
-        }
+        }else timeBottom.visibility = View.GONE
+
     }
 
     private fun setTitle(data: ImMsgIn) {
@@ -175,7 +173,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
         return text
     }
-
 
     override fun onResume() {
         curData?.invoke()?.let {
