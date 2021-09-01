@@ -55,16 +55,13 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initAvatar(data: T) {
-        if (ivAvatar == null) ivAvatar = ImageView(context).apply { id = R.id.im_item_message_avatar }
+        if (ivAvatar == null) ivAvatar = ImageView(context)
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
     }
 
     private fun initBubble(data: T) {
-        if (bubbleView == null) {
-            bubbleView = ImItemDispatcher.getItemWithData(data, context)
-            bubbleView?.id = R.id.im_item_message_bubble
-        }
+        if (bubbleView == null) bubbleView = ImItemDispatcher.getItemWithData(data, context)
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData { curData }
@@ -78,10 +75,14 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initSendStatus(data: T) {
-        if (data.getSelfUserId() != data.getSenderId()) return
-        if (ivSendStatusNo == null) ivSendStatusNo = ImageView(context).apply { id = R.id.im_item_message_send_lose }
+        if (data.getSelfUserId() != data.getSenderId()) {
+            removeIfNotContains(ivSendStatusNo, true)
+            removeIfNotContains(amSending, true)
+            return
+        }
+        if (ivSendStatusNo == null) ivSendStatusNo = ImageView(context)
         if (amSending == null) {
-            amSending = ProgressBar(context).apply { id = R.id.im_item_message_sending }
+            amSending = ProgressBar(context)
         }
         val loadingLp = getSendingLayoutParams(data)
         addViewToSelf(ivSendStatusNo, loadingLp)
@@ -99,14 +100,17 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
 
     private fun addViewToSelf(view: View?, layoutParams: LayoutParams) {
         if (view == null) return
-        var needAdd = true
-        (view.parent as? ViewGroup)?.let {
-            needAdd = if (it != this@BaseImItem) {
-                removeView(view);true
-            } else false
-        }
+        val needAdd = removeIfNotContains(view) ?: true
         view.layoutParams = layoutParams
         if (needAdd) addView(view)
+    }
+
+    private fun removeIfNotContains(view: View?, removeOnly: Boolean = false): Boolean? {
+        return (view?.parent as? ViewGroup)?.let {
+            if (removeOnly || it != this@BaseImItem) {
+                it.removeView(view);true
+            } else false
+        }
     }
 
     open fun getBubbleRenderer(data: T): BaseBubbleRenderer? {
