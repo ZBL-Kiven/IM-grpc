@@ -76,6 +76,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+        textReplyType.setOnClickListener { curData?.invoke()?.resend() }
 
 
 
