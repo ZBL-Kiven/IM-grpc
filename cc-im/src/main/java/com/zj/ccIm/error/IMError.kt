@@ -1,3 +1,3 @@
 package com.zj.ccIm.error
 
-class IMError(val errorMsg: String) : Throwable()
+open class IMError(val errorMsg: String? = null) : Throwable()

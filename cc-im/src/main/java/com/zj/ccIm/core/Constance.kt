@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException
 
 internal object Constance {
 
-    var app: Application? = null
+    lateinit var app: Application
 
     /**-------------------------- HINT MSG ------------------------------*/
 

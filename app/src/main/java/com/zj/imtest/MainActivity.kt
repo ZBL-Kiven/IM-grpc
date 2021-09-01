@@ -23,7 +23,7 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
-import com.zj.ccIm.error.IMError
+import com.zj.ccIm.error.FetchSessionResult
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.base.BaseImItem
@@ -149,8 +149,8 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots}")
         }
 
-        IMHelper.addReceiveObserver<IMError>(0x1127).listen { r, lr, payload ->
-            Log.e("----- ", "=============> ${r?.errorMsg}")
+        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, _ ->
+            Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData}")
         }
     }
 }
