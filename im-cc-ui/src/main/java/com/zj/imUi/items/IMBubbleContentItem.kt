@@ -51,12 +51,14 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     override fun init(data: ImMsgIn) {
         tvName.text = data.getSenderName()
-        if (data.getSenderId() == data.getOwnerId()) {
-            iconIsOwner.visibility = View.VISIBLE
-        }
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
-        } else llName.visibility = View.VISIBLE
+        } else{
+            llName.visibility = View.VISIBLE
+            if( data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
+        }
+
+
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)

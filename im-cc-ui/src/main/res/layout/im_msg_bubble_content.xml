@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
@@ -19,13 +19,16 @@
             android:id="@+id/im_msg_item_normal_text_tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
             tools:text="nick_name" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_bubble_img_owner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
             android:layout_marginStart="3dp"
+            android:visibility="gone"
             android:src="@drawable/icon_is_owner_normal" />
 
     </LinearLayout>
