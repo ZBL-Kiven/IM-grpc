@@ -118,7 +118,8 @@
     <com.zj.imUi.widget.GroupRewardOwnerMeItem
         android:id="@+id/im_msg_item_normal_text_replied_time"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        />
 
 
 </LinearLayout>

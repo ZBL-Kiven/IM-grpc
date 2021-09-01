@@ -10,6 +10,7 @@
 
 
     <color name="reward_ll_color_not_reply">#FFFBEA72</color>
+    <color name="im_msg_item_reward_number_color">#FFFBEA72</color>
     <color name="reward_ll_color_reply">#FFF5F7F9</color>
     <color name="reward_ll_color_timeout">#FFA6ACBF</color>
 
