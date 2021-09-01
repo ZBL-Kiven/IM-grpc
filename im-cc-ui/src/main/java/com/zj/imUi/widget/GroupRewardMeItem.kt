@@ -53,7 +53,7 @@ class GroupRewardMeItem @JvmOverloads constructor(context: Context, attributeSet
                 sparkImg.setImageResource(R.drawable.icon_diamond_ed)
             }
         }
-        textRewardNumber.text = StringBuilder(reduce).append(imMsgIn.getSpark().toString())
+        textRewardNumber.text = StringBuilder(reduce).append(imMsgIn.getDiamonds().toString())
     }
 }
 

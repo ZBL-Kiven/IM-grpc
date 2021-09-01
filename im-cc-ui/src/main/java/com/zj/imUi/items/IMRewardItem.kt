@@ -62,7 +62,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
             textReplyType.visibility = View.VISIBLE
-            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getQuestionContentType().toString().uppercase())
+            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().uppercase())
             textReplyType.text = stringBuilder
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
@@ -75,7 +75,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
-        } else textResponseType.text = data.getQuestionContentType().toString().let { setReplyTypeText(it) }
+        } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
 
 
 
