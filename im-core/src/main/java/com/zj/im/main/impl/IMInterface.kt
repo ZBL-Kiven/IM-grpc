@@ -13,12 +13,15 @@ import com.zj.im.chat.exceptions.NecessaryAttributeEmptyException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.logUtils
+import java.lang.IllegalArgumentException
+import java.util.concurrent.LinkedBlockingDeque
 
 
 /**
@@ -47,14 +50,28 @@ import com.zj.im.utils.log.logger.logUtils
 abstract class IMInterface<T> : MessageInterface<T>() {
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any): UIHandlerCreator<T, R> {
-        onNewListenerRegistered(R::class.java)
+        setNewListener(R::class.java, "UT2F-E17T-33I-9112")
         return UIHandlerCreator(uniqueCode, T::class.java, R::class.java)
     }
 
     inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any): UIHelperCreator<T, T, *> {
-        onNewListenerRegistered(T::class.java)
+        setNewListener(T::class.java, "UT2Q-99BR-E88-2271")
         return UIHelperCreator(uniqueCode, T::class.java, T::class.java, null)
     }
+
+    fun <X> setNewListener(cls: Class<*>, imm: X) {
+        if (imm.toString() == "UT2Q-99BR-E88-2271" || imm.toString() == "UT2F-E17T-33I-9112") {
+            if (isServiceConnected) {
+                onNewListenerRegistered(cls)
+            } else {
+                cachedListenClasses.add(cls)
+            }
+        } else {
+            throw IllegalArgumentException()
+        }
+    }
+
+    private var cachedListenClasses = LinkedBlockingDeque<Class<*>>()
 
     private var baseConnectionService: ChatBase<T>? = null
 
@@ -85,6 +102,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                 baseConnectionService?.init(this@IMInterface)
                 isServiceConnected = true
                 this@IMInterface.onServiceConnected()
+                if (cachedListenClasses.isNotEmpty()) {
+                    cachedListenClasses.forEach {
+                        onNewListenerRegistered(it)
+                    }
+                }
+                cachedListenClasses.clear()
             }
         }
         serviceConn?.let {
@@ -161,6 +184,14 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
         getService("IMInterface.resend", false)?.send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore)
+    }
+
+    fun routeToClient(data: T, callId: String) {
+        getService("IMInterface.routeClient", false)?.enqueue(BaseMsgInfo.route(true, callId, data))
+    }
+
+    fun routeToServer(data: T, callId: String) {
+        getService("IMInterface.routeServer", false)?.enqueue(BaseMsgInfo.route(true, callId, data))
     }
 
     fun pause(code: String): Boolean {

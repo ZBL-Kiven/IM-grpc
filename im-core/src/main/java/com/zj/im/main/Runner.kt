@@ -128,8 +128,8 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
      * send a msg
      * */
     fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
-        DataReceivedDispatcher.pushData(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, false))
+        enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
+        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, false))
     }
 
     private fun setLooperEfficiency(total: Int) {
@@ -179,7 +179,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
     override fun invoke(isSuccess: Boolean, tryRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
         if (isSuccess) {
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
-            DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
+            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
         } else {
             if (!tryRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
             else enqueue(info)
@@ -249,7 +249,8 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
         return runningKey != this.runningKey
     }
 
-    fun notify(): IMInterface<T>? {
+    fun notify(sLog: String? = null): IMInterface<T>? {
+        if (!sLog.isNullOrEmpty()) printInFile("ChatBase.IM.Notify", sLog)
         return imi
     }
 

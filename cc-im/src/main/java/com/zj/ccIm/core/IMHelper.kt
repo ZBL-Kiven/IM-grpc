@@ -54,12 +54,7 @@ object IMHelper : IMInterface<Any?>() {
 
     override fun onNewListenerRegistered(cls: Class<*>) {
         if (cls == SessionInfoEntity::class.java) {
-            Thread {
-                getAppContext()?.let {
-                    val sessions = DbHelper.get(it)?.db?.sessionDao()?.findAll()
-                    postToUiObservers(sessions, null) {}
-                }
-            }.start()
+            routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)
         }
     }
 

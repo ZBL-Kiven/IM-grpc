@@ -12,7 +12,10 @@ import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.sender.Converter
+import com.zj.ccIm.core.sp.SPHelper
+import com.zj.ccIm.error.FetchSessionResult
 import com.zj.im.chat.poster.log
 import com.zj.protocol.grpc.ImMessage
 
@@ -253,6 +256,23 @@ class ClientHubImpl : ClientHub<Any?>() {
         allDots += lastMsgDb?.findAll()?.sumOf { it.msgNum } ?: 0
         super.onMsgPatch(MessageTotalDots(allDots), "", false, null, false) {}
         return Pair(if (!exists) PAYLOAD_ADD else PAYLOAD_CHANGED, sessionInfo)
+    }
+
+    private fun notifyAllSession(callId: String?) {
+        val sessions = context?.let { DbHelper.get(it)?.db?.sessionDao() }?.allSessions
+        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
+        sessions?.forEach {
+            it.sessionMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(it.groupId)
+        }
+        val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
+        IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty())) {}
+        super.onMsgPatch(sessions, callId, true, null, false) {}
+    }
+
+    override fun onRouteCall(callId: String?, data: Any?) {
+        if (callId == Constance.CALL_ID_START_LISTEN_SESSION) {
+            notifyAllSession(callId)
+        }
     }
 
     override fun progressUpdate(progress: Int, callId: String) {

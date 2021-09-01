@@ -28,6 +28,8 @@ abstract class ClientHub<T> {
         MessageInterface.postToUIObservers(data, callId, onFinish)
     }
 
+    open fun onRouteCall(callId: String?, data: T?) {}
+
     abstract fun progressUpdate(progress: Int, callId: String)
 
     fun setConnectState(state: ConnectionState) {

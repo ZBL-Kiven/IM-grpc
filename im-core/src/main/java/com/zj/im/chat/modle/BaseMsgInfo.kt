@@ -11,7 +11,7 @@ import com.zj.im.utils.getIncrementNumber
  * Created by ZJJ
  */
 enum class MessageHandleType {
-    NETWORK_STATE, RECEIVED_MSG, CONNECT_STATE, SEND_MSG, SEND_STATE_CHANGE, SEND_PROGRESS_CHANGED, LAYER_CHANGED
+    NETWORK_STATE, RECEIVED_MSG, CONNECT_STATE, SEND_MSG, SEND_STATE_CHANGE, SEND_PROGRESS_CHANGED, LAYER_CHANGED, ROUTE_CLIENT, ROUTE_SERVER
 }
 
 enum class SendingUp {
@@ -128,6 +128,14 @@ internal class BaseMsgInfo<T> private constructor() {
                 this.type = MessageHandleType.LAYER_CHANGED
                 this.isHidden = isHidden
                 this.ignoreConnecting = true
+            }
+        }
+
+        fun <T> route(client: Boolean, callId: String, data: T?): BaseMsgInfo<T> {
+            return BaseMsgInfo<T>().apply {
+                this.callId = callId
+                this.data = data
+                this.type = if (client) MessageHandleType.ROUTE_CLIENT else MessageHandleType.ROUTE_SERVER
             }
         }
     }

@@ -9,6 +9,8 @@ internal class EventHub<T> {
 
     fun handle(data: BaseMsgInfo<T>) {
         when (data.type) {
+            MessageHandleType.ROUTE_CLIENT -> DataReceivedDispatcher.routeToClient(data.data, data.callId)
+            MessageHandleType.ROUTE_SERVER -> DataReceivedDispatcher.routeToServer(data.data, data.callId)
             MessageHandleType.SEND_MSG -> DataReceivedDispatcher.sendMsg(data)
             MessageHandleType.RECEIVED_MSG -> DataReceivedDispatcher.received(data.data, data.sendingState, data.callId, data.isSpecialData)
             MessageHandleType.CONNECT_STATE -> DataReceivedDispatcher.onConnectionStateChange(data.connStateChange ?: ConnectionState.CONNECTED_ERROR)

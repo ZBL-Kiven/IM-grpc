@@ -26,6 +26,7 @@ import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.error.FetchSessionResult
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.ui.MsgAdapter
 
@@ -143,6 +144,11 @@ class MainActivity : AppCompatActivity() {
             }
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }
+
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1125).listen { r, _, _ ->
+            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text}")
+        }
+
 
         IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, _ ->
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots}")

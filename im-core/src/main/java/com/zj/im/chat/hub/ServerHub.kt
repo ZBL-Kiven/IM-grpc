@@ -26,6 +26,8 @@ abstract class ServerHub<T> {
 
     protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
 
+    open fun onRouteCall(callId: String?, data: T?) {}
+
     abstract fun closeConnection(case: String)
 
     abstract fun reConnect(case: String)

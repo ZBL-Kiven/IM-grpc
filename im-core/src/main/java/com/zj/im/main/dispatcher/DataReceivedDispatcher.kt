@@ -49,7 +49,7 @@ internal object DataReceivedDispatcher {
     }
 
     fun onLifeStateChanged(lifecycle: IMLifecycle) {
-        chatBase?.notify()?.onLifecycle(lifecycle)
+        chatBase?.notify("onLifecycleChanged to ${lifecycle.type.name}  by code: ${lifecycle.what}")?.onLifecycle(lifecycle)
     }
 
     fun onNetworkStateChanged(netWorkState: NetWorkInfo) {
@@ -68,16 +68,22 @@ internal object DataReceivedDispatcher {
         sendingStateChanged(sendingState ?: SendMsgState.NONE, callId, data, isSpecialData, false)
     }
 
+    fun <T> routeToClient(data: T?, callId: String) {
+        getClient("RouteCall")?.onRouteCall(callId, cast(data))
+    }
+
+    fun <T> routeToServer(data: T?, callId: String) {
+        getServer("RouteCall")?.onRouteCall(callId, cast(data))
+    }
+
     fun onConnectionStateChange(connState: ConnectionState) {
         val con = connState == ConnectionState.CONNECTED_ERROR || connState == ConnectionState.NETWORK_STATE_CHANGE || connState == ConnectionState.RECONNECT
         val rec = StatusHub.curConnectionState.canConnect() || connState == ConnectionState.RECONNECT
         if (con && rec) {
-            getServer("connection need to reconnect")?.reConnect(connState.name)
+            getServer("server may need to reconnect")?.reConnect(connState.name)
         }
         StatusHub.curConnectionState = connState
-        getClient("on connection state changed")?.let {
-            chatBase?.notify()?.onConnectionStatusChanged(connState)
-        }
+        chatBase?.notify("on connection state changed")?.onConnectionStatusChanged(connState)
     }
 
     fun onSendingProgress(callId: String, progress: Int) {

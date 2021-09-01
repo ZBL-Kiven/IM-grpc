@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 
 internal object Fetcher {
 
-    private const val SP_FETCH_SESSIONS_TS = "fetch_sessions_ts"
+    const val SP_FETCH_SESSIONS_TS = "fetch_sessions_ts"
     private var onFetching = false
     private val compos = mutableListOf<BaseRetrofit.RequestCompo>()
 
