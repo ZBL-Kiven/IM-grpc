@@ -10,23 +10,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="6dp"
-        android:layout_marginEnd="1dp"
         android:ellipsize="end"
         android:maxWidth="150dp"
         android:maxLines="1"
         android:textColor="@color/nickname_color_black"
         android:textSize="14sp"
         tools:text="Nickname" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/im_msg_item_title_img_flag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginTop="4dp"
-        android:layout_toEndOf="@+id/im_msg_item_title_tv_nickname"
-        android:src="@drawable/icon_is_owner_normal"
-        android:visibility="gone" />
 
     <com.zj.imUi.widget.GroupRewardItem
         android:id="@+id/im_msg_item_title_group_reward_item"

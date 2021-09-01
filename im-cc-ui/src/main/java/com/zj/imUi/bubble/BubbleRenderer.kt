@@ -57,7 +57,7 @@ object BubbleRenderer : BaseBubbleRenderer {
     private fun drawRect(context: Context, width: Int, height: Int): Path {
         val path = Path()
         val rectF = RectF(1f, 1f, width.toFloat() - 1, height.toFloat() - 1)
-        val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 12f), dpToPx(context, 12f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
+        val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
         path.addRoundRect(rectF, radii, Path.Direction.CW)
         return path
     }
@@ -81,9 +81,13 @@ object BubbleRenderer : BaseBubbleRenderer {
             }else if(data.getReplyMsgQuestionIsPublished()==true){
                  ContextCompat.getColor(context, R.color.bg_origin)
             }else ContextCompat.getColor(context, R.color.bg_origin)
-        } else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
+        }
+        else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
             ContextCompat.getColor(context, R.color.replied_bg)
-        } else if(data.getReplyMsgQuestionIsPublished()==false) ContextCompat.getColor(context, R.color.message_item_private)
+        } else if(data.getQuestionStatus() ==0 && !data.getPublished()){
+             ContextCompat.getColor(context, R.color.message_item_private)
+        }
+        else if(data.getReplyMsgQuestionIsPublished()==false) ContextCompat.getColor(context, R.color.message_item_private)
         else if(data.getReplyMsgQuestionIsPublished()==true) ContextCompat.getColor(context, R.color.bg_color_white)
         else {
             if (!data.getPublished()) ContextCompat.getColor(context, R.color.message_item_private)

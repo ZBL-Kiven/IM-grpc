@@ -29,34 +29,38 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
         audioLinearLayout = findViewById(R.id.im_msg_item_widget_record_ll)
     }
 
+
     @SuppressLint("SetTextI18n")
     fun setData(messageBean: ImMsgIn?): GroupMessageRecordItem {
         if (messageBean == null) return this
         audioTime.text = StringBuilder(messageBean.getAudioContentDuration().toString()).append("''")
 
-        if (messageBean.getReplyMsgClientMsgId() == null) { //发送者为大V 且不是回复消息
-            if (messageBean.getSenderId() == messageBean.getSenderId()) audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_self_origin_cornors_bg)
+        if ( messageBean.getReplyMsgClientMsgId() == null) { //发送者为大V 且不是回复消息
+            if (messageBean.getSenderId() == messageBean.getSelfUserId()) audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_self_origin_cornors_bg)
             else audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_origin_cornors_bg)
             audioTime.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-            audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.text_color_white))
-        }
-        if (messageBean.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (messageBean.getSenderId() == messageBean.getSelfUserId()) { //大v自己发送打赏录音消息
-                if (messageBean.getReplyMsgQuestionIsPublished() == false) {
+            audioPlayView.setPaintColor(ContextCompat.getColor(context,R.color.text_color_white))
+        }else if (messageBean.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION ) {
+            if (messageBean.getSenderId() == messageBean.getSelfUserId()){//大v自己发送打赏录音消息
+                if (messageBean.getReplyMsgQuestionIsPublished() == false){
                     audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
                     audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.bg_purple))
-                } else {
+                }else{
                     audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
                     audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.bg_origin))
                 }
-            } else {
+            }else{
                 if (messageBean.getReplyMsgQuestionIsPublished() == false) audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_purple_cornors_bg)
                 else audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_origin_cornors_bg)
                 audioTime.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                 audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.text_color_white))
             }
+        }else if (messageBean.getReplyMsgType()==UiMsgType.MSG_TYPE_TEXT){
+            audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
+            audioTime.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+            audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.bg_origin))
         }
 
         audioTime.text = "${messageBean.getAudioContentDuration() ?: 0}\""
