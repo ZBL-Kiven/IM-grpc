@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.widget.GroupRewardMeItem
@@ -29,13 +30,19 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
     fun setData(imMsgIn: ImMsgIn) {
         mGroupRewardMeItem.setBackGround(imMsgIn)
         mTimeTextView?.text = setTimeText(imMsgIn.getSendTime())
+        if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId()){
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+        }
+        if (imMsgIn.getQuestionStatus() == 2){
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray))
+        }
     }
 
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..359999) {
-            StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
+            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
         } else if (sendTime > 360000 && sendTime < 360000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
+            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
 

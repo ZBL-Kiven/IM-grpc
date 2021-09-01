@@ -64,6 +64,10 @@ interface ImMsgIn {
     fun getReplySenderId(): Int
     fun getReplySenderName(): String?
 
+    fun getReplyMsgQuestionContent(): String?
+    fun getReplyMsgQuestionSpark(): Int?
+    fun getReplyMsgQuestionIsPublished(): Boolean?
+
     /** ========================================= app interface ======================================== */
 
     fun getSelfUserId(): Int?
@@ -77,5 +81,9 @@ interface ImMsgIn {
     fun reply(id: String)
 
     fun block(userId: Int)
+
+    fun resend()
+
+    fun onReplyQuestion()
 
 }

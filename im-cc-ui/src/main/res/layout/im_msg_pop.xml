@@ -1,63 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="wrap_content"
-		android:orientation="horizontal"
-		android:background="@drawable/im_msg_pop_bg"
-		android:gravity="center_vertical"
-		android:layout_height="35dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="35dp"
+    android:background="@drawable/im_msg_pop_bg"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
-	<TextView
-			android:id="@+id/im_msg_pop_copy"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="76dp"
-			android:gravity="center"
-			android:textSize="12sp"
-			android:paddingStart="20dp"
-			android:paddingEnd="20dp"
-			android:text="@string/copy"
-			android:textColor="@android:color/white"/>
+    <TextView
+        android:id="@+id/im_msg_pop_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="76dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/im_ui_msg_copy"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 
-	<View
-			android:id="@+id/im_msg_pop_line1"
-			android:layout_width="1dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginBottom="8dp"
-			android:layout_height="match_parent"
-			android:background="#40000000"/>
+    <View
+        android:id="@+id/im_msg_pop_line1"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#40000000" />
 
 
-	<TextView
-			android:id="@+id/im_msg_pop_reply"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="76dp"
-			android:gravity="center"
-			android:textSize="12sp"
-			android:paddingStart="20dp"
-			android:text="@string/reply"
-			android:paddingEnd="20dp"
-			android:textColor="@android:color/white"/>
+    <TextView
+        android:id="@+id/im_msg_pop_reply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="76dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/im_ui_msg_reply"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 
-	<View
-			android:id="@+id/im_msg_pop_line2"
-			android:layout_width="1dp"
-			android:layout_marginTop="8dp"
-			android:layout_marginBottom="8dp"
-			android:layout_height="match_parent"
-			android:background="#40000000"/>
+    <View
+        android:id="@+id/im_msg_pop_line2"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#40000000" />
 
-	<TextView
-			android:id="@+id/im_msg_pop_block"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:minWidth="76dp"
-			android:gravity="center"
-			android:textSize="12sp"
-			android:paddingStart="20dp"
-			android:paddingEnd="20dp"
-			android:text="@string/block"
-			android:textColor="@android:color/white"/>
+    <TextView
+        android:id="@+id/im_msg_pop_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="76dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/im_ui_msg_block"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 
 </LinearLayout>

@@ -35,7 +35,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
             }
         }
         val reply = view.findViewById<TextView>(R.id.im_msg_pop_reply).apply {
-            visibility = if (data.getSelfUserId() != data.getSenderId()) View.VISIBLE else View.GONE
+            visibility = if (data.getType() != UiMsgType.MSG_TYPE_QUESTION && data.getSelfUserId() != data.getSenderId()) View.VISIBLE else View.GONE
             setOnClickListener {
                 data.reply(data.getMsgId())
                 popWindow.dismiss()

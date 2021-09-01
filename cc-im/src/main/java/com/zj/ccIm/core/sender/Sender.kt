@@ -40,6 +40,19 @@ object Sender {
         IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
+    fun sendUrlImg(url: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
+        val sen = SendMessageReqEn()
+        sen.url = url
+        sen.clientMsgId = url
+        sen.msgType = MsgType.IMG.type
+        sen.groupId = groupId
+        sen.clientMsgId = callId
+        sen.width = width
+        sen.height = height
+        sen.replyMsg = replyMsg
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+    }
+
     fun sendImg(filePath: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
@@ -63,6 +76,17 @@ object Sender {
         IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
     }
 
+    fun sendUrlAudio(url: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
+        val sen = SendMessageReqEn()
+        sen.url = url
+        sen.msgType = MsgType.AUDIO.type
+        sen.groupId = groupId
+        sen.clientMsgId = callId
+        sen.duration = duration
+        sen.replyMsg = replyMsg
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
+    }
+
     fun sendVideo(filePath: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
@@ -73,7 +97,20 @@ object Sender {
         sen.height = height
         sen.duration = duration
         sen.replyMsg = replyMsg
-        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = MsgFileUploader(sen))
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+    }
+
+    fun sendUrlVideo(url: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
+        val sen = SendMessageReqEn()
+        sen.url = url
+        sen.msgType = MsgType.VIDEO.type
+        sen.groupId = groupId
+        sen.clientMsgId = callId
+        sen.width = width
+        sen.height = height
+        sen.duration = duration
+        sen.replyMsg = replyMsg
+        IMHelper.send(sen, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     fun resendMessage(clientId: String) {

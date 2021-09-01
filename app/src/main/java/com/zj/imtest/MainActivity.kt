@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -23,8 +23,10 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
+import com.zj.ccIm.error.FetchSessionResult
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -36,12 +38,12 @@ class MainActivity : AppCompatActivity() {
             return field++
         }
     private lateinit var rv: RecyclerView
-    private lateinit var et: EditText
+    private lateinit var et: TextView
     private var adapter: MsgAdapter? = null
     private val groupId = 6L
     private var lastSelectData: FileInfo? = null
         set(value) {
-            et.setText(value?.path ?: "")
+            et.text = value?.path ?: ""
             field = value
         }
 
@@ -75,7 +77,7 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        Sender.sendText("Test Message $incId", groupId, null)
+        Sender.sendText("你已被油王服务 $incId 次", groupId, null)
     }
 
     fun sendImg(view: View) {
@@ -85,6 +87,11 @@ class MainActivity : AppCompatActivity() {
             if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
             if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
         }
+    }
+
+    fun sendUrlImg(view: View) {
+        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
+        Sender.sendUrlImg(url, 640, 426, groupId)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -130,8 +137,8 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
             if (d != null) when (pl) {
-                ClientHubImpl.PAYLOAD_ADD -> adapter?.add(d)
-                ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+                ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+                ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
             }
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
@@ -139,6 +146,10 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, _ ->
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots}")
+        }
+
+        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, _ ->
+            Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData}")
         }
     }
 }

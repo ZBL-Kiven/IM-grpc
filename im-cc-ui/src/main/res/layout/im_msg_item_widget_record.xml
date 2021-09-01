@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-		xmlns:android="http://schemas.android.com/apk/res/android"
-		android:layout_width="190dp"
-		android:layout_height="wrap_content"
-		android:gravity="center_vertical"
-		android:orientation="horizontal"
-		android:paddingLeft="14dp"
-		android:paddingTop="7dp"
-		android:paddingRight="14dp"
-		android:paddingBottom="7dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/im_msg_item_widget_record_ll"
+    android:layout_width="190dp"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="14dp"
+    android:paddingTop="7dp"
+    android:paddingRight="14dp"
+    android:paddingBottom="7dp">
 
-	<com.zj.imUi.widget.VoicePlayView
-			android:id="@+id/im_msg_item_audio_play_view"
-			android:layout_width="24dp"
-			android:layout_height="24dp"
-			android:layout_marginEnd="4dp"/>
+    <com.zj.imUi.widget.VoicePlayView
+        android:id="@+id/im_msg_item_audio_play_view"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="4dp" />
 
-	<androidx.appcompat.widget.AppCompatTextView
-			android:id="@+id/im_msg_item_audio_time"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:textColor="@android:color/white"
-			android:textSize="14sp"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/im_msg_item_audio_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
 
 
 </LinearLayout>

@@ -54,7 +54,7 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
                 plus = "+ "
             } //未回复
             0 -> {
-                textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_not_reply))
+                textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.im_msg_item_reward_number_color))
                 rewardLinearLayout.setBackgroundResource(R.drawable.im_ui_reward_bg_default)
             } //超时
             2 -> {

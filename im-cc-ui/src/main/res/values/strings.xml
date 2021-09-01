@@ -16,12 +16,12 @@
     <string name="im_ui_msg_type_image">Image</string>
     <string name="im_ui_msg_type_audio">Audio</string>
 
-    <string name="im_ui_msg_reward_type_text">Audio</string>
-    <string name="im_ui_msg_reward_type_image">Audio</string>
+    <string name="im_ui_msg_reward_type_text">Text</string>
+    <string name="im_ui_msg_reward_type_image">Image</string>
     <string name="im_ui_msg_reward_type_audio">Audio</string>
-	<string name="copy">Copy</string>
-    <string name="reply">Reply</string>
-    <string name="block">Block</string>
+	<string name="im_ui_msg_copy">Copy</string>
+    <string name="im_ui_msg_reply">Reply</string>
+    <string name="im_ui_msg_block">Block</string>
 
     <string name="im_ui_sunday">sunday</string>
     <string name="im_ui_monday">monday</string>

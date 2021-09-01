@@ -1,5 +1,8 @@
 package com.zj.imtest.ui
 
+import android.util.Log
+import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
@@ -149,7 +152,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getReplySendState(): Int {
-        return info?.replyMsg?.sendingState ?: 0
+        return info?.replyMsg?.sendingState ?: -2
     }
 
     override fun getReplySenderId(): Int {
@@ -158,6 +161,18 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getReplySenderName(): String? {
         return info?.replyMsg?.sender?.senderName
+    }
+
+    override fun getReplyMsgQuestionContent(): String? {
+        return info?.replyMsg?.questionContent?.textContent?.text
+    }
+
+    override fun getReplyMsgQuestionSpark(): Int? {
+        return info?.replyMsg?.questionContent?.spark
+    }
+
+    override fun getReplyMsgQuestionIsPublished(): Boolean? {
+        return info?.replyMsg?.questionContent?.published
     }
 
     override fun getSelfUserId(): Int {
@@ -171,18 +186,26 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun playAudio() {
-
+        Log.e("----- ", " playAudio")
     }
 
     override fun stopAudio() {
-
+        Log.e("----- ", " stopAudio")
     }
 
     override fun reply(id: String) {
-
+        Log.e("----- ", " reply")
     }
 
     override fun block(userId: Int) {
+        Log.e("----- ", " block")
+    }
+
+    override fun resend() {
+        Sender.resendMessage(getMsgId())
+    }
+
+    override fun onReplyQuestion() {
 
     }
 

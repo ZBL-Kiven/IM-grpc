@@ -22,6 +22,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_ADD = "add"
         const val PAYLOAD_DELETE = "delete"
         const val PAYLOAD_CHANGED = "change"
+        const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
     }
 
     /**
@@ -161,7 +162,7 @@ class ClientHubImpl : ClientHub<Any?>() {
 
             //Callback when the operation of the coroutine is completed
             SendMsgState.ON_SEND_BEFORE_END -> {
-                Pair(localMsg, PAYLOAD_CHANGED)
+                Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
             }
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
                 if (d.black) {
@@ -170,12 +171,12 @@ class ClientHubImpl : ClientHub<Any?>() {
                     msgDb?.deleteMsgByClientId(d.clientMsgId)
                 }
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
-                Pair(localMsg, if (d.black) PAYLOAD_DELETE else PAYLOAD_CHANGED)
+                Pair(localMsg, if (d.black) PAYLOAD_DELETE else PAYLOAD_CHANGED_SEND_STATE)
             }
             SendMsgState.NONE, SendMsgState.SUCCESS -> {
                 sendDb?.deleteByCallId(d.clientMsgId)
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
-                Pair(localMsg, PAYLOAD_CHANGED)
+                Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
             }
         }
     }
