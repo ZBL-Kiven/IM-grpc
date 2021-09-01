@@ -150,7 +150,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getReplySendState(): Int {
-        return info?.replyMsg?.sendingState ?: 0
+        return info?.replyMsg?.sendingState ?: -2
     }
 
     override fun getReplySenderId(): Int {

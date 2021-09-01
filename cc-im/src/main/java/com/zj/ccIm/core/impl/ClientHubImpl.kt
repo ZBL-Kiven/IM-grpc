@@ -23,7 +23,6 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_DELETE = "delete"
         const val PAYLOAD_CHANGED = "change"
         const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
-        const val PAYLOAD_FETCH_SESSION_NULL = "change_fetch_session_null"
     }
 
     /**
