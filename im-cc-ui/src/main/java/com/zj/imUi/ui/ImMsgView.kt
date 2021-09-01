@@ -9,7 +9,6 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
@@ -26,7 +25,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
             } else {
                 val avatar = ivAvatar
                 if (avatar != null) {
-                    addRule(RIGHT_OF, R.id.im_item_message_avatar)
+                    ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                     avatar.visibility = View.VISIBLE
                 } else {
                     addRule(ALIGN_PARENT_START)
@@ -39,7 +38,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
         return LayoutParams(size, size).apply {
             addRule(ALIGN_PARENT_BOTTOM)
-            addRule(START_OF, R.id.im_item_message_bubble)
+            bubbleView?.id?.let { addRule(START_OF, it) }
         }
     }
 
@@ -59,7 +58,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
-        if (data.getType() == UiMsgType.MSG_TYPE_AUDIO&&data.getSenderId() == data.getSelfUserId()&&data.getReplyMsgClientMsgId() == null) return null
+        if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
         return BubbleRenderer
     }
 

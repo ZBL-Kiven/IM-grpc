@@ -53,12 +53,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         tvName.text = data.getSenderName()
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
-        } else{
+        } else {
             llName.visibility = View.VISIBLE
-            if( data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
+            if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
         }
-
-
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -136,47 +134,48 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setReplyContent(data: ImMsgIn) {
-        if (data.getReplyMsgClientMsgId()!=null)
-            data.getReplyMsgType()?.let {
-                data.getReplySenderName()?.let {
-                    llQuestionContent.visibility = View.VISIBLE
-                    tvQuestionName.text = it
-                    when (data.getReplyMsgType()) {
-                        UiMsgType.MSG_TYPE_TEXT -> tvQuestionContent.text = data.getReplyMsgTextContent()
-                        UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
-                        UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
-                        UiMsgType.MSG_TYPE_QUESTION -> tvQuestionContent.text = data.getReplyMsgQuestionContent()
-                    }
+        if (data.getReplyMsgClientMsgId() != null) data.getReplyMsgType()?.let {
+            data.getReplySenderName()?.let {
+                llQuestionContent.visibility = View.VISIBLE
+                tvQuestionName.text = it
+                when (data.getReplyMsgType()) {
+                    UiMsgType.MSG_TYPE_TEXT -> tvQuestionContent.text = data.getReplyMsgTextContent()
+                    UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
+                    UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
+                    UiMsgType.MSG_TYPE_QUESTION -> tvQuestionContent.text = data.getReplyMsgQuestionContent()
                 }
+                return@setReplyContent
             }
-        else  llQuestionContent.visibility = View.GONE
+        }
+        llQuestionContent.visibility = View.GONE
     }
 
     private fun setViewStub(data: ImMsgIn) {
         var isSameType = false
-        val v: View? = when (data.getType()) {
-            UiMsgType.MSG_TYPE_TEXT -> {
-                isSameType = curContentIn is IMContentTextView
-                if (isSameType) null else IMContentTextView(context)
-            }
+        try {
+            val v: View = when (data.getType()) {
+                UiMsgType.MSG_TYPE_TEXT -> {
+                    isSameType = curContentIn is IMContentTextView
+                    if (isSameType) null else IMContentTextView(context)
+                }
 
-            UiMsgType.MSG_TYPE_IMG -> {
-                isSameType = curContentIn is IMContentImageView
-                if (isSameType) null else IMContentImageView(context)
-            }
+                UiMsgType.MSG_TYPE_IMG -> {
+                    isSameType = curContentIn is IMContentImageView
+                    if (isSameType) null else IMContentImageView(context)
+                }
 
-            UiMsgType.MSG_TYPE_AUDIO -> {
-                isSameType = curContentIn is IMContentAudioView
-                if (isSameType) null else IMContentAudioView(context)
+                UiMsgType.MSG_TYPE_AUDIO -> {
+                    isSameType = curContentIn is IMContentAudioView
+                    if (isSameType) null else IMContentAudioView(context)
+                }
+                else -> null
+            } ?: return
+            if (!isSameType) {
+                bubbleContent.removeAllViews()
+                curContentIn = v as? ImContentIn
+                bubbleContent.addView(v, LayoutParams(-1, -1))
             }
-            else -> null
-        }
-        if (!isSameType) {
-            bubbleContent.removeAllViews()
-            curContentIn = v as? ImContentIn
-            bubbleContent.addView(v, LayoutParams(-1, -1))
-            curContentIn?.onSetData(data)
-        } else {
+        } finally {
             curContentIn?.onSetData(data)
         }
     }

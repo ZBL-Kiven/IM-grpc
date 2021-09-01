@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        Sender.sendText("Test Message $incId", groupId, null)
+        Sender.sendText("你已被油王服务 $incId 次", groupId, null)
     }
 
     fun sendImg(view: View) {
@@ -137,8 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
             if (d != null) when (pl) {
-                ClientHubImpl.PAYLOAD_ADD -> adapter?.add(d)
-                ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+                ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
             }

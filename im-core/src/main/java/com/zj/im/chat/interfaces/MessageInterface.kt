@@ -9,15 +9,16 @@ import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.main.StatusHub
 import com.zj.im.utils.log.NetWorkRecordInfo
 import com.zj.im.utils.log.NetRecordChangedListener
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class MessageInterface<T> {
 
     @Suppress("unused")
     companion object {
 
-        private var msgObservers: HashMap<Any, UIOptions<*, *, *>>? = null
+        private var msgObservers: ConcurrentHashMap<Any, UIOptions<*, *, *>>? = null
             get() {
-                if (field == null) field = hashMapOf()
+                if (field == null) field = ConcurrentHashMap()
                 return field
             }
 

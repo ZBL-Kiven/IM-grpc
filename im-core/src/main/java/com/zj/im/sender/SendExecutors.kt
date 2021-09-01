@@ -12,7 +12,7 @@ import java.lang.NullPointerException
  * Created by ZJJ
  */
 
-internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, done: (isOK: Boolean, inRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) -> Unit) {
+internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, done: (isOK: Boolean, tryRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) -> Unit) {
 
     init {
         var exc: Throwable? = null

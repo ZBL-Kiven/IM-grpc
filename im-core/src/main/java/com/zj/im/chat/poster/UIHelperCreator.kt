@@ -22,7 +22,7 @@ class UIHelperCreator<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqu
         return this
     }
 
-    fun listen(onDataReceived: (r: R?, lr: List<R>?, payload: String?) -> Unit) {
+    fun listen(onDataReceived: (r: R?, lr: List<R>?, payload: String?) -> Unit): UIHelperCreator<T, R, L> {
         this.onDataReceived = onDataReceived
         options = UIOptions(uniqueCode, this) { d, s, pl ->
             cacheData.add(CacheData(d, s, pl))
@@ -30,6 +30,7 @@ class UIHelperCreator<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqu
                 notifyDataChanged()
             }
         }
+        return this
     }
 
     private fun notifyDataChanged() {
