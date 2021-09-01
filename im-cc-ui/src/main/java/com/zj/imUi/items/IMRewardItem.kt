@@ -36,21 +36,29 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag:AppCompatTextView
 
+    private var contentLayout: View
+
     init {
-        LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, true)
-        tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
-        textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
-        textResponseType = findViewById(R.id.im_msg_item_owner_reward_question_tv_type)
-        imgCountdown = findViewById(R.id.im_msg_item_owner_reward_question_img_countdown)
-        tvCountdown = findViewById(R.id.im_msg_item_owner_reward_question_tv_countdown)
-        llCountDown = findViewById(R.id.im_msg_item_owner_reward_question_ll_countdown)
-        questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
-        textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
-        timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
-        tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
+        contentLayout = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)
+        with(contentLayout) {
+            tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
+            textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
+            textResponseType = findViewById(R.id.im_msg_item_owner_reward_question_tv_type)
+            imgCountdown = findViewById(R.id.im_msg_item_owner_reward_question_img_countdown)
+            tvCountdown = findViewById(R.id.im_msg_item_owner_reward_question_tv_countdown)
+            llCountDown = findViewById(R.id.im_msg_item_owner_reward_question_ll_countdown)
+            questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
+            textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
+            timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
+            tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
+        }
     }
 
     override fun init(data: ImMsgIn) {
+
+        if (childCount == 0) {
+            addView(contentLayout)
+        }
 
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
