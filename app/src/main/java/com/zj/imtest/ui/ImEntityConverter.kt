@@ -205,4 +205,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         Sender.resendMessage(getMsgId())
     }
 
+    override fun onReplyQuestion() {
+
+    }
+
 }
