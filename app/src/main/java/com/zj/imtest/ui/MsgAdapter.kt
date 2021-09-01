@@ -56,7 +56,7 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
     }
 
     override fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {
-        return (f.clientMsgId.isNotEmpty() && f.clientMsgId == s.clientMsgId) || (f.serverMsgId.isNotEmpty() && f.serverMsgId == s.serverMsgId)
+        return f.clientMsgId.isNotEmpty() && f.clientMsgId == s.clientMsgId
     }
 
     override fun getTimeLine(d: MessageInfoEntity?): String? {

@@ -43,6 +43,7 @@ object Sender {
     fun sendUrlImg(url: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null, callId: String = UUID.randomUUID().toString()) {
         val sen = SendMessageReqEn()
         sen.url = url
+        sen.clientMsgId = url
         sen.msgType = MsgType.IMG.type
         sen.groupId = groupId
         sen.clientMsgId = callId

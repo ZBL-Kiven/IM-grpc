@@ -36,7 +36,6 @@ class FileUploader(private val context: Context, private val d: SendMessageReqEn
             if (body.success) {
                 d.uploadDataTotalByte = totalBytes
                 d.url = body.url
-                d.localFilePath = null
                 onStatus?.call(true, uploadId, 100, d, isOK = true, null)
             } else onError(callId, Exception("The upload may have been successful, but the server still returns failure !"))
         }
