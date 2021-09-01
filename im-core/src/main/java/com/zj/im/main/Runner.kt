@@ -176,12 +176,12 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
         }
     }
 
-    override fun invoke(isSuccess: Boolean, inRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
+    override fun invoke(isSuccess: Boolean, tryRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
         if (isSuccess) {
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
             DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
         } else {
-            if (!inRecent && DataReceivedDispatcher.isDataEnable()) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
+            if (!tryRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
             else enqueue(info)
         }
         sendingPool?.unLock()
