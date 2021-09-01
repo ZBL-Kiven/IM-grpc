@@ -81,4 +81,6 @@ interface ImMsgIn {
 
     fun block(userId: Int)
 
+    fun resend()
+
 }

@@ -152,29 +152,30 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setViewStub(data: ImMsgIn) {
         var isSameType = false
-        val v: View = when (data.getType()) {
-            UiMsgType.MSG_TYPE_TEXT -> {
-                isSameType = curContentIn is IMContentTextView
-                if (isSameType) null else IMContentTextView(context)
-            }
+        try {
+            val v: View = when (data.getType()) {
+                UiMsgType.MSG_TYPE_TEXT -> {
+                    isSameType = curContentIn is IMContentTextView
+                    if (isSameType) null else IMContentTextView(context)
+                }
 
-            UiMsgType.MSG_TYPE_IMG -> {
-                isSameType = curContentIn is IMContentImageView
-                if (isSameType) null else IMContentImageView(context)
-            }
+                UiMsgType.MSG_TYPE_IMG -> {
+                    isSameType = curContentIn is IMContentImageView
+                    if (isSameType) null else IMContentImageView(context)
+                }
 
-            UiMsgType.MSG_TYPE_AUDIO -> {
-                isSameType = curContentIn is IMContentAudioView
-                if (isSameType) null else IMContentAudioView(context)
+                UiMsgType.MSG_TYPE_AUDIO -> {
+                    isSameType = curContentIn is IMContentAudioView
+                    if (isSameType) null else IMContentAudioView(context)
+                }
+                else -> null
+            } ?: return
+            if (!isSameType) {
+                bubbleContent.removeAllViews()
+                curContentIn = v as? ImContentIn
+                bubbleContent.addView(v, LayoutParams(-1, -1))
             }
-            else -> null
-        } ?: return
-        if (!isSameType) {
-            bubbleContent.removeAllViews()
-            curContentIn = v as? ImContentIn
-            bubbleContent.addView(v, LayoutParams(-1, -1))
-            curContentIn?.onSetData(data)
-        } else {
+        } finally {
             curContentIn?.onSetData(data)
         }
     }

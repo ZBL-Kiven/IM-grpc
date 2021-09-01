@@ -1,6 +1,8 @@
 package com.zj.imtest.ui
 
 import android.util.Log
+import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
@@ -197,6 +199,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun block(userId: Int) {
         Log.e("----- ", " block")
+    }
+
+    override fun resend() {
+        Sender.resendMessage(getMsgId())
     }
 
 }

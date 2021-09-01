@@ -55,13 +55,19 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initAvatar(data: T) {
-        if (ivAvatar == null) ivAvatar = ImageView(context)
+        if (ivAvatar == null) {
+            ivAvatar = ImageView(context)
+            ivAvatar?.id = R.id.im_item_message_avatar
+        }
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
     }
 
     private fun initBubble(data: T) {
-        if (bubbleView == null) bubbleView = ImItemDispatcher.getItemWithData(data, context)
+        if (bubbleView == null) {
+            bubbleView = ImItemDispatcher.getItemWithData(data, context)
+            bubbleView?.id = R.id.im_item_message_bubble
+        }
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData { curData }
@@ -80,15 +86,22 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             removeIfNotContains(amSending, true)
             return
         }
-        if (ivSendStatusNo == null) ivSendStatusNo = ImageView(context)
+        if (ivSendStatusNo == null) {
+            ivSendStatusNo = ImageView(context)
+            ivSendStatusNo?.id = R.id.im_item_message_send_lose
+        }
         if (amSending == null) {
             amSending = ProgressBar(context)
+            amSending?.id = R.id.im_item_message_sending
         }
         val loadingLp = getSendingLayoutParams(data)
         addViewToSelf(ivSendStatusNo, loadingLp)
         addViewToSelf(amSending, loadingLp)
         ivSendStatusNo?.setImageResource(R.drawable.icon_sendlose)
         setLoadingState(data)
+        ivSendStatusNo?.setOnClickListener {
+            curData?.resend()
+        }
     }
 
     private fun setLoadingState(d: T?) {

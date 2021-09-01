@@ -1,18 +1,18 @@
 package com.zj.ccIm.core.impl
 
 
-import com.zj.database.entity.SendMessageReqEn
-import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
+import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.protocol.grpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
-import java.lang.IllegalArgumentException
-import java.lang.IllegalStateException
+import com.google.gson.Gson
+import java.nio.charset.Charset
 
 class ServerHubImpl : ServerImplGrpc() {
 
@@ -89,7 +89,7 @@ class ServerHubImpl : ServerImplGrpc() {
             }
             callBack.result(isOk, data, throwable)
         }
-        return d.uploadDataTotalByte + d.content.toString().toByteArray().size
+        return d.uploadDataTotalByte + getDataBytes(d)
     }
 
     /**
@@ -200,6 +200,10 @@ class ServerHubImpl : ServerImplGrpc() {
                 override fun onCompleted() {}
             })
         }
+    }
+
+    private fun getDataBytes(obj: Any?): Int {
+        return Gson().toJson(obj).toByteArray(Charset.forName("UTF-8")).size
     }
 
     override fun onParseError(t: Throwable?) {
