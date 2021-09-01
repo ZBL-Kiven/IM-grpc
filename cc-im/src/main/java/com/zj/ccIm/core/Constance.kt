@@ -16,6 +16,9 @@ internal object Constance {
     const val PING_TIMEOUT = "reconnection because the ping was no response too many times!"
 
     /**-------------------------- CALL IDS ------------------------------*/
+    const val CALL_ID_CLEAR_SESSION_BADGE = "internal_clear_session_badge"
+
+
     const val INTERNAL_CALL_ID_PREFIX = "internal_call"
     const val CALL_ID_START_LISTEN_SESSION = INTERNAL_CALL_ID_PREFIX + "_start_listen_session"
     const val CALL_ID_SUBSCRIBE_NEW_TOPIC = INTERNAL_CALL_ID_PREFIX + "_subscribe_new_topic_type"
@@ -23,8 +26,6 @@ internal object Constance {
     const val CALL_ID_LEAVE_CHAT_ROOM = INTERNAL_CALL_ID_PREFIX + "_leave_chat_room"
     const val CALL_ID_REGISTER_CHAT = INTERNAL_CALL_ID_PREFIX + "_register_chat_room"
     const val CALL_ID_REGISTERED_CHAT = INTERNAL_CALL_ID_PREFIX + "_registered_chat_room"
-    const val CALL_ID_CLEAR_SESSION_BADGE = INTERNAL_CALL_ID_PREFIX + "_clear_session_badge"
-
     const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline"
     const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_chat_messages"
     const val CALL_ID_GET_OFFLINE_GROUP_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_group_messages"

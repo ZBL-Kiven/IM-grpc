@@ -126,7 +126,7 @@ internal object Fetcher {
             }
         }
         onFetching = false
-        IMHelper.postToUiObservers(FetchSessionResult(isSuccess, isFirstFetch, isEmptyData)) {}
+        IMHelper.postToUiObservers(FetchSessionResult(isSuccess, isFirstFetch, isEmptyData))
     }
 
     fun cancel() {

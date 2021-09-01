@@ -32,7 +32,7 @@ object IMHelper : IMInterface<Any?>() {
     internal lateinit var imConfig: ImConfigIn
 
     fun init(app: Application, imConfig: ImConfigIn) {
-        IMHelper.imConfig = imConfig
+        this.imConfig = imConfig
         Constance.app = app
         Fetcher.init()
         SPHelper.init("im_sp_main", app)
@@ -81,7 +81,7 @@ object IMHelper : IMInterface<Any?>() {
                     local?.updateConfigs(disturbType, top, groupName, des)
                     if (local != null) {
                         sd.insertOrChangeSession(local)
-                        postToUiObservers(local, ClientHubImpl.PAYLOAD_CHANGED) {}
+                        postToUiObservers(local, ClientHubImpl.PAYLOAD_CHANGED)
                     }
                 }
             }
@@ -95,7 +95,8 @@ object IMHelper : IMInterface<Any?>() {
         data.groupId = groupId
         data.ownerId = ownerId
         this.lastMsgRegister = LastMsgReqBean(groupId, ownerId)
-        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+        routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
 
     fun leaveChatRoom(groupId: Long) {
@@ -103,7 +104,8 @@ object IMHelper : IMInterface<Any?>() {
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
         this.lastMsgRegister = null
-        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+        routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
 
     private fun getOfflineChatMsg(groupId: Long, ownerId: Long) {
@@ -111,7 +113,7 @@ object IMHelper : IMInterface<Any?>() {
         val data = GetImHistoryMsgReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        IMHelper.send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     private fun getOfflineGroupMsg(groupId: Long, ownerId: Long) {
@@ -119,7 +121,7 @@ object IMHelper : IMInterface<Any?>() {
         val data = GetImHistoryMsgReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        IMHelper.send(data.build(), callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        send(data.build(), callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
     }
 
     internal fun tryToRegisterAfterConnected(): Boolean {
@@ -130,8 +132,8 @@ object IMHelper : IMInterface<Any?>() {
         return false
     }
 
-    internal fun postToUiObservers(data: Any?, payload: String? = null, onFinish: () -> Unit) {
-        super.postToUi(data, payload, onFinish)
+    internal fun postToUiObservers(data: Any?, payload: String? = null, onFinish: (() -> Unit)? = null) {
+        super.postToUi(data, payload, onFinish ?: {})
     }
 
     internal fun onMsgRegistered() {

@@ -47,11 +47,6 @@ class ClientHubImpl : ClientHub<Any?>() {
         var d = data
         var payload: String? = callId
         when (callId) {
-            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                val deal = clearGroupBadge(d as Long)
-                payload = deal?.first
-                d = deal?.second
-            }
             Constance.TOPIC_IM_MSG -> {
                 val info = try {
                     Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
@@ -265,13 +260,17 @@ class ClientHubImpl : ClientHub<Any?>() {
             it.sessionMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(it.groupId)
         }
         val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
-        IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty())) {}
+        IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty()))
         super.onMsgPatch(sessions, callId, true, null, false) {}
     }
 
     override fun onRouteCall(callId: String?, data: Any?) {
-        if (callId == Constance.CALL_ID_START_LISTEN_SESSION) {
-            notifyAllSession(callId)
+        when (callId) {
+            Constance.CALL_ID_START_LISTEN_SESSION -> notifyAllSession(callId)
+            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
+                val deal = clearGroupBadge(data as Long)
+                IMHelper.postToUiObservers(deal?.second, deal?.first)
+            }
         }
     }
 

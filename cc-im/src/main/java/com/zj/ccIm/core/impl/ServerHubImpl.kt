@@ -66,7 +66,6 @@ class ServerHubImpl : ServerImplGrpc() {
                 }
             }
             Constance.CONNECT_TYPE_MESSAGE -> {
-                postReceivedMessage(Constance.CALL_ID_CLEAR_SESSION_BADGE, null, true, 0)
                 postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, null, true, 0)
             }
         }
@@ -188,16 +187,10 @@ class ServerHubImpl : ServerImplGrpc() {
     private fun leaveChatRoom(d: Any?) {
         val rq = (d as? LeaveImGroupReq) ?: return
         withChannel(false) {
-            it.leaveImGroup(rq, object : StreamObserver<LeaveImGroupReply> {
-                override fun onNext(value: LeaveImGroupReply?) {
-                    postReceivedMessage(Constance.CALL_ID_CLEAR_SESSION_BADGE, null, true, 0)
+            it.leaveImGroup(rq, object : CusObserver<LeaveImGroupReply>() {
+                override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
+                    if (!isOk) t?.let { onParseError(t) }
                 }
-
-                override fun onError(t: Throwable?) {
-                    onParseError(t)
-                }
-
-                override fun onCompleted() {}
             })
         }
     }
