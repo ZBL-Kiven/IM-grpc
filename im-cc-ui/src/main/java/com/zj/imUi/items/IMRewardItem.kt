@@ -34,23 +34,31 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
-    private var tvReliedFLag: AppCompatTextView
+    private var tvReliedFLag:AppCompatTextView
+
+    private var contentLayout: View
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, true)
-        tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
-        textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
-        textResponseType = findViewById(R.id.im_msg_item_owner_reward_question_tv_type)
-        imgCountdown = findViewById(R.id.im_msg_item_owner_reward_question_img_countdown)
-        tvCountdown = findViewById(R.id.im_msg_item_owner_reward_question_tv_countdown)
-        llCountDown = findViewById(R.id.im_msg_item_owner_reward_question_ll_countdown)
-        questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
-        textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
-        timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
-        tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
+        contentLayout = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)
+        with(contentLayout) {
+            tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
+            textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
+            textResponseType = findViewById(R.id.im_msg_item_owner_reward_question_tv_type)
+            imgCountdown = findViewById(R.id.im_msg_item_owner_reward_question_img_countdown)
+            tvCountdown = findViewById(R.id.im_msg_item_owner_reward_question_tv_countdown)
+            llCountDown = findViewById(R.id.im_msg_item_owner_reward_question_ll_countdown)
+            questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
+            textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
+            timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
+            tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
+        }
     }
 
     override fun init(data: ImMsgIn) {
+
+        if (childCount == 0) {
+            addView(contentLayout)
+        }
 
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
@@ -58,10 +66,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         setTitle(data)
 
         //问题内容
-        textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
+        textQuestion.text = data.getQuestionTextContent()
+        //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
             textReplyType.visibility = View.VISIBLE
-            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getQuestionContentType().toString().uppercase())
+            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().uppercase())
             textReplyType.text = stringBuilder
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
@@ -74,13 +83,15 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
-        } else textResponseType.text = data.getQuestionContentType().toString().let { setReplyTypeText(it) }
+        } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
         textReplyType.setOnClickListener { curData?.invoke()?.resend() }
+
 
         if (data.getQuestionStatus() == 0) {
             if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
                 if (data.getPublished()) {
-                    textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_white)) //回答方式背景
+                    textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+                    //回答方式背景
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                     textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg) //有效期 图标
                     tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
@@ -123,18 +134,19 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
 
         tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
-
         if (data.getSelfUserId() == data.getSenderId() && data.getSelfUserId() != data.getOwnerId()) {
             timeBottom.visibility = View.VISIBLE
             timeBottom.setData(data)
-        }
+        }else timeBottom.visibility = View.GONE
+
     }
 
     private fun setTitle(data: ImMsgIn) {
-        if (data.getSelfUserId() == data.getSenderId()) tvName.visibility = View.GONE
-        else {
-            tvName.setData(data.getSelfUserId(), data)
-            tvName.visibility = View.VISIBLE
+        if (data.getSelfUserId() == data.getSenderId())
+            tvName.visibility = View.GONE
+            else {
+                tvName.setData(data.getSelfUserId(),data)
+                tvName.visibility = View.VISIBLE
         }
     }
 
@@ -161,7 +173,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
         return text
     }
-
 
     override fun onResume() {
         curData?.invoke()?.let {

@@ -13,6 +13,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
+import com.zj.imUi.items.IMRewardItem
 import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
@@ -29,6 +30,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private var curData: T? = null
+    private var lastDataType: String? = null
     open var bubbleView: BaseBubble? = null
     open var ivAvatar: ImageView? = null
     open var ivSendStatusNo: ImageView? = null
@@ -43,6 +45,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             initAvatar(data)
             initBubble(data)
             initSendStatus(data)
+            lastDataType = data.getType()
         }
     }
 
@@ -64,6 +67,13 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initBubble(data: T) {
+        if (bubbleView != null) {
+            val curQuestion = lastDataType ==  UiMsgType.MSG_TYPE_QUESTION
+            if (curQuestion != (data.getType() == UiMsgType.MSG_TYPE_QUESTION)) {
+                onDestroyed()
+                bubbleView = null
+            }
+        }
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)
             bubbleView?.id = R.id.im_item_message_bubble
