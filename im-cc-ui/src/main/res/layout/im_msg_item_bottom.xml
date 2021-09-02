@@ -11,10 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_toStartOf="@id/im_msg_item_bottom_group_reward_item"
         android:textColor="@color/nickname_color_black"
-        android:paddingBottom="2dp"
+        android:paddingBottom="3dp"
+        android:maxLines="1"
         tools:text="12 minutes ago" />
 
     <com.zj.imUi.widget.GroupRewardMeItem
