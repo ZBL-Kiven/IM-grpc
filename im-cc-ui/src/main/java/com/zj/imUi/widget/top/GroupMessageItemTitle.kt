@@ -29,13 +29,14 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context, attribut
         mNickname = findViewById(R.id.im_msg_item_title_tv_nickname)
     }
 
-    fun setData(userId: Int?, messageBean: ImMsgIn?) {
-        if (messageBean == null ||userId ==null ) return
-        mGroupRewardItem.visibility = View.GONE //消息为打赏消息，且接收者为大V，打赏控件可见
-        if (messageBean.getType() == UiMsgType.MSG_TYPE_QUESTION && userId == messageBean.getOwnerId()) {
+    fun setData(messageBean: ImMsgIn?) {
+        if (messageBean == null) return
+        //消息为打赏消息，且接收者为大V，打赏控件可见
+        if (messageBean.getType() == UiMsgType.MSG_TYPE_QUESTION && messageBean.getSelfUserId() == messageBean.getOwnerId()) {
             mGroupRewardItem.visibility = View.VISIBLE
             mGroupRewardItem.setBackGround(messageBean)
-        }
+        }else
+            mGroupRewardItem.visibility = View.GONE
         mNickname.text = messageBean.getSenderName()
     }
 }

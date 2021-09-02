@@ -145,11 +145,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     }
 
     private fun setTitle(data: ImMsgIn) {
-        if (data.getSelfUserId() == data.getSenderId())
-            tvName.visibility = View.GONE
-            else {
-                tvName.setData(data.getSelfUserId(),data)
-                tvName.visibility = View.VISIBLE
+        tvName.visibility = View.VISIBLE
+        if (data.getSelfUserId() == data.getSenderId()) tvName.visibility = View.GONE
+        else {
+            tvName.setData(data)
+            tvName.visibility = View.VISIBLE
         }
     }
 
