@@ -56,6 +56,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         } else {
             llName.visibility = View.VISIBLE
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
+            else  iconIsOwner.visibility = View.GONE
         }
         setIconVisibility(data)
         setViewStub(data)

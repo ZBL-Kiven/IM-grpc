@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
+            android:textColor="@color/text_color_black"
             tools:text="nick_name" />
 
         <androidx.appcompat.widget.AppCompatImageView
