@@ -5,6 +5,7 @@ import android.app.Notification
 import android.util.Log
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.LastMsgReqBean
+import com.zj.ccIm.core.bean.SessionConfigReqEn
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.hub.ClientHub
@@ -22,6 +23,9 @@ import com.zj.protocol.grpc.GetImHistoryMsgReq
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
 import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType
+import okhttp3.RequestBody
+import com.google.gson.Gson
 import java.lang.NullPointerException
 
 
@@ -73,7 +77,9 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {
-        ImApi.getOptionApi().call({ it.updateSessionInfo(groupId, disturbType, top, des, groupName) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
+        val conf = SessionConfigReqEn(groupId, disturbType, top, des, groupName)
+        val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), Gson().toJson(conf))
+        ImApi.getOptionApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
             if (i && d != null) {
                 getAppContext()?.let {
                     val sd = DbHelper.get(it)?.db?.sessionDao()

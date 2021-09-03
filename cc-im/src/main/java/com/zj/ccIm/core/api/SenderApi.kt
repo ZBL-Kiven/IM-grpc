@@ -18,10 +18,4 @@ interface SenderApi {
     @Multipart
     @POST("/im/upload/file")
     fun upload(@PartMap params: @JvmSuppressWildcards Map<String, RequestBody>, @Part file: MultipartBody.Part): Observable<UploadRespEn?>
-
-
-    @Multipart
-    @POST("/im/upload/file")
-    fun uploadFile(@Part("sign") sign: RequestBody, @Part("type") type: RequestBody, @Part file: MultipartBody.Part): Observable<UploadRespEn?>
-
 }
