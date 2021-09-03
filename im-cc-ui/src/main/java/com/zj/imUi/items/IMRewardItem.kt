@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -84,7 +85,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
-        textReplyType.setOnClickListener { curData?.invoke()?.resend() }
+        textReplyType.setOnClickListener {
+            data.onReplyQuestion()
+        }
 
 
         if (data.getQuestionStatus() == 0) {
@@ -142,11 +145,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     }
 
     private fun setTitle(data: ImMsgIn) {
-        if (data.getSelfUserId() == data.getSenderId())
-            tvName.visibility = View.GONE
-            else {
-                tvName.setData(data.getSelfUserId(),data)
-                tvName.visibility = View.VISIBLE
+        tvName.visibility = View.VISIBLE
+        if (data.getSelfUserId() == data.getSenderId()) tvName.visibility = View.GONE
+        else {
+            tvName.setData(data)
+            tvName.visibility = View.VISIBLE
         }
     }
 
