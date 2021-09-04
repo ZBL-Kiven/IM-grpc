@@ -9,10 +9,12 @@ import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.R
+import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.views.ut.DPUtils
@@ -22,7 +24,7 @@ class IMContentCCVideoView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     def: Int = 0
-) : LinearLayout(context, attrs, def) {
+) : BaseBubble(context, attrs, def) {
 
 
     private var tvName: AppCompatTextView
@@ -32,18 +34,32 @@ class IMContentCCVideoView @JvmOverloads constructor(
     private var tvCCVideoTitle: AppCompatTextView
     private var tvCCVideoSendTime: AppCompatTextView
 
+    private var contentLayout: View
+
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, true)
-        tvName = findViewById(R.id.im_msg_item_normal_cc_video_tv_nickname)
-        imgOwnerFlag = findViewById(R.id.im_msg_item_normal_cc_video_img_owner)
-        llTitle = findViewById(R.id.im_msg_item_normal_cc_video_ll_title)
-        imgCCVideoCover = findViewById(R.id.im_msg_item_normal_cc_video_img_cover)
-        tvCCVideoTitle = findViewById(R.id.im_msg_item_normal_cc_video_tv_title)
-        tvCCVideoSendTime = findViewById(R.id.im_msg_item_normal_cc_video_tv_time)
+        contentLayout =
+            LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, false)
+        with(contentLayout) {
+            tvName = findViewById(R.id.im_msg_item_normal_cc_video_tv_nickname)
+            imgOwnerFlag = findViewById(R.id.im_msg_item_normal_cc_video_img_owner)
+            llTitle = findViewById(R.id.im_msg_item_normal_cc_video_ll_title)
+            imgCCVideoCover = findViewById(R.id.im_msg_item_normal_cc_video_img_cover)
+            tvCCVideoTitle = findViewById(R.id.im_msg_item_normal_cc_video_tv_title)
+            tvCCVideoSendTime = findViewById(R.id.im_msg_item_normal_cc_video_tv_time)
+        }
     }
 
-    fun onSetData(data: ImMsgIn?) {
+    override fun init(data: ImMsgIn) {
+
+        if (childCount == 0) {
+            addView(contentLayout)
+        }
+
+        onSetData(data)
+    }
+
+    private fun onSetData(data: ImMsgIn?) {
         if (data == null) return
 
         if (data.getSelfUserId() != data.getSenderId()) {
@@ -66,8 +82,25 @@ class IMContentCCVideoView @JvmOverloads constructor(
         data.getCCVideoContentVideoTitle()?.let {
             tvCCVideoTitle.visibility = View.VISIBLE
             tvCCVideoTitle.text = data.getCCVideoContentVideoTitle()
+            if (data.getSelfUserId() == data.getSenderId()) {
+                tvCCVideoTitle.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.text_color_white
+                    )
+                )
+            } else tvCCVideoTitle.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.text_color_black
+                )
+            )
+
         }
-        tvCCVideoSendTime.text = setTimeText(data.getSendTime())
+        if (data.getSendTime() in 1..3600000 * 48) {
+            tvCCVideoSendTime.visibility = View.VISIBLE
+            tvCCVideoSendTime.text = setTimeText(data.getSendTime())
+        } else tvCCVideoSendTime.visibility = View.GONE
 
     }
 
@@ -93,6 +126,18 @@ class IMContentCCVideoView @JvmOverloads constructor(
     private fun timeParse(duration: Long): String {
         val minute = duration / 60000
         return minute.toString()
+    }
+
+
+
+    override fun onResume() {
+    }
+
+    override fun onStop() {
+    }
+
+    override fun onDestroy() {
+        removeAllViews()
     }
 
 }
