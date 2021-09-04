@@ -112,7 +112,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 }
 
             } else { //消息发送者为其他群员
-                //回答方式背景
                 textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
                 if (data.getSelfUserId() != data.getOwnerId()) {
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
@@ -137,7 +136,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
 
         tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
-        if (data.getSelfUserId() == data.getSenderId() && data.getSelfUserId() != data.getOwnerId()) {
+        if (data.getSelfUserId() == data.getSenderId()) {
             timeBottom.visibility = View.VISIBLE
             timeBottom.setData(data)
         }else timeBottom.visibility = View.GONE
@@ -193,13 +192,17 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
         if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
+        if (remainingTime<1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
     }
 
     private fun timeParseHour(duration: Long): String? {
+        if(duration<1){
+            return "- -"
+        }
         var time: String? = ""
-        val hour = duration / 360000
-        val minutes = duration % 360000
-        val minute = (minutes.toFloat() / 6000).roundToInt()
+        val hour = duration / 3600000
+        val minutes = duration % 3600000
+        val minute = (minutes.toFloat() / 60000).roundToInt()
         if (hour < 1) {
             time += 0
         }
@@ -208,6 +211,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             time += "0"
         }
         time += minute
+
         return time
     }
 }

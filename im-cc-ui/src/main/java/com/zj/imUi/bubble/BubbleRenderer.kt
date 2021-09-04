@@ -69,12 +69,12 @@ object BubbleRenderer : BaseBubbleRenderer {
 
     private fun setColor(context: Context, data: ImMsgIn): Int {
         return if (isSelfMessage) {
+            //自己发送的消息
             if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
                 ContextCompat.getColor(context, R.color.replied_bg)
             } else if(data.getQuestionStatus() == 0){
-                if (!data.getPublished()) {
-                    if (isOwner) ContextCompat.getColor(context, R.color.bg_purple)
-                    else ContextCompat.getColor(context, R.color.message_item_private)
+                if (!data.getPublished()) {//打赏消息状态
+                     ContextCompat.getColor(context, R.color.message_item_private)
                 } else ContextCompat.getColor(context, R.color.bg_origin)
             } else if (data.getReplyMsgQuestionIsPublished()==false) {
                 ContextCompat.getColor(context, R.color.bg_purple)
@@ -82,16 +82,12 @@ object BubbleRenderer : BaseBubbleRenderer {
                  ContextCompat.getColor(context, R.color.bg_origin)
             }else ContextCompat.getColor(context, R.color.bg_origin)
         }
-        else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
-            ContextCompat.getColor(context, R.color.replied_bg)
-        } else if(data.getQuestionStatus() ==0 && !data.getPublished()){
-             ContextCompat.getColor(context, R.color.message_item_private)
-        }
+        else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) ContextCompat.getColor(context, R.color.replied_bg)
+        else if(data.getQuestionStatus() ==0 && !data.getPublished()){ ContextCompat.getColor(context, R.color.message_item_private) }
         else if(data.getReplyMsgQuestionIsPublished()==false) ContextCompat.getColor(context, R.color.message_item_private)
         else if(data.getReplyMsgQuestionIsPublished()==true) ContextCompat.getColor(context, R.color.bg_color_white)
         else {
-            if (!data.getPublished()) ContextCompat.getColor(context, R.color.message_item_private)
-            else ContextCompat.getColor(context, R.color.bg_color_white)
+                ContextCompat.getColor(context, R.color.bg_color_white)
         }
     }
 }

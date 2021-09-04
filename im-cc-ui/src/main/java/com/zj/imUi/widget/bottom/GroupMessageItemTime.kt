@@ -39,9 +39,9 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
     }
 
     private fun setTimeText(sendTime: Long): CharSequence? {
-        return if (sendTime in 60000..359999) {
+        return if (sendTime in 60000..3599999) {
             StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
-        } else if (sendTime > 360000 && sendTime < 360000 * 48) {
+        } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
             StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
@@ -49,7 +49,7 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
 
     private fun timeParseHour(duration: Long): String {
         val time: String?
-        val hour = duration / 360000
+        val hour = duration / 3600000
         time = hour.toString()
         return time
     }
