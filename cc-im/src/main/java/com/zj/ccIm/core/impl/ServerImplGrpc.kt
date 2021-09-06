@@ -43,7 +43,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     override fun closeConnection(case: String) {
         channel?.shutdownNow()
-        curConnectionState = ConnectionState.CONNECTED_ERROR
+        curConnectionState = ConnectionState.INIT
     }
 
     override fun reConnect(case: String) {
@@ -77,10 +77,10 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
     protected fun <R> withChannel(require: Boolean = true, r: (MsgApiGrpc.MsgApiStub) -> R?): R? {
         channel?.let {
             if (it.isTerminated && require) {
-                reConnect(Constance.CONNECTION_RESET);return null
+                postToClose(Constance.CONNECTION_RESET);return null
             }
             return r(it.stub { c -> MsgApiGrpc.newStub(c) }.build())
-        } ?: if (require) reConnect(Constance.CONNECTION_UNAVAILABLE)
+        } ?: if (require) postToClose(Constance.CONNECTION_UNAVAILABLE)
         return null
     }
 
@@ -127,7 +127,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
                         pingHasNotResponseCount++
                     }
                     if (pingHasNotResponseCount > 3 || (pongTime > 0L && curTime - (pongTime + lastPingTime) > outOfTime)) {
-                        reConnect(Constance.PING_TIMEOUT)
+                        postToClose(Constance.PING_TIMEOUT)
                     }
                     pingTime = System.currentTimeMillis()
                 }
@@ -136,7 +136,6 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
                 }
                 ConnectionState.NETWORK_STATE_CHANGE, ConnectionState.CONNECTED_ERROR -> {
                     clearPingRecord()
-                    connectDelay(Constance.RECONNECTION_TIME_5000)
                 }
                 else -> {
                 }

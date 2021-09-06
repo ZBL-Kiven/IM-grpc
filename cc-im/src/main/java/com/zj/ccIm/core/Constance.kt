@@ -44,7 +44,6 @@ internal object Constance {
     const val CONNECT_TYPE_TOPIC = 0xf1912
     const val CONNECT_TYPE_MESSAGE = 0xf1367
     const val RECONNECTION_TIME = 2000L
-    const val RECONNECTION_TIME_5000 = 5000L
     const val SEND_MSG_DEFAULT_TIMEOUT = 15000L
 
     const val HEART_BEATS_EVENT = 0xf1365

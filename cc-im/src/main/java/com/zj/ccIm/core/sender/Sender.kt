@@ -174,7 +174,7 @@ object Sender {
             val c = (context?.applicationContext as? Application) ?: throw NullPointerException("context should not be null !!")
             when (d.msgType) {
                 MsgType.IMG.type -> {
-                    ImgCompress.with(c).ignoreBy(1024 * 1024).load(d.localFilePath).setTargetPath(mImageOutputPath).setCompressListener(onImgCompressListener).start()
+                    ImgCompress.with(c).ignoreBy(1024).load(d.localFilePath).setTargetPath(mImageOutputPath).setCompressListener(onImgCompressListener).start()
                 }
 
                 MsgType.VIDEO.type -> {

@@ -61,6 +61,7 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
             netWorkRecordInfo?.apply {
                 this.lastModifySendData = lastModifySendData
                 this.receivedSize += lastModifySendData
+                this.sentCount += 1
                 this.total = sentSize + receivedSize
                 record(this)
             }
@@ -73,27 +74,10 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
             netWorkRecordInfo?.apply {
                 this.lastModifyReceiveData = lastModifyReceiveData
                 this.sentSize += lastModifyReceiveData
+                this.receivedCount += 1
                 this.total = sentSize + receivedSize
                 record(this)
             }
-        }
-    }
-
-    @JvmStatic
-    fun recordSendCount() {
-        if (accessAble) {
-            val sentCount = (netWorkRecordInfo?.sentCount ?: 0) + 1
-            netWorkRecordInfo?.sentCount = sentCount
-            record(netWorkRecordInfo)
-        }
-    }
-
-    @JvmStatic
-    fun recordReceivedCount() {
-        if (accessAble) {
-            val receivedCount = (netWorkRecordInfo?.receivedCount ?: 0) + 1
-            netWorkRecordInfo?.receivedCount = receivedCount
-            record(netWorkRecordInfo)
         }
     }
 

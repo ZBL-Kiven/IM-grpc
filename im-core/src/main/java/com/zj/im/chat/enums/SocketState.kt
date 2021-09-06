@@ -16,6 +16,10 @@ enum class ConnectionState(var case: String = "") {
         return this != INIT && this != PING && this != PONG
     }
 
+    fun isErrorType(): Boolean {
+        return this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT || this == RECONNECT
+    }
+
     fun case(s: String): ConnectionState {
         this.case = s
         return this

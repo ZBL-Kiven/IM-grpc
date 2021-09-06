@@ -26,11 +26,16 @@ abstract class ServerHub<T> {
 
     protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
 
+    protected abstract fun closeConnection(case: String)
+
     open fun onRouteCall(callId: String?, data: T?) {}
 
-    abstract fun closeConnection(case: String)
+    protected abstract fun reConnect(case: String)
 
-    abstract fun reConnect(case: String)
+    internal fun tryToReConnect(case: String) {
+        NetRecordUtils.recordDisconnectCount()
+        reConnect(case)
+    }
 
     internal fun sendToServer(params: T, callId: String, callBack: SendingCallBack<T>) {
         val size = send(params, callId, callBack)
@@ -70,7 +75,7 @@ abstract class ServerHub<T> {
      * */
     @Suppress("SameParameterValue")
     protected fun postReceivedMessage(callId: String, data: T, isSpecialData: Boolean, size: Long) {
-        NetRecordUtils.recordLastModifySendData(size)
+        if (size > 0) NetRecordUtils.recordLastModifyReceiveData(size)
         DataReceivedDispatcher.pushData(BaseMsgInfo.receiveMsg(callId, data, isSpecialData))
     }
 

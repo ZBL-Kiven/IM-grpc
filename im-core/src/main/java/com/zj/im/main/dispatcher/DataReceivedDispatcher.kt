@@ -77,10 +77,10 @@ internal object DataReceivedDispatcher {
     }
 
     fun onConnectionStateChange(connState: ConnectionState) {
-        val con = connState == ConnectionState.CONNECTED_ERROR || connState == ConnectionState.NETWORK_STATE_CHANGE || connState == ConnectionState.RECONNECT
-        val rec = StatusHub.curConnectionState.canConnect() || connState == ConnectionState.RECONNECT
+        val con = connState.isErrorType()
+        val rec = StatusHub.curConnectionState.canConnect()
         if (con && rec) {
-            getServer("server may need to reconnect")?.reConnect(connState.name)
+            getServer("server may need to reconnect")?.tryToReConnect(connState.name)
         }
         StatusHub.curConnectionState = connState
         chatBase?.notify("on connection state changed")?.onConnectionStatusChanged(connState)
