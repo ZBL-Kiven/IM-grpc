@@ -163,11 +163,7 @@ class ClientHubImpl : ClientHub<Any?>() {
                 Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
             }
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
-                if (d.black) {
-                    msgDb?.deleteAllBySessionId(d.groupId)
-                } else {
-                    msgDb?.deleteMsgByClientId(d.clientMsgId)
-                }
+                msgDb?.deleteMsgByClientId(d.clientMsgId)
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
                 Pair(localMsg, if (d.black) PAYLOAD_DELETE else PAYLOAD_CHANGED_SEND_STATE)
             }

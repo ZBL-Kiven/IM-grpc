@@ -5,11 +5,11 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 117658
+        return 117659
     }
 
     override fun getUserName(): String {
-        return "11111"
+        return "if 油"
     }
 
     override fun getUserAvatar(): String {

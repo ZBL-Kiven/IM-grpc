@@ -98,6 +98,7 @@ class ServerHubImpl : ServerImplGrpc() {
      * */
     private fun registerMsgReceiver(d: Any?) {
         val req = (d as? GetImMessageReq) ?: return
+        print("server hub event ", "call on register msg receiver with ${d.groupId}")
         withChannel {
             it.getImMessage(req, object : CusObserver<ImMessage>() {
                 override fun onResult(isOk: Boolean, data: ImMessage?, t: Throwable?) {
@@ -186,6 +187,7 @@ class ServerHubImpl : ServerImplGrpc() {
      * */
     private fun leaveChatRoom(d: Any?) {
         val rq = (d as? LeaveImGroupReq) ?: return
+        print("server hub event ", "leave from receiver with ${d.groupId}")
         withChannel(false) {
             it.leaveImGroup(rq, object : CusObserver<LeaveImGroupReply>() {
                 override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
