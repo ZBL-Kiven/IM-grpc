@@ -79,6 +79,22 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.audioContent?.duration
     }
 
+    override fun getCCVideoContentImgPreviewRemoteStorageUrl(): String? {
+        return ""
+    }
+
+    override fun getCCVideoContentVideoId(): String? {
+        return  ""
+    }
+
+    override fun getCCVideoContentVideoDescribe(): String? {
+        return  ""
+    }
+
+    override fun getCCVideoContentVideoTitle(): String? {
+        return  ""
+    }
+
     //打赏相关
 
     override fun getAnswerMsgType(): String? {
@@ -206,6 +222,18 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun onReplyQuestion() {
+
+    }
+
+    override fun onViewLargePic() {
+
+    }
+
+    override fun jumpToOwnerHomePage() {
+
+    }
+
+    override fun jumpToSenderRewardsPage() {
 
     }
 

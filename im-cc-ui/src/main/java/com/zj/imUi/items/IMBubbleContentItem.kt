@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -66,20 +67,21 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setTime(data: ImMsgIn) {
-        timeBottom.visibility = View.GONE
-        if (data.getSelfUserId() == data.getOwnerId() && data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            timeBottom.setData(data)
+        timeBottom.visibility = View.VISIBLE
+        if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
             timeBottom.visibility = View.VISIBLE
-        }
+            timeBottom.setData(data)
+        }else timeBottom.visibility = View.GONE
+
     }
 
     private fun setContentColor(data: ImMsgIn) {
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getSenderId() == data.getSelfUserId() && data.getSelfUserId() == data.getOwnerId()) {
+            if (data.getSenderId() == data.getSelfUserId()) {
                 tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                 tvFlag.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-            } else if (data.getSenderId() == data.getOwnerId()) {
+            } else {
                 if (data.getReplyMsgQuestionIsPublished() == false) {
                     tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
                     tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
@@ -124,8 +126,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             imgQuestion.visibility = View.VISIBLE
             imgReply.visibility = View.VISIBLE
             if (data.getSenderId() == data.getSelfUserId()) {
-                if (data.getOwnerId() == data.getSelfUserId()) imgReply.setImageResource(R.drawable.icon_huida_bai)
-            } else if (data.getReplyMsgQuestionIsPublished() == false && data.getSenderId() == data.getOwnerId()) {
+                imgReply.setImageResource(R.drawable.icon_huida_bai)
+            } else if (data.getReplyMsgQuestionIsPublished() == false) {
                 imgReply.setImageResource(R.drawable.icon_simihuida_normal)
             }
         } else {
@@ -175,6 +177,14 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
                 bubbleContent.addView(v, LayoutParams(-1, -1))
+
+                bubbleContent.setOnClickListener{
+                    if (data.getType() ==UiMsgType.MSG_TYPE_IMG){
+                        Log.d("LiXiang","图片item点击",)
+                        data.onViewLargePic()
+                    }
+                }
+
             }
         } finally {
             curContentIn?.onSetData(data)

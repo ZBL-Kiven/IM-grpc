@@ -26,7 +26,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
     private val handler = Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
         when (it.what) {
             Constance.HEART_BEATS_EVENT -> {
-                checkNetWork()
+                curConnectionState = ConnectionState.PING
             }
             Constance.CONNECTION_EVENT -> {
                 conn()
@@ -98,7 +98,6 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
                     if (isOk) curConnectionState = ConnectionState.PONG else nextHeartbeats()
                 }
             })
-            curConnectionState = ConnectionState.PING
         }
     }
 
@@ -120,9 +119,7 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
                     pongTime = System.currentTimeMillis()
                 }
                 ConnectionState.PING -> {
-                    if (field == ConnectionState.PING && !hasNetworkAccess()) {
-                        checkNetWork()
-                    }
+                    checkNetWork()
                     val curTime = System.currentTimeMillis()
                     val outOfTime = heartBeatsTime * 3f
                     val lastPingTime = curTime - pingTime - heartBeatsTime

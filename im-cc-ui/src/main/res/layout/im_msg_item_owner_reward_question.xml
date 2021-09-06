@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:visibility="gone"
+        tools:visibility="visible"
         tools:text="nickname" />
 
     <LinearLayout

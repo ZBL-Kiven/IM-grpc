@@ -42,8 +42,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         } else {
             this.curData = data
             removeAllViews()
-            initAvatar(data)
             initBubble(data)
+            initAvatar(data)
             initSendStatus(data)
             lastDataType = data.getType()
         }
@@ -57,7 +57,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
     }
 
-    private fun initAvatar(data: T) {
+    open fun initAvatar(data: T) {
         if (ivAvatar == null) {
             ivAvatar = ImageView(context)
             ivAvatar?.id = R.id.im_item_message_avatar
@@ -68,8 +68,14 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
 
     private fun initBubble(data: T) {
         if (bubbleView != null) {
-            val curQuestion = lastDataType ==  UiMsgType.MSG_TYPE_QUESTION
+            val curQuestion = lastDataType == UiMsgType.MSG_TYPE_QUESTION
             if (curQuestion != (data.getType() == UiMsgType.MSG_TYPE_QUESTION)) {
+                onDestroyed()
+                bubbleView = null
+            }
+            //  检测上一个是不是cc_video类型，不是则销毁
+            val curCCVideo = lastDataType == UiMsgType.MSG_TYPE_CC_VIDEO
+            if( curCCVideo!=(data.getType() == UiMsgType.MSG_TYPE_CC_VIDEO)){
                 onDestroyed()
                 bubbleView = null
             }
@@ -127,7 +133,6 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         view.layoutParams = layoutParams
         if (needAdd) addView(view)
     }
-
     private fun removeIfNotContains(view: View?, removeOnly: Boolean = false): Boolean? {
         return (view?.parent as? ViewGroup)?.let {
             if (removeOnly || it != this@BaseImItem) {

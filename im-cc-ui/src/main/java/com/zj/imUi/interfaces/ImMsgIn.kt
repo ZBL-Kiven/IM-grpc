@@ -39,6 +39,11 @@ interface ImMsgIn {
 
     fun getAudioContentDuration(): Long?
 
+    fun getCCVideoContentImgPreviewRemoteStorageUrl():String?
+    fun getCCVideoContentVideoId():String?
+    fun getCCVideoContentVideoDescribe():String?
+    fun getCCVideoContentVideoTitle():String?
+
     //打赏相关
     fun getAnswerMsgType(): String?
     fun getQuestionContentType(): String?
@@ -85,5 +90,11 @@ interface ImMsgIn {
     fun resend()
 
     fun onReplyQuestion()
+
+    fun onViewLargePic()
+
+    fun jumpToOwnerHomePage()
+
+    fun jumpToSenderRewardsPage()
 
 }

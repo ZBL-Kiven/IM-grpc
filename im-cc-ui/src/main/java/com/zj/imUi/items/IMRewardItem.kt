@@ -17,6 +17,7 @@ import com.zj.imUi.utils.RewardTimeCountdownUtils
 import com.zj.imUi.widget.bottom.GroupMessageItemTime
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import java.lang.StringBuilder
+import java.util.*
 import kotlin.math.roundToInt
 
 /**
@@ -35,7 +36,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
-    private var tvReliedFLag:AppCompatTextView
+    private var tvReliedFLag: AppCompatTextView
 
     private var contentLayout: View
 
@@ -61,17 +62,22 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             addView(contentLayout)
         }
 
+
+        contentLayout.setOnClickListener {
+            Log.d("LiXiang", "打赏item点击")
+            data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
+        }
+
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
         tvReliedFLag.visibility = View.GONE
         setTitle(data)
 
         //问题内容
-        textQuestion.text = data.getQuestionTextContent()
-        //当为群主视角查看未回答问题时,增加可点击textView控件
+        textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
             textReplyType.visibility = View.VISIBLE
-            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().uppercase())
+            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().toUpperCase(Locale.ENGLISH))
             textReplyType.text = stringBuilder
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
@@ -85,7 +91,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+
         textReplyType.setOnClickListener {
+            Log.d("LiXiang", "回复TextView点击")
             data.onReplyQuestion()
         }
 
@@ -93,8 +101,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         if (data.getQuestionStatus() == 0) {
             if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
                 if (data.getPublished()) {
-                    textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-                    //回答方式背景
+                    textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_white)) //回答方式背景
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
                     textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg) //有效期 图标
                     tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
@@ -112,7 +119,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 }
 
             } else { //消息发送者为其他群员
-                //回答方式背景
                 textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
                 if (data.getSelfUserId() != data.getOwnerId()) {
                     textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
@@ -137,10 +143,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
 
         tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
-        if (data.getSelfUserId() == data.getSenderId() && data.getSelfUserId() != data.getOwnerId()) {
+        if (data.getSelfUserId() == data.getSenderId()) {
             timeBottom.visibility = View.VISIBLE
             timeBottom.setData(data)
-        }else timeBottom.visibility = View.GONE
+        } else timeBottom.visibility = View.GONE
 
     }
 
@@ -193,13 +199,17 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
         if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
+        if (remainingTime < 1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
     }
 
     private fun timeParseHour(duration: Long): String? {
+        if (duration < 1) {
+            return "- -"
+        }
         var time: String? = ""
-        val hour = duration / 360000
-        val minutes = duration % 360000
-        val minute = (minutes.toFloat() / 6000).roundToInt()
+        val hour = duration / 3600000
+        val minutes = duration % 3600000
+        val minute = (minutes.toFloat() / 60000).roundToInt()
         if (hour < 1) {
             time += 0
         }
@@ -208,6 +218,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             time += "0"
         }
         time += minute
+
         return time
     }
 }

@@ -21,6 +21,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:textColor="@color/text_color_black"
+            android:maxWidth="180dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             tools:text="nick_name" />
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -120,6 +123,8 @@
         android:id="@+id/im_msg_item_normal_text_replied_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
+        tools:visibility="visible"
         />
 
 

@@ -3,6 +3,7 @@ package com.zj.imUi.ui
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
@@ -24,11 +25,13 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
                 addRule(ALIGN_PARENT_END)
             } else {
                 val avatar = ivAvatar
-                if (avatar != null) {
+                if(avatar != null){
+                    ivAvatar?.visibility = View.VISIBLE
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
-                    avatar.visibility = View.VISIBLE
-                } else {
-                    addRule(ALIGN_PARENT_START)
+                }else{
+                    initAvatar(d)
+                    ivAvatar?.visibility = View.VISIBLE
+                    ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                 }
             }
         }
