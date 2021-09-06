@@ -83,12 +83,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textResponseType.text = context.getString(R.string.im_ui_public)
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg)
-                textReplyType.setBackgroundResource(R.drawable.textview_frame_origin_roundcornor_4dp)
+                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_origin_roundcornor_4dp)
             } else {
                 textResponseType.text = context.getString(R.string.im_ui_private)
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_purple_private))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
-                textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
+                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
 
@@ -115,7 +115,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
                     tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_origin_private))
                     imgCountdown.setImageResource(R.drawable.icon_countdown_normal)
-                    llCountDown.setBackgroundResource(R.drawable.textview_frame_brown_roundcornor)
+                    llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
                 }
 
             } else { //消息发送者为其他群员
@@ -126,7 +126,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 }
                 tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_origin_private))
                 imgCountdown.setImageResource(R.drawable.icon_countdown_normal)
-                llCountDown.setBackgroundResource(R.drawable.textview_frame_brown_roundcornor)
+                llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
             }
         } else if (data.getQuestionStatus() == 1) { //已回复
             //回答方式背景

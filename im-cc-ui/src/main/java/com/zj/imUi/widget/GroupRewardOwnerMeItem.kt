@@ -19,8 +19,8 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_bottom, this, true)
-        textRewardNumber = findViewById(R.id.tv_reward_number)
-        textRewardTime = findViewById(R.id.tv_tIme)
+        textRewardNumber = findViewById(R.id.im_msg_item_owner_reward_bottom_tv_reward_number)
+        textRewardTime = findViewById(R.id.im_msg_item_owner_reward_bottom_tv_tIme)
     }
 
     @SuppressLint("SetTextI18n")
