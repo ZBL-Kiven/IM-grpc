@@ -51,12 +51,14 @@ class IMContentCCVideoView @JvmOverloads constructor(
     }
 
     override fun init(data: ImMsgIn) {
-
         if (childCount == 0) {
             addView(contentLayout)
         }
-
         onSetData(data)
+
+        imgCCVideoCover.setOnClickListener{
+            data.jumpToOwnerHomePage() //跳转大V作品详情页
+        }
     }
 
     private fun onSetData(data: ImMsgIn?) {

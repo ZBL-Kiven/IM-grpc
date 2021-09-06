@@ -61,6 +61,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             addView(contentLayout)
         }
 
+
+        contentLayout.setOnClickListener{
+            Log.d("LiXiang","打赏item点击",)
+            data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
+        }
+
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
         tvReliedFLag.visibility = View.GONE
@@ -85,7 +91,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 textReplyType.setBackgroundResource(R.drawable.textview_frame_purple_round_corner_4dp)
             }
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+
         textReplyType.setOnClickListener {
+            Log.d("LiXiang","回复TextView点击",)
             data.onReplyQuestion()
         }
 

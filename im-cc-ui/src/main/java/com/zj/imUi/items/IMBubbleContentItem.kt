@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -176,6 +177,14 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
                 bubbleContent.addView(v, LayoutParams(-1, -1))
+
+                bubbleContent.setOnClickListener{
+                    if (data.getType() ==UiMsgType.MSG_TYPE_IMG){
+                        Log.d("LiXiang","图片item点击",)
+                        data.onViewLargePic()
+                    }
+                }
+
             }
         } finally {
             curContentIn?.onSetData(data)

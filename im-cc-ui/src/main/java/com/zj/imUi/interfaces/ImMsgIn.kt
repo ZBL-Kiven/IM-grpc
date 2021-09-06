@@ -91,4 +91,10 @@ interface ImMsgIn {
 
     fun onReplyQuestion()
 
+    fun onViewLargePic()
+
+    fun jumpToOwnerHomePage()
+
+    fun jumpToSenderRewardsPage()
+
 }
