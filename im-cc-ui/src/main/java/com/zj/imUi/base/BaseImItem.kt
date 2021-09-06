@@ -58,6 +58,10 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
+        if (data.getSelfUserId() == data.getSenderId()) {
+            removeIfNotContains(ivAvatar, true)
+            return
+        }
         if (ivAvatar == null) {
             ivAvatar = ImageView(context)
             ivAvatar?.id = R.id.im_item_message_avatar
@@ -136,7 +140,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     private fun removeIfNotContains(view: View?, removeOnly: Boolean = false): Boolean? {
         return (view?.parent as? ViewGroup)?.let {
             if (removeOnly || it != this@BaseImItem) {
-                it.removeView(view);true
+                it.removeView(view);
+                true
             } else false
         }
     }

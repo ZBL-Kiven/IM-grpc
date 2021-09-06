@@ -7,9 +7,11 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
@@ -24,13 +26,12 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
                 ivAvatar?.visibility = View.GONE
                 addRule(ALIGN_PARENT_END)
             } else {
-                val avatar = ivAvatar
-                if(avatar != null){
-                    ivAvatar?.visibility = View.VISIBLE
+                ivAvatar?.visibility = View.VISIBLE
+                val avatar: ImageView? = ivAvatar
+                if (avatar != null) {
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
-                }else{
+                } else {
                     initAvatar(d)
-                    ivAvatar?.visibility = View.VISIBLE
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                 }
             }
@@ -50,13 +51,22 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         val lpS = (context.resources.displayMetrics.density * 8f + 0.5f).toInt()
         val lp = LayoutParams(size, size)
         lp.marginEnd = lpS
-        return lp
+        return lp.apply {
+            addRule(ALIGN_PARENT_START)
+            ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
+        }
     }
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
-        Glide.with(iv).load(d.getSenderAvatar()).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).error(ColorDrawable(Color.GRAY)).into(iv)
+        val corners = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            20f,
+            context.resources.displayMetrics
+        ).toInt()
+        Glide.with(iv).load(d.getSenderAvatar()).centerInside()
+            .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
+            .error(ColorDrawable(Color.GRAY)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
