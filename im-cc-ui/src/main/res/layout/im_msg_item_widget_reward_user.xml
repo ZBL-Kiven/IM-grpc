@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll"
+    android:id="@+id/im_msg_item_widget_reward_user_ll"
     android:layout_width="wrap_content"
     android:layout_height="30dp"
     android:background="@drawable/im_ui_reward_bg_default_me"
@@ -9,7 +9,7 @@
     android:orientation="horizontal">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_reward_number"
+        android:id="@+id/im_msg_item_widget_reward_user_tv_reward_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/reward_text_color_not_reply"
@@ -18,7 +18,7 @@
         tools:text="- 500" />
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/img_spark"
+        android:id="@+id/im_msg_item_widget_reward_user_img_spark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spark_margin_left"

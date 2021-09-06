@@ -23,9 +23,9 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_widget_reward, this, true)
-        textRewardNumber = findViewById(R.id.tv_reward_number)
-        sparkImg = findViewById(R.id.img_spark)
-        rewardLinearLayout = findViewById(R.id.ll)
+        textRewardNumber = findViewById(R.id.im_msg_item_widget_reward_tv_reward_number)
+        sparkImg = findViewById(R.id.im_msg_item_widget_reward_img_spark)
+        rewardLinearLayout = findViewById(R.id.im_msg_item_widget_reward_ll)
         val textPaint: Paint = textRewardNumber.paint
         textPaint.isFakeBoldText = true
     }

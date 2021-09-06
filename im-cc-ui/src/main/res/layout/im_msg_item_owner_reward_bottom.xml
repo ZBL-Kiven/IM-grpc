@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_tIme"
+        android:id="@+id/im_msg_item_owner_reward_bottom_tv_tIme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -19,7 +19,7 @@
 
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/ll"
+        android:id="@+id/im_msg_item_owner_reward_bottom_ll"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_marginEnd="6dp"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_reward_number"
+            android:id="@+id/im_msg_item_owner_reward_bottom_tv_reward_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/im_msg_item_reward_number_color"
@@ -38,7 +38,7 @@
             tools:text="+ 500" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/img_spark"
+            android:id="@+id/im_msg_item_owner_reward_bottom_img_spark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spark_margin_left"
@@ -52,8 +52,8 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@+id/ll"
-        app:layout_constraintStart_toEndOf="@+id/tv_tIme"
+        app:layout_constraintEnd_toStartOf="@+id/im_msg_item_owner_reward_bottom_ll"
+        app:layout_constraintStart_toEndOf="@+id/im_msg_item_owner_reward_bottom_tv_tIme"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
