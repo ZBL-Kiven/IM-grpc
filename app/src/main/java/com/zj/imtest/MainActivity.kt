@@ -90,9 +90,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun sendUrlImg(view: View) {
-        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
-        Sender.sendUrlImg(url, 640, 426, groupId)
+    fun sendUrlImg(view: View) { //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
+        //        Sender.sendUrlImg(url, 640, 426, groupId)
+        IMHelper.updateSessionStatus(groupId, top = if (view.isSelected) 0 else 1)
+        view.isSelected = !view.isSelected
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -145,7 +146,7 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1125).listen { r, _, _ ->
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, _, _ ->
             Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text}")
         }
 
