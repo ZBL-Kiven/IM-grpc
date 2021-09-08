@@ -34,7 +34,7 @@
             android:layout_marginStart="3dp"
             android:visibility="gone"
             tools:visibility="visible"
-            android:src="@drawable/icon_is_owner_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_owner" />
 
     </LinearLayout>
 
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/icon_huida_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal" />
     </RelativeLayout>
 
     <androidx.appcompat.widget.AppCompatTextView

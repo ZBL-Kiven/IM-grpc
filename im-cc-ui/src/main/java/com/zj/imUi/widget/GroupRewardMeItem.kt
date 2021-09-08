@@ -38,19 +38,19 @@ class GroupRewardMeItem @JvmOverloads constructor(context: Context, attributeSet
         when (imMsgIn.getQuestionStatus()) {
             1 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_timeout))
-                rewardLinearLayout.setBackgroundResource(R.drawable.bg_yilingqu_me)
-                sparkImg.setImageResource(R.drawable.icon_diamond_ed)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained_me)
+                sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_diamonds_gray)
                 reduce = "- "
             }
             0 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_member_waitReply))
-                rewardLinearLayout.setBackgroundResource(R.drawable.im_ui_reward_bg_default_me)
-                sparkImg.setImageResource(R.drawable.icon_diamond_normal)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_can_obtain_me)
+                sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_diamonds_normal)
             }
             2 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_timeout))
-                rewardLinearLayout.setBackgroundResource(R.drawable.bg_yilingqu_me)
-                sparkImg.setImageResource(R.drawable.icon_diamond_ed)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained_me)
+                sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_diamonds_gray)
             }
         }
         textRewardNumber.text = StringBuilder(reduce).append(imMsgIn.getDiamonds().toString())

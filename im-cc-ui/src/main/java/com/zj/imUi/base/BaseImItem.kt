@@ -15,7 +15,6 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
-import com.zj.imUi.items.IMRewardItem
 import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
@@ -135,7 +134,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         val loadingLp = getSendingLayoutParams(data)
         addViewToSelf(ivSendStatusNo, loadingLp)
         addViewToSelf(amSending, loadingLp)
-        ivSendStatusNo?.setImageResource(R.drawable.icon_sendlose)
+        ivSendStatusNo?.setImageResource(R.drawable.im_msg_item_widget_reward_icon_sendlose)
         setLoadingState(data)
         ivSendStatusNo?.setOnClickListener {
             curData?.resend()

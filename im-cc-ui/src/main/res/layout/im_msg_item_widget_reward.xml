@@ -4,7 +4,7 @@
     android:id="@+id/im_msg_item_widget_reward_ll"
     android:layout_width="wrap_content"
     android:layout_height="30dp"
-    android:background="@drawable/im_ui_reward_bg_default"
+    android:background="@drawable/im_msg_item_widget_reward_bg_can_obtain"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -22,5 +22,5 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/spark_margin_left"
-        android:src="@drawable/icon_currency_normal" />
+        android:src="@drawable/im_msg_item_widget_reward_spark_normal" />
 </LinearLayout>

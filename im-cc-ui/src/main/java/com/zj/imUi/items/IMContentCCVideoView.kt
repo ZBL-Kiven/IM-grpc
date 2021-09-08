@@ -17,6 +17,7 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
+import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
 
@@ -101,7 +102,7 @@ class IMContentCCVideoView @JvmOverloads constructor(
         }
         if (data.getSendTime() in 1..3600000 * 48) {
             tvCCVideoSendTime.visibility = View.VISIBLE
-            tvCCVideoSendTime.text = setTimeText(data.getSendTime())
+            tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { setTimeText(it) }
         } else tvCCVideoSendTime.visibility = View.GONE
 
     }

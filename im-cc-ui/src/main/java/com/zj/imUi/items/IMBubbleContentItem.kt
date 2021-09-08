@@ -59,6 +59,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
             else  iconIsOwner.visibility = View.GONE
         }
+//        llName.visibility = View.GONE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -127,9 +128,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             imgQuestion.visibility = View.VISIBLE
             imgReply.visibility = View.VISIBLE
             if (data.getSenderId() == data.getSelfUserId()) {
-                imgReply.setImageResource(R.drawable.icon_huida_bai)
+                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_white)
             } else if (data.getReplyMsgQuestionIsPublished() == false) {
-                imgReply.setImageResource(R.drawable.icon_simihuida_normal)
+                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_private)
             }
         } else {
             imgQuestion.visibility = View.GONE

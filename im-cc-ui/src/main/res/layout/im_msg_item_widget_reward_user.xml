@@ -4,7 +4,7 @@
     android:id="@+id/im_msg_item_widget_reward_user_ll"
     android:layout_width="wrap_content"
     android:layout_height="30dp"
-    android:background="@drawable/im_ui_reward_bg_default_me"
+    android:background="@drawable/im_msg_item_widget_reward_bg_can_obtain_me"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -22,6 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spark_margin_left"
-        android:src="@drawable/icon_diamond_normal" />
+        android:src="@drawable/im_msg_item_widget_reward_diamonds_normal" />
 
 </LinearLayout>

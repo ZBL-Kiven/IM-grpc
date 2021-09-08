@@ -2,12 +2,14 @@ package com.zj.imUi.widget.bottom
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.TimeUtils
 import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardMeItem
 import java.lang.StringBuilder
 
@@ -29,7 +31,9 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
 
     fun setData(imMsgIn: ImMsgIn) {
         mGroupRewardMeItem.setBackGround(imMsgIn)
-        mTimeTextView?.text = setTimeText(imMsgIn.getSendTime()/1000000)
+
+        mTimeTextView?.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { setTimeText(it) }
+
         if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId()){
             mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
         }

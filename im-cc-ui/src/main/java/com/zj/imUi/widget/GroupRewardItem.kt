@@ -33,9 +33,9 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
     private fun setSpark(status: Int) {
         when (status) {
             2 -> {
-                sparkImg.setImageResource(R.drawable.icon_currency_guoqi)
+                sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_spark_white)
             }
-            0, 1 -> sparkImg.setImageResource(R.drawable.icon_currency_normal)
+            0, 1 -> sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_spark_normal)
         }
     }
 
@@ -50,16 +50,16 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
         when (messageBean.getQuestionStatus()) {
             1 -> { //设置是否显示加号
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply)) //设置布局背景
-                rewardLinearLayout.setBackgroundResource(R.drawable.bg_yilingqu)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained)
                 plus = "+ "
             } //未回复
             0 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.im_msg_item_reward_number_color))
-                rewardLinearLayout.setBackgroundResource(R.drawable.im_ui_reward_bg_default)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_can_obtain)
             } //超时
             2 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_timeout))
-                rewardLinearLayout.setBackgroundResource(R.drawable.bg_weilingqu)
+                rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_not_obtain)
             }
         }
         messageBean.getSpark().let {

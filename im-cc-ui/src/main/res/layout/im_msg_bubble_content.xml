@@ -34,7 +34,7 @@
             android:layout_marginTop="2dp"
             android:layout_marginStart="3dp"
             android:visibility="gone"
-            android:src="@drawable/icon_is_owner_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_owner" />
 
     </LinearLayout>
 
@@ -53,7 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/icon_huida_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal" />
 
         <FrameLayout
             android:id="@+id/im_msg_bubble_viewstub"
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/icon_question_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_question_normal" />
 
         <LinearLayout
             android:layout_width="match_parent"
