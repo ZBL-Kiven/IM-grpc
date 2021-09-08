@@ -12,5 +12,7 @@ interface BaseBubbleConfig<T> {
 
     fun getAvatarLayoutParams(d: T): RelativeLayout.LayoutParams
 
+    fun getTvNickNameLayoutParams(d: T): RelativeLayout.LayoutParams
+
     fun onLoadAvatar(iv: ImageView?, d: T)
 }

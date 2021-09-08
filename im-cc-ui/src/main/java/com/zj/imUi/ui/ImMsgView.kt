@@ -34,6 +34,14 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
                     initAvatar(d)
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                 }
+            //                tvNickname?.visibility = View.VISIBLE
+//                val nickname = tvNickname
+//                if (nickname!=null){
+//                    tvNickname?.id?.let { addRule(BELOW, it) }
+//                } else {
+//                    initName(d)
+//                    tvNickname?.id?.let { addRule(BELOW, it) }
+//                }
             }
         }
     }
@@ -64,9 +72,10 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
             20f,
             context.resources.displayMetrics
         ).toInt()
-        Glide.with(iv).load(d.getSenderAvatar()).centerInside()
-            .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-            .error(ColorDrawable(Color.GRAY)).into(iv)
+            Glide.with(iv).load(d.getSenderAvatar()).centerInside()
+                .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
+                .placeholder(R.drawable.im_msg_item_default_avatar)
+                .error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
@@ -75,4 +84,10 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         return BubbleRenderer
     }
 
+    override fun getTvNickNameLayoutParams(d: ImMsgIn): LayoutParams {
+        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+            tvNickname?.id?.let { addRule(BELOW, it) }
+            ivAvatar?.id?.let { addRule(RIGHT_OF,it) }
+        }
+    }
 }

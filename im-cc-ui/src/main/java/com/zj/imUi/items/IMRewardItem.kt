@@ -36,7 +36,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
-    private var tvReliedFLag: AppCompatTextView
+    private var tvReliedFLag:AppCompatTextView
 
     private var contentLayout: View
 
@@ -63,8 +63,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
 
 
-        contentLayout.setOnClickListener {
-            Log.d("LiXiang", "打赏item点击")
+        contentLayout.setOnClickListener{
+            Log.d("LiXiang","打赏item点击",)
             data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
         }
 
@@ -77,7 +77,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
             textReplyType.visibility = View.VISIBLE
-            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().toUpperCase(Locale.ENGLISH))
+            val stringBuilder: StringBuilder = StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ").append(data.getAnswerMsgType().toString().toUpperCase(
+                Locale.ENGLISH))
             textReplyType.text = stringBuilder
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
@@ -96,6 +97,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             Log.d("LiXiang", "回复TextView点击")
             data.onReplyQuestion()
         }
+
+        tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
 
 
         if (data.getQuestionStatus() == 0) {
@@ -128,6 +131,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 imgCountdown.setImageResource(R.drawable.icon_countdown_normal)
                 llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
             }
+
+            if(data.getExpireTime() in 1..3599999){
+                llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
+            }
         } else if (data.getQuestionStatus() == 1) { //已回复
             //回答方式背景
             textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
@@ -137,12 +144,15 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             imgCountdown.setImageResource(R.drawable.icon_countdown_ex)
             llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
             tvReliedFLag.visibility = View.VISIBLE
+            tvCountdown.text = context.getString(R.string.im_ui_question_no_time)
 
         } else if (data.getQuestionStatus() == 2) {
             setOutTimeBg()
         }
 
-        tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
+
+
+
         if (data.getSelfUserId() == data.getSenderId()) {
             timeBottom.visibility = View.VISIBLE
             timeBottom.setData(data)
@@ -170,7 +180,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.frame_textview_private))
         imgCountdown.setImageResource(R.drawable.icon_countdown_ex)
         llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
-        tvCountdown.text = "- -"
+        tvCountdown.text = context.getString(R.string.im_ui_question_no_time)
     }
 
     private fun setReplyTypeText(type: String): String? {
@@ -199,12 +209,15 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
         if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
-        if (remainingTime < 1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
+//        if (remainingTime < 1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
+        if (this.curData?.invoke()?.getQuestionStatus() == 0 && remainingTime < 3600000) {
+            tvCountdown.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg)
+        }
     }
 
     private fun timeParseHour(duration: Long): String? {
         if (duration < 1) {
-            return "- -"
+            return context.getString(R.string.im_ui_question_no_time)
         }
         var time: String? = ""
         val hour = duration / 3600000

@@ -29,7 +29,7 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
 
     fun setData(imMsgIn: ImMsgIn) {
         mGroupRewardMeItem.setBackGround(imMsgIn)
-        mTimeTextView?.text = setTimeText(imMsgIn.getSendTime())
+        mTimeTextView?.text = setTimeText(imMsgIn.getSendTime()/1000000)
         if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId()){
             mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
         }

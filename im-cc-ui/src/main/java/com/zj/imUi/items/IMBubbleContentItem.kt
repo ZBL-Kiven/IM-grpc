@@ -37,6 +37,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
         tvName = findViewById(R.id.im_msg_item_normal_text_tv_nickname)
+        iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
         bubbleContent = findViewById(R.id.im_msg_bubble_viewstub)
         tvQuestionContent = findViewById(R.id.im_msg_item_normal_text_replied_content)
         tvFlag = findViewById(R.id.im_msg_item_normal_text_replied_tv_flag)
@@ -46,7 +47,6 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         timeBottom = findViewById(R.id.im_msg_item_normal_text_replied_time)
         llQuestionContent = findViewById(R.id.im_msg_bubble_content_ll_question)
         llName = findViewById(R.id.im_msg_bubble_ll_title)
-        iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
         llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
@@ -67,10 +67,11 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     private fun setTime(data: ImMsgIn) {
-        timeBottom.visibility = View.VISIBLE
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            timeBottom.visibility = View.VISIBLE
-            timeBottom.setData(data)
+            if(data.getSelfUserId() == data.getSenderId()) {
+                timeBottom.visibility = View.VISIBLE
+                timeBottom.setData(data)
+            }
         }else timeBottom.visibility = View.GONE
 
     }
@@ -184,7 +185,6 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                         data.onViewLargePic()
                     }
                 }
-
             }
         } finally {
             curContentIn?.onSetData(data)
