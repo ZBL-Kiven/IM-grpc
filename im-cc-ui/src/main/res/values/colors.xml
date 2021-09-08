@@ -36,11 +36,13 @@
     <color name="frame_textview_brown">#FFD3870A</color>
     <color name="frame_textview_gray">#80B8B8B8</color>
     <color name="frame_textview_changes">#FFF0723B</color>
+    <color name="text_color_red">#FFD30A0A</color>
     <color name="replied_textview">#FF3EC093</color>
     <color name="replied_bg">#FFE2E5EF</color>
     <color name="nickname_color_black">#FF262628</color>
     <color name="text_color_black">#FF262628</color>
-\    <color name="text_color_gray">#FFA6ACBF</color>
+    <color name="text_color_gray">#FFA6ACBF</color>
+    <color name="text_color_gray_nickname">#FF9395AE</color>
 
     <color name="message_item_private">#33944DE3</color>
     <color name="message_purple_translate_20">#33944DE2</color>

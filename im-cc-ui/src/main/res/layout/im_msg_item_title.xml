@@ -14,7 +14,7 @@
         android:ellipsize="end"
         android:maxWidth="150dp"
         android:maxLines="1"
-        android:textColor="@color/nickname_color_black"
+        android:textColor="@color/text_color_gray_nickname"
         android:textSize="14sp"
         tools:text="Nickname" />
 
