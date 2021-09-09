@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="im_item_message_avatar" type="id" />
-    <item name="im_item_message_send_lose" type="id" />
-    <item name="im_item_message_sending" type="id" />
+    <item name="im_item_message_send_state" type="id" />
     <item name="im_item_message_bubble" type="id" />
     <item name="im_item_message_nickname" type="id" />
 </resources>

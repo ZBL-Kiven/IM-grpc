@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -16,16 +15,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
 
-class IMContentCCVideoView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    def: Int = 0
-) : BaseBubble(context, attrs, def) {
+class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
 
 
     private var tvName: AppCompatTextView
@@ -35,12 +29,9 @@ class IMContentCCVideoView @JvmOverloads constructor(
     private var tvCCVideoTitle: AppCompatTextView
     private var tvCCVideoSendTime: AppCompatTextView
 
-    private var contentLayout: View
-
+    private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, false)
 
     init {
-        contentLayout =
-            LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, false)
         with(contentLayout) {
             tvName = findViewById(R.id.im_msg_item_normal_cc_video_tv_nickname)
             imgOwnerFlag = findViewById(R.id.im_msg_item_normal_cc_video_img_owner)
@@ -57,7 +48,7 @@ class IMContentCCVideoView @JvmOverloads constructor(
         }
         onSetData(data)
 
-        imgCCVideoCover.setOnClickListener{
+        imgCCVideoCover.setOnClickListener {
             data.jumpToOwnerHomePage() //跳转大V作品详情页
         }
     }
@@ -70,34 +61,17 @@ class IMContentCCVideoView @JvmOverloads constructor(
             tvName.text = data.getSenderName()
         } else llTitle.visibility = View.GONE
 
-        val corners = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            8f,
-            context.resources.displayMetrics
-        ).toInt()
+        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
         data.getCCVideoContentImgPreviewRemoteStorageUrl()?.let {
-            Glide.with(this).load(it).centerInside()
-                .override(DPUtils.dp2px(256f), DPUtils.dp2px(160f))
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-                .into(imgCCVideoCover)
+            Glide.with(this).load(it).centerInside().override(DPUtils.dp2px(256f), DPUtils.dp2px(160f)).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).into(imgCCVideoCover)
         }
 
         data.getCCVideoContentVideoTitle()?.let {
             tvCCVideoTitle.visibility = View.VISIBLE
             tvCCVideoTitle.text = data.getCCVideoContentVideoTitle()
             if (data.getSelfUserId() == data.getSenderId()) {
-                tvCCVideoTitle.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.text_color_white
-                    )
-                )
-            } else tvCCVideoTitle.setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.text_color_black
-                )
-            )
+                tvCCVideoTitle.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+            } else tvCCVideoTitle.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
 
         }
         if (data.getSendTime() in 1..3600000 * 48) {
@@ -107,17 +81,13 @@ class IMContentCCVideoView @JvmOverloads constructor(
 
     }
 
-
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..3599999) {
-            StringBuilder(timeParse(sendTime)).append(" ")
-                .append(context.getString(R.string.im_ui_min_ago))
+            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
         } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(" ")
-                .append(context.getString(R.string.im_ui_hours_ago))
+            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
-
 
     private fun timeParseHour(duration: Long): String {
         val time: String?
@@ -130,7 +100,6 @@ class IMContentCCVideoView @JvmOverloads constructor(
         val minute = duration / 60000
         return minute.toString()
     }
-
 
 
     override fun onResume() {

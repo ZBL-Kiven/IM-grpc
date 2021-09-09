@@ -1,12 +1,9 @@
 package com.zj.imUi.items
 
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
@@ -21,29 +18,19 @@ import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.views.ut.DPUtils
-import android.graphics.drawable.BitmapDrawable
-
-import android.graphics.Bitmap
-
-import android.graphics.BitmapFactory
-
-
 
 
 class IMContentImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : AppCompatImageView(context, attrs, def), ImContentIn {
 
-
-    private  var  anim : ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000);
-
+    private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
 
     init {
         anim.duration = 800
-        anim.repeatCount = ObjectAnimator.INFINITE;
-        anim.start();
+        anim.repeatCount = ObjectAnimator.INFINITE
+        anim.start()
         this.scaleType = ScaleType.CENTER_INSIDE
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
@@ -52,24 +39,16 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
             val lp = FrameLayout.LayoutParams(arrayInt[0], arrayInt[1])
             layoutParams = lp
             data.getImgContentUrl()?.let {
-                Glide.with(this)
-                    .load(it)
-                    .centerInside()
-                    .override(arrayInt[0], arrayInt[1])
-                    .placeholder(R.drawable.im_msg_item_img_loading)
-                    .error(R.drawable.im_msg_item_img_loading)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-                    .addListener(object :RequestListener<Drawable>{
-                        override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                            Log.e("li_xiang","图片加载失败")
-                            return false
-                        }
-                        override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                            anim.cancel()
-                            return false
-                        }
-                    })
-                    .into(this)
+                Glide.with(this).load(it).fitCenter().override(arrayInt[0], arrayInt[1]).placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
+
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        anim.cancel()
+                        return false
+                    }
+                }).into(this)
             }
         }
     }
