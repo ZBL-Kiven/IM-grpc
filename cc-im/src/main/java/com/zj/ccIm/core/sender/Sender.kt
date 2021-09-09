@@ -129,7 +129,7 @@ object Sender {
     class MsgFileUploader(private val d: SendMessageReqEn) : BaseFileSender(Constance.app, d, d.clientMsgId) {
 
         private val mVideoOutputPath = "/compress/im/${d.clientMsgId}.mp4"
-        private val mImageOutputPath = "/compress/im/${d.clientMsgId}.jpg"
+        private val mImageOutputPath = "/compress/im/${d.clientMsgId}"
 
         private val onImgCompressListener = object : com.zj.ccIm.core.sender.compress.OnCompressListener {
 
@@ -138,34 +138,42 @@ object Sender {
             }
 
             override fun onSuccess(path: String?) {
+                log("image compress success ")
                 val deleteOriginalFile = path != d.localFilePath
                 d.localFilePath = path
                 super@MsgFileUploader.startUpload(deleteOriginalFile)
             }
 
             override fun onError(e: Throwable?) {
+                log("image compress error case: ${e?.message} ")
                 onStatus?.call(true, d.clientMsgId, 0, d, false, e)
             }
         }
 
         private val onVideoCompressListener = object : CompressListener {
             override fun onSuccess(p0: String?) {
+                log("video start compress ... ")
                 val deleteOriginalFile = p0 != d.localFilePath
                 d.localFilePath = p0
                 super@MsgFileUploader.startUpload(deleteOriginalFile)
             }
 
             override fun onCancel() {
+                log("video compress canceled! ")
                 cancel()
             }
 
-            override fun onProgress(p0: Float) {}
+            override fun onProgress(p0: Float) {
+                log("video compress progress changed => ${p0 * 100}%")
+            }
 
             override fun onError(p0: Int, case: String) {
+                log("video compress error case : $case ")
                 onStatus?.call(true, d.clientMsgId, 0, d, false, IllegalArgumentException(case))
             }
 
             override fun onFilePatched(p0: String?): Boolean {
+                log("video compress , compatible with inaccessible files , the file is patched to : $p0 ")
                 return true
             }
         }

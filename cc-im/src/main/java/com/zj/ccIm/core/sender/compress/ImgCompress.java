@@ -53,8 +53,11 @@ public class ImgCompress implements Handler.Callback {
             mCompressListener.onError(new FileNotFoundException("no target cached file found"));
             return null;
         }
-        String cacheBuilder = cache.getAbsolutePath() + "/" + mTargetPath + (TextUtils.isEmpty(suffix) ? ".jpg" : suffix);
-        return new File(cacheBuilder);
+        if (!cache.exists() && !cache.mkdirs()) {
+            return null;
+        }
+        String targetPath = mTargetPath + (TextUtils.isEmpty(suffix) ? ".JPEG" : suffix);
+        return new File(cache, targetPath);
     }
 
     /**
@@ -86,14 +89,18 @@ public class ImgCompress implements Handler.Callback {
             cachePath = context.getCacheDir().getPath();
         }
         File cacheDir = new File(cachePath);
-        if (!cacheDir.exists()) {
-            File result = new File(cacheDir, cacheName);
-            if (!result.mkdirs() && (!result.exists() || !result.isDirectory())) {
-                return null;
-            }
-            return result;
+        if (!cacheDir.exists() && !cacheDir.mkdirs()) {
+            return null;
         }
-        return null;
+        File result = new File(cacheDir, cacheName);
+        if (result.exists() && !result.isDirectory()) {
+            if (!result.delete()) return null;
+            result = new File(cacheDir, cacheName);
+        }
+        if (!result.exists() && !result.mkdirs()) {
+            return null;
+        }
+        return result;
     }
 
     /**
@@ -114,7 +121,14 @@ public class ImgCompress implements Handler.Callback {
             AsyncTask.SERIAL_EXECUTOR.execute(() -> {
                 try {
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_START));
-                    File result = Checker.isNeedCompress(mLeastCompressSize, path) ? new Engine(path, getImageCacheFile(context, Checker.checkSuffix(path))).compress() : new File(path);
+                    File result;
+                    if (Checker.isNeedCompress(mLeastCompressSize, path)) {
+                        File f = getImageCacheFile(context, Checker.checkSuffix(path));
+                        if (f == null) return;
+                        result = new Engine(path, f).compress();
+                    } else {
+                        result = new File(path);
+                    }
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_MULTIPLE_SUCCESS, result.getAbsolutePath()));
                 } catch (IOException e) {
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, e));
@@ -183,7 +197,10 @@ public class ImgCompress implements Handler.Callback {
         }
 
         public Builder setTargetPath(String targetPath) {
-            this.mTargetPath = targetPath;
+            if (!TextUtils.isEmpty(targetPath)) {
+                String[] paths = targetPath.split("\\.");
+                this.mTargetPath = paths[0];
+            }
             return this;
         }
 

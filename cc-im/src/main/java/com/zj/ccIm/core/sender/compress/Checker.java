@@ -44,9 +44,8 @@ class Checker {
 
     static String checkSuffix(String path) {
         if (TextUtils.isEmpty(path)) {
-            return ".jpg";
+            return ".JPEG";
         }
-
         return path.substring(path.lastIndexOf("."));
     }
 

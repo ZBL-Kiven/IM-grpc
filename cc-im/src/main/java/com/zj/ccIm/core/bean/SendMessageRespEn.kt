@@ -27,4 +27,14 @@ class SendMessageRespEn {
      * */
     var sendTime: Long = 0
 
+    /**
+     * 钻石余额
+     */
+    val diamondNum: Int? = null
+
+    /**
+     * spark余额
+     */
+    val sparkNum: Int? = null
+
 }

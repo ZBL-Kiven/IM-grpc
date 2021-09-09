@@ -13,7 +13,12 @@ open class BaseFileSender(protected val context: Context?, private val d: SendMe
 
     final override fun call(onStatus: OnStatus<Any?>) {
         this.onStatus = onStatus
-        startUpload(false)
+        try {
+            startUpload(false)
+        } catch (e: Exception) {
+            onStatus.call(true, callId, 0, d, false, e)
+            e.printStackTrace()
+        }
     }
 
     protected open fun startUpload(isDeleteFileAfterUpload: Boolean) {

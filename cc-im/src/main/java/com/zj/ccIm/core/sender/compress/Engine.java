@@ -3,7 +3,8 @@ package com.zj.ccIm.core.sender.compress;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -78,29 +79,23 @@ class Engine {
                 angle = 270;
                 break;
         }
-
         matrix.postRotate(angle);
-
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
     File compress() throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = computeSize();
-
         Bitmap tagBitmap = BitmapFactory.decodeFile(srcImg, options);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-
         tagBitmap = rotatingImage(tagBitmap);
         tagBitmap.compress(Bitmap.CompressFormat.JPEG, 90, stream);
         tagBitmap.recycle();
-
         FileOutputStream fos = new FileOutputStream(tagImg);
         fos.write(stream.toByteArray());
         fos.flush();
         fos.close();
         stream.close();
-
         return tagImg;
     }
 }

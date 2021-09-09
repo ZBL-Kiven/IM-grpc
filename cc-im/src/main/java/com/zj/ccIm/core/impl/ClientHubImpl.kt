@@ -11,6 +11,7 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.google.gson.Gson
+import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.sender.Converter
@@ -41,7 +42,7 @@ class ClientHubImpl : ClientHub<Any?>() {
      * @param onFinish is called to unblock the queue. By default, it is called after ClientHub pushes.
      * */
     override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        if (isInterruptData(callId, sendingState == SendMsgState.SENDING)) {
+        if (isInterruptData(callId, sendingState)) {
             onFinish();return
         }
         var d = data
@@ -83,15 +84,22 @@ class ClientHubImpl : ClientHub<Any?>() {
      * This is used to intercept content that you don't want to be pushed to UI observers
      * @return true is no longer push
      * */
-    private fun isInterruptData(callId: String?, b: Boolean): Boolean {
+    private fun isInterruptData(callId: String?, sendingState: SendMsgState?): Boolean {
+        val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
             IMHelper.onMsgRegistered();return true
         }
-        if (!b && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
+        if (sendingState != SendMsgState.SENDING && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
             if (IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)) IMHelper.onOfflineMsgPatched()
             return false
         }
-        return callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
+        if (!interruptDefault && sendingState == SendMsgState.FAIL && callId != null) {
+            val sendingDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
+            val lp = sendingDb?.findByCallId(callId)?.let { i -> onDealSendingInfo(i, callId, sendingState) }
+            IMHelper.postToUiObservers(lp?.first, lp?.second)
+            return true
+        }
+        return interruptDefault
     }
 
     private fun dealWithDb(cls: Class<*>?, d: Any?, dc: Collection<*>?, callId: String?, sendingState: SendMsgState?): Triple<Any?, List<Any?>?, String?> {
@@ -155,6 +163,11 @@ class ClientHubImpl : ClientHub<Any?>() {
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
         localMsg?.sendTime = d.sendTime
+        val spark = d.sparkNum
+        val diamond = d.diamondNum
+        if (spark != null || diamond != null) {
+            super.onMsgPatch(AssetsChanged(spark, diamond), callId, false, sendingState, false) {}
+        }
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
