@@ -36,4 +36,3 @@ dependencies {
     implementation 'com.cc.android:views:2.0.5'
 }
 
-apply from: "upload.gradle"

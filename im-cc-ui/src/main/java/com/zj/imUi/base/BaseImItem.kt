@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
-import com.zj.imUi.items.IMRewardItem
 import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
@@ -31,6 +32,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
 
     private var curData: T? = null
     private var lastDataType: String? = null
+    open var tvNickname:TextView?=null
     open var bubbleView: BaseBubble? = null
     open var ivAvatar: ImageView? = null
     open var ivSendStatusNo: ImageView? = null
@@ -43,10 +45,25 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             this.curData = data
             removeAllViews()
             initBubble(data)
+//            initName(data)
             initAvatar(data)
             initSendStatus(data)
             lastDataType = data.getType()
         }
+    }
+
+    open fun initName(data: T) {
+        if (data.getSelfUserId() == data.getSenderId()) {
+            removeIfNotContains(tvNickname, true)
+            return
+        }
+        if (tvNickname == null) {
+            tvNickname = TextView(context)
+            tvNickname?.id = R.id.im_item_message_nickname
+        }
+        addViewToSelf(tvNickname, getTvNickNameLayoutParams(data))
+        tvNickname?.text = data.getSenderName()
+        tvNickname?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray_nickname))
     }
 
     fun notifyChange(d: T?, pl: Any?) {
@@ -117,7 +134,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         val loadingLp = getSendingLayoutParams(data)
         addViewToSelf(ivSendStatusNo, loadingLp)
         addViewToSelf(amSending, loadingLp)
-        ivSendStatusNo?.setImageResource(R.drawable.icon_sendlose)
+        ivSendStatusNo?.setImageResource(R.drawable.im_msg_item_widget_reward_icon_sendlose)
         setLoadingState(data)
         ivSendStatusNo?.setOnClickListener {
             curData?.resend()

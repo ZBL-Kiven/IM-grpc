@@ -4,4 +4,5 @@
     <item name="im_item_message_send_lose" type="id" />
     <item name="im_item_message_sending" type="id" />
     <item name="im_item_message_bubble" type="id" />
+    <item name="im_item_message_nickname" type="id" />
 </resources>

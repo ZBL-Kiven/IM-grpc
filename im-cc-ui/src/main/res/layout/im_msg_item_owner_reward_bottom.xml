@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spark_margin_left"
-            android:src="@drawable/icon_currency_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_spark_normal" />
 
 
     </androidx.appcompat.widget.LinearLayoutCompat>

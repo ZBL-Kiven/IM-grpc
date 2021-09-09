@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.TimeDiffUtils
 
 import java.lang.StringBuilder
 
@@ -26,7 +27,7 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
     @SuppressLint("SetTextI18n")
     fun setData(imMsgIn: ImMsgIn) {
         textRewardNumber.text = "+ " + imMsgIn.getReplyMsgQuestionSpark()
-        textRewardTime.text = setTimeText(imMsgIn.getSendTime())
+        textRewardTime.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { setTimeText(it) }
         textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
     }
 
