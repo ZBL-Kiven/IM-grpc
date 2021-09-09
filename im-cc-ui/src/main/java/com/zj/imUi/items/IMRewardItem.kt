@@ -2,7 +2,6 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
@@ -36,12 +35,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private var llCountDown: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
-    private var tvReliedFLag:AppCompatTextView
+    private var tvReliedFLag: AppCompatTextView
 
-    private var contentLayout: View
+    private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)
 
     init {
-        contentLayout = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)
         with(contentLayout) {
             tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
             textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
@@ -61,10 +59,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         if (childCount == 0) {
             addView(contentLayout)
         }
-
-
-        contentLayout.setOnClickListener{
-            Log.d("LiXiang","打赏item点击",)
+        contentLayout.setOnClickListener {
             data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
         }
 
@@ -93,7 +88,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         } else textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
 
         textReplyType.setOnClickListener {
-            Log.d("LiXiang", "回复TextView点击")
             data.onReplyQuestion()
         }
 
@@ -131,7 +125,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                 llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
             }
 
-            if(data.getExpireTime() in 1..3599999){
+            if (data.getExpireTime() in 1..3599999) {
                 llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
             }
         } else if (data.getQuestionStatus() == 1) { //已回复
@@ -148,9 +142,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         } else if (data.getQuestionStatus() == 2) {
             setOutTimeBg()
         }
-
-
-
 
         if (data.getSelfUserId() == data.getSenderId()) {
             timeBottom.visibility = View.VISIBLE
@@ -191,7 +182,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         }
         return text
     }
-private fun setReplyTypeTextUP(type: String): String? {
+
+    private fun setReplyTypeTextUP(type: String): String? {
         var text: String? = null
         when (type) {
             UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_reward_type_text)
@@ -216,8 +208,7 @@ private fun setReplyTypeTextUP(type: String): String? {
     }
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
-        if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
-//        if (remainingTime < 1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
+        if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime) //        if (remainingTime < 1) curData?.invoke()?.getMsgId()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it) }
         if (this.curData?.invoke()?.getQuestionStatus() == 0 && remainingTime < 3600000) {
             tvCountdown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
         }

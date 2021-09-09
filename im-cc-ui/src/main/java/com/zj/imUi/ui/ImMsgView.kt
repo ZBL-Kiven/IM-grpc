@@ -1,13 +1,9 @@
 package com.zj.imUi.ui
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -17,6 +13,7 @@ import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.views.ut.DPUtils
 
 class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
@@ -34,14 +31,15 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
                     initAvatar(d)
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                 }
-            //                tvNickname?.visibility = View.VISIBLE
-//                val nickname = tvNickname
-//                if (nickname!=null){
-//                    tvNickname?.id?.let { addRule(BELOW, it) }
-//                } else {
-//                    initName(d)
-//                    tvNickname?.id?.let { addRule(BELOW, it) }
-//                }
+
+                //                tvNickname?.visibility = View.VISIBLE
+                //                val nickname = tvNickname
+                //                if (nickname!=null){
+                //                    tvNickname?.id?.let { addRule(BELOW, it) }
+                //                } else {
+                //                    initName(d)
+                //                    tvNickname?.id?.let { addRule(BELOW, it) }
+                //                }
             }
         }
     }
@@ -50,6 +48,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
         val size = (context.resources.displayMetrics.density * 16f + 0.5f).toInt()
         return LayoutParams(size, size).apply {
             addRule(ALIGN_PARENT_BOTTOM)
+            setMargins(0, 0, DPUtils.dp2px(8f), 0)
             bubbleView?.id?.let { addRule(START_OF, it) }
         }
     }
@@ -67,15 +66,8 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
-        val corners = TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            20f,
-            context.resources.displayMetrics
-        ).toInt()
-            Glide.with(iv).load(d.getSenderAvatar()).centerInside()
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-                .placeholder(R.drawable.im_msg_item_default_avatar)
-                .error((R.drawable.im_msg_item_default_avatar)).into(iv)
+        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
+        Glide.with(iv).load(d.getSenderAvatar()).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
@@ -87,7 +79,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     override fun getTvNickNameLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
             tvNickname?.id?.let { addRule(BELOW, it) }
-            ivAvatar?.id?.let { addRule(RIGHT_OF,it) }
+            ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
         }
     }
 }

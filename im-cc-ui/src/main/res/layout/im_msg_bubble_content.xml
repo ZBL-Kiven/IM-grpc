@@ -20,21 +20,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:textColor="@color/text_color_gray_nickname"
-            android:textSize="14sp"
+            android:ellipsize="end"
             android:maxWidth="180dp"
             android:maxLines="1"
-            android:ellipsize="end"
+            android:textColor="@color/text_color_gray_nickname"
+            android:textSize="14sp"
             tools:text="nick_name" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_bubble_img_owner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:layout_marginStart="3dp"
-            android:visibility="gone"
-            android:src="@drawable/im_msg_item_widget_reward_icon_owner" />
+            android:layout_marginTop="2dp"
+            android:src="@drawable/im_msg_item_widget_reward_icon_owner"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -42,16 +42,16 @@
         android:id="@+id/im_msg_bubble_img_ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_icon_reply"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="4dp"
             android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal" />
 
@@ -74,11 +74,11 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_icon_question"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:src="@drawable/im_msg_item_widget_reward_icon_question_normal" />
 
@@ -125,8 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
 
 
 </LinearLayout>

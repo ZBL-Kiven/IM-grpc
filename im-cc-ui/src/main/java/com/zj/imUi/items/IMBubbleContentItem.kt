@@ -2,7 +2,6 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -16,6 +15,7 @@ import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
+import com.zj.views.ut.DPUtils
 
 
 class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
@@ -33,6 +33,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
     private val timeBottom: GroupRewardOwnerMeItem
     private val llContent: LinearLayout
     private var curContentIn: ImContentIn? = null
+    private val baseContentMargins = DPUtils.dp2px(12f)
 
     init {
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
@@ -57,9 +58,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         } else {
             llName.visibility = View.VISIBLE
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
-            else  iconIsOwner.visibility = View.GONE
-        }
-//        llName.visibility = View.GONE
+            else iconIsOwner.visibility = View.GONE
+        } //        llName.visibility = View.GONE
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -69,11 +69,11 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun setTime(data: ImMsgIn) {
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if(data.getSelfUserId() == data.getSenderId()) {
+            if (data.getSelfUserId() == data.getSenderId()) {
                 timeBottom.visibility = View.VISIBLE
                 timeBottom.setData(data)
             }
-        }else timeBottom.visibility = View.GONE
+        } else timeBottom.visibility = View.GONE
 
     }
 
@@ -175,14 +175,16 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 }
                 else -> null
             } ?: return
+
+            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) llContent.setPadding(0, 0, 0, 0)
+            else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
+
             if (!isSameType) {
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
-                bubbleContent.addView(v, LayoutParams(-1, -1))
-
-                bubbleContent.setOnClickListener{
-                    if (data.getType() ==UiMsgType.MSG_TYPE_IMG){
-                        Log.d("LiXiang","图片item点击",)
+                bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                bubbleContent.setOnClickListener {
+                    if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
                         data.onViewLargePic()
                     }
                 }
