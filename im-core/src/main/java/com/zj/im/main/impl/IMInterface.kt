@@ -191,7 +191,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     }
 
     fun routeToServer(data: T, callId: String) {
-        getService("IMInterface.routeServer", false)?.enqueue(BaseMsgInfo.route(true, callId, data))
+        getService("IMInterface.routeServer", false)?.enqueue(BaseMsgInfo.route(false, callId, data))
     }
 
     fun pause(code: String): Boolean {

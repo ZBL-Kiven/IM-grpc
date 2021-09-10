@@ -90,9 +90,8 @@ internal class BaseMsgInfo<T> private constructor() {
         fun <T> connectStateChange(connStateChange: ConnectionState, case: String = ""): BaseMsgInfo<T> {
             val baseInfo = BaseMsgInfo<T>()
             baseInfo.type = MessageHandleType.CONNECT_STATE
-            baseInfo.connStateChange = connStateChange.apply {
-                this.case = case
-            }
+            connStateChange.case = case
+            baseInfo.connStateChange = connStateChange
             return baseInfo
         }
 

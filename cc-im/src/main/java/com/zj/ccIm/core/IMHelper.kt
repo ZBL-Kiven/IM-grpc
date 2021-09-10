@@ -14,7 +14,6 @@ import com.zj.im.main.impl.IMInterface
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
-import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.IMDb
 import com.zj.database.entity.SessionInfoEntity
@@ -26,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import com.google.gson.Gson
+import com.zj.ccIm.core.bean.MessageTotalDots
 import java.lang.NullPointerException
 
 
@@ -57,8 +57,13 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {
-        if (cls == SessionInfoEntity::class.java) {
-            routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)
+        when (cls) {
+            SessionInfoEntity::class.java -> {
+                routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)
+            }
+            MessageTotalDots::class.java -> {
+                routeToClient(null, Constance.CALL_ID_START_LISTEN_TOTAL_DOTS)
+            }
         }
     }
 
@@ -83,8 +88,11 @@ object IMHelper : IMInterface<Any?>() {
             if (i && d != null) {
                 getAppContext()?.let {
                     val sd = DbHelper.get(it)?.db?.sessionDao()
+                    val smd = DbHelper.get(it)?.db?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
+                    val localMsg = smd?.findSessionMsgInfoBySessionId(d.groupId)
                     local?.updateConfigs(disturbType, top, groupName, des)
+                    local?.sessionMsgInfo = localMsg
                     if (local != null) {
                         sd.insertOrChangeSession(local)
                         postToUiObservers(local, ClientHubImpl.PAYLOAD_CHANGED)
@@ -115,19 +123,17 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     private fun getOfflineChatMsg(groupId: Long, ownerId: Long) {
-        val callId = Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES
         val data = GetImHistoryMsgReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        routeToServer(data.build(), Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
     }
 
     private fun getOfflineGroupMsg(groupId: Long, ownerId: Long) {
-        val callId = Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES
         val data = GetImHistoryMsgReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        send(data.build(), callId, 3000, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        routeToServer(data.build(), Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES)
     }
 
     internal fun tryToRegisterAfterConnected(): Boolean {
@@ -145,16 +151,6 @@ object IMHelper : IMInterface<Any?>() {
     internal fun onMsgRegistered() {
         refreshChatMsg()
         refreshGroupMsg()
-    }
-
-    internal fun onOfflineMsgPatched() {
-        val gid = lastMsgRegister?.groupId ?: return
-        withDb {
-            val resendMsg = it?.sendMsgDao()?.findAllBySessionId(gid)
-            resendMsg?.forEach { msg ->
-                Sender.resendMessage(msg)
-            }
-        }
     }
 
     fun close() {

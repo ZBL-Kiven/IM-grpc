@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     private lateinit var rv: RecyclerView
     private lateinit var et: TextView
+    private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
     private val groupId = 6L
     private var lastSelectData: FileInfo? = null
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         rv = findViewById(R.id.main_erv)
+        tv = findViewById(R.id.main_tv_conn)
         et = findViewById(R.id.main_edit)
         adapter = MsgAdapter(rv)
         rv.adapter = adapter
@@ -90,9 +92,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun sendUrlImg(view: View) {
-        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
-        Sender.sendUrlImg(url, 640, 426, groupId)
+    fun sendUrlImg(view: View) { //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
+        //        Sender.sendUrlImg(url, 640, 426, groupId)
+        IMHelper.updateSessionStatus(groupId, null, 1)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -135,6 +137,10 @@ class MainActivity : AppCompatActivity() {
 
         //初始化 IM 聊天 模块，（异步完成）
         IMHelper.init(this.application, IMConfig)
+
+        IMHelper.registerConnectionStateChangeListener(this::class.java.simpleName) {
+            tv.text = it.name
+        }
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
             if (d != null) when (pl) {
