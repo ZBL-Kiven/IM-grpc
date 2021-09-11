@@ -57,8 +57,30 @@ public class ImgCompress implements Handler.Callback {
             return null;
         }
         String targetPath = mTargetPath + (TextUtils.isEmpty(suffix) ? ".JPEG" : suffix);
-        return new File(cache, targetPath);
+        return checkOrBuildFile(cache, targetPath);
     }
+
+    private File checkOrBuildFile(File cache, String targetPath) {
+        try {
+            File target = new File(cache, targetPath);
+            if (!target.exists()) {
+                File parent = target.getParentFile();
+                if (parent == null) {
+                    String s = target.getParent();
+                    if (s == null || s.isEmpty()) {
+                        s = cache.getPath();
+                    }
+                    parent = new File(s);
+                }
+                if ((parent.exists() || parent.mkdirs()) && ((target.exists() && target.isFile()) || target.createNewFile())) {
+                    return target;
+                }
+            }
+        } catch (IOException ignored) {
+        }
+        return null;
+    }
+
 
     /**
      * Returns a directory with a default name in the private cache directory of the application to
@@ -124,7 +146,10 @@ public class ImgCompress implements Handler.Callback {
                     File result;
                     if (Checker.isNeedCompress(mLeastCompressSize, path)) {
                         File f = getImageCacheFile(context, Checker.checkSuffix(path));
-                        if (f == null) return;
+                        if (f == null || !f.exists()) {
+                            if (mCompressListener != null) mCompressListener.onError(new NullPointerException("the compress temp file is invalid!"));
+                            return;
+                        }
                         result = new Engine(path, f).compress();
                     } else {
                         result = new File(path);
@@ -143,8 +168,14 @@ public class ImgCompress implements Handler.Callback {
      * start compress and return the mFile
      */
     @WorkerThread
+    @Nullable
     private File get(String path, Context context) throws IOException {
-        return Checker.isNeedCompress(mLeastCompressSize, path) ? new Engine(path, getImageCacheFile(context, Checker.checkSuffix(path))).compress() : new File(path);
+        File target = getImageCacheFile(context, Checker.checkSuffix(path));
+        if (target == null || !target.exists()) {
+            mCompressListener.onError(new NullPointerException("the file with path " + path + " is invalid!"));
+            return null;
+        }
+        return Checker.isNeedCompress(mLeastCompressSize, path) ? new Engine(path, target).compress() : new File(path);
     }
 
     @Override

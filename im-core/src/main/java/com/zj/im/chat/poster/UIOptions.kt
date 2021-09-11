@@ -171,9 +171,3 @@ fun log(str: String) {
 fun debugLog(str: String) {
     if (BuildConfig.DEBUG) println("im-ui-debug ----- $str")
 }
-
-fun <T, R> PriorityQueue<T>.with(block: (PriorityQueue<T>) -> R): R {
-    synchronized(this) {
-        return block(this)
-    }
-}

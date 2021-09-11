@@ -27,7 +27,6 @@ class Engine {
         }
         this.tagImg = tagImg;
         this.srcImg = srcImg;
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         options.inSampleSize = 1;

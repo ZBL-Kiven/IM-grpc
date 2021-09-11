@@ -43,7 +43,7 @@ class ClientHubImpl : ClientHub<Any?>() {
      * @param onFinish is called to unblock the queue. By default, it is called after ClientHub pushes.
      * */
     override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        if (isInterruptData(callId, sendingState)) {
+        if (isInterruptData(callId, data, sendingState)) {
             onFinish();return
         }
         var d = data
@@ -63,9 +63,6 @@ class ClientHubImpl : ClientHub<Any?>() {
                 val deal = onDealSessionInfo(d?.toString())
                 payload = deal?.first ?: callId
                 d = if (deal?.second == null) d else deal.second
-            }
-            Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS -> {
-                onDispatchSentErrorMsg(d as Long);return
             }
             else -> {
                 if (d is Collection<*>) {
@@ -88,15 +85,18 @@ class ClientHubImpl : ClientHub<Any?>() {
      * This is used to intercept content that you don't want to be pushed to UI observers
      * @return true is no longer push
      * */
-    private fun isInterruptData(callId: String?, sendingState: SendMsgState?): Boolean {
+    private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
             IMHelper.onMsgRegistered()
             return true
         }
         if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
             return false
+        }
+        if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
+            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
+            onDispatchSentErrorMsg(d as Long)
         }
         if (!interruptDefault && sendingState == SendMsgState.FAIL && callId != null) {
             val sendingDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }

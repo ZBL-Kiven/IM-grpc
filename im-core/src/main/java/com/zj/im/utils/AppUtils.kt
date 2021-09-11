@@ -11,7 +11,7 @@ import android.content.res.Configuration
 import java.lang.IllegalStateException
 
 
-object AppUtils : Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
+internal object AppUtils : Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
 
     private var application: Application? = null
     private val appEvents: MutableList<OnAppEvent> = mutableListOf()
@@ -99,7 +99,7 @@ object AppUtils : Application.ActivityLifecycleCallbacks, ComponentCallbacks2 {
     }
 }
 
-interface OnAppEvent {
+internal interface OnAppEvent {
 
     fun appStateChanged(inBackground: Boolean)
 

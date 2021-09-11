@@ -1,7 +1,5 @@
 package com.zj.ccIm.core.impl
 
-
-import android.util.Log
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
@@ -101,7 +99,6 @@ class ServerHubImpl : ServerImplGrpc() {
      * @see [GetImMessageReq]
      * */
     private fun registerMsgReceiver(d: Any?) {
-        Log.e("------- ", "registerMsgReceiver  $d")
         val req = (d as? GetImMessageReq) ?: return
         print("server hub event ", "call on register msg receiver with ${d.groupId}")
         withChannel {
@@ -131,7 +128,6 @@ class ServerHubImpl : ServerImplGrpc() {
                                 onConnected(Constance.CONNECT_TYPE_TOPIC)
                             }
                             Constance.TOPIC_MSG_REGISTRATION -> {
-                                Log.e("------- ", data.topic)
                                 onConnected(Constance.CONNECT_TYPE_MESSAGE)
                             }
                             else -> {
@@ -158,8 +154,7 @@ class ServerHubImpl : ServerImplGrpc() {
                     postReceivedMessage(type, data.imMessageList, true, size)
                     val gid = offlineFetchTab.remove(type)
                     if (gid != null && offlineFetchTab.isEmpty()) {
-                        Log.e("------- ", "${Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS}  with $gid")
-                        postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, gid, false, 0)
+                        postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, gid, true, 0)
                     }
                 } else onParseError(t, false)
             }
