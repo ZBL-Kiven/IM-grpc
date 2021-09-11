@@ -130,7 +130,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
             } else {
                 textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
-                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_purple_private_60))
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_purple_private))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
 
                 tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_origin_private))
@@ -141,7 +141,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         } else { //消息发送者为其他群员
             textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
             if (data.getSelfUserId() != data.getOwnerId()) {
-                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type_70))
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg) //有效期 图标
             }
             tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_origin_private))
