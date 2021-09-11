@@ -22,7 +22,7 @@ object TimeDiffUtils {
         val time1 = dateFormat.parse(sendTime)
         val time2 = dateFormat.parse(currentTime)
       //此时为微秒  一秒等于一百万微秒，等于一千毫秒，这儿换算成毫秒
-        Log.e("li_xiang","lastTime: " +lastTime+"差值"+((time2.time-time1.time)).toString()+"   sendTime  $sendTime"+"当前时间戳"+System.currentTimeMillis()+"  currentTime $currentTime"+"     time1 $time1"+"  time2  $time2")
+        Log.e("li_xiang","发送时间戳: " +lastTime+" 时间差（毫秒）"+((time2.time-time1.time)).toString()+"   sendTime  $sendTime"+"当前时间戳"+System.currentTimeMillis()+"  currentTime $currentTime"+"     time1 $time1"+"  time2  $time2")
         return (time2.time - time1.time)
     }
 

@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
@@ -14,6 +15,7 @@ class IMContentTextView @JvmOverloads constructor(context: Context, attrs: Attri
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+        typeface = Typeface.defaultFromStyle(Typeface.BOLD);
         setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
             Color.WHITE
         } else {

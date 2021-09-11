@@ -25,7 +25,8 @@
             android:maxLines="1"
             android:textColor="@color/text_color_gray_nickname"
             android:textSize="14sp"
-            tools:text="nick_name" />
+            tools:text="nick_name"
+            android:textStyle="bold"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_bubble_img_owner"
@@ -96,7 +97,9 @@
                 android:maxLines="1"
                 android:textColor="@color/text_color_gray"
                 android:textSize="16sp"
-                tools:text="nick_name" />
+                tools:text="nick_name"
+                android:textStyle="bold"
+                />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/im_msg_item_normal_text_replied_tv_flag"
@@ -104,6 +107,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/im_ui_user_nickname_split"
                 android:textColor="@color/text_color_gray"
+                android:textStyle="bold"
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView

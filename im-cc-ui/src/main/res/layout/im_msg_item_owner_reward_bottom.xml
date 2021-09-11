@@ -12,7 +12,6 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/nickname_color_black"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="12 min ago" />

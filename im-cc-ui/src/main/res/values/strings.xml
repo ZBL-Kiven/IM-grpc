@@ -34,6 +34,6 @@
     <string name="im_ui_month_time_format">M month d HH: mm</string>
     <string name="im_ui_year_time_format">yyyy year M month d HH: mm</string>
     <string name="im_ui_yesterday">yesterday</string>
-    <string name="im_ui_question_no_time">- -</string>
+    <string name="im_ui_question_no_time">Expired</string>
 
 </resources>

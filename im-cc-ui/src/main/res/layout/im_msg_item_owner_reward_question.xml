@@ -61,7 +61,8 @@
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
-            tools:text="Text" />
+            tools:text="Text"
+            />
 
         <LinearLayout
             android:id="@+id/im_msg_item_owner_reward_question_ll_countdown"
@@ -88,6 +89,7 @@
                 android:gravity="center"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 tools:text="24h" />
 
         </LinearLayout>
@@ -108,7 +110,8 @@
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="REPLY BY TEXT"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        android:textStyle="bold"/>
 
     <FrameLayout
         android:layout_width="match_parent"
