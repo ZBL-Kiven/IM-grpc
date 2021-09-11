@@ -24,7 +24,8 @@
             android:maxWidth="180dp"
             android:maxLines="1"
             android:ellipsize="end"
-            tools:text="nick_name" />
+            tools:text="nick_name"
+            android:textStyle="bold"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_cc_video_img_owner"
@@ -70,6 +71,7 @@
         android:ellipsize="end"
         android:textSize="16sp"
         android:id="@+id/im_msg_item_normal_cc_video_tv_title"
+        android:textStyle="bold"
         tools:text="I'm In Paris!!!"
         />
 

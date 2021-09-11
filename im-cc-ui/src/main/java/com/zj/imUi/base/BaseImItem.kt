@@ -23,6 +23,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         const val NOTIFY_CHANGE_AUDIO = "notify_change_audio"
         const val NOTIFY_CHANGE_VIDEO = "notify_change_video"
         const val NOTIFY_CHANGE_SENDING_STATE = "notify_change_send_state"
+        const val NOTIFY_CHANGE_REWARD_STATE = "notify_change_reward_state"
 
         fun onLog(s: String) {
             Log.e("------ BaseImItem", "  error case: $s")

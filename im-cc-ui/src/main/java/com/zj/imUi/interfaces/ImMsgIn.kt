@@ -97,4 +97,6 @@ interface ImMsgIn {
 
     fun jumpToSenderRewardsPage()
 
+    fun questionStatusOverdueChange()
+
 }

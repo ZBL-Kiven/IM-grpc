@@ -3,10 +3,10 @@
     <corners
         android:radius="4dp"/>
     <stroke
-        android:color="@color/text_color_red"
+        android:color="@color/text_color_red_70"
         android:width="1dp"/>
     <solid
-        android:color="#FFFE510F"
+        android:color="@color/item_countdown_bg_red_70"
         />
 
 </shape>
