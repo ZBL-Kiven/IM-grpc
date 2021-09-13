@@ -30,6 +30,7 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
     }
 
     fun setData(imMsgIn: ImMsgIn) {
+
         mGroupRewardMeItem.setBackGround(imMsgIn)
 
         mTimeTextView?.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { setTimeText(it) }
@@ -41,6 +42,18 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
             mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray))
         }
     }
+
+    fun setDataWithTime(sendTime: Long,imMsgIn: ImMsgIn) {
+        mTimeTextView?.text = setTimeText(sendTime)
+
+        if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId()){
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+        }
+        if (imMsgIn.getQuestionStatus() == 2){
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray))
+        }
+    }
+
 
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..3599999) {

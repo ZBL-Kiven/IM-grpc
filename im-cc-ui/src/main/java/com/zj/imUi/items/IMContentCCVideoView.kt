@@ -15,11 +15,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
 
-class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
 
 
     private var tvName: AppCompatTextView
@@ -102,10 +103,19 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
     }
 
 
-    override fun onResume() {
+    override fun onSendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { tvCCVideoSendTime.text = setTimeText(sendTime) } }
     }
 
+    override fun onResume() {
+        curData?.invoke()?.let {
+            TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(),
+                    it1,this)
+            }}    }
+
     override fun onStop() {
+        curData?.invoke()?.let { MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId()) }
     }
 
     override fun onDestroy() {

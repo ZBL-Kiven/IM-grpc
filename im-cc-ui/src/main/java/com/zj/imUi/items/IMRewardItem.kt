@@ -14,7 +14,9 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.RewardTimeCountdownUtils
+import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.bottom.GroupMessageItemTime
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import java.lang.StringBuilder
@@ -26,7 +28,7 @@ import kotlin.math.roundToInt
  * date:   2021/8/9  6:44 下午
  * description: 消息列表Item 打赏内容
  */
-class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : BaseBubble(context, attributeSet, defStyle), RewardTimeCountdownUtils.CountdownListener {
+class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : BaseBubble(context, attributeSet, defStyle), MessageSendTimeUtils.SendTImeListener,RewardTimeCountdownUtils.CountdownListener {
 
     private val tvName: GroupMessageItemTitle
     private var textQuestion: AppCompatTextView
@@ -64,6 +66,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         contentLayout.setOnClickListener {
             data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
         }
+
+
 
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
@@ -169,7 +173,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
     private fun setOutTimeBg() { //超时 的提问字体颜色不同
         textQuestion.setTextColor(ContextCompat.getColor(context, R.color.reward_ll_color_timeout))
         questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_gray)
-
         //回答方式背景
         textResponseType.setTextColor(ContextCompat.getColor(context, R.color.frame_textview_private))
         textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg) //有效期 图标
@@ -216,11 +219,18 @@ private fun setReplyTypeTextUP(type: String): String? {
     override fun onResume() {
         curData?.invoke()?.let {
             RewardTimeCountdownUtils.registerCountdownObserver(it.getMsgId(), it.getExpireTime(), this)
+            TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(),
+                    it1,this)
+            }
         }
     }
 
     override fun onStop() {
-        curData?.invoke()?.let { RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId()) }
+        curData?.invoke()?.let {
+            RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
+            MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+        }
     }
 
     override fun onDestroy() {
@@ -245,8 +255,8 @@ private fun setReplyTypeTextUP(type: String): String? {
     }
 
     override fun onCountdown(msgId: String, remainingTime: Long) {
-        if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
         if (this.curData?.invoke()?.getQuestionStatus() == 0 ) {
+            if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text = timeParseHour(remainingTime)
             when {
                 remainingTime in 1..3599999 -> {
                     llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
@@ -261,10 +271,12 @@ private fun setReplyTypeTextUP(type: String): String? {
         }
     }
 
+    override fun onSendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { timeBottom.setDataWithTime(sendTime,it) } }
+    }
+
     private fun timeParseHour(duration: Long): String? {
-        if (duration < 1) {
-            return context.getString(R.string.im_ui_question_no_time)
-        }
+        if (duration < 1) return context.getString(R.string.im_ui_question_no_time)
         var time: String? = ""
         val hour = duration / 3600000
         val minutes = duration % 3600000
@@ -277,7 +289,6 @@ private fun setReplyTypeTextUP(type: String): String? {
             time += "0"
         }
         time += minute
-
         return time
     }
 }

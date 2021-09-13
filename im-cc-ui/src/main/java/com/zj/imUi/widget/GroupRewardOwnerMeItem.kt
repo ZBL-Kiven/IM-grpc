@@ -31,6 +31,11 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
         textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
     }
 
+    fun setDataWithTime(sendTime: Long) {
+        textRewardTime.text = setTimeText(sendTime)
+    }
+
+
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..3599999) {
             StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))

@@ -14,11 +14,13 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.MessageSendTimeUtils
+import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
 import com.zj.views.ut.DPUtils
 
 
-class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
 
     private val tvName: AppCompatTextView
     private val iconIsOwner: AppCompatImageView
@@ -59,7 +61,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             llName.visibility = View.VISIBLE
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
             else iconIsOwner.visibility = View.GONE
-        } //        llName.visibility = View.GONE
+        }
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -203,10 +205,20 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
 
     override fun onResume() {
         curContentIn?.onResume(curData?.invoke())
+        curData?.invoke()?.let {
+        TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+            MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(),
+                it1,this)
+        }}
+    }
+
+    override fun onSendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { timeBottom.setDataWithTime(sendTime) } }
     }
 
     override fun onStop() {
         curContentIn?.onStop(curData?.invoke())
+        curData?.invoke()?.let { MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId()) }
     }
 
     override fun onDestroy() {
