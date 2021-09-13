@@ -14,8 +14,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
+import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
+import com.zj.imUi.utils.RewardTimeCountdownUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
@@ -56,6 +58,8 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
 
     private fun onSetData(data: ImMsgIn?) {
         if (data == null) return
+
+        performRegisterTimer()
 
         if (data.getSelfUserId() != data.getSenderId()) {
             llTitle.visibility = View.VISIBLE
@@ -108,11 +112,30 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
     }
 
     override fun onResume() {
+        performRegisterTimer()
+    }
+
+    override fun notifyChange(pl: Any?) {
+        super.notifyChange(pl)
+        when (pl) {
+            BaseImItem.NOTIFY_CHANGE_SENDING_STATE->performRegisterTimer()
+        }
+    }
+
+    private fun performRegisterTimer() {
         curData?.invoke()?.let {
-            TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
-                MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(),
-                    it1,this)
-            }}    }
+            if (it.getSendState() == 0 || it.getSendState() == 3) {
+                TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                    MessageSendTimeUtils.registerSendTimeObserver(
+                        it.getMsgId(),
+                        it1, this
+                    )
+                }
+            } else {
+                MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+            }
+        }
+    }
 
     override fun onStop() {
         curData?.invoke()?.let { MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId()) }

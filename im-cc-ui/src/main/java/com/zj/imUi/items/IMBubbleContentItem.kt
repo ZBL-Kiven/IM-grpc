@@ -62,6 +62,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
             else iconIsOwner.visibility = View.GONE
         }
+        performRegisterTimer()
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -200,16 +201,28 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         super.notifyChange(pl)
         when (pl) {
             BaseImItem.NOTIFY_CHANGE_AUDIO, BaseImItem.NOTIFY_CHANGE_VIDEO -> onResume()
+            BaseImItem.NOTIFY_CHANGE_SENDING_STATE->performRegisterTimer()
         }
     }
 
     override fun onResume() {
         curContentIn?.onResume(curData?.invoke())
+        performRegisterTimer()
+    }
+
+    private fun performRegisterTimer() {
         curData?.invoke()?.let {
-        TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
-            MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(),
-                it1,this)
-        }}
+            if (it.getSendState() == 0 || it.getSendState() == 3) {
+                TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                    MessageSendTimeUtils.registerSendTimeObserver(
+                        it.getMsgId(),
+                        it1, this
+                    )
+                }
+            } else {
+                MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+            }
+        }
     }
 
     override fun onSendTime(msgId: String, sendTime: Long) {
