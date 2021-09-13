@@ -104,7 +104,9 @@ class ServerHubImpl : ServerImplGrpc() {
         withChannel {
             it.getImMessage(req, object : CusObserver<ImMessage>() {
                 override fun onResult(isOk: Boolean, data: ImMessage?, t: Throwable?) {
+                    i("server hub event ", "new Msg in group ${d.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
                     if (isOk && data != null) {
+                        print("server hub event ", "new Msg [${data.clientMsgId}] received")
                         val size = data.serializedSize * 1L
                         postReceivedMessage(data.clientMsgId, data, false, size)
                     } else onParseError(t, false)
@@ -121,7 +123,7 @@ class ServerHubImpl : ServerImplGrpc() {
         requestStreamObserver = withChannel(true) {
             it.listenTopicData(object : CusObserver<ListenTopicReply>() {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-                    print("on topic", "topic = ${data?.topic}")
+                    print("server hub event ", "topic = ${data?.topic}")
                     if (isOk && data != null) {
                         when (data.topic) {
                             Constance.TOPIC_CONN_SUCCESS -> {
@@ -149,6 +151,7 @@ class ServerHubImpl : ServerImplGrpc() {
         offlineFetchTab[type] = rq.groupId
         val observer = object : CusObserver<BatchMsg>() {
             override fun onResult(isOk: Boolean, data: BatchMsg?, t: Throwable?) {
+                print("server hub event ", "get offline msg for type [$type] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")
                 if (isOk && data != null) {
                     val size = data.serializedSize * 1L
                     postReceivedMessage(type, data.imMessageList, true, size)

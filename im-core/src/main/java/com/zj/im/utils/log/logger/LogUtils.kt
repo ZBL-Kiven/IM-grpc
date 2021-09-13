@@ -24,6 +24,10 @@ internal val logUtils = object : LogCollectionUtils.Config() {
         get() = { now() }
 }
 
+internal fun i(where: String, s: String){
+    logUtils.i(where, s)
+}
+
 internal fun e(where: String, s: String) {
     logUtils.e(where, s)
 }

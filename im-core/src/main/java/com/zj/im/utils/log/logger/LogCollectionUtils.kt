@@ -39,6 +39,12 @@ sealed class LogCollectionUtils {
 
     private fun getTag(what: String?) = String.format(TAG, what)
 
+    fun i(where: String, s: String?) {
+        if (debugEnable) {
+            Log.i(getTag(ErrorType.i.errorName), getLogText(where, s))
+        }
+    }
+
     fun d(where: String, s: String?) {
         if (debugEnable) {
             Log.d(getTag(ErrorType.D.errorName), getLogText(where, s))
@@ -115,7 +121,7 @@ sealed class LogCollectionUtils {
     }
 
     private enum class ErrorType(var errorName: String?) {
-        E("ERROR"), D("DEBUG"), W("WARMING")
+        E("ERROR"), D("DEBUG"), W("WARMING"), i("INFO")
     }
 
     abstract class Config : LogCollectionUtils() {

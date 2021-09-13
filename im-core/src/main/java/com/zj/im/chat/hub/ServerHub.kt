@@ -10,7 +10,7 @@ import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.im.main.StatusHub
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.utils.log.NetRecordUtils
-import com.zj.im.utils.log.logger.printInFile
+import com.zj.im.utils.log.logger.logUtils
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
@@ -141,8 +141,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         DataReceivedDispatcher.pushData(BaseMsgInfo.receiveMsg(callId, data, isSpecialData))
     }
 
+    protected fun i(where: String, case: String) {
+        logUtils.i(where, case)
+    }
+
     protected fun print(where: String, case: String) {
-        printInFile(where, case)
+        logUtils.printInFile(where, case, true)
     }
 
     open fun shutdown() {

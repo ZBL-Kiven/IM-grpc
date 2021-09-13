@@ -91,12 +91,12 @@ class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.onMsgRegistered()
             return true
         }
-        if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-            return false
-        }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
             IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
             onDispatchSentErrorMsg(d as Long)
+        }
+        if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
+            return false
         }
         if (!interruptDefault && sendingState == SendMsgState.FAIL && callId != null) {
             val sendingDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }

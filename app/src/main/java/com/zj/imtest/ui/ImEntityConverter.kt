@@ -237,4 +237,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     }
 
+    override fun questionStatusOverdueChange() {
+
+    }
+
 }
