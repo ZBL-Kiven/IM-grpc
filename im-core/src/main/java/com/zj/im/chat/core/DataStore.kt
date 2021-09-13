@@ -40,7 +40,9 @@ internal class DataStore<T> {
     fun put(info: BaseMsgInfo<T>): Int {
         when (info.type) {
             MessageHandleType.ROUTE_CLIENT, MessageHandleType.ROUTE_SERVER -> {
-                simpleStatusFound.add(info)
+                simpleStatusFound.addOrSet(info) { o ->
+                    info.callId == o.callId
+                }
             }
             MessageHandleType.CONNECT_STATE -> {
                 connectStateChanged.addOnly(info)

@@ -9,7 +9,7 @@ enum class ConnectionState(var case: String = "") {
     }
 
     fun canConnect(): Boolean {
-        return this == INIT || this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE
+        return this == INIT || this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT
     }
 
     fun isValidState(): Boolean {
@@ -17,11 +17,17 @@ enum class ConnectionState(var case: String = "") {
     }
 
     fun isErrorType(): Boolean {
-        return this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT || this == RECONNECT
+        return this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT
     }
 
     fun case(s: String): ConnectionState {
         this.case = s
         return this
+    }
+
+    fun pollCase(): String {
+        val case = this.case
+        this.case = ""
+        return case
     }
 }

@@ -5,7 +5,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 117659
+        return 119273
     }
 
     override fun getUserName(): String {
@@ -36,11 +36,11 @@ object IMConfig : ImConfigIn {
     }
 
     override fun getHeatBeatsTimeOut(): Long {
-        return 5000
+        return 5
     }
 
     override fun getIdleTimeOut(): Long {
-        return 24 * 60 * 60 * 1000
+        return 5 * 1000
     }
 
 }

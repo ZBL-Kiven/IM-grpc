@@ -110,6 +110,17 @@ internal class CustomList<OUT> {
         }
     }
 
+    fun addOrSet(element: OUT, predicate: (other: OUT) -> Boolean) {
+        lst.runSync {
+            val index = it.indexOfFirst(predicate)
+            if (index > 0) {
+                it[index] = element
+            } else {
+                it.add(element)
+            }
+        }
+    }
+
     fun addIf(element: OUT?, index: Int = -1, predicate: (`in`: OUT, other: OUT) -> Boolean) {
         lst.runSync { lst ->
             element?.let {

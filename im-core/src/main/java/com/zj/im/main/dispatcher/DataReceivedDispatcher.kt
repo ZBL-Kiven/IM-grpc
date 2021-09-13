@@ -10,6 +10,7 @@ import com.zj.im.main.StatusHub
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.printInFile
 
+
 internal object DataReceivedDispatcher {
 
     private var chatBase: ChatBase<*>? = null
@@ -28,16 +29,16 @@ internal object DataReceivedDispatcher {
         chatBase?.sendTo(data)
     }
 
-    fun postError(throwable: Throwable) {
-        chatBase?.postError(throwable)
+    fun postError(throwable: Throwable, deadly: Boolean) {
+        chatBase?.postError(throwable, deadly)
     }
 
     fun onLayerChanged(isHidden: Boolean) {
         chatBase?.onAppLayerChanged(isHidden)
     }
 
-    fun checkNetWork() {
-        getServer("on app layer changed")?.checkNetWork()
+    fun checkNetWork(alwaysCheck: Boolean) {
+        getServer("on app layer changed")?.checkNetWork(alwaysCheck)
     }
 
     fun isDataEnable(): Boolean {
@@ -77,13 +78,11 @@ internal object DataReceivedDispatcher {
     }
 
     fun onConnectionStateChange(connState: ConnectionState) {
-        val con = connState.isErrorType()
-        val rec = StatusHub.curConnectionState.canConnect()
-        if (con && rec) {
+        if (connState.canConnect()) {
             getServer("server may need to reconnect")?.tryToReConnect(connState.name)
         }
         StatusHub.curConnectionState = connState
-        chatBase?.notify("on connection state changed")?.onConnectionStatusChanged(connState)
+        chatBase?.notify("on connection state changed to ${connState.name}")?.onConnectionStatusChanged(connState)
     }
 
     fun onSendingProgress(callId: String, progress: Int) {

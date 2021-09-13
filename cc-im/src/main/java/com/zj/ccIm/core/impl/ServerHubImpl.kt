@@ -1,6 +1,5 @@
 package com.zj.ccIm.core.impl
 
-
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
@@ -17,6 +16,7 @@ import java.nio.charset.Charset
 class ServerHubImpl : ServerImplGrpc() {
 
     private var subscribeTopics = mutableListOf<String>()
+    private var offlineFetchTab = hashMapOf<String, Any>()
     private var requestStreamObserver: StreamObserver<ListenTopicReq>? = null
 
     override fun send(params: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
@@ -37,10 +37,6 @@ class ServerHubImpl : ServerImplGrpc() {
             Constance.CALL_ID_REGISTER_CHAT -> {
                 registerMsgReceiver(params)
             }
-
-            Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES, Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES -> {
-                getOfflineMessage(callId, params)
-            }
             else -> null
         }
         if (called == null) {
@@ -51,16 +47,22 @@ class ServerHubImpl : ServerImplGrpc() {
         return sendSize
     }
 
+    override fun onRouteCall(callId: String?, data: Any?) {
+        when (callId) {
+            Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES, Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES -> {
+                if (isConnected()) getOfflineMessage(callId, data)
+            }
+        }
+    }
+
     override fun onConnection() {
         receiveTopic()
     }
 
-    override fun onConnected(connectType: Int) {
+    private fun onConnected(connectType: Int) {
         when (connectType) {
             Constance.CONNECT_TYPE_TOPIC -> {
-                super.onConnected(connectType)
-
-                //subscribe current topics
+                postOnConnected()
                 if (subscribeTopics.isNotEmpty()) {
                     registerTopicListener()
                 }
@@ -105,7 +107,7 @@ class ServerHubImpl : ServerImplGrpc() {
                     if (isOk && data != null) {
                         val size = data.serializedSize * 1L
                         postReceivedMessage(data.clientMsgId, data, false, size)
-                    } else onParseError(t)
+                    } else onParseError(t, false)
                 }
             })
         }
@@ -133,7 +135,7 @@ class ServerHubImpl : ServerImplGrpc() {
                                 postReceivedMessage(data.topic, data.data, false, size)
                             }
                         }
-                    } else onParseError(t)
+                    } else onParseError(t, false)
                 }
             })
         }
@@ -144,12 +146,17 @@ class ServerHubImpl : ServerImplGrpc() {
      * */
     private fun getOfflineMessage(type: String, d: Any?) {
         val rq = (d as? GetImHistoryMsgReq) ?: return
+        offlineFetchTab[type] = rq.groupId
         val observer = object : CusObserver<BatchMsg>() {
             override fun onResult(isOk: Boolean, data: BatchMsg?, t: Throwable?) {
                 if (isOk && data != null) {
                     val size = data.serializedSize * 1L
                     postReceivedMessage(type, data.imMessageList, true, size)
-                } else onParseError(t)
+                    val gid = offlineFetchTab.remove(type)
+                    if (gid != null && offlineFetchTab.isEmpty()) {
+                        postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, gid, true, 0)
+                    }
+                } else onParseError(t, false)
             }
         }
         withChannel {
@@ -187,11 +194,12 @@ class ServerHubImpl : ServerImplGrpc() {
      * */
     private fun leaveChatRoom(d: Any?) {
         val rq = (d as? LeaveImGroupReq) ?: return
+        offlineFetchTab.clear()
         print("server hub event ", "leave from receiver with ${d.groupId}")
         withChannel(false) {
             it.leaveImGroup(rq, object : CusObserver<LeaveImGroupReply>() {
                 override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
-                    if (!isOk) t?.let { onParseError(t) }
+                    if (!isOk) t?.let { onParseError(t, false) }
                 }
             })
         }
@@ -201,17 +209,18 @@ class ServerHubImpl : ServerImplGrpc() {
         return Gson().toJson(obj).toByteArray(Charset.forName("UTF-8")).size
     }
 
-    override fun onParseError(t: Throwable?) {
+    override fun onParseError(t: Throwable?, deadly: Boolean) {
         print("server.onParseError", "${t?.message}")
+        offlineFetchTab.clear()
         (t as? StatusRuntimeException)?.let {
             when (it.status.code) {
                 Status.Code.CANCELLED -> {
                     print("------ ", "onCanceled with message : ${t.message}")
                 }
                 else -> {
-                    super.onParseError(IllegalStateException("server error ${it.status.code.name} ; code = ${it.status.code.value()} "))
+                    super.onParseError(IllegalStateException("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
                 }
             }
-        } ?: super.onParseError(t)
+        } ?: super.onParseError(t, deadly)
     }
 }

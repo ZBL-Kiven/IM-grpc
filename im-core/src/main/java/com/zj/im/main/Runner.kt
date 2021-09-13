@@ -203,14 +203,14 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
         enqueue(BaseMsgInfo.connectStateChange<T>(state, case))
     }
 
-    fun postError(e: Throwable, throws: Boolean = true) {
+    fun postError(e: Throwable, deadly: Boolean = true) {
         errorCollector.printInFile("postError", e.message, true)
         when (e) {
             is LooperInterruptedException -> {
                 if (!isFinishing(curRunningKey)) initHandler()
                 else printInFile("ChatBase.IM.LooperInterrupted", " the MsgLooper was stopped by SDK shutDown")
             }
-            else -> if (throws && BuildConfig.DEBUG) throw e
+            else -> if (deadly && BuildConfig.DEBUG) throw e
         }
         imi?.postError(e)
     }

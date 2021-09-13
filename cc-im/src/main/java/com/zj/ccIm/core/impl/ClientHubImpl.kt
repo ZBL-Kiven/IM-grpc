@@ -15,6 +15,7 @@ import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.sender.Converter
+import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.FetchSessionResult
 import com.zj.im.chat.poster.log
@@ -42,7 +43,7 @@ class ClientHubImpl : ClientHub<Any?>() {
      * @param onFinish is called to unblock the queue. By default, it is called after ClientHub pushes.
      * */
     override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        if (isInterruptData(callId, sendingState)) {
+        if (isInterruptData(callId, data, sendingState)) {
             onFinish();return
         }
         var d = data
@@ -84,14 +85,18 @@ class ClientHubImpl : ClientHub<Any?>() {
      * This is used to intercept content that you don't want to be pushed to UI observers
      * @return true is no longer push
      * */
-    private fun isInterruptData(callId: String?, sendingState: SendMsgState?): Boolean {
+    private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            IMHelper.onMsgRegistered();return true
+            IMHelper.onMsgRegistered()
+            return true
         }
-        if (sendingState != SendMsgState.SENDING && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
-            if (IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)) IMHelper.onOfflineMsgPatched()
+        if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
             return false
+        }
+        if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
+            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
+            onDispatchSentErrorMsg(d as Long)
         }
         if (!interruptDefault && sendingState == SendMsgState.FAIL && callId != null) {
             val sendingDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
@@ -256,10 +261,17 @@ class ClientHubImpl : ClientHub<Any?>() {
         val exists = sessionInfo != null
         lastMsgDb?.insertOrUpdateSessionMsgInfo(info)
         sessionInfo?.sessionMsgInfo = info
-        var allDots = sessionDb?.allSessions?.sumOf { it.questionNum } ?: 0
-        allDots += lastMsgDb?.findAll()?.sumOf { it.msgNum } ?: 0
-        super.onMsgPatch(MessageTotalDots(allDots), "", false, null, false) {}
+        notifyAllSessionDots()
         return Pair(if (!exists) PAYLOAD_ADD else PAYLOAD_CHANGED, sessionInfo)
+    }
+
+    private fun onDispatchSentErrorMsg(groupId: Long) {
+        IMHelper.withDb {
+            val resendMsg = it?.sendMsgDao()?.findAllBySessionId(groupId)
+            resendMsg?.forEach { msg ->
+                Sender.resendMessage(msg)
+            }
+        }
     }
 
     private fun notifyAllSession(callId: String?) {
@@ -273,9 +285,16 @@ class ClientHubImpl : ClientHub<Any?>() {
         super.onMsgPatch(sessions, callId, true, null, false) {}
     }
 
+    private fun notifyAllSessionDots(callId: String? = "") {
+        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
+        val allDots = lastMsgDb?.findAll()?.sumOf { it.msgNum } ?: 0
+        super.onMsgPatch(MessageTotalDots(allDots), callId, false, null, false) {}
+    }
+
     override fun onRouteCall(callId: String?, data: Any?) {
         when (callId) {
             Constance.CALL_ID_START_LISTEN_SESSION -> notifyAllSession(callId)
+            Constance.CALL_ID_START_LISTEN_TOTAL_DOTS -> notifyAllSessionDots(callId)
             Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
                 val deal = clearGroupBadge(data as Long)
                 IMHelper.postToUiObservers(deal?.second, deal?.first)
