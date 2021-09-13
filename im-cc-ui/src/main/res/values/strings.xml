@@ -9,8 +9,8 @@
 
     <string name="im_ui_replied">Replied</string>
 
-    <string name="im_ui_min_ago">minutes ago</string>
-    <string name="im_ui_hours_ago">hours ago</string>
+    <string name="im_ui_min_ago">m ago</string>
+    <string name="im_ui_hours_ago">h ago</string>
 
     <string name="im_ui_msg_type_text">Text</string>
     <string name="im_ui_msg_type_image">Image</string>

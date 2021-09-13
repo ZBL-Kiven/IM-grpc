@@ -33,9 +33,9 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
 
     private fun setTimeText(sendTime: Long): CharSequence? {
         return if (sendTime in 60000..3599999) {
-            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
+            StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
         } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
+            StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
         } else null
     }
 
