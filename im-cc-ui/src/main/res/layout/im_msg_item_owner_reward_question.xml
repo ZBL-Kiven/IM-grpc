@@ -35,8 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/message_textColor_meReplyOthers"
-            android:textSize="16sp"
             android:textStyle="bold"
+            android:textSize="16sp"
             tools:text="Let's go hiking together！" />
 
     </LinearLayout>

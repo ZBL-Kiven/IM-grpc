@@ -51,7 +51,7 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
             1 -> { //设置是否显示加号
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.reward_text_color_reply)) //设置布局背景
                 rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained)
-                plus = "+ "
+                plus = ""
             } //未回复
             0 -> {
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.im_msg_item_reward_number_color))
