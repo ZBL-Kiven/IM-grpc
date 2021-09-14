@@ -58,4 +58,5 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
     abstract fun onDestroy()
 
     open fun notifyChange(pl: Any?) {}
+
 }
