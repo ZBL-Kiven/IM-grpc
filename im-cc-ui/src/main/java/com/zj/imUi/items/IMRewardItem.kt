@@ -362,13 +362,15 @@ class IMRewardItem @JvmOverloads constructor(
         var time: String? = ""
         val hour = duration / 3600000
         val minutes = duration % 3600000
-        val minute = (minutes.toFloat() / 60000).roundToInt()
+        var minute = (minutes.toFloat() / 60000).roundToInt()
         if (hour < 1) {
             time += 0
         }
         time += "$hour:"
         if (minute < 10) {
             time += "0"
+        }else if (minute == 60){
+            minute = 59
         }
         time += minute
         return time

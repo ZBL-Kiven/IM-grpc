@@ -27,33 +27,12 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
     @SuppressLint("SetTextI18n")
     fun setData(imMsgIn: ImMsgIn) {
         textRewardNumber.text = "+ " + imMsgIn.getReplyMsgQuestionSpark()
-        textRewardTime.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { setTimeText(it) }
+        textRewardTime.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
         textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
     }
 
     fun setDataWithTime(sendTime: Long) {
-        textRewardTime.text = setTimeText(sendTime)
-    }
-
-
-    private fun setTimeText(sendTime: Long): CharSequence? {
-        return if (sendTime in 60000..3599999) {
-            StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
-        } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
-        } else null
-    }
-
-    private fun timeParseHour(duration: Long): String {
-        val time: String?
-        val hour = duration / 3600000
-        time = hour.toString()
-        return time
-    }
-
-    private fun timeParse(duration: Long): String {
-        val minute = duration / 60000
-        return minute.toString()
+        textRewardTime.text = TimeDiffUtils.setTimeText(sendTime,context)
     }
 }
 

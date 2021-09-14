@@ -30,22 +30,26 @@ object TimeDiffUtils {
     }
 
 
-  private fun setTimeText(sendTime: Long,context:Context): CharSequence? {
-    return if (sendTime in 60000..3599999) {
-      StringBuilder(timeParse(sendTime,context)).append(" ").append(context.getString(R.string.im_ui_min_ago))
-    } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-      StringBuilder(timeParseHour(sendTime,context)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
-    } else null
+   fun setTimeText(sendTime: Long,context:Context): CharSequence? {
+    return when (sendTime) {
+        in 60000..3599999 -> {
+          StringBuilder(timeParse(sendTime,context)).append(context.getString(R.string.im_ui_min_ago))
+        }
+        in 3600000 ..3600000 * 48 -> {
+          StringBuilder(timeParseHour(sendTime,context)).append(context.getString(R.string.im_ui_hours_ago))
+        }
+        else -> null
+    }
   }
 
-  private fun timeParseHour(duration: Long,context: Context): String {
+   private fun timeParseHour(duration: Long, context: Context): String {
     val time: String?
     val hour = duration / 3600000
     time = hour.toString()
     return time
   }
 
-  private fun timeParse(duration: Long,context: Context): String {
+   private fun timeParse(duration: Long, context: Context): String {
     val minute = duration / 60000
     return minute.toString()
   }

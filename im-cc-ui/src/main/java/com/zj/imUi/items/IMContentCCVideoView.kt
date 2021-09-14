@@ -81,34 +81,13 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         }
         if (data.getSendTime() in 1..3600000 * 48) {
             tvCCVideoSendTime.visibility = View.VISIBLE
-            tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { setTimeText(it) }
+            tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
         } else tvCCVideoSendTime.visibility = View.GONE
 
     }
 
-    private fun setTimeText(sendTime: Long): CharSequence? {
-        return if (sendTime in 60000..3599999) {
-            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
-        } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
-        } else null
-    }
-
-    private fun timeParseHour(duration: Long): String {
-        val time: String?
-        val hour = duration / 3600000
-        time = hour.toString()
-        return time
-    }
-
-    private fun timeParse(duration: Long): String {
-        val minute = duration / 60000
-        return minute.toString()
-    }
-
-
     override fun onSendTime(msgId: String, sendTime: Long) {
-        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { tvCCVideoSendTime.text = setTimeText(sendTime) } }
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { tvCCVideoSendTime.text = TimeDiffUtils.setTimeText(sendTime,context) } }
     }
 
     override fun onResume() {
