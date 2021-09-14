@@ -1,6 +1,7 @@
 package com.zj.ccIm.core.impl
 
 import android.util.Log
+import com.google.gson.Gson
 import com.zj.database.DbHelper
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.im.chat.enums.SendMsgState
@@ -10,7 +11,6 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
-import com.google.gson.Gson
 import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.Fetcher
@@ -53,7 +53,9 @@ class ClientHubImpl : ClientHub<Any?>() {
                 val info = try {
                     Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
                 } catch (e: Exception) {
-                    log("parse session error with : ${e.message} \n data = $d");return
+                    log("parse session error with : ${e.message} \n data = $d")
+                    onFinish()
+                    return
                 }
                 val deal = onDealSessionLastMsgInfo(info)
                 payload = deal.first
@@ -152,6 +154,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             resp.clientMsgId = sen.clientMsgId
             resp.groupId = sen.groupId
             resp.black = false
+            resp.published = sen.public
             onDealMsgSentInfo(resp, callId, sendingState)
         }
     }
@@ -165,6 +168,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
         val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
         val localMsg = msgDb?.findMsgByClientId(callId)
+        localMsg?.questionContent?.published = d.published
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
         localMsg?.sendTime = d.sendTime
@@ -178,6 +182,7 @@ class ClientHubImpl : ClientHub<Any?>() {
 
             //Callback when the operation of the coroutine is completed
             SendMsgState.ON_SEND_BEFORE_END -> {
+                msgDb?.insertOrChangeMessage(localMsg)
                 Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
             }
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
@@ -257,7 +262,10 @@ class ClientHubImpl : ClientHub<Any?>() {
     private fun onDealSessionLastMsgInfo(info: SessionLastMsgInfo): Pair<String, Any?> {
         val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        val sessionInfo = sessionDb?.findSessionById(info.groupId)
+        var groupId = info.groupId
+        if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
+        if (groupId <= 0) log("error case: the session last msg info ,group id is invalid!")
+        val sessionInfo = sessionDb?.findSessionById(groupId)
         val exists = sessionInfo != null
         lastMsgDb?.insertOrUpdateSessionMsgInfo(info)
         sessionInfo?.sessionMsgInfo = info

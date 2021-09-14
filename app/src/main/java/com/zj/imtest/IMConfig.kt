@@ -5,7 +5,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 119273
+        return 151253
     }
 
     override fun getUserName(): String {
@@ -23,16 +23,16 @@ object IMConfig : ImConfigIn {
 
     override fun getGrpcAddress(): Pair<String, Int> {
 
-        return Pair("grpc.ccdev.lerjin.com", 50003)
+        //        return Pair("grpc.ccdev.lerjin.com", 50003)
 
-        //        return Pair("172.16.1.75", 50003)
+        return Pair("172.16.1.75", 50003)
     }
 
     override fun getIMHost(): String {
 
         return "https://im.ccdev.lerjin.com"
 
-        //                return "http://172.16.1.75:8085"
+        //        return "http://172.16.1.75:8085"
     }
 
     override fun getHeatBeatsTimeOut(): Long {

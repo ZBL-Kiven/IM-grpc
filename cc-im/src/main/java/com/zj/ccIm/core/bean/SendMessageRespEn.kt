@@ -37,4 +37,9 @@ class SendMessageRespEn {
      */
     val sparkNum: Int? = null
 
+    /**
+     * 是否公开消息
+     * */
+    var published: Boolean = true
+
 }

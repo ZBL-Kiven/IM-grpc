@@ -123,24 +123,28 @@ class ServerHubImpl : ServerImplGrpc() {
         requestStreamObserver = withChannel(true) {
             it.listenTopicData(object : CusObserver<ListenTopicReply>() {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-                    print("server hub event ", "topic = ${data?.topic}")
-                    if (isOk && data != null) {
-                        when (data.topic) {
-                            Constance.TOPIC_CONN_SUCCESS -> {
-                                onConnected(Constance.CONNECT_TYPE_TOPIC)
-                            }
-                            Constance.TOPIC_MSG_REGISTRATION -> {
-                                onConnected(Constance.CONNECT_TYPE_MESSAGE)
-                            }
-                            else -> {
-                                val size = data.serializedSize * 1L
-                                postReceivedMessage(data.topic, data.data, false, size)
-                            }
-                        }
-                    } else onParseError(t, false)
+                    onDealTopicReceived(isOk, data, t)
                 }
             })
         }
+    }
+
+    private fun onDealTopicReceived(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
+        print("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
+        if (isOk && data != null) {
+            when (data.topic) {
+                Constance.TOPIC_CONN_SUCCESS -> {
+                    onConnected(Constance.CONNECT_TYPE_TOPIC)
+                }
+                Constance.TOPIC_MSG_REGISTRATION -> {
+                    onConnected(Constance.CONNECT_TYPE_MESSAGE)
+                }
+                else -> {
+                    val size = data.serializedSize * 1L
+                    postReceivedMessage(data.topic, data.data, false, size)
+                }
+            }
+        } else onParseError(t, false)
     }
 
     /**

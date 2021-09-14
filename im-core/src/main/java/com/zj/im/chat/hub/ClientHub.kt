@@ -10,6 +10,7 @@ import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.modle.IMLifecycle
 import com.zj.im.utils.log.logger.printInFile
+import java.lang.Exception
 
 /**
  * Created by ZJJ
@@ -25,7 +26,11 @@ abstract class ClientHub<T> {
     var context: Application? = null; internal set
 
     protected open fun onMsgPatch(data: T?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        MessageInterface.postToUIObservers(data, callId, onFinish)
+        try {
+            MessageInterface.postToUIObservers(data, callId, onFinish)
+        } catch (e: Exception) {
+            printInFile("client hub error ", " the ui poster throw an error case: ${e.message}")
+        }
     }
 
     open fun onRouteCall(callId: String?, data: T?) {}
