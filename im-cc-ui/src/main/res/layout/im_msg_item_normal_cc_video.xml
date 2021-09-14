@@ -55,10 +55,12 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_cc_video_img_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal" />
+            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
