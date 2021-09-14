@@ -130,6 +130,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
     private fun setTextStyle() {
         tvReliedFLag.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+        tvReliedFLag.paint.isFakeBoldText = true
         textQuestion.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         tvCountdown.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         textReplyType.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
