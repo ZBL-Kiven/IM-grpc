@@ -1,7 +1,10 @@
 package com.zj.imUi.utils
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
+import com.zj.imUi.R
+import java.lang.StringBuilder
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
@@ -25,5 +28,31 @@ object TimeDiffUtils {
         Log.e("li_xiang","发送时间戳: " +lastTime+" 时间差（毫秒）"+((time2.time-time1.time)).toString()+"   sendTime  $sendTime"+"当前时间戳"+System.currentTimeMillis()+"  currentTime $currentTime"+"     time1 $time1"+"  time2  $time2")
         return (time2.time - time1.time)
     }
+
+
+   fun setTimeText(sendTime: Long,context:Context): CharSequence? {
+    return when (sendTime) {
+        in 60000..3599999 -> {
+          StringBuilder(timeParse(sendTime,context)).append(context.getString(R.string.im_ui_min_ago))
+        }
+        in 3600000 ..3600000 * 48 -> {
+          StringBuilder(timeParseHour(sendTime,context)).append(context.getString(R.string.im_ui_hours_ago))
+        }
+        else -> null
+    }
+  }
+
+   private fun timeParseHour(duration: Long, context: Context): String {
+    val time: String?
+    val hour = duration / 3600000
+    time = hour.toString()
+    return time
+  }
+
+   private fun timeParse(duration: Long, context: Context): String {
+    val minute = duration / 60000
+    return minute.toString()
+  }
+
 
 }

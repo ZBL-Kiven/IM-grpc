@@ -14,12 +14,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
+import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.MessageSendTimeUtils
+import com.zj.imUi.utils.RewardTimeCountdownUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
 
-class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
 
 
     private var tvName: AppCompatTextView
@@ -56,6 +59,8 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
     private fun onSetData(data: ImMsgIn?) {
         if (data == null) return
 
+        performRegisterTimer()
+
         if (data.getSelfUserId() != data.getSenderId()) {
             llTitle.visibility = View.VISIBLE
             tvName.text = data.getSenderName()
@@ -76,36 +81,43 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         }
         if (data.getSendTime() in 1..3600000 * 48) {
             tvCCVideoSendTime.visibility = View.VISIBLE
-            tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { setTimeText(it) }
+            tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
         } else tvCCVideoSendTime.visibility = View.GONE
 
     }
 
-    private fun setTimeText(sendTime: Long): CharSequence? {
-        return if (sendTime in 60000..3599999) {
-            StringBuilder(timeParse(sendTime)).append(" ").append(context.getString(R.string.im_ui_min_ago))
-        } else if (sendTime > 3600000 && sendTime < 3600000 * 48) {
-            StringBuilder(timeParseHour(sendTime)).append(" ").append(context.getString(R.string.im_ui_hours_ago))
-        } else null
+    override fun onSendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { tvCCVideoSendTime.text = TimeDiffUtils.setTimeText(sendTime,context) } }
     }
-
-    private fun timeParseHour(duration: Long): String {
-        val time: String?
-        val hour = duration / 3600000
-        time = hour.toString()
-        return time
-    }
-
-    private fun timeParse(duration: Long): String {
-        val minute = duration / 60000
-        return minute.toString()
-    }
-
 
     override fun onResume() {
+        performRegisterTimer()
+    }
+
+    override fun notifyChange(pl: Any?) {
+        super.notifyChange(pl)
+        when (pl) {
+            BaseImItem.NOTIFY_CHANGE_SENDING_STATE->performRegisterTimer()
+        }
+    }
+
+    private fun performRegisterTimer() {
+        curData?.invoke()?.let {
+            if (it.getSendState() == 0 || it.getSendState() == 3) {
+                TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                    MessageSendTimeUtils.registerSendTimeObserver(
+                        it.getMsgId(),
+                        it1, this
+                    )
+                }
+            } else {
+                MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+            }
+        }
     }
 
     override fun onStop() {
+        curData?.invoke()?.let { MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId()) }
     }
 
     override fun onDestroy() {

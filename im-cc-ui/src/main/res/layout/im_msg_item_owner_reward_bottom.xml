@@ -49,7 +49,7 @@
     <!--        仅作分割，不让左右控件重合-->
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toStartOf="@+id/im_msg_item_owner_reward_bottom_ll"
         app:layout_constraintStart_toEndOf="@+id/im_msg_item_owner_reward_bottom_tv_tIme"

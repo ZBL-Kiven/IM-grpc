@@ -26,7 +26,7 @@
             android:textColor="@color/text_color_gray_nickname"
             android:textSize="14sp"
             tools:text="nick_name"
-            android:textStyle="bold"/>
+            />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_bubble_img_owner"

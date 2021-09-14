@@ -7,55 +7,55 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 
 @Suppress("unused")
-object RewardTimeCountdownUtils {
+object MessageSendTimeUtils {
 
     var handler = Handler(Looper.getMainLooper()) {
         val msgId = it.obj.toString()
-        countdownMaps[msgId]?.calculateExpireTime()
+        MessageSendTimeMaps[msgId]?.calculateSendTime()
         return@Handler false
     }
 
-    fun onCountDown(value: Long) {
+    fun onSendTime(value: Long) {
         //每分钟刷新，应传入 60*1000
-        countdownMaps.forEach {
+        MessageSendTimeMaps.forEach {
             it.value.usedTime += value
         }
     }
 
-    fun clearCountdownObserver(msgId: String) {
-        countdownMaps.remove(msgId)?.let {
+    fun clearSendTimeObserver(msgId: String) {
+        MessageSendTimeMaps.remove(msgId)?.let {
             it.clearListener()
             handler.removeMessages(it.hashCode())
         }
     }
 
-    fun clearAllCountdownObservers() {
+    fun clearAllSendTimeObservers() {
         handler.removeCallbacksAndMessages(null)
-        countdownMaps.clear()
+        MessageSendTimeMaps.clear()
     }
 
-    data class CountdownInfo(val msgId: String, var expireTime: Long, private var l: WeakReference<CountdownListener?>) {
+    data class MessageSendTimeInfo(val msgId: String, var sendTime: Long, private var l: WeakReference<SendTImeListener?>) {
         var usedTime: Long = 0
             set(value) {
                 if (field != value) {
                     field = value
                     if (Thread.currentThread() == Looper.getMainLooper().thread) {
-                        calculateExpireTime()
+                        calculateSendTime()
                     } else {
                         //如果不在主线程，则用handler处理
                         handler.sendMessage(Message.obtain().apply {
-                            what = this@CountdownInfo.hashCode()
+                            what = this@MessageSendTimeInfo.hashCode()
                             obj = msgId
                         })
                     }
                 }
             }
 
-        internal fun calculateExpireTime() {
-            this.l.get()?.onCountdown(msgId, expireTime - usedTime)
+        internal fun calculateSendTime() {
+            this.l.get()?.onSendTime(msgId, sendTime + usedTime)
         }
 
-        internal fun updateListener(l: WeakReference<CountdownListener?>) {
+        internal fun updateListener(l: WeakReference<SendTImeListener?>) {
             this.l = l
         }
 
@@ -64,27 +64,27 @@ object RewardTimeCountdownUtils {
         }
     }
 
-    private val countdownMaps: ConcurrentHashMap<String, CountdownInfo> = ConcurrentHashMap()
+    private val MessageSendTimeMaps: ConcurrentHashMap<String, MessageSendTimeInfo> = ConcurrentHashMap()
 
     //为每个Item注册监听器
-    internal fun registerCountdownObserver(msgId: String, expireTime: Long, l: CountdownListener) {
-        var exists = countdownMaps[msgId]
-//        exists = CountdownInfo(msgId, expireTime, WeakReference(l))
+    internal fun registerSendTimeObserver(msgId: String, sendTime: Long, l: SendTImeListener) {
+        var exists = MessageSendTimeMaps[msgId]
+//        exists = CountdownInfo(msgId, sendTime, WeakReference(l))
         if (exists == null) {
-            exists = CountdownInfo(msgId, expireTime, WeakReference(l))
+            exists = MessageSendTimeInfo(msgId, sendTime, WeakReference(l))
         } else {
             exists.updateListener(WeakReference(l))
         }
-        countdownMaps[msgId] = exists
+        MessageSendTimeMaps[msgId] = exists
     }
 
-    internal fun unRegisterCountdownObserver(msgId: String) {
-        val info = countdownMaps[msgId]
+    internal fun unRegisterSendTImeObserver(msgId: String) {
+        val info = MessageSendTimeMaps[msgId]
         handler.removeMessages(info.hashCode())
         info?.clearListener()
     }
 
-    interface CountdownListener {
-        fun onCountdown(msgId: String, remainingTime: Long)
+    interface SendTImeListener {
+        fun onSendTime(msgId: String, sendTime: Long)
     }
 }

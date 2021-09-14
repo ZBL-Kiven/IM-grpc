@@ -14,11 +14,13 @@ import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.imUi.utils.MessageSendTimeUtils
+import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
 import com.zj.views.ut.DPUtils
 
 
-class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
 
     private val tvName: AppCompatTextView
     private val iconIsOwner: AppCompatImageView
@@ -59,7 +61,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             llName.visibility = View.VISIBLE
             if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
             else iconIsOwner.visibility = View.GONE
-        } //        llName.visibility = View.GONE
+        }
+        performRegisterTimer()
         setIconVisibility(data)
         setViewStub(data)
         setReplyContent(data)
@@ -198,15 +201,37 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         super.notifyChange(pl)
         when (pl) {
             BaseImItem.NOTIFY_CHANGE_AUDIO, BaseImItem.NOTIFY_CHANGE_VIDEO -> onResume()
+            BaseImItem.NOTIFY_CHANGE_SENDING_STATE->performRegisterTimer()
         }
     }
 
     override fun onResume() {
         curContentIn?.onResume(curData?.invoke())
+        performRegisterTimer()
+    }
+
+    private fun performRegisterTimer() {
+        curData?.invoke()?.let {
+            if (it.getSendState() == 0 || it.getSendState() == 3) {
+                TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
+                    MessageSendTimeUtils.registerSendTimeObserver(
+                        it.getMsgId(),
+                        it1, this
+                    )
+                }
+            } else {
+                MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+            }
+        }
+    }
+
+    override fun onSendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { timeBottom.setDataWithTime(sendTime) } }
     }
 
     override fun onStop() {
         curContentIn?.onStop(curData?.invoke())
+        curData?.invoke()?.let { MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId()) }
     }
 
     override fun onDestroy() {
