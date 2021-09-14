@@ -28,7 +28,6 @@ object Converter {
             MsgType.IMG.type -> {
                 msg.imgContent = ImgContent().apply {
                     this.url = selectValidString(sen.url, sen.localFilePath)
-                    this.duration = sen.duration
                     this.width = sen.width
                     this.height = sen.height
                 }

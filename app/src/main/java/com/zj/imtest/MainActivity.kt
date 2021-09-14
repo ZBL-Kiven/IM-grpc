@@ -20,6 +20,7 @@ import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 6L
+    private val groupId = 52L
     private var lastSelectData: FileInfo? = null
         set(value) {
             et.text = value?.path ?: ""
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, 117656)
+        IMHelper.registerChatRoom(groupId, 151254)
     }
 
     fun leaveChatRoom(view: View) {
@@ -80,7 +81,8 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        Sender.sendText("你已被油王服务 $incId 次", groupId, null)
+        view.isSelected = !view.isSelected
+        Sender.sendRewardTextMsg("你已被油王服务 $incId 次", groupId, 0, MsgType.TEXT, view.isSelected)
     }
 
     fun sendImg(view: View) {
@@ -143,6 +145,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
+            Log.e("------ ", "=====>    ${d?.questionContent?.published}")
             if (d != null) when (pl) {
                 ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
