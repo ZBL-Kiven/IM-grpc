@@ -15,7 +15,7 @@
         android:textColor="@color/im_msg_item_reward_number_color"
         android:textSize="17sp"
         android:textStyle="bold"
-        tools:text="+ 500" />
+        tools:text="500" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/im_msg_item_widget_reward_img_spark"

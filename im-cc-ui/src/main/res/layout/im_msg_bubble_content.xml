@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="5dp"
             android:src="@drawable/im_msg_item_widget_reward_icon_owner"
             android:visibility="gone" />
 

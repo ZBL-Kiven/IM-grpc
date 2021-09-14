@@ -2,6 +2,7 @@ package com.zj.imUi.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
@@ -10,8 +11,6 @@ import androidx.core.content.ContextCompat
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.TimeDiffUtils
-
-import java.lang.StringBuilder
 
 class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
 
@@ -29,6 +28,7 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
         textRewardNumber.text = "+ " + imMsgIn.getReplyMsgQuestionSpark()
         textRewardTime.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
         textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+        textRewardNumber.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
     }
 
     fun setDataWithTime(sendTime: Long) {

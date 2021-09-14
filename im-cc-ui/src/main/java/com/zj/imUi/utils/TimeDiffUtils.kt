@@ -2,12 +2,10 @@ package com.zj.imUi.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.zj.imUi.R
 import java.lang.StringBuilder
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  * author: 李 祥
@@ -32,26 +30,24 @@ object TimeDiffUtils {
     fun setTimeText(sendTime: Long, context: Context): CharSequence? {
         return when (sendTime) {
             in 60000..3599999 -> {
-                StringBuilder(timeParse(sendTime, context)).append(context.getString(R.string.im_ui_min_ago))
+                StringBuilder(timeParse(sendTime)).append(context.getString(R.string.im_ui_min_ago))
             }
             in 3600000..3600000 * 48 -> {
-                StringBuilder(timeParseHour(sendTime, context)).append(context.getString(R.string.im_ui_hours_ago))
+                StringBuilder(timeParseHour(sendTime)).append(context.getString(R.string.im_ui_hours_ago))
             }
             else -> null
         }
     }
 
-    private fun timeParseHour(duration: Long, context: Context): String {
+    private fun timeParseHour(duration: Long): String {
         val time: String?
         val hour = duration / 3600000
         time = hour.toString()
         return time
     }
 
-    private fun timeParse(duration: Long, context: Context): String {
+    private fun timeParse(duration: Long): String {
         val minute = duration / 60000
         return minute.toString()
     }
-
-
 }
