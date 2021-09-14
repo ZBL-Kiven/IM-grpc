@@ -85,6 +85,7 @@ class Engine {
     File compress() throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = computeSize();
+        options.inJustDecodeBounds = false;
         Bitmap tagBitmap = BitmapFactory.decodeFile(srcImg, options);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         tagBitmap = rotatingImage(tagBitmap);

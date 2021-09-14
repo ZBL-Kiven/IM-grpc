@@ -29,6 +29,8 @@ public class ImgCompress implements Handler.Callback {
     private final int mLeastCompressSize;
     private final OnCompressListener mCompressListener;
     private final Handler mHandler;
+    public static final int ERROR_CODE_FILE_INVALID = 1;
+    public static final int ERROR_CODE_CONTEXT_LOSE = 2;
 
     private ImgCompress(Builder builder) {
         this.mPath = builder.mPath;
@@ -50,7 +52,7 @@ public class ImgCompress implements Handler.Callback {
     private File getImageCacheFile(Context context, String suffix) {
         File cache = getImageCacheDir(context);
         if (cache == null) {
-            mCompressListener.onError(new FileNotFoundException("no target cached file found"));
+            compressError(ERROR_CODE_FILE_INVALID, new FileNotFoundException("no target cached file found"));
             return null;
         }
         if (!cache.exists() && !cache.mkdirs()) {
@@ -63,7 +65,12 @@ public class ImgCompress implements Handler.Callback {
     private File checkOrBuildFile(File cache, String targetPath) {
         try {
             File target = new File(cache, targetPath);
-            if (!target.exists()) {
+            if (target.exists()) {
+                if (target.isFile()) return target;
+                else if (target.delete()) {
+                    checkOrBuildFile(cache, targetPath);
+                } else return null;
+            } else {
                 File parent = target.getParentFile();
                 if (parent == null) {
                     String s = target.getParent();
@@ -131,12 +138,12 @@ public class ImgCompress implements Handler.Callback {
     @UiThread
     private void launch(final Context context) {
         if (context == null) {
-            mCompressListener.onError(new NullPointerException("context cannot be null"));
+            compressError(ERROR_CODE_CONTEXT_LOSE, new NullPointerException("context cannot be null"));
             return;
         }
         final String path = mPath;
-        if (path == null || path.isEmpty() && mCompressListener != null) {
-            mCompressListener.onError(new NullPointerException("image file cannot be null"));
+        if (path == null || path.isEmpty()) {
+            compressError(ERROR_CODE_FILE_INVALID, new NullPointerException("image file cannot be null"));
             return;
         }
         if (!TextUtils.isEmpty(path)) {
@@ -147,7 +154,7 @@ public class ImgCompress implements Handler.Callback {
                     if (Checker.isNeedCompress(mLeastCompressSize, path)) {
                         File f = getImageCacheFile(context, Checker.checkSuffix(path));
                         if (f == null || !f.exists()) {
-                            if (mCompressListener != null) mCompressListener.onError(new NullPointerException("the compress temp file is invalid!"));
+                            compressError(ERROR_CODE_FILE_INVALID, new NullPointerException("the compress temp file is invalid!"));
                             return;
                         }
                         result = new Engine(path, f).compress();
@@ -155,12 +162,12 @@ public class ImgCompress implements Handler.Callback {
                         result = new File(path);
                     }
                     mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_MULTIPLE_SUCCESS, result.getAbsolutePath()));
-                } catch (IOException e) {
-                    mHandler.sendMessage(mHandler.obtainMessage(MSG_COMPRESS_ERROR, e));
+                } catch (Exception e) {
+                    compressError(ERROR_CODE_FILE_INVALID, e);
                 }
             });
         } else {
-            if (mCompressListener != null) mCompressListener.onError(new IllegalArgumentException("can not read the path : " + path));
+            compressError(ERROR_CODE_FILE_INVALID, new IllegalArgumentException("can not read the path : " + path));
         }
     }
 
@@ -172,10 +179,18 @@ public class ImgCompress implements Handler.Callback {
     private File get(String path, Context context) throws IOException {
         File target = getImageCacheFile(context, Checker.checkSuffix(path));
         if (target == null || !target.exists()) {
-            mCompressListener.onError(new NullPointerException("the file with path " + path + " is invalid!"));
+            compressError(ERROR_CODE_FILE_INVALID, new NullPointerException("the file with path " + path + " is invalid!"));
             return null;
         }
         return Checker.isNeedCompress(mLeastCompressSize, path) ? new Engine(path, target).compress() : new File(path);
+    }
+
+    private void compressError(int code, Exception e) {
+        Message msg = Message.obtain();
+        msg.what = MSG_COMPRESS_ERROR;
+        msg.arg1 = code;
+        msg.obj = e;
+        mHandler.sendMessage(msg);
     }
 
     @Override
@@ -190,7 +205,7 @@ public class ImgCompress implements Handler.Callback {
                 mCompressListener.onSuccess(msg.obj.toString());
                 break;
             case MSG_COMPRESS_ERROR:
-                mCompressListener.onError((Throwable) msg.obj);
+                mCompressListener.onError(msg.arg1, (Throwable) msg.obj);
                 break;
         }
         return false;

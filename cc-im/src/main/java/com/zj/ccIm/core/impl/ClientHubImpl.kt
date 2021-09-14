@@ -100,12 +100,6 @@ class ClientHubImpl : ClientHub<Any?>() {
         if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
             return false
         }
-        if (!interruptDefault && sendingState == SendMsgState.FAIL && callId != null) {
-            val sendingDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
-            val lp = sendingDb?.findByCallId(callId)?.let { i -> onDealSendingInfo(i, callId, sendingState) }
-            IMHelper.postToUiObservers(lp?.first, lp?.second)
-            return true
-        }
         return interruptDefault
     }
 
@@ -116,7 +110,9 @@ class ClientHubImpl : ClientHub<Any?>() {
         when (cls) {
             SendMessageReqEn::class.java -> {
                 if (d != null) {
-                    val r = onDealSendingInfo(d as SendMessageReqEn, callId, sendingState)
+                    val sst = sendingState ?: SendMsgState.SENDING
+                    val msg = Converter.exchangeMsgInfoBySendingInfo(d as SendMessageReqEn, sst)
+                    val r = onDealMessages(msg, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
@@ -143,20 +139,6 @@ class ClientHubImpl : ClientHub<Any?>() {
             }
         }
         return Triple(first, second, pl)
-    }
-
-    private fun onDealSendingInfo(sen: SendMessageReqEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
-        return if (sendingState == SendMsgState.SENDING) {
-            val msg = Converter.exchangeMsgInfoBySendingInfo(sen, sendingState)
-            onDealMessages(msg, callId, sendingState)
-        } else {
-            val resp = SendMessageRespEn()
-            resp.clientMsgId = sen.clientMsgId
-            resp.groupId = sen.groupId
-            resp.black = false
-            resp.published = sen.public
-            onDealMsgSentInfo(resp, callId, sendingState)
-        }
     }
 
     /**

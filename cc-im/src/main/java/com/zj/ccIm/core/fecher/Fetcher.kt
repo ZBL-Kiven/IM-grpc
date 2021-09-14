@@ -60,7 +60,7 @@ internal object Fetcher {
                         SPHelper.put(SP_FETCH_SESSIONS_TS, d.timeStamp)
                         val sessionDao = DbHelper.get(Constance.app)?.db?.sessionDao()
                         sessions.forEach { s ->
-                            if (s.groupStatus == 0) {
+                            if (s.groupStatus == 0 || s.groupStatus == 1) {
                                 sessionDao?.insertOrChangeSession(s)
                             } else {
                                 sessionDao?.deleteSession(s)

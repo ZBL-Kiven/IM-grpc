@@ -25,7 +25,7 @@ object ImApi {
     }
 
     fun getSenderApi(h: HeaderProvider? = null): BaseApi<SenderApi> {
-        return BaseApi.create<SenderApi>(IME).baseUrl(baseUrl).header(h ?: header).build()
+        return BaseApi.create<SenderApi>(EH).baseUrl(baseUrl).header(h ?: header).build()
     }
 
     fun getOptionApi(): BaseApi<OptionApi> {
@@ -34,14 +34,6 @@ object ImApi {
 
     fun getFetcherApi(): BaseApi<FetcherApi> {
         return BaseApi.create<FetcherApi>(EH).baseUrl(baseUrl).header(header).build()
-    }
-
-
-    object IME : ErrorHandler {
-
-        override fun onError(throwable: Throwable?): Boolean {
-            return false
-        }
     }
 
 
@@ -56,7 +48,6 @@ object ImApi {
                 if (errorBodyCode == SERVER_ERROR) {
                     val errorBody = Gson().fromJson(errorString, HttpErrorBody::class.java)
                     errorBody?.throwable = throwable
-                    if (resolveProfError(errorBody)) return true
                 }
                 Log.e("request error", " ----- case: $errorInfo \ndetail = $errorString  \nerrorCode = $errorCode \nerrorBodyCode = $errorBodyCode")
             } else {
@@ -74,23 +65,12 @@ object ImApi {
             return false
         }
 
-        private fun resolveProfError(error: HttpErrorBody?): Boolean {
-            return when (error?.code) {
-                AUTH_FAIL -> {
-                    Log.e("----- ", "token expired");true
-                }
-                else -> false
-            }
-        }
-
         private const val SERVER_ERROR = 555
-        private const val AUTH_FAIL = 10009
 
         class HttpErrorBody {
             var code: Int = 0
             var lang: String? = null
             var message: String? = null
-            var debug: String? = null
             var name: String? = null
             var throwable: Throwable? = null
         }

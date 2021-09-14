@@ -315,7 +315,6 @@ class IMRewardItem @JvmOverloads constructor(
         super.notifyChange(pl)
         when (pl) {
             BaseImItem.NOTIFY_CHANGE_REWARD_STATE -> {
-                Log.e("li_xiang_reward", "IMR_reward_change")
                 //过期改变打赏状态
                 curData?.invoke()?.questionStatusOverdueChange()
                 curData?.invoke()?.let {

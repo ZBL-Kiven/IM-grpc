@@ -5,7 +5,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 151253
+        return 117658
     }
 
     override fun getUserName(): String {
@@ -23,9 +23,9 @@ object IMConfig : ImConfigIn {
 
     override fun getGrpcAddress(): Pair<String, Int> {
 
-        //        return Pair("grpc.ccdev.lerjin.com", 50003)
+        return Pair("grpc.ccdev.lerjin.com", 50003)
 
-        return Pair("172.16.1.75", 50003)
+        //        return Pair("172.16.1.75", 50003)
     }
 
     override fun getIMHost(): String {

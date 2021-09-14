@@ -144,8 +144,8 @@ object Sender {
                 super@MsgFileUploader.startUpload(deleteOriginalFile)
             }
 
-            override fun onError(e: Throwable?) {
-                log("image compress error case: ${e?.message} ")
+            override fun onError(code: Int, e: Throwable?) {
+                log("image compress error with code : $code case: ${e?.message} ")
                 onStatus?.call(true, d.clientMsgId, 0, d, false, e)
             }
         }
