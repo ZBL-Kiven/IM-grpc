@@ -85,7 +85,6 @@ class ServerHubImpl : ServerImplGrpc() {
 
         ImApi.getSenderApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
             var isOk = isSuccess
-            data?.black = true
             if (isSuccess && data != null) {
                 isOk = !data.black
             }
