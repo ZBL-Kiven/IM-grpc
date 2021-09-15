@@ -18,7 +18,9 @@
 
     <string name="im_ui_msg_reward_type_text">Text</string>
     <string name="im_ui_msg_reward_type_image">Image</string>
+    <string name="im_ui_msg_reply_type_image">[ Image ]</string>
     <string name="im_ui_msg_reward_type_audio">Voice</string>
+    <string name="im_ui_msg_reply_type_audio">[ Voice ]</string>
 	<string name="im_ui_msg_copy">Copy</string>
     <string name="im_ui_msg_reply">Reply</string>
     <string name="im_ui_msg_block">Mute</string>
@@ -35,5 +37,6 @@
     <string name="im_ui_year_time_format">yyyy year M month d HH: mm</string>
     <string name="im_ui_yesterday">yesterday</string>
     <string name="im_ui_question_no_time">Expired</string>
+    <string name="im_ui_msg_not_allowed">Message type not allowed</string>
 
 </resources>

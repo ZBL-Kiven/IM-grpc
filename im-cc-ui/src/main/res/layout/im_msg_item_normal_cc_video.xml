@@ -55,12 +55,21 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_cc_video_img_flag"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/im_msg_item_cc_video_play"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/im_msg_item_cc_video_img_progressbar"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal"
-            android:visibility="gone"
-            tools:visibility="visible" />
+            android:indeterminate="true"
+            android:indeterminateTint="@color/bg_gray_70" />
+
     </RelativeLayout>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -85,10 +94,11 @@
         tools:text="12 minutes ago"
         android:maxLines="1"
         android:ellipsize="end"
-        android:maxWidth="180dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="12dp"
+        android:layout_marginTop="-10dp"
         android:visibility="gone"
+        tools:visibility="visible"
         />
 </LinearLayout>

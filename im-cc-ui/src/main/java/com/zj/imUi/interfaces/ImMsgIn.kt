@@ -93,7 +93,9 @@ interface ImMsgIn {
 
     fun onViewLargePic()
 
-    fun jumpToOwnerHomePage()
+    fun jumpToVideoDetails()
+
+    fun jumpToUserHomePage()
 
     fun jumpToSenderRewardsPage()
 

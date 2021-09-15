@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -17,6 +18,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
+import com.zj.imUi.widget.MsgPop
 import com.zj.views.ut.DPUtils
 
 
@@ -148,8 +150,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 tvQuestionName.text = it
                 when (data.getReplyMsgType()) {
                     UiMsgType.MSG_TYPE_TEXT -> tvQuestionContent.text = data.getReplyMsgTextContent()
-                    UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_image)
-                    UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reward_type_audio)
+                    UiMsgType.MSG_TYPE_IMG -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reply_type_image)
+                    UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reply_type_audio)
                     UiMsgType.MSG_TYPE_QUESTION -> tvQuestionContent.text = data.getReplyMsgQuestionContent()
                 }
                 return@setReplyContent
@@ -179,17 +181,26 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 else -> null
             } ?: return
 
-            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) llContent.setPadding(0, 0, 0, 0)
+            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()&&data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
             else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
 
             if (!isSameType) {
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
                 bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-                bubbleContent.setOnClickListener {
-                    if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+                if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+                    bubbleContent.setOnClickListener {
+                        Log.d("LiXiang", "bubbleContent点击")
                         data.onViewLargePic()
                     }
+                }
+                bubbleContent.setOnLongClickListener {
+                    Log.d("LiXiang", "bubbleContent长按点击响应")
+                    val isNotSelf = data.getSelfUserId() != data.getSenderId()
+                    if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
+                        MsgPop(context, data).show(it)
+                    }
+                    true
                 }
             }
         } finally {
