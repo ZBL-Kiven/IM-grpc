@@ -5,6 +5,7 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import com.zj.imUi.R
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 
@@ -16,7 +17,11 @@ object BubbleRenderer : BaseBubbleRenderer {
         return null
     }
 
-    override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int) {
+    override fun drawBubble(context: Context,
+        canvas: Canvas,
+        data: ImMsgIn,
+        width: Int,
+        height: Int) {
         drawBackGround(context, canvas, data, width, height)
     }
 
@@ -24,7 +29,11 @@ object BubbleRenderer : BaseBubbleRenderer {
     private var isOwner = false
     private var isOwnerReplyQuestionIsPublic = true
 
-    private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int) {
+    private fun drawBackGround(context: Context,
+        canvas: Canvas,
+        data: ImMsgIn,
+        width: Int,
+        height: Int) {
         val mBgColorOrigin = ContextCompat.getColor(context, R.color.bg_origin)
         isSelfMessage = data.getSelfUserId() == data.getSenderId()
         isOwner = data.getSenderId() == data.getOwnerId()
@@ -36,13 +45,27 @@ object BubbleRenderer : BaseBubbleRenderer {
         paint.color = setColor(context, data)
         if (isSelfMessage) { //发送者为自己
             val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
-            val radii = floatArrayOf(dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 8f), dpToPx(context, 8f))
+            val radii = floatArrayOf(dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 0f),
+                dpToPx(context, 0f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f))
             path.addRoundRect(rectF, radii, Path.Direction.CW)
             canvas.drawPath(path, paint)
         } else {
             paint.style = Paint.Style.FILL
             val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
-            val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
+            val radii = floatArrayOf(dpToPx(context, 0f),
+                dpToPx(context, 0f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f),
+                dpToPx(context, 8f))
             path.addRoundRect(rectF, radii, Path.Direction.CW)
             canvas.drawPath(path, paint) //发送者为大V
             if (isOwner && isOwnerReplyQuestionIsPublic) {
@@ -57,7 +80,14 @@ object BubbleRenderer : BaseBubbleRenderer {
     private fun drawRect(context: Context, width: Int, height: Int): Path {
         val path = Path()
         val rectF = RectF(1f, 1f, width.toFloat() - 1, height.toFloat() - 1)
-        val radii = floatArrayOf(dpToPx(context, 0f), dpToPx(context, 0f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f), dpToPx(context, 8f))
+        val radii = floatArrayOf(dpToPx(context, 0f),
+            dpToPx(context, 0f),
+            dpToPx(context, 8f),
+            dpToPx(context, 8f),
+            dpToPx(context, 8f),
+            dpToPx(context, 8f),
+            dpToPx(context, 8f),
+            dpToPx(context, 8f))
         path.addRoundRect(rectF, radii, Path.Direction.CW)
         return path
     }
@@ -68,26 +98,27 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
     private fun setColor(context: Context, data: ImMsgIn): Int {
-        return if (isSelfMessage) {
-            //自己发送的消息
-            if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) {
-                ContextCompat.getColor(context, R.color.replied_bg)
-            } else if(data.getQuestionStatus() == 0){
-                if (!data.getPublished()) {//打赏消息状态
-                     ContextCompat.getColor(context, R.color.message_item_private)
-                } else ContextCompat.getColor(context, R.color.bg_origin)
-            } else if (data.getReplyMsgQuestionIsPublished()==false) {
+        return if (isSelfMessage) { //自己发送的消息
+            if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {
+                    ContextCompat.getColor(context, R.color.replied_bg)
+                } else {
+                    if (!data.getPublished()) { //打赏消息状态
+                        ContextCompat.getColor(context, R.color.message_item_private)
+                    } else ContextCompat.getColor(context, R.color.bg_origin)
+                }
+            } else if (data.getReplyMsgQuestionIsPublished() == false) {
                 ContextCompat.getColor(context, R.color.bg_purple)
-            }else if(data.getReplyMsgQuestionIsPublished()==true){
-                 ContextCompat.getColor(context, R.color.bg_origin)
-            }else ContextCompat.getColor(context, R.color.bg_origin)
+            } else if (data.getReplyMsgQuestionIsPublished() == true) {
+                ContextCompat.getColor(context, R.color.bg_origin)
+            } else ContextCompat.getColor(context, R.color.bg_origin)
+        } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+            if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) ContextCompat.getColor(context, R.color.replied_bg)
+            else if (data.getQuestionStatus() == 0 && !data.getPublished()) { ContextCompat.getColor(context, R.color.message_item_private) }
+            else { ContextCompat.getColor(context, R.color.bg_color_white) }
         }
-        else if (data.getQuestionStatus() == 1||data.getQuestionStatus()==2) ContextCompat.getColor(context, R.color.replied_bg)
-        else if(data.getQuestionStatus() ==0 && !data.getPublished()){ ContextCompat.getColor(context, R.color.message_item_private) }
-        else if(data.getReplyMsgQuestionIsPublished()==false) ContextCompat.getColor(context, R.color.message_item_private)
-        else if(data.getReplyMsgQuestionIsPublished()==true) ContextCompat.getColor(context, R.color.bg_color_white)
-        else {
-                ContextCompat.getColor(context, R.color.bg_color_white)
-        }
+        else if (data.getReplyMsgQuestionIsPublished() == false) ContextCompat.getColor(context, R.color.message_item_private)
+        else if (data.getReplyMsgQuestionIsPublished() == true) ContextCompat.getColor(context, R.color.bg_color_white)
+        else { ContextCompat.getColor(context, R.color.bg_color_white) }
     }
 }

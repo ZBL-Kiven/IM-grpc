@@ -44,7 +44,6 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             this.curData = data
             removeAllViews()
             initBubble(data)
-
             //            initName(data)
             initAvatar(data)
             initSendStatus(data)
@@ -85,6 +84,9 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
+        ivAvatar?.setOnClickListener {
+            data.jumpToUserHomePage()
+        }
     }
 
     private fun initBubble(data: T) {
@@ -108,6 +110,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData { curData }
         bubbleView?.setOnLongClickListener {
+            Log.d("LiXiang", "长按点击响应")
             val isNotSelf = data.getSelfUserId() != data.getSenderId()
             if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
                 MsgPop(context, data).show(it)

@@ -2,6 +2,7 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -179,7 +180,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 else -> null
             } ?: return
 
-            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) llContent.setPadding(0, 0, 0, 0)
+            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()&&data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
             else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
 
             if (!isSameType) {
@@ -187,6 +188,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 curContentIn = v as? ImContentIn
                 bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 bubbleContent.setOnClickListener {
+                    Log.d("LiXiang", "bubbleContent点击")
                     if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
                         data.onViewLargePic()
                     }
