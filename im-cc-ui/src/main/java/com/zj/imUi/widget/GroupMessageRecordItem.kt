@@ -3,6 +3,7 @@ package com.zj.imUi.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
@@ -71,6 +72,15 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
             } else {
                 messageBean.stopAudio()
             }
+        }
+
+        setOnLongClickListener {
+            Log.d("LiXiang", "audio长按点击响应")
+            val isNotSelf = messageBean.getSelfUserId() != messageBean.getSenderId()
+            if (messageBean.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
+                MsgPop(context, messageBean).show(it)
+            }
+            true
         }
         return this
     }

@@ -27,6 +27,8 @@ class IMContentTextView @JvmOverloads constructor(context: Context,
         if (data.getType() == UiMsgType.MSG_TYPE_TEXT) text = data.getTextContent()
     }
 
+
+
     override fun onResume(data: ImMsgIn?) {
 
     }
