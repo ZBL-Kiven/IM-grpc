@@ -21,13 +21,16 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
-import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.views.ut.DPUtils
+
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.zj.imUi.R
+
 
 class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
 
@@ -67,7 +70,6 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         if (childCount == 0) {
             addView(contentLayout)
         }
-
         onSetData(data)
 
         imgCCVideoCover.setOnClickListener {
@@ -75,6 +77,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun onSetData(data: ImMsgIn?) {
         if (data == null) return
 
@@ -87,8 +90,11 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         } else llTitle.visibility = View.GONE
 
         val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
+        val roundOptions = RequestOptions().transform(RoundedCorners(corners))
+        roundOptions.transform(CenterCrop(), RoundedCorners(corners)) //处理CenterCrop的情况,保证圆角不shixiao
+
         data.getCCVideoContentImgPreviewRemoteStorageUrl()?.let {
-            Glide.with(this).load(it).fitCenter().override(DPUtils.dp2px(256f), DPUtils.dp2px(160f)).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).addListener(object :
+            Glide.with(this).load(it).override(DPUtils.dp2px(256f), DPUtils.dp2px(160f)).apply(roundOptions).addListener(object :
                 RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     return false
