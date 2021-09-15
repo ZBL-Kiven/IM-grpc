@@ -39,15 +39,15 @@ object ImApi {
 
     object EH : ErrorHandler {
 
-        override fun onError(throwable: Throwable?): Boolean {
+        override fun onError(throwable: Throwable?): Pair<Boolean, Any?> {
+            var msgBody: Any? = null
             if (throwable is HttpException) {
                 val errorInfo = throwable.response()?.body()?.toString()
                 val errorString = throwable.response()?.errorBody()?.string()
                 val errorCode = throwable.code()
                 val errorBodyCode = throwable.response()?.code()
                 if (errorBodyCode == SERVER_ERROR) {
-                    val errorBody = Gson().fromJson(errorString, HttpErrorBody::class.java)
-                    errorBody?.throwable = throwable
+                    msgBody = Gson().fromJson(errorString, HttpErrorBody::class.java)
                 }
                 Log.e("request error", " ----- case: $errorInfo \ndetail = $errorString  \nerrorCode = $errorCode \nerrorBodyCode = $errorBodyCode")
             } else {
@@ -62,7 +62,7 @@ object ImApi {
                 }
             }
             throwable?.printStackTrace()
-            return false
+            return Pair(false, msgBody)
         }
 
         private const val SERVER_ERROR = 555
@@ -72,7 +72,6 @@ object ImApi {
             var lang: String? = null
             var message: String? = null
             var name: String? = null
-            var throwable: Throwable? = null
         }
     }
 }
