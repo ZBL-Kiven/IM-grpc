@@ -42,4 +42,9 @@ class SendMessageRespEn {
      * */
     var published: Boolean = true
 
+    /**
+     * 消息过期时间，仅限于有时限的消息
+     * */
+    var expireTime: Long = -1L
+
 }

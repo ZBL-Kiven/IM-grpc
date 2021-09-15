@@ -150,10 +150,11 @@ class ClientHubImpl : ClientHub<Any?>() {
         val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
         val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
         val localMsg = msgDb?.findMsgByClientId(callId)
-        localMsg?.questionContent?.published = d.published
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
         localMsg?.sendTime = d.sendTime
+        localMsg?.questionContent?.published = d.published
+        localMsg?.questionContent?.expireTime = d.expireTime
         val spark = d.sparkNum
         val diamond = d.diamondNum
         if (spark != null || diamond != null) {

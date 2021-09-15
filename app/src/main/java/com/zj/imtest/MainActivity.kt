@@ -81,8 +81,7 @@ class MainActivity : AppCompatActivity() {
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
-        view.isSelected = !view.isSelected
-        Sender.sendRewardTextMsg("你已被油王服务 $incId 次", groupId, 0, MsgType.TEXT, view.isSelected)
+        Sender.sendText("你已被油王服务 $incId 次", groupId)
     }
 
     fun sendImg(view: View) {
