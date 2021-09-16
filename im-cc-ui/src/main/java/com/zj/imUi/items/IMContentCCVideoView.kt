@@ -1,6 +1,5 @@
 package com.zj.imUi.items
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -8,7 +7,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
@@ -32,7 +30,9 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.zj.imUi.R
 
 
-class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) ,MessageSendTimeUtils.SendTImeListener{
+class IMContentCCVideoView @JvmOverloads constructor(context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0) : BaseBubble(context, attrs, def), MessageSendTimeUtils.SendTImeListener {
 
 
     private var tvName: AppCompatTextView
@@ -42,12 +42,12 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
     private var imgJumpFlag: AppCompatImageView
     private var tvCCVideoTitle: AppCompatTextView
     private var tvCCVideoSendTime: AppCompatTextView
-    private var ccVideoProgressBar:ProgressBar
+    private var ccVideoProgressBar: ProgressBar
 
-    @SuppressLint("ObjectAnimatorBinding")
-//    private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
+    @SuppressLint("ObjectAnimatorBinding") //    private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
 
-    private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, false)
+    private var contentLayout: View =
+        LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_video, this, false)
 
     init {
         with(contentLayout) {
@@ -59,11 +59,10 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
             tvCCVideoSendTime = findViewById(R.id.im_msg_item_normal_cc_video_tv_time)
             imgJumpFlag = findViewById(R.id.im_msg_item_normal_cc_video_img_flag)
             ccVideoProgressBar = findViewById(R.id.im_msg_item_cc_video_img_progressbar)
-        }
-//        anim.duration = 800
-//        anim.repeatCount = ObjectAnimator.INFINITE
-//        anim.start()
-//        imgCCVideoCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        } //        anim.duration = 800
+        //        anim.repeatCount = ObjectAnimator.INFINITE
+        //        anim.start()
+        //        imgCCVideoCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
     }
 
     override fun init(data: ImMsgIn) {
@@ -89,18 +88,27 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
             tvName.text = data.getSenderName()
         } else llTitle.visibility = View.GONE
 
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
+        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            8f,
+            context.resources.displayMetrics).toInt()
         val roundOptions = RequestOptions().transform(RoundedCorners(corners))
-        roundOptions.transform(CenterCrop(), RoundedCorners(corners)) //处理CenterCrop的情况,保证圆角不shixiao
+        roundOptions.transform(CenterCrop(), RoundedCorners(corners)) //处理CenterCrop的情况,保证圆角不失效
 
         data.getCCVideoContentImgPreviewRemoteStorageUrl()?.let {
-            Glide.with(this).load(it).override(DPUtils.dp2px(256f), DPUtils.dp2px(160f)).apply(roundOptions).addListener(object :
-                RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+            Glide.with(this).load(it).override(DPUtils.dp2px(256f), DPUtils.dp2px(160f))
+                .apply(roundOptions).addListener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean): Boolean {
                     return false
                 }
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                override fun onResourceReady(resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean): Boolean {
                     imgJumpFlag.visibility = View.VISIBLE
                     ccVideoProgressBar.visibility = View.GONE
                     return false
@@ -112,22 +120,30 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
             tvCCVideoTitle.visibility = View.VISIBLE
             tvCCVideoTitle.text = data.getCCVideoContentVideoTitle()
             if (data.getSelfUserId() == data.getSenderId()) {
-                tvCCVideoTitle.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-            } else tvCCVideoTitle.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
+                tvCCVideoTitle.setTextColor(ContextCompat.getColor(context,
+                    R.color.text_color_white))
+            } else tvCCVideoTitle.setTextColor(ContextCompat.getColor(context,
+                R.color.text_color_black))
 
         }
         val timeDiff: Long? = TimeDiffUtils.timeDifference(data.getSendTime())
         if (timeDiff != null) {
-            if (timeDiff  > 1 && timeDiff < 3600000 * 48) {
+            if (timeDiff > 1 && timeDiff < 3600000 * 48) {
                 tvCCVideoSendTime.visibility = View.VISIBLE
-                tvCCVideoSendTime.text =  (TimeDiffUtils.timeDifference(data.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
+                tvCCVideoSendTime.text = (TimeDiffUtils.timeDifference(data.getSendTime()))?.let {
+                    TimeDiffUtils.setTimeText(it,
+                        context)
+                }
             } else tvCCVideoSendTime.visibility = View.GONE
         }
 
     }
 
     override fun onSendTime(msgId: String, sendTime: Long) {
-        if (msgId == this.curData?.invoke()?.getMsgId()) { this.curData?.invoke()?.let { tvCCVideoSendTime.text = TimeDiffUtils.setTimeText(sendTime,context) } }
+        if (msgId == this.curData?.invoke()?.getMsgId()) {
+            this.curData?.invoke()
+                ?.let { tvCCVideoSendTime.text = TimeDiffUtils.setTimeText(sendTime, context) }
+        }
     }
 
     override fun onResume() {
@@ -137,7 +153,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
     override fun notifyChange(pl: Any?) {
         super.notifyChange(pl)
         when (pl) {
-            BaseImItem.NOTIFY_CHANGE_SENDING_STATE->performRegisterTimer()
+            BaseImItem.NOTIFY_CHANGE_SENDING_STATE -> performRegisterTimer()
         }
     }
 
@@ -145,10 +161,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context, attrs: At
         curData?.invoke()?.let {
             if (it.getSendState() == 0 || it.getSendState() == 3) {
                 TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
-                    MessageSendTimeUtils.registerSendTimeObserver(
-                        it.getMsgId(),
-                        it1, this
-                    )
+                    MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
                 }
             } else {
                 MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())

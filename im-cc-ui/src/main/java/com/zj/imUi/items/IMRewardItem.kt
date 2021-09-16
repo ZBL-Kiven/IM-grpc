@@ -20,6 +20,7 @@ import com.zj.imUi.utils.RewardTimeCountdownUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.bottom.GroupMessageItemTime
 import com.zj.imUi.widget.top.GroupMessageItemTitle
+import com.zj.views.ut.DPUtils
 import java.lang.StringBuilder
 import java.util.*
 import kotlin.math.roundToInt
@@ -41,9 +42,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var imgCountdown: AppCompatImageView
     private var tvCountdown: AppCompatTextView
     private var llCountDown: LinearLayout
+    private var llQuestion: LinearLayout
     private var questionIcon: AppCompatImageView
     private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag: AppCompatTextView
+    private val baseContentMargins = DPUtils.dp2px(12f)
+
 
     private var contentLayout: View = LayoutInflater.from(context)
         .inflate(R.layout.im_msg_item_owner_reward_question, this, false)
@@ -60,6 +64,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
             timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
             tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
+            llQuestion = findViewById(R.id.im_msg_item_owner_reward_question_il)
         }
     }
 
@@ -71,6 +76,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
         }
 
+        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,0)
+        else llQuestion.setPadding(baseContentMargins,DPUtils.dp2px(8f),baseContentMargins,0)
 
         //最开始此控件均不可见
         textReplyType.visibility = View.GONE
@@ -82,12 +89,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
-            textReplyType.visibility = View.VISIBLE
-            val stringBuilder: StringBuilder =
-                StringBuilder(context.getString(R.string.im_ui_reply_by)).append(" ")
-                    .append(setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(
-                        Locale.ENGLISH))
-            textReplyType.text = stringBuilder
+            textReplyType.visibility = VISIBLE
+            textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.ENGLISH)
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
@@ -233,8 +236,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         when (type) {
             UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_reward_type_text)
             UiMsgType.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_reward_type_image)
-            UiMsgType.MSG_TYPE_AUDIO -> text =
-                context.getString(R.string.im_ui_msg_reward_type_audio)
+            UiMsgType.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_reward_type_audio)
         }
         return text
     }

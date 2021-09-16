@@ -136,6 +136,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_white)
             } else if (data.getReplyMsgQuestionIsPublished() == false) {
                 imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_private)
+            }else{
+                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_normal)
+
             }
         } else {
             imgQuestion.visibility = View.GONE
@@ -182,6 +185,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             } ?: return
 
             if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()&&data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
+            else if(data.getSenderId() != data.getSelfUserId()){ llContent.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, baseContentMargins) }
             else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
 
             if (!isSameType) {

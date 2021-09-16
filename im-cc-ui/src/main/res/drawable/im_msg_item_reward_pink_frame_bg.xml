@@ -6,5 +6,5 @@
         android:color="@color/frame_textview_changes_77"
         android:width="1dp"/>
     <solid
-        android:color="#3BF0723B"/>
+        android:color="#12F0723B"/>
 </shape>
