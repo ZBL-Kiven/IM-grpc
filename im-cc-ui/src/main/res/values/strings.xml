@@ -19,14 +19,16 @@
     <string name="im_ui_msg_reply_type_image">[ Image ]</string>
     <string name="im_ui_msg_reply_type_audio">[ Voice ]</string>
 
-	<string name="im_ui_msg_copy">Copy</string>
+    <string name="im_ui_msg_copy">Copy</string>
     <string name="im_ui_msg_reply">Reply</string>
     <string name="im_ui_msg_block">Block</string>
 
 
-    <string name="im_ui_hour_time_format">HH:mm</string>
-    <string name="im_ui_month_time_format">M month d HH: mm</string>
-    <string name="im_ui_year_time_format">yyyy year M month d HH: mm</string>
+    <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
+    <string name="im_ui_month_time_format" translatable="false">MM %s dd HH: mm</string>
+    <string name="im_ui_year_time_format" translatable="false">yyyy %s MM %s dd HH: mm</string>
+    <string name="im_ui_year" translatable="false">year</string>
+    <string name="im_ui_mouth" translatable="false">mouth</string>
 
 
     <string name="im_ui_min_ago">m ago</string>
@@ -41,5 +43,6 @@
     <string name="im_ui_yesterday">yesterday</string>
     <string name="im_ui_question_no_time">Expired</string>
     <string name="im_ui_msg_not_allowed">Message type not allowed</string>
+
 
 </resources>
