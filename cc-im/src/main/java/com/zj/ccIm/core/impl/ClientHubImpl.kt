@@ -172,6 +172,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
+                if (d.msgStatus == 1) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> PAYLOAD_DELETE
                     d.msgStatus == 1 -> PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
