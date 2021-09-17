@@ -229,7 +229,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     }
 
-    override fun jumpToOwnerHomePage() {
+    override fun jumpToVideoDetails() {
+
+    }
+
+    override fun jumpToUserHomePage() {
 
     }
 

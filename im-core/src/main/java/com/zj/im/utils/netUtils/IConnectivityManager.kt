@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities.*
 import android.os.Build
 import com.zj.im.utils.log.logger.printInFile
 
+@Suppress("unused")
 internal class IConnectivityManager {
 
     private var stateChangeListener: ((NetWorkInfo) -> Unit)? = null

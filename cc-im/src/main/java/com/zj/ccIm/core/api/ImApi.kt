@@ -66,6 +66,7 @@ object ImApi {
         }
 
         private const val SERVER_ERROR = 555
+        const val SENSITIVE_WORDS = 20004
 
         class HttpErrorBody {
             var code: Int = 0

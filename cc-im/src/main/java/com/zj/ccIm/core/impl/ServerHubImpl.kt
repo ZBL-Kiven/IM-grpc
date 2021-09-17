@@ -11,6 +11,7 @@ import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
 import com.google.gson.Gson
+import com.zj.ccIm.core.api.ImApi.EH.SENSITIVE_WORDS
 import java.nio.charset.Charset
 
 class ServerHubImpl : ServerImplGrpc() {
@@ -82,13 +83,25 @@ class ServerHubImpl : ServerImplGrpc() {
             return 0
         }
         if (d.clientMsgId != callId) d.clientMsgId = callId
-
-        ImApi.getSenderApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException? ->
-            var isOk = isSuccess
-            if (isSuccess && data != null) {
-                isOk = !data.black
+        ImApi.getSenderApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
+            var resp = data
+            val isOk = isSuccess && resp != null && !resp.black
+            if (!isOk) {
+                when ((a as? ImApi.EH.HttpErrorBody)?.code) {
+                    SENSITIVE_WORDS -> {
+                        if (resp == null) resp = SendMessageRespEn().apply {
+                            this.clientMsgId = d.clientMsgId
+                            this.msgStatus = 1
+                            this.groupId = d.groupId
+                            this.diamondNum = d.diamondNum
+                            this.published = d.public
+                        } else {
+                            resp.msgStatus = 1
+                        }
+                    }
+                }
             }
-            callBack.result(isOk, data, throwable)
+            callBack.result(isOk, resp, throwable)
         }
         return d.uploadDataTotalByte + getDataBytes(d)
     }

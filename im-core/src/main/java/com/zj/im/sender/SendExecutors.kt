@@ -34,8 +34,9 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
                         override fun result(isOK: Boolean, d: T?, throwable: Throwable?) {
                             exc = throwable
                             clearTimeout()
-                            info.data = d
-                            done(isOK && d != null, !DataReceivedDispatcher.isDataEnable(), info, exc)
+                            val retryAble = !DataReceivedDispatcher.isDataEnable()
+                            info.data = if ((!isOK || d == null) && retryAble) data else d
+                            done(isOK && d != null, retryAble, info, exc)
                         }
                     }) ?: throw NullPointerException("server can not be null !!")
                 }

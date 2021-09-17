@@ -28,6 +28,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_DELETE = "delete"
         const val PAYLOAD_CHANGED = "change"
         const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
+        const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "delete_case_sensitive_words"
     }
 
     /**
@@ -171,7 +172,12 @@ class ClientHubImpl : ClientHub<Any?>() {
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
-                Pair(localMsg, if (d.black) PAYLOAD_DELETE else PAYLOAD_CHANGED_SEND_STATE)
+                val pl = when {
+                    d.black -> PAYLOAD_DELETE
+                    d.msgStatus == 1 -> PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
+                    else -> PAYLOAD_CHANGED_SEND_STATE
+                }
+                Pair(localMsg, pl)
             }
             SendMsgState.NONE, SendMsgState.SUCCESS -> {
                 sendDb?.deleteByCallId(d.clientMsgId)

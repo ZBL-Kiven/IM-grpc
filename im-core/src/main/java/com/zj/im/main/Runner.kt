@@ -181,8 +181,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
             printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
             enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
         } else {
-            if (!tryRecent) enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
-            else enqueue(info)
+            if (tryRecent) enqueue(info) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
         }
         sendingPool?.unLock()
     }

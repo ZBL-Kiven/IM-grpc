@@ -30,12 +30,12 @@ class SendMessageRespEn {
     /**
      * 钻石余额
      */
-    val diamondNum: Int? = null
+    var diamondNum: Int? = null
 
     /**
      * spark余额
      */
-    val sparkNum: Int? = null
+    var sparkNum: Int? = null
 
     /**
      * 是否公开消息
@@ -46,5 +46,10 @@ class SendMessageRespEn {
      * 消息过期时间，仅限于有时限的消息
      * */
     var expireTime: Long = -1L
+
+    /**
+     * send msg state , 0: normal , 1 SensitiveWords
+     * */
+    var msgStatus: Int = 0
 
 }
