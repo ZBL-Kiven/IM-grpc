@@ -90,7 +90,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
             textReplyType.visibility = VISIBLE
-            textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.ENGLISH)
+            textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
             if (data.getPublished()) {
                 textResponseType.text = context.getString(R.string.im_ui_public)
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))

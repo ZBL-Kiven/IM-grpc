@@ -31,8 +31,8 @@ object TimeLineInflateModel {
             ctx.getString(R.string.im_ui_friday),
             ctx.getString(R.string.im_ui_saturday))
         val hourTimeFormat = ctx.getString(R.string.im_ui_hour_time_format)
-        val monthTimeFormat = ctx.getString(R.string.im_ui_month_time_format, R.string.im_ui_mouth)
-        val yearTimeFormat = ctx.getString(R.string.im_ui_year_time_format, R.string.im_ui_year, R.string.im_ui_mouth)
+        val monthTimeFormat = ctx.getString(R.string.im_ui_month_time_format)
+        val yearTimeFormat = ctx.getString(R.string.im_ui_year_time_format)
         try {
             val todayCalendar = Calendar.getInstance()
             val calendar = Calendar.getInstance()
@@ -41,13 +41,13 @@ object TimeLineInflateModel {
                 result = if (todayCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) {
                     when (todayCalendar.get(Calendar.DAY_OF_MONTH) - calendar.get(Calendar.DAY_OF_MONTH)) {
                         0 -> getTime(timestamp, hourTimeFormat)
-                        1 -> "${ctx.getString(R.string.im_ui_yesterday)} ${
-                            getTime(timestamp, hourTimeFormat)
-                        }"
-                        2, 3, 4, 5, 6 -> {
-                            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-                            "${weekNames[dayOfWeek - 1]} ${getTime(timestamp, hourTimeFormat)}"
-                        }
+//                        1 -> "${ctx.getString(R.string.im_ui_yesterday)} ${
+//                            getTime(timestamp, hourTimeFormat)
+//                        }"
+//                        2, 3, 4, 5, 6 -> {
+//                            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+//                            "${weekNames[dayOfWeek - 1]} ${getTime(timestamp, hourTimeFormat)}"
+//                        }
                         else -> getTime(timestamp, monthTimeFormat)
                     }
                 } else {
