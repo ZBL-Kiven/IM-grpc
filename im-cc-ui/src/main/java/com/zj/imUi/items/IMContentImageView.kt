@@ -20,7 +20,9 @@ import com.zj.imUi.utils.AutomationImageCalculateUtils
 import com.zj.views.ut.DPUtils
 
 
-class IMContentImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : AppCompatImageView(context, attrs, def), ImContentIn {
+class IMContentImageView @JvmOverloads constructor(context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0) : AppCompatImageView(context, attrs, def), ImContentIn {
 
     private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
 
@@ -35,20 +37,33 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
         if (data == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
         if (arrayInt != null) {
-            val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
+            val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                8f,
+                context.resources.displayMetrics).toInt()
             val lp = FrameLayout.LayoutParams(arrayInt[0], arrayInt[1])
             layoutParams = lp
             data.getImgContentUrl()?.let {
-                Glide.with(this).load(it).fitCenter().override(arrayInt[0], arrayInt[1]).placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).addListener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
+                Glide.with(this).load(it).fitCenter().override(arrayInt[0], arrayInt[1])
+                    .placeholder(R.drawable.im_msg_item_img_loading)
+                    .error(R.drawable.im_msg_item_img_loading)
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
+                    .addListener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean): Boolean {
+                            return false
+                        }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        anim.cancel()
-                        return false
-                    }
-                }).into(this)
+                        override fun onResourceReady(resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean): Boolean {
+                            anim.cancel()
+                            return false
+                        }
+                    }).into(this)
             }
         }
     }

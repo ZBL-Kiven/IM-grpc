@@ -1,42 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="im_ui_user_nickname_split" translatable="false"> : </string>
+    <string name="im_ui_user_nickname_split"> : </string>
 
     <string name="im_ui_private">Private</string>
     <string name="im_ui_public">Public</string>
-    <string name="im_ui_reply_by">REPLY BY </string>
 
-    <string name="im_ui_replied">Replied</string>
-
-    <string name="im_ui_min_ago">m ago</string>
-    <string name="im_ui_hours_ago">h ago</string>
+    <string name="im_ui_replied">Responded</string>
 
     <string name="im_ui_msg_type_text">Text</string>
     <string name="im_ui_msg_type_image">Image</string>
     <string name="im_ui_msg_type_audio">Voice</string>
 
-    <string name="im_ui_msg_reward_type_text">Text</string>
-    <string name="im_ui_msg_reward_type_image">Image</string>
-    <string name="im_ui_msg_reply_type_image">[ Image ]</string>
-    <string name="im_ui_msg_reward_type_audio">Voice</string>
-    <string name="im_ui_msg_reply_type_audio">[ Voice ]</string>
-	<string name="im_ui_msg_copy">Copy</string>
-    <string name="im_ui_msg_reply">Reply</string>
-    <string name="im_ui_msg_block">Mute</string>
+    <string name="im_ui_msg_reward_type_text">REPLY VIA TEXT</string>
+    <string name="im_ui_msg_reward_type_image">REPLY VIA IMAGE</string>
+    <string name="im_ui_msg_reward_type_audio">REPLY VIA VOICE</string>
 
-    <string name="im_ui_sunday">sunday</string>
-    <string name="im_ui_monday">monday</string>
-    <string name="im_ui_tuesday">tuesday</string>
-    <string name="im_ui_wednesday">wednesday</string>
-    <string name="im_ui_thursday">thursday</string>
-    <string name="im_ui_friday">friday</string>
-    <string name="im_ui_saturday">saturday</string>
-    <string name="im_ui_hour_time_format">HH:mm</string>
-    <string name="im_ui_month_time_format">M month d HH: mm</string>
-    <string name="im_ui_year_time_format">yyyy year M month d HH: mm</string>
-    <string name="im_ui_yesterday">yesterday</string>
+    <string name="im_ui_msg_reply_type_image">[ Image ]</string>
+    <string name="im_ui_msg_reply_type_audio">[ Voice ]</string>
+
+    <string name="im_ui_msg_copy">Copy</string>
+    <string name="im_ui_msg_reply">Reply</string>
+    <string name="im_ui_msg_block">Block</string>
+
+    <string name="im_ui_min_ago">m ago</string>
+    <string name="im_ui_hours_ago">h ago</string>
     <string name="im_ui_question_no_time">Expired</string>
     <string name="im_ui_msg_not_allowed">Message type not allowed</string>
+
+
+    <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
+    <string name="im_ui_month_time_format" translatable="false">MM-dd HH: mm</string>
+    <string name="im_ui_year_time_format" translatable="false">yyyy-MM-dd HH: mm</string>
+    <string name="im_ui_year" translatable="false">year</string>
+    <string name="im_ui_mouth" translatable="false">mouth</string>
+    <string name="im_ui_sunday" translatable="false">sunday</string>
+    <string name="im_ui_monday" translatable="false">monday</string>
+    <string name="im_ui_tuesday" translatable="false">tuesday</string>
+    <string name="im_ui_wednesday" translatable="false">wednesday</string>
+    <string name="im_ui_thursday" translatable="false">thursday</string>
+    <string name="im_ui_friday" translatable="false">friday</string>
+    <string name="im_ui_saturday" translatable="false">saturday</string>
+    <string name="im_ui_yesterday" translatable="false">yesterday</string>
+
+
 
 </resources>

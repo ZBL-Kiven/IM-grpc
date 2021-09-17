@@ -10,10 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/nickname_color_black"
+        android:layout_marginTop="4dp"
+        android:textColor="@color/text_color_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:alpha="0.7"
         tools:text="12 min ago" />
 
 
