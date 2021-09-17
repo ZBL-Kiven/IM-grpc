@@ -184,9 +184,21 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 else -> null
             } ?: return
 
-            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()&&data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
-            else if(data.getSenderId() != data.getSelfUserId()){ llContent.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, baseContentMargins) }
-            else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
+            if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) {
+                if(data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
+                else llContent.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,DPUtils.dp2px(8f))
+            }
+            else if(data.getSenderId() != data.getSelfUserId()){
+                if(data.getReplyMsgClientMsgId() == null)
+                       llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, baseContentMargins)
+                else llContent.setPadding(baseContentMargins,DPUtils.dp2px(6f),baseContentMargins,DPUtils.dp2px(8f))
+            }
+            else {
+                if (data.getReplyMsgClientMsgId()!=null){
+                    llContent.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,DPUtils.dp2px(8f))
+                }else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
+            }
+
 
             if (!isSameType) {
                 bubbleContent.removeAllViews()
