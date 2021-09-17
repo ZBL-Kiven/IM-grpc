@@ -26,7 +26,7 @@
     <string name="im_ui_min_ago">m ago</string>
     <string name="im_ui_hours_ago">h ago</string>
     <string name="im_ui_question_no_time">Expired</string>
-    <string name="im_ui_msg_not_allowed">Message type not allowed</string>
+    <string name="im_ui_msg_not_allowed">These type of messages can not be sent</string>
 
 
     <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>

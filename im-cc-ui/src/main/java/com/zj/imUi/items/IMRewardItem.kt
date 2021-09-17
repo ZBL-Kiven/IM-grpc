@@ -177,10 +177,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_origin)
             llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
         }
+        llCountDown.visibility = View.VISIBLE
 
         if (data.getExpireTime() in 1..3599999) {
             llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
-            llCountDown.visibility = View.VISIBLE
         }
 
     }
