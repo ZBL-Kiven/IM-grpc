@@ -4,8 +4,10 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -21,7 +23,6 @@ import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.bottom.GroupMessageItemTime
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import com.zj.views.ut.DPUtils
-import java.lang.StringBuilder
 import java.util.*
 import kotlin.math.roundToInt
 
@@ -47,6 +48,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag: AppCompatTextView
     private val baseContentMargins = DPUtils.dp2px(12f)
+    private var frameFLag:FrameLayout
 
 
     private var contentLayout: View = LayoutInflater.from(context)
@@ -65,6 +67,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
             tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
             llQuestion = findViewById(R.id.im_msg_item_owner_reward_question_il)
+            frameFLag = findViewById(R.id.im_msg_item_owner_reward_frame)
         }
     }
 
@@ -129,6 +132,13 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             timeBottom.setData(data)
         } else timeBottom.visibility = View.GONE
 
+
+        if (data.getSelfUserId() == data.getOwnerId()){
+            val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
+            lp.setMargins(0,DPUtils.dp2px(-60f),DPUtils.dp2px(10f),DPUtils.dp2px(10f))
+            lp.gravity = Gravity.END
+            tvReliedFLag.layoutParams = lp
+        }
     }
 
     private fun setTextStyle() {

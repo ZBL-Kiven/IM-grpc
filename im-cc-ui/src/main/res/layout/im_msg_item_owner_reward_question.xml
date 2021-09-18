@@ -110,10 +110,10 @@
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="REPLY BY TEXT"
-        tools:visibility="visible"
         android:textStyle="bold"/>
 
     <FrameLayout
+        android:id="@+id/im_msg_item_owner_reward_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false">
@@ -124,7 +124,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:visibility="gone"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
@@ -132,20 +133,24 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:layout_marginTop="-20dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="35dp"
+            android:layout_marginTop="-40dp"
             android:alpha="0.4"
             android:background="@drawable/im_msg_item_replied_flag_cornors_bg"
             android:paddingLeft="20dp"
             android:paddingTop="2dp"
             android:paddingRight="20dp"
             android:paddingBottom="2dp"
-            android:rotation="-30"
+            android:rotation="-25"
             android:text="@string/im_ui_replied"
             android:textColor="@color/replied_textview"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone"
-            tools:visibility="visible"/>
+            tools:visibility="visible"
+            />
+
     </FrameLayout>
+
+
 </LinearLayout>
