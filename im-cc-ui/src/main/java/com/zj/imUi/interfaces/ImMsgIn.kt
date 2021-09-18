@@ -101,4 +101,5 @@ interface ImMsgIn {
 
     fun questionStatusOverdueChange()
 
+    fun getAvatarUrl():String?
 }

@@ -66,8 +66,9 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
+        val avatarUrl = d.getAvatarUrl()
         val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
-        Glide.with(iv).load(d.getSenderAvatar()).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
+        Glide.with(iv).load(avatarUrl).centerInside().apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
@@ -82,4 +83,5 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
             ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
         }
     }
+
 }
