@@ -100,6 +100,4 @@ interface ImMsgIn {
     fun jumpToSenderRewardsPage()
 
     fun questionStatusOverdueChange()
-
-    fun getAvatarUrl():String?
 }
