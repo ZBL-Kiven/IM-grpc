@@ -158,14 +158,19 @@ object IMHelper : IMInterface<Any?>() {
         Fetcher.cancel()
     }
 
+    override fun shutdown(case: String) {
+        close()
+        super.shutdown(case)
+    }
+
     /**
      * must call when login out
      * */
     fun loginOut(app: Application) {
-        close()
-        SPHelper.clear()
         Thread {
+            SPHelper.clear()
             withDb(app) { it?.clearAllTables() }
+            shutdown("on logout called !")
         }.start()
     }
 
