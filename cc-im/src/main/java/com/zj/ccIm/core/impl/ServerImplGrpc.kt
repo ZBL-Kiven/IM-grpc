@@ -13,13 +13,11 @@ import io.grpc.stub.StreamObserver
 abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     private var channel: Grpc.CachedChannel? = null
-    private var defaultHeader: Map<String, String>? = null
 
     abstract fun onConnection()
 
     override fun init(context: Application?) {
         super.init(context)
-        defaultHeader = mapOf("token" to IMHelper.imConfig.getToken(), "userid" to "${IMHelper.imConfig.getUserId()}")
         connect()
     }
 
@@ -39,7 +37,8 @@ abstract class ServerImplGrpc : ServerHub<Any?>() {
                 val keepAliveTimeOut = IMHelper.imConfig.getHeatBeatsTimeOut()
                 val idleTimeOut = IMHelper.imConfig.getIdleTimeOut()
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                channel = Grpc.get(config).defaultHeader(defaultHeader)
+                val header = mapOf("token" to IMHelper.imConfig.getToken(), "userid" to "${IMHelper.imConfig.getUserId()}")
+                channel = Grpc.get(config).defaultHeader(header)
             }
             onConnection()
         } catch (e: Exception) {
