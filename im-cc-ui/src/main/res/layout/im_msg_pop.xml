@@ -24,7 +24,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="#40000000" />
+        android:background="#44F5F7F9" />
 
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="#40000000" />
+        android:background="#44F5F7F9" />
 
     <TextView
         android:id="@+id/im_msg_pop_block"

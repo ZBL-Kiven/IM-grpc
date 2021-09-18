@@ -5,7 +5,7 @@
     <color name="reward_text_color_reply">#FFA6ACBF</color>
     <color name="reward_text_color_timeout">#FFEAECF3</color>
     <color name="reward_text_color_member_waitReply">#FF8277E1</color>
-    <color name="popWindow_bg">#DD333333</color>
+    <color name="popWindow_bg">#333333</color>
     <color name="popWindow_line">#17000000</color>
 
 
