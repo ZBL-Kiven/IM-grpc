@@ -136,6 +136,11 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
                 }
             } else tvCCVideoSendTime.visibility = View.GONE
         }
+        if(data.getSelfUserId() == data.getSenderId()){
+            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_self_reply_others))
+        }else
+            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.message_cc_video_send_time))
+
 
     }
 
