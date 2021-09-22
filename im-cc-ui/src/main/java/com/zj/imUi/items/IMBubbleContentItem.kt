@@ -188,6 +188,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                 if(data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
                 else llContent.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,DPUtils.dp2px(8f))
             }
+            else if (v is IMContentAudioView && data.getSelfUserId() == data.getSenderId()) {
+                if(data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
+                else llContent.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,DPUtils.dp2px(8f))
+            }
             else if(data.getSenderId() != data.getSelfUserId()){
                 if(data.getReplyMsgClientMsgId() == null)
                        llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, baseContentMargins)
