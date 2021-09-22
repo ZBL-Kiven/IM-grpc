@@ -9,7 +9,7 @@ import com.zj.api.okhttp3.ProgressListener
 import com.zj.api.okhttp3.ProgressRequestBody
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.UploadRespEn
-import com.zj.compress.FileUtils
+import com.zj.compress.videos.FileUtils
 import io.reactivex.schedulers.Schedulers
 import okhttp3.*
 import java.io.File

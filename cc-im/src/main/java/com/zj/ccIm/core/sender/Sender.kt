@@ -1,13 +1,10 @@
 package com.zj.ccIm.core.sender
 
 import android.app.Application
-import android.net.Uri
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
-import com.zj.ccIm.core.sender.compress.ImgCompress
-import com.zj.compress.CompressListener
-import com.zj.compress.VideoCompressUtils
+import com.zj.compress.CompressUtils
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.poster.log
@@ -131,7 +128,11 @@ object Sender {
         private val mVideoOutputPath = "/compress/im/${d.clientMsgId}.mp4"
         private val mImageOutputPath = "/compress/im/${d.clientMsgId}"
 
-        private val onImgCompressListener = object : com.zj.ccIm.core.sender.compress.OnCompressListener {
+        private val onImgCompressListener = object : com.zj.compress.images.CompressListener {
+
+            override fun onFileTransform(p0: String?) {
+                log("image path transformed")
+            }
 
             override fun onStart() {
                 log("image start compress ... ")
@@ -150,7 +151,7 @@ object Sender {
             }
         }
 
-        private val onVideoCompressListener = object : CompressListener {
+        private val onVideoCompressListener = object : com.zj.compress.videos.CompressListener {
             override fun onSuccess(p0: String?) {
                 log("video start compress ... ")
                 val deleteOriginalFile = p0 != d.localFilePath
@@ -172,21 +173,21 @@ object Sender {
                 onStatus?.call(true, d.clientMsgId, 0, d, false, IllegalArgumentException(case))
             }
 
-            override fun onFilePatched(p0: String?): Boolean {
+            override fun onFileTransform(p0: String?) {
                 log("video compress , compatible with inaccessible files , the file is patched to : $p0 ")
-                return true
             }
         }
 
         override fun startUpload(isDeleteFileAfterUpload: Boolean) {
             val c = (context?.applicationContext as? Application) ?: throw NullPointerException("context should not be null !!")
+            val cu = CompressUtils.with(c).load(d.localFilePath)
             when (d.msgType) {
                 MsgType.IMG.type -> {
-                    ImgCompress.with(c).ignoreBy(1024).load(d.localFilePath).setTargetPath(mImageOutputPath).setCompressListener(onImgCompressListener).start()
+                    cu.asImage().ignoreBy(1024).setTargetPath(mImageOutputPath).start(onImgCompressListener)
                 }
 
                 MsgType.VIDEO.type -> {
-                    VideoCompressUtils.create(c).setLevel(2000).setInputFilePath(Uri.parse(d.localFilePath)).setOutPutFileName(mVideoOutputPath).build().start(onVideoCompressListener)
+                    cu.asVideo().setLevel(2000).setOutPutFileName(mVideoOutputPath).start(onVideoCompressListener)
                 }
 
                 MsgType.AUDIO.type -> {
