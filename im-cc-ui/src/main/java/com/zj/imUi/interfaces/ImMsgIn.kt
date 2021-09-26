@@ -58,6 +58,11 @@ interface ImMsgIn {
 
     //回复相关
     fun getReplyMsgTextContent(): String?
+    fun getReplyMsgImgContent(): String?
+    fun getReplyMsgImgWidth(): Int?
+    fun getReplyMsgImgHeight(): Int?
+    fun getReplyMsgCCVideoCoverContent(): String?
+    fun getReplyMsgCCVideoId(): String?
     fun getReplyMsgClientMsgId(): String?
     fun getReplyMsgCreateTs(): Long?
     fun getReplyMsgGroupId(): Long?

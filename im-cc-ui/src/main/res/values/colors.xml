@@ -52,6 +52,7 @@
     <color name="text_color_black">#FF262628</color>
     <color name="text_color_gray">#FFA6ACBF</color>
     <color name="text_color_gray_nickname">#FF9395AE</color>
+    <color name="message_cc_video_send_time">#FFC7C7DA</color>
 
     <color name="message_item_private">#33944DE3</color>
     <color name="message_purple_translate_20">#33944DE2</color>
