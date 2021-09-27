@@ -46,7 +46,7 @@
             android:layout_marginStart="3dp"
             android:layout_marginTop="5dp"
             android:src="@drawable/im_msg_item_widget_reward_icon_owner"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:visibility="visible"
             />
 

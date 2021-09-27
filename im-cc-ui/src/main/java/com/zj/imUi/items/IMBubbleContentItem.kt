@@ -28,6 +28,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
 
     private val tvName: AppCompatTextView
     private val iconIsOwner: AppCompatImageView
+    private val iconV :AppCompatImageView
     private val llQuestionContent: LinearLayout
     private val llName: LinearLayout
     private val bubbleContent: FrameLayout
@@ -47,6 +48,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content, this, true)
         tvName = findViewById(R.id.im_msg_item_normal_text_tv_nickname)
         iconIsOwner = findViewById(R.id.im_msg_bubble_img_owner)
+        iconV = findViewById(R.id.im_msg_bubble_img_v)
         bubbleContent = findViewById(R.id.im_msg_bubble_viewstub)
         bubbleRepliedContent = findViewById(R.id.im_msg_bubble_replied_stub)
         tvQuestionContent = findViewById(R.id.im_msg_item_normal_text_replied_content)
@@ -67,8 +69,14 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             llName.visibility = View.GONE
         } else {
             llName.visibility = View.VISIBLE
-            if (data.getSenderId() == data.getOwnerId()) iconIsOwner.visibility = View.VISIBLE
-            else iconIsOwner.visibility = View.GONE
+            if (data.getSenderId() == data.getOwnerId()){
+                iconIsOwner.visibility = View.VISIBLE
+                iconV.visibility = View.VISIBLE
+            }
+            else{
+                iconIsOwner.visibility = View.GONE
+                iconV.visibility = View.GONE
+            }
         }
         performRegisterTimer()
         setIconVisibility(data)

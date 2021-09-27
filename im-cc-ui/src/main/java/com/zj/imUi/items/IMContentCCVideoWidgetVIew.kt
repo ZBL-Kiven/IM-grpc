@@ -62,16 +62,8 @@ class IMContentCCVideoWidgetVIew @JvmOverloads constructor(context: Context,
         if (data == null) return
 
         imgJumpFlag.visibility = View.GONE
-
-//        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-//            0f,
-//            context.resources.displayMetrics).toInt()
-//        val roundOptions = RequestOptions().transform(RoundedCorners(corners))
-//        roundOptions.transform(CenterCrop(), RoundedCorners(corners)) //处理CenterCrop的情况,保证圆角不失效
-
         data.getReplyMsgCCVideoCoverContent()?.let {
             Glide.with(this).load(it).override(DPUtils.dp2px(44f), DPUtils.dp2px(44f)).centerCrop()
-//                .apply(roundOptions)
                 .addListener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean { return false }
                     override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
