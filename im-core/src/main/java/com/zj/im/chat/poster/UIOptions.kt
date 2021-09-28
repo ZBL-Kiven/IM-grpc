@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import com.zj.im.BuildConfig
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.utils.log.logger.printInFile
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -160,14 +160,10 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
 
 @Suppress("UNCHECKED_CAST")
 @Throws(java.lang.ClassCastException::class, ClassCastException::class)
-fun <I, O> castNotSafety(a: I): O {
+internal fun <I, O> castNotSafety(a: I): O {
     return a as O
 }
 
-fun log(str: String) {
-    println("im-ui ----- $str")
-}
-
-fun debugLog(str: String) {
-    if (BuildConfig.DEBUG) println("im-ui-debug ----- $str")
+private fun log(str: String) {
+    printInFile("im-ui", str)
 }

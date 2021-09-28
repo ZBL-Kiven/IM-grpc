@@ -16,6 +16,7 @@ private static final long serialVersionUID = 0L;
     super(builder);
   }
   private GetImMessageReq() {
+    channel_ = com.google.protobuf.LazyStringArrayList.EMPTY;
   }
 
   @java.lang.Override
@@ -38,6 +39,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -58,6 +60,20 @@ private static final long serialVersionUID = 0L;
             ownerId_ = input.readUInt64();
             break;
           }
+          case 26: {
+            java.lang.String s = input.readStringRequireUtf8();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              channel_ = new com.google.protobuf.LazyStringArrayList();
+              mutable_bitField0_ |= 0x00000001;
+            }
+            channel_.add(s);
+            break;
+          }
+          case 32: {
+
+            targetUserid_ = input.readUInt64();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -73,6 +89,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        channel_ = channel_.getUnmodifiableView();
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -112,6 +131,72 @@ private static final long serialVersionUID = 0L;
     return ownerId_;
   }
 
+  public static final int CHANNEL_FIELD_NUMBER = 3;
+  private com.google.protobuf.LazyStringList channel_;
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @return A list containing the channel.
+   */
+  public com.google.protobuf.ProtocolStringList
+      getChannelList() {
+    return channel_;
+  }
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @return The count of channel.
+   */
+  public int getChannelCount() {
+    return channel_.size();
+  }
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @param index The index of the element to return.
+   * @return The channel at the given index.
+   */
+  public java.lang.String getChannel(int index) {
+    return channel_.get(index);
+  }
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the channel at the given index.
+   */
+  public com.google.protobuf.ByteString
+      getChannelBytes(int index) {
+    return channel_.getByteString(index);
+  }
+
+  public static final int TARGETUSERID_FIELD_NUMBER = 4;
+  private long targetUserid_;
+  /**
+   * <pre>
+   * fans user id
+   * </pre>
+   *
+   * <code>uint64 targetUserid = 4;</code>
+   * @return The targetUserid.
+   */
+  @java.lang.Override
+  public long getTargetUserid() {
+    return targetUserid_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -132,6 +217,12 @@ private static final long serialVersionUID = 0L;
     if (ownerId_ != 0L) {
       output.writeUInt64(2, ownerId_);
     }
+    for (int i = 0; i < channel_.size(); i++) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, channel_.getRaw(i));
+    }
+    if (targetUserid_ != 0L) {
+      output.writeUInt64(4, targetUserid_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -148,6 +239,18 @@ private static final long serialVersionUID = 0L;
     if (ownerId_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
         .computeUInt64Size(2, ownerId_);
+    }
+    {
+      int dataSize = 0;
+      for (int i = 0; i < channel_.size(); i++) {
+        dataSize += computeStringSizeNoTag(channel_.getRaw(i));
+      }
+      size += dataSize;
+      size += 1 * getChannelList().size();
+    }
+    if (targetUserid_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt64Size(4, targetUserid_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -168,6 +271,10 @@ private static final long serialVersionUID = 0L;
         != other.getGroupId()) return false;
     if (getOwnerId()
         != other.getOwnerId()) return false;
+    if (!getChannelList()
+        .equals(other.getChannelList())) return false;
+    if (getTargetUserid()
+        != other.getTargetUserid()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -185,6 +292,13 @@ private static final long serialVersionUID = 0L;
     hash = (37 * hash) + OWNERID_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getOwnerId());
+    if (getChannelCount() > 0) {
+      hash = (37 * hash) + CHANNEL_FIELD_NUMBER;
+      hash = (53 * hash) + getChannelList().hashCode();
+    }
+    hash = (37 * hash) + TARGETUSERID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getTargetUserid());
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -322,6 +436,10 @@ private static final long serialVersionUID = 0L;
 
       ownerId_ = 0L;
 
+      channel_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      targetUserid_ = 0L;
+
       return this;
     }
 
@@ -348,8 +466,15 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public GetImMessageReq buildPartial() {
       GetImMessageReq result = new GetImMessageReq(this);
+      int from_bitField0_ = bitField0_;
       result.groupId_ = groupId_;
       result.ownerId_ = ownerId_;
+      if (((bitField0_ & 0x00000001) != 0)) {
+        channel_ = channel_.getUnmodifiableView();
+        bitField0_ = (bitField0_ & ~0x00000001);
+      }
+      result.channel_ = channel_;
+      result.targetUserid_ = targetUserid_;
       onBuilt();
       return result;
     }
@@ -404,6 +529,19 @@ private static final long serialVersionUID = 0L;
       if (other.getOwnerId() != 0L) {
         setOwnerId(other.getOwnerId());
       }
+      if (!other.channel_.isEmpty()) {
+        if (channel_.isEmpty()) {
+          channel_ = other.channel_;
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          ensureChannelIsMutable();
+          channel_.addAll(other.channel_);
+        }
+        onChanged();
+      }
+      if (other.getTargetUserid() != 0L) {
+        setTargetUserid(other.getTargetUserid());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -432,6 +570,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long groupId_ ;
     /**
@@ -491,6 +630,195 @@ private static final long serialVersionUID = 0L;
     public Builder clearOwnerId() {
       
       ownerId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private com.google.protobuf.LazyStringList channel_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    private void ensureChannelIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        channel_ = new com.google.protobuf.LazyStringArrayList(channel_);
+        bitField0_ |= 0x00000001;
+       }
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @return A list containing the channel.
+     */
+    public com.google.protobuf.ProtocolStringList
+        getChannelList() {
+      return channel_.getUnmodifiableView();
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @return The count of channel.
+     */
+    public int getChannelCount() {
+      return channel_.size();
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param index The index of the element to return.
+     * @return The channel at the given index.
+     */
+    public java.lang.String getChannel(int index) {
+      return channel_.get(index);
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param index The index of the value to return.
+     * @return The bytes of the channel at the given index.
+     */
+    public com.google.protobuf.ByteString
+        getChannelBytes(int index) {
+      return channel_.getByteString(index);
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param index The index to set the value at.
+     * @param value The channel to set.
+     * @return This builder for chaining.
+     */
+    public Builder setChannel(
+        int index, java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureChannelIsMutable();
+      channel_.set(index, value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param value The channel to add.
+     * @return This builder for chaining.
+     */
+    public Builder addChannel(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureChannelIsMutable();
+      channel_.add(value);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param values The channel to add.
+     * @return This builder for chaining.
+     */
+    public Builder addAllChannel(
+        java.lang.Iterable<java.lang.String> values) {
+      ensureChannelIsMutable();
+      com.google.protobuf.AbstractMessageLite.Builder.addAll(
+          values, channel_);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearChannel() {
+      channel_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      bitField0_ = (bitField0_ & ~0x00000001);
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+     * </pre>
+     *
+     * <code>repeated string channel = 3;</code>
+     * @param value The bytes of the channel to add.
+     * @return This builder for chaining.
+     */
+    public Builder addChannelBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      ensureChannelIsMutable();
+      channel_.add(value);
+      onChanged();
+      return this;
+    }
+
+    private long targetUserid_ ;
+    /**
+     * <pre>
+     * fans user id
+     * </pre>
+     *
+     * <code>uint64 targetUserid = 4;</code>
+     * @return The targetUserid.
+     */
+    @java.lang.Override
+    public long getTargetUserid() {
+      return targetUserid_;
+    }
+    /**
+     * <pre>
+     * fans user id
+     * </pre>
+     *
+     * <code>uint64 targetUserid = 4;</code>
+     * @param value The targetUserid to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTargetUserid(long value) {
+      
+      targetUserid_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     * fans user id
+     * </pre>
+     *
+     * <code>uint64 targetUserid = 4;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTargetUserid() {
+      
+      targetUserid_ = 0L;
       onChanged();
       return this;
     }

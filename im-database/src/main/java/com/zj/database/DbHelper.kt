@@ -7,15 +7,21 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 
 class DbHelper private constructor(context: Context) {
+
     var db: IMDb
     private var dbName = "clipClaps-im"
+
     private val migrations = arrayOf<Migration>()
 
     init {
         val builder = Room.databaseBuilder(context, IMDb::class.java, dbName)
         builder.setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
         builder.allowMainThreadQueries()
-        if (migrations.isNotEmpty()) builder.addMigrations()
+        if (migrations.isNotEmpty()) {
+            builder.addMigrations()
+        } else {
+            builder.fallbackToDestructiveMigration()
+        }
         db = builder.build()
     }
 

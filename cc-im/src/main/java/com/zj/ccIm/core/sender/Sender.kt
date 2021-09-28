@@ -4,10 +4,10 @@ import android.app.Application
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.logger.ImLogs
 import com.zj.compress.CompressUtils
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
-import com.zj.im.chat.poster.log
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import java.util.*
@@ -131,50 +131,50 @@ object Sender {
         private val onImgCompressListener = object : com.zj.compress.images.CompressListener {
 
             override fun onFileTransform(p0: String?) {
-                log("image path transformed")
+                ImLogs.d("MsgFileUploader", "image path transformed")
             }
 
             override fun onStart() {
-                log("image start compress ... ")
+                ImLogs.d("MsgFileUploader", "image start compress ... ")
             }
 
             override fun onSuccess(path: String?) {
-                log("image compress success ")
+                ImLogs.d("MsgFileUploader", "image compress success ")
                 val deleteOriginalFile = path != d.localFilePath
                 d.localFilePath = path
                 super@MsgFileUploader.startUpload(deleteOriginalFile)
             }
 
             override fun onError(code: Int, e: Throwable?) {
-                log("image compress error with code : $code case: ${e?.message} ")
+                ImLogs.d("MsgFileUploader", "image compress error with code : $code case: ${e?.message} ")
                 onStatus?.call(true, d.clientMsgId, 0, d, false, e)
             }
         }
 
         private val onVideoCompressListener = object : com.zj.compress.videos.CompressListener {
             override fun onSuccess(p0: String?) {
-                log("video start compress ... ")
+                ImLogs.d("MsgFileUploader", "video start compress ... ")
                 val deleteOriginalFile = p0 != d.localFilePath
                 d.localFilePath = p0
                 super@MsgFileUploader.startUpload(deleteOriginalFile)
             }
 
             override fun onCancel() {
-                log("video compress canceled! ")
+                ImLogs.d("MsgFileUploader", "video compress canceled! ")
                 cancel()
             }
 
             override fun onProgress(p0: Float) {
-                log("video compress progress changed => ${p0 * 100}%")
+                ImLogs.d("MsgFileUploader", "video compress progress changed => ${p0 * 100}%")
             }
 
             override fun onError(p0: Int, case: String) {
-                log("video compress error case : $case ")
+                ImLogs.d("MsgFileUploader", "video compress error case : $case ")
                 onStatus?.call(true, d.clientMsgId, 0, d, false, IllegalArgumentException(case))
             }
 
             override fun onFileTransform(p0: String?) {
-                log("video compress , compatible with inaccessible files , the file is patched to : $p0 ")
+                ImLogs.d("MsgFileUploader", "video compress , compatible with inaccessible files , the file is patched to : $p0 ")
             }
         }
 

@@ -18,4 +18,55 @@ public interface GetImMessageReqOrBuilder extends
    * @return The ownerId.
    */
   long getOwnerId();
+
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @return A list containing the channel.
+   */
+  java.util.List<java.lang.String>
+      getChannelList();
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @return The count of channel.
+   */
+  int getChannelCount();
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @param index The index of the element to return.
+   * @return The channel at the given index.
+   */
+  java.lang.String getChannel(int index);
+  /**
+   * <pre>
+   *owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private
+   * </pre>
+   *
+   * <code>repeated string channel = 3;</code>
+   * @param index The index of the value to return.
+   * @return The bytes of the channel at the given index.
+   */
+  com.google.protobuf.ByteString
+      getChannelBytes(int index);
+
+  /**
+   * <pre>
+   * fans user id
+   * </pre>
+   *
+   * <code>uint64 targetUserid = 4;</code>
+   * @return The targetUserid.
+   */
+  long getTargetUserid();
 }

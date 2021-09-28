@@ -8,9 +8,7 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.zj.database.entity.MessageInfoEntity;
 import com.zj.database.entity.SendMessageReqEn;
-import com.zj.database.entity.SessionInfoEntity;
 
 import java.util.List;
 

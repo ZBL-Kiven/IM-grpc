@@ -2,16 +2,10 @@ package com.zj.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.zj.database.dao.MessageDao
-import com.zj.database.dao.SendMsgDao
-import com.zj.database.dao.SessionDao
-import com.zj.database.dao.SessionLastMessageDao
-import com.zj.database.entity.SessionLastMsgInfo
-import com.zj.database.entity.MessageInfoEntity
-import com.zj.database.entity.SendMessageReqEn
-import com.zj.database.entity.SessionInfoEntity
+import com.zj.database.dao.*
+import com.zj.database.entity.*
 
-@Database(entities = [SessionInfoEntity::class, MessageInfoEntity::class, SendMessageReqEn::class, SessionLastMsgInfo::class], version = 1, exportSchema = false)
+@Database(entities = [SessionInfoEntity::class, MessageInfoEntity::class, SendMessageReqEn::class, SessionLastMsgInfo::class, PrivateOwnerEntity::class], version = 2, exportSchema = false)
 abstract class IMDb : RoomDatabase() {
 
     abstract fun sessionDao(): SessionDao
@@ -21,5 +15,7 @@ abstract class IMDb : RoomDatabase() {
     abstract fun sessionMsgDao(): SessionLastMessageDao
 
     abstract fun sendMsgDao(): SendMsgDao
+
+    abstract fun privateChatOwnerDao(): PrivateChatOwnerDao
 
 }

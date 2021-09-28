@@ -53,7 +53,7 @@ object MsgSender {
                     }
                 }
             }
-            reqCompo = ImApi.getSenderApi(header).call({ it.upload(map, part) }, Schedulers.io(), Schedulers.newThread()) { isSuccess, data, throwable ->
+            reqCompo = ImApi.getRecordApi(header).call({ it.upload(map, part) }, Schedulers.io(), Schedulers.newThread()) { isSuccess, data, throwable ->
                 if (isSuccess && data?.success == true) {
                     if (builder.deleteCompressFile) FileUtils.delete(builder.fileInfo?.path)
                     observer.onSuccess(builder.callId, data, totalBytes)

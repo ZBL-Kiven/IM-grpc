@@ -23,10 +23,6 @@ public interface MessageDao {
     List<MessageInfoEntity> findAll();
 
     @WorkerThread
-    @Query("SELECT * FROM messages WHERE serverMsgId = :msgId")
-    MessageInfoEntity findMsgById(String msgId);
-
-    @WorkerThread
     @Query("SELECT * FROM messages WHERE clientMsgId = :clientMsgId")
     MessageInfoEntity findMsgByClientId(String clientMsgId);
 

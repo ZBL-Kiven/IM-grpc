@@ -12,13 +12,14 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.protocol.utl.ProtoBeanUtils
 import com.zj.ccIm.core.bean.AssetsChanged
+import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.sender.Converter
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.FetchSessionResult
-import com.zj.im.chat.poster.log
+import com.zj.ccIm.logger.ImLogs
 import com.zj.protocol.grpc.ImMessage
 
 class ClientHubImpl : ClientHub<Any?>() {
@@ -44,44 +45,44 @@ class ClientHubImpl : ClientHub<Any?>() {
      * @param onFinish is called to unblock the queue. By default, it is called after ClientHub pushes.
      * */
     override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        if (isInterruptData(callId, data, sendingState)) {
-            onFinish();return
-        }
         var d = data
         var payload: String? = callId
-        when (callId) {
-            Constance.TOPIC_IM_MSG -> {
-                val info = try {
-                    Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
-                } catch (e: Exception) {
-                    log("parse session error with : ${e.message} \n data = $d")
-                    onFinish()
-                    return
+        try {
+            if (isInterruptData(callId, data, sendingState)) {
+                onFinish();return
+            }
+            when (callId) {
+                Constance.TOPIC_IM_MSG -> {
+                    val info = Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
+                    val deal = onDealSessionLastMsgInfo(info)
+                    payload = deal.first
+                    d = if (deal.second == null) d else deal.second
                 }
-                val deal = onDealSessionLastMsgInfo(info)
-                payload = deal.first
-                d = if (deal.second == null) d else deal.second
-            }
-            Constance.TOPIC_GROUP_INFO -> {
-                val deal = onDealSessionInfo(d?.toString())
-                payload = deal?.first ?: callId
-                d = if (deal?.second == null) d else deal.second
-            }
-            else -> {
-                if (d is Collection<*>) {
-                    (d as? Collection<*>)?.let {
-                        val cls = it.firstOrNull()?.javaClass
-                        val deal = dealWithDb(cls, null, it, callId, sendingState)
-                        d = if (deal.second.isNullOrEmpty()) d else deal.second
+                Constance.TOPIC_GROUP_INFO -> {
+                    val deal = onDealSessionInfo(d?.toString())
+                    payload = deal?.first ?: callId
+                    d = if (deal?.second == null) d else deal.second
+                }
+                else -> {
+                    if (d is Collection<*>) {
+                        (d as? Collection<*>)?.let {
+                            val cls = it.firstOrNull()?.javaClass
+                            val deal = dealWithDb(cls, null, it, callId, sendingState)
+                            d = if (deal.second.isNullOrEmpty()) d else deal.second
+                        }
+                    } else {
+                        val deal = dealWithDb(d?.javaClass, d, null, callId, sendingState)
+                        d = if (deal.first == null) d else deal.first
+                        payload = if (deal.third.isNullOrEmpty()) callId else deal.third
                     }
-                } else {
-                    val deal = dealWithDb(d?.javaClass, d, null, callId, sendingState)
-                    d = if (deal.first == null) d else deal.first
-                    payload = if (deal.third.isNullOrEmpty()) callId else deal.third
                 }
             }
+            super.onMsgPatch(d, payload, isSpecialData, sendingState, isResent, onFinish)
+        } catch (e: Exception) {
+            ImLogs.requireToPrintInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
+            onFinish()
+            return
         }
-        super.onMsgPatch(d, payload, isSpecialData, sendingState, isResent, onFinish)
     }
 
     /**
@@ -91,7 +92,7 @@ class ClientHubImpl : ClientHub<Any?>() {
     private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            IMHelper.onMsgRegistered()
+            IMHelper.onMsgRegistered(Gson().fromJson(d?.toString(), LastMsgReqBean::class.java))
             return true
         }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
@@ -219,7 +220,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         val info = try {
             Gson().fromJson(d, SessionInfoEntity::class.java)
         } catch (e: Exception) {
-            log("parse session error with : ${e.message} \n data = $d"); return null
+            ImLogs.requireToPrintInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d"); return null
         }
         val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
@@ -254,7 +255,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
         var groupId = info.groupId
         if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
-        if (groupId <= 0) log("error case: the session last msg info ,group id is invalid!")
+        if (groupId <= 0) ImLogs.requireToPrintInFile("onDealSessionLastMsgInfo", "error case: the session last msg info ,group id is invalid!")
         val sessionInfo = sessionDb?.findSessionById(groupId)
         val exists = sessionInfo != null
         lastMsgDb?.insertOrUpdateSessionMsgInfo(info)

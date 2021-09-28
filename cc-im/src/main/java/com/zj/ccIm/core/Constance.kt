@@ -30,7 +30,6 @@ internal object Constance {
     const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline"
     const val CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS = CALL_ID_GET_OFFLINE_MESSAGES + "_done"
     const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_chat_messages"
-    const val CALL_ID_GET_OFFLINE_GROUP_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_group_messages"
 
 
     /**-------------------------- TOPIC CHANNEL ------------------------------*/
@@ -42,8 +41,6 @@ internal object Constance {
 
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
 
-    const val CONNECT_TYPE_TOPIC = 0xf1912
-    const val CONNECT_TYPE_MESSAGE = 0xf1367
     const val SEND_MSG_DEFAULT_TIMEOUT = 15000L
 
     /**-------------------------- EVENT CODE -------------------------------------------*/

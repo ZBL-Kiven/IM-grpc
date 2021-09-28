@@ -3,12 +3,12 @@ package com.zj.im.chat.interfaces
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.modle.IMLifecycle
 import com.zj.im.chat.poster.UIOptions
-import com.zj.im.chat.poster.debugLog
 import com.zj.im.utils.MainLooper
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.main.StatusHub
 import com.zj.im.utils.log.NetWorkRecordInfo
 import com.zj.im.utils.log.NetRecordChangedListener
+import com.zj.im.utils.log.logger.d
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class MessageInterface<T> {
@@ -45,12 +45,12 @@ abstract class MessageInterface<T> {
             msgObservers?.forEach { (_, v) ->
                 if (v.post(data, payload)) {
                     isUsed = true
-                    debugLog("the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")
+                    d("postToUIObservers", "the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")
                 }
             }
             onFinish()
             val cls = if (data is Collection<*>) data.firstOrNull()?.javaClass else data.javaClass
-            if (!isUsed) debugLog("the data ${cls?.simpleName}.class has been abandon with none consumer")
+            if (!isUsed) d("postToUIObservers", "the data ${cls?.simpleName}.class has been abandon with none consumer")
         }
     }
 

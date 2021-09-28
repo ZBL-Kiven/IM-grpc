@@ -10,7 +10,7 @@ import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.im.main.StatusHub
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.utils.log.NetRecordUtils
-import com.zj.im.utils.log.logger.logUtils
+import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
@@ -141,12 +141,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         DataReceivedDispatcher.pushData(BaseMsgInfo.receiveMsg(callId, data, isSpecialData))
     }
 
-    protected fun i(where: String, case: String) {
-        logUtils.i(where, case)
+    protected fun recordOtherSendNetworkDataSize(size: Long) {
+        if (size > 0) NetRecordUtils.recordLastModifySendData(size)
     }
 
-    protected fun print(where: String, case: String) {
-        logUtils.printInFile(where, case, true)
+    protected fun recordOtherReceivedNetworkDataSize(size: Long) {
+        if (size > 0) NetRecordUtils.recordLastModifyReceiveData(size)
     }
 
     open fun shutdown() {
@@ -201,10 +201,10 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 field = value
                 if (value.isValidState()) DataReceivedDispatcher.pushData<T>(BaseMsgInfo.connectStateChange(value, case))
                 when (value) {
-                    ConnectionState.PING -> print("on connection status change ----- ", "--- $value -- ${nio(pingTime)}")
-                    ConnectionState.PONG -> print("on connection status change ----- ", "--- $value -- ${nio(pongTime)}")
-                    ConnectionState.CONNECTED_ERROR -> print("on connection status change ----- ", "$value  ==> reconnection with error : $case")
-                    else -> print("on connection status change ----- ", "--- $value --")
+                    ConnectionState.PING -> printInFile("on connection status change ----- ", "--- $value -- ${nio(pingTime)}")
+                    ConnectionState.PONG -> printInFile("on connection status change ----- ", "--- $value -- ${nio(pongTime)}")
+                    ConnectionState.CONNECTED_ERROR -> printInFile("on connection status change ----- ", "$value  ==> reconnection with error : $case")
+                    else -> printInFile("on connection status change ----- ", "--- $value --")
                 }
             }
         }

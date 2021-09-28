@@ -24,9 +24,8 @@ import com.zj.im.utils.Constance
 import com.zj.im.utils.EfficiencyUtils
 import com.zj.im.utils.TimeOutUtils
 import com.zj.im.utils.log.NetRecordUtils
-import com.zj.im.utils.log.logger.FileUtils
+import com.zj.im.utils.log.logger.*
 import com.zj.im.utils.log.logger.errorCollector
-import com.zj.im.utils.log.logger.logUtils
 import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
@@ -83,7 +82,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
             val logsCollectionAble = it.option?.logsCollectionAble ?: { false }
             val logsMaxRetain = it.option?.logsMaxRetain ?: Constance.MAX_RETAIN_TCP_LOG
             diskPathName = it.option?.logsFileName ?: ""
-            logUtils.init(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
+            getLogUtils().init(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
             NetRecordUtils.init(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
         }
     }

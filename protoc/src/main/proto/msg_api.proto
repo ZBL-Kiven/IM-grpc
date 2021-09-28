@@ -16,7 +16,6 @@ message ListenTopicReq{
     Subscribe   = 0;
     UnSubscribe = 1;
   }
-
 }
 
 message ListenTopicReply{
@@ -24,10 +23,13 @@ message ListenTopicReply{
   string data  = 2;
 }
 
-
 message GetImMessageReq {
-  uint64 groupId = 1;
-  uint64 ownerId = 2;
+  uint64 groupId      = 1;
+  uint64 ownerId      = 2;
+  /*owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private*/
+  repeated string channel      = 3;
+  /* fans user id*/
+  uint64 targetUserid = 4;
 }
 
 message ImMessage{
@@ -105,16 +107,6 @@ message LeaveImGroupReply {
   bool success = 1;
 }
 
-message GetImHistoryMsgReq{
-  uint64 groupId = 1;
-  uint64 msgId   = 2;
-  uint64 ownerId = 3;
-}
-
-message BatchMsg{
-  repeated ImMessage imMessage = 1;
-}
-
 message PingReq{
 }
 
@@ -128,10 +120,6 @@ service MsgApi{
   rpc GetImMessage(GetImMessageReq) returns (stream ImMessage){}
 
   rpc LeaveImGroup(LeaveImGroupReq) returns (LeaveImGroupReply){}
-
-  rpc GetGroupHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
-
-  rpc GetChatHistoryMessage(GetImHistoryMsgReq) returns (BatchMsg){}
 
   rpc Ping(PingReq) returns (Pong){}
 

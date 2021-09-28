@@ -17,8 +17,6 @@ import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.IMDb
 import com.zj.database.entity.SessionInfoEntity
-import com.zj.im.chat.poster.log
-import com.zj.protocol.grpc.GetImHistoryMsgReq
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
 import io.reactivex.schedulers.Schedulers
@@ -26,6 +24,8 @@ import okhttp3.MediaType
 import okhttp3.RequestBody
 import com.google.gson.Gson
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.fecher.FetchMsgChannel
+import com.zj.ccIm.logger.ImLogs
 import java.lang.NullPointerException
 
 
@@ -71,20 +71,15 @@ object IMHelper : IMInterface<Any?>() {
         Fetcher.onFetchSessions(true)
     }
 
-    fun refreshChatMsg() {
+    fun refreshOrGetChatMsg(bean: LastMsgReqBean? = lastMsgRegister) {
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        lastMsgRegister?.let { getOfflineChatMsg(it.groupId, it.ownerId) }
-    }
-
-    fun refreshGroupMsg() {
-        pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        lastMsgRegister?.let { getOfflineGroupMsg(it.groupId, it.ownerId) }
+        bean?.let { routeToServer(bean, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES) }
     }
 
     fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {
         val conf = SessionConfigReqEn(groupId, disturbType, top, des, groupName)
         val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), Gson().toJson(conf))
-        ImApi.getOptionApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
+        ImApi.getRecordApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
             if (i && d != null) {
                 getAppContext()?.let {
                     val sd = DbHelper.get(it)?.db?.sessionDao()
@@ -102,13 +97,15 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun registerChatRoom(groupId: Long, ownerId: Long) {
+    fun registerChatRoom(groupId: Long, ownerId: Long, targetUserId: Long? = null, vararg channel: FetchMsgChannel) {
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
-        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId)
+        data.targetUserid = targetUserId ?: -1L
+        channel.forEach { data.addChannel(it.serializeName) }
+        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, 0, channel)
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
         routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
@@ -122,23 +119,9 @@ object IMHelper : IMInterface<Any?>() {
         routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
 
-    private fun getOfflineChatMsg(groupId: Long, ownerId: Long) {
-        val data = GetImHistoryMsgReq.newBuilder()
-        data.groupId = groupId
-        data.ownerId = ownerId
-        routeToServer(data.build(), Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
-    }
-
-    private fun getOfflineGroupMsg(groupId: Long, ownerId: Long) {
-        val data = GetImHistoryMsgReq.newBuilder()
-        data.groupId = groupId
-        data.ownerId = ownerId
-        routeToServer(data.build(), Constance.CALL_ID_GET_OFFLINE_GROUP_MESSAGES)
-    }
-
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId)
+            registerChatRoom(it.groupId, it.ownerId, it.targetUserId, *it.channels)
             return true
         }
         return false
@@ -148,9 +131,8 @@ object IMHelper : IMInterface<Any?>() {
         super.postToUi(data, payload, onFinish ?: {})
     }
 
-    internal fun onMsgRegistered() {
-        refreshChatMsg()
-        refreshGroupMsg()
+    internal fun onMsgRegistered(lrb: LastMsgReqBean) {
+        refreshOrGetChatMsg(lrb)
     }
 
     fun close() {
@@ -179,7 +161,7 @@ object IMHelper : IMInterface<Any?>() {
             val ctx = app ?: getAppContext() ?: throw NullPointerException()
             run(DbHelper.get(ctx)?.db)
         } catch (e: Exception) {
-            log("failed to open db ,case : ${e.message}");null
+            ImLogs.requireToPrintInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
         }
     }
 }

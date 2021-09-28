@@ -2,6 +2,7 @@ package com.zj.ccIm.core.api
 
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.ccIm.core.bean.FetcherSessionBean
+import com.zj.database.entity.MessageInfoEntity
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query

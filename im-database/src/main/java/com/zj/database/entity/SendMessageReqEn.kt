@@ -63,11 +63,6 @@ class SendMessageReqEn {
     var diamondNum: Int? = null
 
     /**
-     * 上传的文件大小（用于记录，如果存在）
-     */
-    var uploadDataTotalByte: Long = 0
-
-    /**
      * 文件
      */
     var localFilePath: String? = null

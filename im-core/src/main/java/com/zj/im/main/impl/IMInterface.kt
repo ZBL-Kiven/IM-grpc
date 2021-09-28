@@ -19,7 +19,7 @@ import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.cast
-import com.zj.im.utils.log.logger.logUtils
+import com.zj.im.utils.log.logger.d
 import java.lang.IllegalArgumentException
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -128,7 +128,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         if (client == null) {
             client = getClient()
             client?.context = option?.context
-            logUtils.d("IMI.getClient", "create client with $case")
+            d("IMI.getClient", "create client with $case")
         }
         if (client == null) {
             postError(NecessaryAttributeEmptyException("can't create a client by null!"))
@@ -139,7 +139,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     internal fun getServer(case: String = ""): ServerHub<T>? {
         if (server == null) {
             server = getServer()
-            logUtils.d("IMI.getServer", "create server with $case")
+            d("IMI.getServer", "create server with $case")
         }
         if (server == null) {
             postError(NecessaryAttributeEmptyException("can't create a server by null!"))

@@ -101,64 +101,6 @@ public final class MsgApiGrpc {
     return getLeaveImGroupMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetGroupHistoryMessageMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "GetGroupHistoryMessage",
-      requestType = GetImHistoryMsgReq.class,
-      responseType = BatchMsg.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetGroupHistoryMessageMethod() {
-    io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetGroupHistoryMessageMethod;
-    if ((getGetGroupHistoryMessageMethod = MsgApiGrpc.getGetGroupHistoryMessageMethod) == null) {
-      synchronized (MsgApiGrpc.class) {
-        if ((getGetGroupHistoryMessageMethod = MsgApiGrpc.getGetGroupHistoryMessageMethod) == null) {
-          MsgApiGrpc.getGetGroupHistoryMessageMethod = getGetGroupHistoryMessageMethod =
-              io.grpc.MethodDescriptor.<GetImHistoryMsgReq, BatchMsg>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetGroupHistoryMessage"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  GetImHistoryMsgReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  BatchMsg.getDefaultInstance()))
-              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetGroupHistoryMessage"))
-              .build();
-        }
-      }
-    }
-    return getGetGroupHistoryMessageMethod;
-  }
-
-  private static volatile io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetChatHistoryMessageMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "GetChatHistoryMessage",
-      requestType = GetImHistoryMsgReq.class,
-      responseType = BatchMsg.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetChatHistoryMessageMethod() {
-    io.grpc.MethodDescriptor<GetImHistoryMsgReq, BatchMsg> getGetChatHistoryMessageMethod;
-    if ((getGetChatHistoryMessageMethod = MsgApiGrpc.getGetChatHistoryMessageMethod) == null) {
-      synchronized (MsgApiGrpc.class) {
-        if ((getGetChatHistoryMessageMethod = MsgApiGrpc.getGetChatHistoryMessageMethod) == null) {
-          MsgApiGrpc.getGetChatHistoryMessageMethod = getGetChatHistoryMessageMethod =
-              io.grpc.MethodDescriptor.<GetImHistoryMsgReq, BatchMsg>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetChatHistoryMessage"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  GetImHistoryMsgReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  BatchMsg.getDefaultInstance()))
-              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetChatHistoryMessage"))
-              .build();
-        }
-      }
-    }
-    return getGetChatHistoryMessageMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<PingReq, Pong> getPingMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
@@ -259,20 +201,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public void getGroupHistoryMessage(GetImHistoryMsgReq request,
-                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetGroupHistoryMessageMethod(), responseObserver);
-    }
-
-    /**
-     */
-    public void getChatHistoryMessage(GetImHistoryMsgReq request,
-                                      io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetChatHistoryMessageMethod(), responseObserver);
-    }
-
-    /**
-     */
     public void ping(PingReq request,
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
@@ -295,16 +223,6 @@ public final class MsgApiGrpc {
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<LeaveImGroupReq, LeaveImGroupReply>(
                   this, METHODID_LEAVE_IM_GROUP)))
-          .addMethod(
-            getGetGroupHistoryMessageMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
-              new MethodHandlers<GetImHistoryMsgReq, BatchMsg>(
-                  this, METHODID_GET_GROUP_HISTORY_MESSAGE)))
-          .addMethod(
-            getGetChatHistoryMessageMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
-              new MethodHandlers<GetImHistoryMsgReq, BatchMsg>(
-                  this, METHODID_GET_CHAT_HISTORY_MESSAGE)))
           .addMethod(
             getPingMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -354,22 +272,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public void getGroupHistoryMessage(GetImHistoryMsgReq request,
-                                       io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getGetGroupHistoryMessageMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
-    public void getChatHistoryMessage(GetImHistoryMsgReq request,
-                                      io.grpc.stub.StreamObserver<BatchMsg> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getGetChatHistoryMessageMethod(), getCallOptions()), request, responseObserver);
-    }
-
-    /**
-     */
     public void ping(PingReq request,
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
@@ -408,20 +310,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public BatchMsg getGroupHistoryMessage(GetImHistoryMsgReq request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getGetGroupHistoryMessageMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
-    public BatchMsg getChatHistoryMessage(GetImHistoryMsgReq request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getGetChatHistoryMessageMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
     public Pong ping(PingReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getPingMethod(), getCallOptions(), request);
@@ -452,22 +340,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getGroupHistoryMessage(
-        GetImHistoryMsgReq request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getGetGroupHistoryMessageMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<BatchMsg> getChatHistoryMessage(
-        GetImHistoryMsgReq request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getGetChatHistoryMessageMethod(), getCallOptions()), request);
-    }
-
-    /**
-     */
     public com.google.common.util.concurrent.ListenableFuture<Pong> ping(
         PingReq request) {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
@@ -477,10 +349,8 @@ public final class MsgApiGrpc {
 
   private static final int METHODID_GET_IM_MESSAGE = 0;
   private static final int METHODID_LEAVE_IM_GROUP = 1;
-  private static final int METHODID_GET_GROUP_HISTORY_MESSAGE = 2;
-  private static final int METHODID_GET_CHAT_HISTORY_MESSAGE = 3;
-  private static final int METHODID_PING = 4;
-  private static final int METHODID_LISTEN_TOPIC_DATA = 5;
+  private static final int METHODID_PING = 2;
+  private static final int METHODID_LISTEN_TOPIC_DATA = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -506,14 +376,6 @@ public final class MsgApiGrpc {
         case METHODID_LEAVE_IM_GROUP:
           serviceImpl.leaveImGroup((LeaveImGroupReq) request,
               (io.grpc.stub.StreamObserver<LeaveImGroupReply>) responseObserver);
-          break;
-        case METHODID_GET_GROUP_HISTORY_MESSAGE:
-          serviceImpl.getGroupHistoryMessage((GetImHistoryMsgReq) request,
-              (io.grpc.stub.StreamObserver<BatchMsg>) responseObserver);
-          break;
-        case METHODID_GET_CHAT_HISTORY_MESSAGE:
-          serviceImpl.getChatHistoryMessage((GetImHistoryMsgReq) request,
-              (io.grpc.stub.StreamObserver<BatchMsg>) responseObserver);
           break;
         case METHODID_PING:
           serviceImpl.ping((PingReq) request,
@@ -586,8 +448,6 @@ public final class MsgApiGrpc {
               .addMethod(getListenTopicDataMethod())
               .addMethod(getGetImMessageMethod())
               .addMethod(getLeaveImGroupMethod())
-              .addMethod(getGetGroupHistoryMessageMethod())
-              .addMethod(getGetChatHistoryMessageMethod())
               .addMethod(getPingMethod())
               .build();
         }

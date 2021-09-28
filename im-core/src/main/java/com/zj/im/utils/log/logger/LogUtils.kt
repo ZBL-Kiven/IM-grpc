@@ -12,10 +12,10 @@ import com.zj.im.utils.today
  *
  * collectionAble = auto
  * */
-internal val logUtils = object : LogCollectionUtils.Config() {
+private val logUtils = object : LogCollectionUtils.Config() {
 
     override fun overriddenFolderName(folderName: String): String {
-        return "$folderName/tcpStatus"
+        return "$folderName/ConnectionStatus"
     }
 
     override val subPath: () -> String
@@ -24,7 +24,11 @@ internal val logUtils = object : LogCollectionUtils.Config() {
         get() = { now() }
 }
 
-internal fun i(where: String, s: String){
+fun getLogUtils(): LogCollectionUtils.Config {
+    return logUtils
+}
+
+internal fun i(where: String, s: String) {
     logUtils.i(where, s)
 }
 

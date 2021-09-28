@@ -3,17 +3,17 @@ package com.zj.ccIm.core.fecher
 import com.zj.api.base.BaseRetrofit
 import com.zj.database.DbHelper
 import com.zj.im.chat.enums.ConnectionState
-import com.zj.im.chat.poster.log
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.FetchSessionResult
+import com.zj.ccIm.logger.ImLogs
 import io.reactivex.schedulers.Schedulers
 
 internal object Fetcher {
 
-    const val SP_FETCH_SESSIONS_TS = "fetch_sessions_ts"
+    const val SP_FETCH_SESSIONS_TS = "fetch_last_modify_ts"
     private var onFetching = false
     private val compos = mutableListOf<BaseRetrofit.RequestCompo>()
 
@@ -41,7 +41,7 @@ internal object Fetcher {
         onFetching = true
         val lastTs = SPHelper[SP_FETCH_SESSIONS_TS, 0L] ?: 0L
         var compo: BaseRetrofit.RequestCompo? = null
-        log("start fetch sessions  by onlyRefresh = $onlyRefresh ,with last ts : $lastTs")
+        ImLogs.d("Fetcher", "start fetch sessions  by onlyRefresh = $onlyRefresh ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
         compo = ImApi.getFetcherApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
             try {
@@ -49,14 +49,14 @@ internal object Fetcher {
                 if (b) {
                     if (sessions.isNullOrEmpty()) {
                         if (isFirstFetch) {
-                            log("fetch sessions is null result for first time !")
+                            ImLogs.d("Fetcher", "fetch sessions is null result for first time !")
                             finishFetch(onlyRefresh, isSuccess = true, isFirstFetch, isEmptyData = true)
                         } else {
-                            log("fetch sessions is null ,trying to fetch last msg by localed !")
+                            ImLogs.d("Fetcher", "fetch sessions is null ,trying to fetch last msg by localed !")
                             onFetchLastMessage(onlyRefresh, isFirstFetch)
                         }
                     } else {
-                        log("fetch sessions success , new ts is ${d.timeStamp}, changed group is [${d.groupList?.joinToString { "${it.groupName} , " }}]")
+                        ImLogs.d("Fetcher", "fetch sessions success , new ts is ${d.timeStamp}, changed group is [${d.groupList?.joinToString { "${it.groupName} , " }}]")
                         SPHelper.put(SP_FETCH_SESSIONS_TS, d.timeStamp)
                         val sessionDao = DbHelper.get(Constance.app)?.db?.sessionDao()
                         sessions.forEach { s ->
@@ -84,7 +84,7 @@ internal object Fetcher {
         val sessions = DbHelper.get(Constance.app)?.db?.sessionDao()?.allSessions
         if (!sessions.isNullOrEmpty()) {
             val gIds = sessions.map { ms -> ms.groupId }
-            log("start fetch session last message info by onlyRefresh = $onlyRefresh , groups = $gIds")
+            ImLogs.d("Fetcher", "start fetch session last message info by onlyRefresh = $onlyRefresh , groups = $gIds")
             compo = ImApi.getFetcherApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
                 try {
                     val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
@@ -120,7 +120,7 @@ internal object Fetcher {
 
     private fun finishFetch(onlyRefresh: Boolean, isSuccess: Boolean, isFirstFetch: Boolean, isEmptyData: Boolean) {
         if (!onlyRefresh) {
-            log(" Fetch finished !!")
+            ImLogs.d("Fetcher", " Fetch finished !!")
             if (!IMHelper.tryToRegisterAfterConnected()) {
                 IMHelper.resume(Constance.FETCH_SESSION_CODE)
             }

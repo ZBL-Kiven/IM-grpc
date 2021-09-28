@@ -93,7 +93,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun sendUrlImg(view: View) { //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
+    fun sendUrlImg(view: View) {
+
+        //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
         IMHelper.updateSessionStatus(groupId, null, 1)
     }

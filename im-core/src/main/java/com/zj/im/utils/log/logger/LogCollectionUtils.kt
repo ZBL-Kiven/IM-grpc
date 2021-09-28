@@ -18,7 +18,7 @@ import java.lang.NullPointerException
 sealed class LogCollectionUtils {
 
     companion object {
-        const val TAG = "com.zj.LogUtils:println %s"
+        const val TAG = "com.zj.im-core:%s"
     }
 
     private var subPath: () -> String = { today() }

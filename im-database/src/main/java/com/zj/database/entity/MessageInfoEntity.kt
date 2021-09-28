@@ -2,17 +2,18 @@ package com.zj.database.entity
 
 import androidx.room.Entity
 import androidx.room.Ignore
+import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.zj.database.converter.*
 import java.util.*
 
-@Entity(primaryKeys = ["serverMsgId", "clientMsgId"], tableName = "messages")
+@Entity(tableName = "messages")
 class MessageInfoEntity {
 
     /**
      * 客户端消息id
      */
-    var clientMsgId: String = UUID.randomUUID().toString()
+    @PrimaryKey var clientMsgId: String = UUID.randomUUID().toString()
 
     /**
      * 群组id
@@ -85,12 +86,6 @@ class MessageInfoEntity {
     @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
 
     //----------------------------------------------------------------- 本地辅助字段 ⬇️--------------------------------------------------------------
-
-    /**
-     * 合并服务端消息 id
-     * */
-    @Suppress("SuspiciousVarProperty") var serverMsgId: String = ""
-        get() = "$groupId.$msgId"
 
     /**
      * 标记存储类型的 id

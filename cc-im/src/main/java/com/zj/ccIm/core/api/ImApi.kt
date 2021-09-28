@@ -8,6 +8,9 @@ import com.zj.api.interfaces.ErrorHandler
 import com.zj.ccIm.core.IMHelper
 import retrofit2.HttpException
 import com.google.gson.Gson
+import com.zj.api.base.BaseRetrofit
+import com.zj.ccIm.core.bean.LastMsgReqBean
+import com.zj.database.entity.MessageInfoEntity
 import java.net.UnknownHostException
 
 
@@ -24,16 +27,16 @@ object ImApi {
         }
     }
 
-    fun getSenderApi(h: HeaderProvider? = null): BaseApi<SenderApi> {
-        return BaseApi.create<SenderApi>(EH).baseUrl(baseUrl).header(h ?: header).build()
-    }
-
-    fun getOptionApi(): BaseApi<OptionApi> {
-        return BaseApi.create<OptionApi>(EH).baseUrl(baseUrl).header(header).build()
+    fun getRecordApi(h: HeaderProvider? = null): BaseApi<IMRecordSizeApi> {
+        return BaseApi.create<IMRecordSizeApi>(EH).baseUrl(baseUrl).header(h ?: header).build()
     }
 
     fun getFetcherApi(): BaseApi<FetcherApi> {
         return BaseApi.create<FetcherApi>(EH).baseUrl(baseUrl).header(header).build()
+    }
+
+    fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?) -> Unit): BaseRetrofit.RequestCompo? {
+        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserId, channels = param.channels.map { c -> c.serializeName }.toTypedArray()) }, result)
     }
 
 
