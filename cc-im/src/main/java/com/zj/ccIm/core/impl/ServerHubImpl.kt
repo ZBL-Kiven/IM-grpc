@@ -52,7 +52,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (called == null) {
             sendMsg(params, callId, callBack)
         } else {
-            callBack.result(true, null, null)
+            callBack.result(true, null, false, null, null)
         }
         return 0 //send by http , so there is not data size to parse
     }
@@ -74,7 +74,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * */
     private fun sendMsg(d: Any?, callId: String, callBack: SendingCallBack<Any?>) {
         if (d !is SendMessageReqEn) {
-            callBack.result(false, null, IllegalArgumentException("the send msg type is not supported except SendMessageReqEn.class"))
+            callBack.result(false, null, false, IllegalArgumentException("the send msg type is not supported except SendMessageReqEn.class"), null)
             return
         }
         if (d.clientMsgId != callId) d.clientMsgId = callId
@@ -96,7 +96,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     }
                 }
             }
-            callBack.result(isOk, resp, throwable)
+            callBack.result(isOk, resp, d.autoRetryResend, throwable, a)
         }
     }
 

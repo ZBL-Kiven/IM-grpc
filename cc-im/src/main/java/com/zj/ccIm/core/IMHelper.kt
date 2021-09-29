@@ -26,6 +26,7 @@ import com.google.gson.Gson
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.logger.ImLogs
+import com.zj.database.entity.PrivateOwnerEntity
 import java.lang.NullPointerException
 
 
@@ -63,6 +64,9 @@ object IMHelper : IMInterface<Any?>() {
             }
             MessageTotalDots::class.java -> {
                 routeToClient(null, Constance.CALL_ID_START_LISTEN_TOTAL_DOTS)
+            }
+            PrivateOwnerEntity::class.java -> {
+                routeToClient(null, Constance.CALL_ID_START_LISTEN_PRIVATE_OWNER_CHAT)
             }
         }
     }
@@ -151,15 +155,20 @@ object IMHelper : IMInterface<Any?>() {
     fun loginOut(app: Application) {
         Thread {
             SPHelper.clear()
-            withDb(app) { it?.clearAllTables() }
+            withDb(app) { it.clearAllTables() }
             shutdown("on logout called !")
         }.start()
+
     }
 
-    fun <R> withDb(app: Application? = null, run: (IMDb?) -> R?): R? {
+
+    fun <R> withDb(app: Application? = null, imDb: IMDb? = null, run: (IMDb) -> R?): R? {
+
         return try {
             val ctx = app ?: getAppContext() ?: throw NullPointerException()
-            run(DbHelper.get(ctx)?.db)
+            (imDb ?: DbHelper.get(ctx)?.db)?.let {
+                run(it)
+            }
         } catch (e: Exception) {
             ImLogs.requireToPrintInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
         }

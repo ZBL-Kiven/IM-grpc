@@ -30,7 +30,7 @@ import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Boolean, BaseMsgInfo<T>, Throwable?) -> Unit {
+internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutors.SendExecutorsInterface<T> {
 
     private var dataStore: DataStore<T>? = null
     private var msgLooper: MsgLooper? = null
@@ -175,19 +175,25 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, (Boolean, Bo
         }
     }
 
-    override fun invoke(isSuccess: Boolean, tryRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) {
-        if (isSuccess) {
-            printInFile("SendExecutors.send", "the data [${info.callId}] has been send to server")
-            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, info.callId, info.data, info.isResend))
+    override fun result(isOK: Boolean, retryAble: Boolean, d: BaseMsgInfo<T>, throwable: Throwable?, payloadInfo: Any?) {
+        if (isOK) {
+            printInFile("SendExecutors.send", "the data [${d.callId}] has been send to server")
+            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, d.callId, d.data, d.isResend))
         } else {
-            if (tryRecent) enqueue(info) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL, info.callId, info.data, info.isResend))
+            printInFile("SendExecutors.send", "send ${d.callId} was failed with error : ${throwable?.message} , payload = $payloadInfo")
+            if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend))
         }
         sendingPool?.unLock()
     }
 
-    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?) {
+    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?, payloadInfo: Any?) {
         if (isFinish) {
-            sendingPool?.setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data)
+            if (isOK) {
+                printInFile("SendExecutors.send", "$callId before sending task success\npayload = $payloadInfo")
+            } else {
+                printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
+            }
+            sendingPool?.setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data, payloadInfo)
         } else {
             enqueue(BaseMsgInfo.onProgressChange<T>(progress, callId))
         }

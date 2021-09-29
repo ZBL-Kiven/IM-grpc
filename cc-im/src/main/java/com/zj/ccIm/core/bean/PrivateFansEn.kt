@@ -25,7 +25,12 @@ class PrivateFansEn {
     var avatar: String? = null
 
     /**
+     * 群id
+     */
+    var groupId: Long? = null
+
+    /**
      * 忽略数据库字段，由推送时拼装
      * */
-   var lastMsgInfo: SessionLastMsgInfo? = null
+    var lastMsgInfo: SessionLastMsgInfo? = null
 }

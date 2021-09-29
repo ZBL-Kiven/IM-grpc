@@ -68,6 +68,16 @@ class SendMessageReqEn {
     var localFilePath: String? = null
 
     /**
+     * 失败后是否自动重试发送
+     * */
+    var autoRetryResend: Boolean = true
+
+    /**
+     * 初始化是否自动重试发送发送中消息
+     * */
+    var autoResendWhenBootStart: Boolean = true
+
+    /**
      *回复的消息,不参与上传，但是参与存储
      */
     @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null

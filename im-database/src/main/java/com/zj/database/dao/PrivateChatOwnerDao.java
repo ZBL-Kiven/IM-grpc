@@ -8,6 +8,8 @@ import androidx.room.Query;
 
 import com.zj.database.entity.PrivateOwnerEntity;
 
+import java.util.List;
+
 @Dao
 public interface PrivateChatOwnerDao {
 
@@ -23,5 +25,8 @@ public interface PrivateChatOwnerDao {
 
     @Query("DELETE FROM private_owner WHERE groupId = :groupId")
     int deleteByGroupId(Long groupId);
+
+    @Query("SELECT * FROM private_owner")
+    List<PrivateOwnerEntity> findAll();
 
 }

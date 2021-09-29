@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers
 internal object Fetcher {
 
     const val SP_FETCH_SESSIONS_TS = "fetch_last_modify_ts"
+    const val SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS = "fetch_last_modify_owner_ts"
     private var onFetching = false
     private val compos = mutableListOf<BaseRetrofit.RequestCompo>()
 

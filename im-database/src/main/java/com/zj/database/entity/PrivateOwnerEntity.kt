@@ -12,7 +12,7 @@ class PrivateOwnerEntity {
      */
     @PrimaryKey var groupId: Long? = null
 
-    var ownerId: Int? = null
+    var ownerId: Int = 0
 
     /**
      * 群主名称
@@ -23,16 +23,6 @@ class PrivateOwnerEntity {
      * 头像
      */
     var avatar: String? = null
-
-    /**
-     * 性别
-     */
-    var gender: Int? = null
-
-    /**
-     * clap code
-     * */
-    var code: String? = null
 
     /**
      * 忽略数据库字段，由推送时拼装

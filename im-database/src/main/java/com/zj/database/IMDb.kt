@@ -17,5 +17,4 @@ abstract class IMDb : RoomDatabase() {
     abstract fun sendMsgDao(): SendMsgDao
 
     abstract fun privateChatOwnerDao(): PrivateChatOwnerDao
-
 }

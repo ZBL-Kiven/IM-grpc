@@ -6,5 +6,5 @@ package com.zj.im.chat.interfaces
 
 interface SendingCallBack<T> {
 
-    fun result(isOK: Boolean, d: T?, throwable: Throwable?)
+    fun result(isOK: Boolean, d: T?, retryAble: Boolean, throwable: Throwable?, payloadInfo: Any?)
 }

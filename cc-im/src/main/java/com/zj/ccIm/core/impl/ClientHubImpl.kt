@@ -2,7 +2,6 @@ package com.zj.ccIm.core.impl
 
 import android.util.Log
 import com.google.gson.Gson
-import com.zj.database.DbHelper
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
@@ -10,16 +9,13 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
-import com.zj.protocol.utl.ProtoBeanUtils
-import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.LastMsgReqBean
-import com.zj.ccIm.core.bean.MessageTotalDots
-import com.zj.ccIm.core.fecher.Fetcher
+import com.zj.ccIm.core.bean.PrivateFansEn
+import com.zj.ccIm.core.db.*
 import com.zj.ccIm.core.sender.Converter
 import com.zj.ccIm.core.sender.Sender
-import com.zj.ccIm.core.sp.SPHelper
-import com.zj.ccIm.error.FetchSessionResult
 import com.zj.ccIm.logger.ImLogs
+import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 
 class ClientHubImpl : ClientHub<Any?>() {
@@ -54,14 +50,33 @@ class ClientHubImpl : ClientHub<Any?>() {
             when (callId) {
                 Constance.TOPIC_IM_MSG -> {
                     val info = Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
-                    val deal = onDealSessionLastMsgInfo(info)
-                    payload = deal.first
-                    d = if (deal.second == null) d else deal.second
+                    val deal = SessionLastMsgDbOperator.onDealSessionLastMsgInfo(info)
+                    payload = deal?.first
+                    d = if (deal?.second == null) d else deal.second
                 }
                 Constance.TOPIC_GROUP_INFO -> {
-                    val deal = onDealSessionInfo(d?.toString())
+                    val deal = SessionDbOperator.onDealSessionInfo(d?.toString())
                     payload = deal?.first ?: callId
                     d = if (deal?.second == null) d else deal.second
+                }
+                Constance.TOPIC_CHAT_OWNER_INFO -> {
+                    val info = Gson().fromJson(d?.toString(), PrivateOwnerEntity::class.java)
+                    PrivateOwnerDbOperator.insertANewChatInfo(info)
+                }
+                Constance.TOPIC_CHAT_FANS_INFO -> {
+                    val info = Gson().fromJson(d?.toString(), PrivateFansEn::class.java)
+                    IMHelper.postToUiObservers(info, PAYLOAD_ADD)
+                }
+                Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
+                    cast<Any?, Map<String, List<MessageInfoEntity>>?>(data)?.forEach { (k, v) ->
+                        val trans = arrayListOf<MessageInfoEntity>()
+                        v.forEach {
+                            val t = MessageDbOperator.onDealMessages(it, callId, sendingState)?.first
+                            if (t != null) trans.add(t)
+                        }
+                        payload = k
+                        d = trans
+                    }
                 }
                 else -> {
                     if (d is Collection<*>) {
@@ -114,14 +129,14 @@ class ClientHubImpl : ClientHub<Any?>() {
                 if (d != null) {
                     val sst = sendingState ?: SendMsgState.SENDING
                     val msg = Converter.exchangeMsgInfoBySendingInfo(d as SendMessageReqEn, sst)
-                    val r = onDealMessages(msg, callId, sendingState)
+                    val r = MessageDbOperator.onDealMessages(msg, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
             }
             SendMessageRespEn::class.java -> {
                 if (d != null) {
-                    val r = onDealMsgSentInfo(d as SendMessageRespEn, callId, sendingState)
+                    val r = SendingDbOperator.onDealMsgSentInfo(d as SendMessageRespEn, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
@@ -129,12 +144,12 @@ class ClientHubImpl : ClientHub<Any?>() {
             ImMessage::class.java, MessageInfoEntity::class.java -> {
                 if (!dc.isNullOrEmpty()) {
                     dc.forEach {
-                        val r = onDealMessages(it, callId, sendingState)
+                        val r = MessageDbOperator.onDealMessages(it, callId, sendingState)
                         second.add(r?.first)
                     }
                 }
                 if (d != null) {
-                    val r = onDealMessages(d, callId, sendingState)
+                    val r = MessageDbOperator.onDealMessages(d, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
@@ -143,160 +158,30 @@ class ClientHubImpl : ClientHub<Any?>() {
         return Triple(first, second, pl)
     }
 
-    /**
-     * When the message is sent, the state callback event,
-     * here is the message that the database already exists in the database and is sent to the UI.
-     * */
-    private fun onDealMsgSentInfo(d: SendMessageRespEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
-        if (sendingState == null) return null
-        val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
-        val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
-        val localMsg = msgDb?.findMsgByClientId(callId)
-        localMsg?.sendingState = sendingState.type
-        localMsg?.msgId = d.msgId
-        localMsg?.sendTime = d.sendTime
-        localMsg?.questionContent?.published = d.published
-        localMsg?.questionContent?.expireTime = d.expireTime
-        val spark = d.sparkNum
-        val diamond = d.diamondNum
-        if (spark != null || diamond != null) {
-            super.onMsgPatch(AssetsChanged(spark, diamond), callId, false, sendingState, false) {}
-        }
-        return when (sendingState) {
-            SendMsgState.SENDING -> null
-
-            //Callback when the operation of the coroutine is completed
-            SendMsgState.ON_SEND_BEFORE_END -> {
-                msgDb?.insertOrChangeMessage(localMsg)
-                Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
+    override fun onRouteCall(callId: String?, data: Any?) {
+        when (callId) {
+            Constance.CALL_ID_START_LISTEN_SESSION -> {
+                SessionDbOperator.notifyAllSession(callId)
             }
-            SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
-                msgDb?.deleteMsgByClientId(d.clientMsgId)
-                if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
-                if (d.msgStatus == 1) sendDb?.deleteByCallId(d.clientMsgId)
-                val pl = when {
-                    d.black -> PAYLOAD_DELETE
-                    d.msgStatus == 1 -> PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
-                    else -> PAYLOAD_CHANGED_SEND_STATE
-                }
-                Pair(localMsg, pl)
+            Constance.CALL_ID_START_LISTEN_TOTAL_DOTS -> {
+                SessionLastMsgDbOperator.notifyAllSessionDots(callId)
             }
-            SendMsgState.NONE, SendMsgState.SUCCESS -> {
-                sendDb?.deleteByCallId(d.clientMsgId)
-                msgDb?.deleteMsgByClientId(d.clientMsgId)
-                Pair(localMsg, PAYLOAD_CHANGED_SEND_STATE)
+            Constance.CALL_ID_START_LISTEN_PRIVATE_OWNER_CHAT -> {
+                PrivateOwnerDbOperator.notifyAllSession(callId)
+            }
+            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
+                val deal = BadgeDbOperator.clearGroupBadge(data as Long)
+                IMHelper.postToUiObservers(deal?.second, deal?.first)
             }
         }
-    }
-
-    /**
-     * Parse Msg and refresh the contents of the local database cache according to different situations
-     * */
-    private fun onDealMessages(d: Any?, callId: String?, sendingState: SendMsgState?): Pair<MessageInfoEntity?, String?>? {
-        val msg: MessageInfoEntity? = (d as? MessageInfoEntity) ?: (d as? ImMessage)?.let {
-            ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
-        }
-        if (msg != null) {
-            if (msg.sendTime <= 0) msg.sendTime = System.currentTimeMillis()
-            val msgDb = context?.let { DbHelper.get(it)?.db?.messageDao() }
-            val localMsg = if (callId.isNullOrEmpty()) null else msgDb?.findMsgByClientId(callId)
-            if (localMsg == null && sendingState == SendMsgState.SENDING) {
-                msgDb?.insertOrChangeMessage(msg)
-            }
-            if (localMsg != null && (sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
-                val sendDb = context?.let { DbHelper.get(it)?.db?.sendMsgDao() }
-                val localSendCache = if (callId.isNullOrEmpty()) null else sendDb?.findByCallId(callId)
-                sendDb?.delete(localSendCache)
-                msgDb?.deleteMsgByClientId(callId)
-            }
-            msg.sendingState = sendingState?.type ?: SendMsgState.NONE.type
-            val pl = if (localMsg == null) PAYLOAD_ADD else PAYLOAD_CHANGED
-            return Pair(msg, pl)
-        }
-        return null
-    }
-
-    private fun onDealSessionInfo(d: String?): Pair<String, Any?>? {
-        val info = try {
-            Gson().fromJson(d, SessionInfoEntity::class.java)
-        } catch (e: Exception) {
-            ImLogs.requireToPrintInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d"); return null
-        }
-        val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
-        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        val exists = sessionDb?.findSessionById(info.groupId) == null
-        val local = sessionDb?.findSessionById(info.groupId)
-        if (local != null) {
-            info.disturbStatus = local.disturbStatus
-            info.top = local.top
-        }
-        val lastMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(info.groupId)
-        info.sessionMsgInfo = lastMsgInfo
-        sessionDb?.insertOrChangeSession(info)
-        return Pair(if (exists) PAYLOAD_ADD else PAYLOAD_CHANGED, info)
-    }
-
-    private fun clearGroupBadge(groupId: Long): Pair<String, Any?>? {
-        return IMHelper.withDb {
-            val last = it?.sessionMsgDao()?.findSessionMsgInfoBySessionId(groupId)
-            last?.ownerMsgId = null
-            last?.ownerReplyMsgId = null
-            last?.replyMeQuesMsgId = null
-            last?.replyMeMsgId = null
-            last?.msgNum = 0
-            last
-        }?.let {
-            onDealSessionLastMsgInfo(it)
-        }
-    }
-
-    private fun onDealSessionLastMsgInfo(info: SessionLastMsgInfo): Pair<String, Any?> {
-        val sessionDb = context?.let { DbHelper.get(it)?.db?.sessionDao() }
-        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        var groupId = info.groupId
-        if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
-        if (groupId <= 0) ImLogs.requireToPrintInFile("onDealSessionLastMsgInfo", "error case: the session last msg info ,group id is invalid!")
-        val sessionInfo = sessionDb?.findSessionById(groupId)
-        val exists = sessionInfo != null
-        lastMsgDb?.insertOrUpdateSessionMsgInfo(info)
-        sessionInfo?.sessionMsgInfo = info
-        notifyAllSessionDots()
-        return Pair(if (!exists) PAYLOAD_ADD else PAYLOAD_CHANGED, sessionInfo)
     }
 
     private fun onDispatchSentErrorMsg(groupId: Long) {
         IMHelper.withDb {
-            val resendMsg = it?.sendMsgDao()?.findAllBySessionId(groupId)
+            val resendMsg = it.sendMsgDao().findAllBySessionId(groupId)
             resendMsg?.forEach { msg ->
-                Sender.resendMessage(msg)
-            }
-        }
-    }
-
-    private fun notifyAllSession(callId: String?) {
-        val sessions = context?.let { DbHelper.get(it)?.db?.sessionDao() }?.allSessions
-        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        sessions?.forEach {
-            it.sessionMsgInfo = lastMsgDb?.findSessionMsgInfoBySessionId(it.groupId)
-        }
-        val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
-        IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty()))
-        super.onMsgPatch(sessions, callId, true, null, false) {}
-    }
-
-    private fun notifyAllSessionDots(callId: String? = "") {
-        val lastMsgDb = context?.let { DbHelper.get(it)?.db?.sessionMsgDao() }
-        val allDots = lastMsgDb?.findAll()?.sumOf { it.msgNum } ?: 0
-        super.onMsgPatch(MessageTotalDots(allDots), callId, false, null, false) {}
-    }
-
-    override fun onRouteCall(callId: String?, data: Any?) {
-        when (callId) {
-            Constance.CALL_ID_START_LISTEN_SESSION -> notifyAllSession(callId)
-            Constance.CALL_ID_START_LISTEN_TOTAL_DOTS -> notifyAllSessionDots(callId)
-            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                val deal = clearGroupBadge(data as Long)
-                IMHelper.postToUiObservers(deal?.second, deal?.first)
+                if (msg.autoResendWhenBootStart) Sender.resendMessage(msg)
+                else dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
             }
         }
     }

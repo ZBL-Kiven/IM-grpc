@@ -20,8 +20,8 @@ import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.error.FetchSessionResult
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, 151254)
+        IMHelper.registerChatRoom(groupId, 151254, null, FetchMsgChannel.OWNER_CLAP_HOUSE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     fun queryCurrent(view: View) {
         val sb = StringBuilder()
-        DbHelper.get(this)?.db?.let {
+        IMHelper.withDb {
             sb.append("messageCount = ${it.messageDao().findAll().size}\n")
             sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
             sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
@@ -155,8 +155,8 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, _, _ ->
-            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text}")
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, _ ->
+            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text}")
         }
 
 

@@ -9,6 +9,9 @@ import com.zj.database.converter.MessageConverter
 @Entity(tableName = "SessionMsgInfo")
 class SessionLastMsgInfo {
 
+    /**
+     * the key set of , groupId in public chat , ownerId in private owner chat , -userId in private user chat.
+     * */
     @PrimaryKey var groupId: Long = -1
 
     // Last interactive message

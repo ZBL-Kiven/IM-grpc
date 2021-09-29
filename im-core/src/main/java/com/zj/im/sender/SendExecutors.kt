@@ -12,11 +12,10 @@ import java.lang.NullPointerException
  * Created by ZJJ
  */
 
-internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, done: (isOK: Boolean, tryRecent: Boolean, info: BaseMsgInfo<T>, e: Throwable?) -> Unit) {
+internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, done: SendExecutorsInterface<T>) {
 
     init {
         var exc: Throwable? = null
-
         fun clearTimeout() {
             TimeOutUtils.remove(info.callId)
         }
@@ -25,25 +24,30 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
             when (info.sendingUp) {
                 SendingUp.CANCEL -> {
                     clearTimeout()
-                    done(false, false, info, exc)
+                    done.result(isOK = false, retryAble = false, d = info, throwable = exc, payloadInfo = null)
                 }
                 else -> {
                     val data = info.data ?: throw NullPointerException("what's the point you are sending an empty message?")
                     TimeOutUtils.putASentMessage(info.callId, info.data, info.timeOut, info.isResend, info.ignoreConnecting)
                     server?.sendToServer(data, info.callId, object : SendingCallBack<T> {
-                        override fun result(isOK: Boolean, d: T?, throwable: Throwable?) {
+                        override fun result(isOK: Boolean, d: T?, retryAble: Boolean, throwable: Throwable?, payloadInfo: Any?) {
                             exc = throwable
                             clearTimeout()
-                            val retryAble = !DataReceivedDispatcher.isDataEnable()
-                            info.data = if ((!isOK || d == null) && retryAble) data else d
-                            done(isOK && d != null, retryAble, info, exc)
+                            val canRetry = retryAble && !DataReceivedDispatcher.isDataEnable()
+                            info.data = if ((!isOK || d == null) && canRetry) data else d
+                            done.result(isOK && d != null, canRetry, info, exc, payloadInfo)
                         }
                     }) ?: throw NullPointerException("server can not be null !!")
                 }
             }
         } catch (e: Exception) {
-            exc = e;clearTimeout()
-            done(false, false, info, exc)
+            exc = e
+            clearTimeout()
+            done.result(false, retryAble = false, d = info, throwable = exc, payloadInfo = null)
         }
+    }
+
+    internal interface SendExecutorsInterface<T> {
+        fun result(isOK: Boolean, retryAble: Boolean, d: BaseMsgInfo<T>, throwable: Throwable?, payloadInfo: Any?)
     }
 }

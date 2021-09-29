@@ -5,7 +5,7 @@ import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.*
 import com.zj.im.chat.enums.SendMsgState
 
-object Converter {
+internal object Converter {
 
     fun exchangeMsgInfoBySendingInfo(sen: SendMessageReqEn, sendingState: SendMsgState = SendMsgState.NONE): MessageInfoEntity {
         val msg = MessageInfoEntity()
@@ -58,7 +58,7 @@ object Converter {
             }
         }
         IMHelper.withDb {
-            it?.sendMsgDao()?.insertOrChange(sen)
+            it.sendMsgDao().insertOrChange(sen)
         }
         return msg
     }

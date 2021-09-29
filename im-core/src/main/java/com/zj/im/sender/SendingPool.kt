@@ -15,7 +15,7 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
 
     private val sendMsgQueue = cusListOf<BaseMsgInfo<T>>()
 
-    fun setSendState(state: SendingUp, callId: String, data: T? = null) {
+    fun setSendState(state: SendingUp, callId: String, data: T? = null, payloadInfo: Any?) {
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = state
             this.data = data
@@ -23,7 +23,7 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
             if (state != SendingUp.CANCEL) {
                 this.onSendBefore = null
             } else {
-                sendState = SendMsgState.FAIL
+                sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
             }
             val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend)
             DataReceivedDispatcher.pushData(notifyState)
