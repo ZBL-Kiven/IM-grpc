@@ -23,4 +23,7 @@ public interface SessionLastMessageDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdateSessionMsgInfo(SessionLastMsgInfo info);
 
+    @Query("DELETE FROM sessionmsginfo WHERE groupId = :sessionId")
+    void deleteBySessionId(long sessionId);
+
 }

@@ -7,7 +7,7 @@ class PrivateFansEn {
     /**
      * 用户id
      */
-    var userId: Int? = null
+    var userId: Long? = null
 
     /**
      * 用户名

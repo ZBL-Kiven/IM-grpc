@@ -31,12 +31,12 @@ object ImApi {
         return BaseApi.create<IMRecordSizeApi>(EH).baseUrl(baseUrl).header(h ?: header).build()
     }
 
-    fun getFetcherApi(): BaseApi<FetcherApi> {
-        return BaseApi.create<FetcherApi>(EH).baseUrl(baseUrl).header(header).build()
+    fun getFunctionApi(): BaseApi<FunctionApi> {
+        return BaseApi.create<FunctionApi>(EH).baseUrl(baseUrl).header(header).build()
     }
 
     fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?) -> Unit): BaseRetrofit.RequestCompo? {
-        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserId, channels = param.channels.map { c -> c.serializeName }.toTypedArray()) }, result)
+        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = param.channel) }, result)
     }
 
 

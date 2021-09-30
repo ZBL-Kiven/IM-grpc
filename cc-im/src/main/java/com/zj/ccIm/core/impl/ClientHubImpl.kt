@@ -2,11 +2,13 @@ package com.zj.ccIm.core.impl
 
 import android.util.Log
 import com.google.gson.Gson
+import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.ccIm.core.bean.LastMsgReqBean
@@ -172,6 +174,16 @@ class ClientHubImpl : ClientHub<Any?>() {
             Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
                 val deal = BadgeDbOperator.clearGroupBadge(data as Long)
                 IMHelper.postToUiObservers(deal?.second, deal?.first)
+            }
+            Constance.CALL_ID_DELETE_SESSION -> {
+                val d = data as DeleteSessionInfo
+                when (d.pl) {
+                    Comment.DELETE_OWNER_SESSION -> PrivateOwnerDbOperator.deleteSession(d.targetId ?: return)
+                    Comment.DELETE_FANS_SESSION -> {
+                        val en = PrivateFansEn().apply { this.userId = d.targetId }
+                        IMHelper.postToUiObservers(en, PAYLOAD_DELETE)
+                    }
+                }
             }
         }
     }

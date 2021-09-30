@@ -44,7 +44,7 @@ internal object Fetcher {
         var compo: BaseRetrofit.RequestCompo? = null
         ImLogs.d("Fetcher", "start fetch sessions  by onlyRefresh = $onlyRefresh ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
-        compo = ImApi.getFetcherApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
+        compo = ImApi.getFunctionApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
             try {
                 val sessions = d?.groupList
                 if (b) {
@@ -86,7 +86,7 @@ internal object Fetcher {
         if (!sessions.isNullOrEmpty()) {
             val gIds = sessions.map { ms -> ms.groupId }
             ImLogs.d("Fetcher", "start fetch session last message info by onlyRefresh = $onlyRefresh , groups = $gIds")
-            compo = ImApi.getFetcherApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
+            compo = ImApi.getFunctionApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
                 try {
                     val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
                     d?.forEach { fi ->

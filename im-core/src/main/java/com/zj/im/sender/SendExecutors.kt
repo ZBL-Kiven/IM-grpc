@@ -34,7 +34,7 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
                             exc = throwable
                             clearTimeout()
                             val canRetry = retryAble && !DataReceivedDispatcher.isDataEnable()
-                            info.data = if ((!isOK || d == null) && canRetry) data else d
+                            info.data = if ((!isOK && canRetry) || d == null) data else d
                             done.result(isOK && d != null, canRetry, info, exc, payloadInfo)
                         }
                     }) ?: throw NullPointerException("server can not be null !!")

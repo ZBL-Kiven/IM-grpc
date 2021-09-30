@@ -20,8 +20,8 @@ interface IMRecordSizeApi {
     @POST("/im/upload/file")
     fun upload(@PartMap params: @JvmSuppressWildcards Map<String, RequestBody>, @Part file: MultipartBody.Part): Observable<UploadRespEn?>
 
-    @GET("/im/message/read/chat/msg/interval")
-    fun getMsgList(@Query("msgId") msgId: Long?, @Query("groupId") groupId: Long?, @Query("ownerId") type: Long?, @Query("targetUserId") targetUserId: Long?, @Query("channel") channels: Array<String>): Observable<Map<String, List<MessageInfoEntity?>?>?>
+    @GET("/im/message/read/msg/interval")
+    fun getMsgList(@Query("msgId") msgId: Long?, @Query("groupId") groupId: Long?, @Query("ownerId") type: Long?, @Query("targetUserId") targetUserId: Long?, @Query("channel") channels: Array<out String>): Observable<Map<String, List<MessageInfoEntity?>?>?>
 
     @POST("/im/group/setting")
     fun updateSessionInfo(@Body configs: RequestBody): Observable<UpdateSessionInfoRespEn?>

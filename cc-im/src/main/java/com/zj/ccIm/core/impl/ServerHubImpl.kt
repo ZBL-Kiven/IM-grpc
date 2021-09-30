@@ -14,8 +14,10 @@ import retrofit2.HttpException
 import com.zj.api.BaseApi
 import com.zj.api.base.BaseRetrofit
 import com.zj.api.utils.LoggerInterface
+import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.api.ImApi.EH.SENSITIVE_WORDS
+import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.ccIm.logger.ImLogs
 
@@ -61,6 +63,9 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         when (callId) {
             Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
                 if (isConnected()) getOfflineMessage(callId, data)
+            }
+            Constance.CALL_ID_DELETE_SESSION -> {
+                deleteSession(data as DeleteSessionInfo)
             }
         }
     }
@@ -114,7 +119,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     ImLogs.i("server hub event ", "new Msg in group ${data?.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
                     if (isOk && data != null) {
                         ImLogs.requireToPrintInFile("server hub event ", "new Msg [${data.clientMsgId}] received")
-                        val size = data.serializedSize * 1L
+                        val size = data.serializedSize.toLong()
                         postReceivedMessage(data.clientMsgId, data, false, size)
                     } else onParseError(t, false)
                 }
@@ -150,7 +155,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, data.data, true, 0)
                 }
                 else -> {
-                    val size = data.serializedSize * 1L
+                    val size = data.serializedSize.toLong()
                     postReceivedMessage(data.topic, data.data, false, size)
                 }
             }
@@ -207,6 +212,15 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 }
             })
         }
+    }
+
+    private fun deleteSession(data: DeleteSessionInfo) {
+        val type = when (data.pl) {
+            Comment.DELETE_FANS_SESSION -> 1
+            Comment.DELETE_OWNER_SESSION -> 0
+            else -> throw java.lang.IllegalArgumentException()
+        }
+        ImApi.getFunctionApi().call({ it.deleteSession(data.groupId, data.targetId, type) })
     }
 
     override fun onParseError(t: Throwable?, deadly: Boolean) {

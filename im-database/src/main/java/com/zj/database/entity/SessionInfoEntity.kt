@@ -49,7 +49,7 @@ class SessionInfoEntity {
     var top: Int = 0
 
     /**
-     * 群组状态 0正常 1停用
+     * 群组状态 0正常 1停用 3取关
      */
     var groupStatus: Int = 0
 

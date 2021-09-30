@@ -1,10 +1,10 @@
 package com.zj.ccIm.core.sender
 
 import android.content.Context
-import com.zj.ccIm.core.Constance.toMd5
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.UploadRespEn
+import com.zj.ccIm.core.toMd5
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.sender.OnStatus
 import com.zj.database.entity.SendMessageReqEn

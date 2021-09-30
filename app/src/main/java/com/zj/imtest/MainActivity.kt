@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, 151254, null, FetchMsgChannel.OWNER_CLAP_HOUSE)
+        IMHelper.registerChatRoom(groupId, 151254, null, FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -146,7 +146,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
-            Log.e("------ ", "=====>    ${d?.questionContent?.published}")
             if (d != null) when (pl) {
                 ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)

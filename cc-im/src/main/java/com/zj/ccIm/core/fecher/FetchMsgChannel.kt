@@ -7,5 +7,6 @@ enum class FetchMsgChannel(val serializeName: String) {
     OWNER_PRIVATE("owner_private"),
     FANS_CLAP_HOUSE("fans_clap_house"),
     FANS_MESSAGE("fans_message"),
-    FANS_PRIVATE("fans_private")
+    FANS_PRIVATE("fans_private");
+
 }

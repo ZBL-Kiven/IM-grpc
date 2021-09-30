@@ -5,7 +5,6 @@ import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.FetchPrivateChatSessionResult
-import com.zj.ccIm.error.FetchSessionResult
 import com.zj.database.IMDb
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
@@ -26,7 +25,7 @@ internal object PrivateOwnerDbOperator {
                 newChat.ownerName = session.groupName
                 val lastSessionMsg = SessionLastMsgInfo().apply {
                     this.newMsg = msg
-                    this.groupId = session.ownerId * 1L
+                    this.groupId = session.ownerId.toLong()
                     this.msgNum = 1
                 }
                 it.sessionMsgDao().insertOrUpdateSessionMsgInfo(lastSessionMsg)
@@ -49,11 +48,22 @@ internal object PrivateOwnerDbOperator {
             val sessions = it.privateChatOwnerDao().findAll()
             val lstMsgDao = it.sessionMsgDao()
             for (s in sessions) {
-                s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoBySessionId(s.ownerId * 1L)
+                s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoBySessionId(s.ownerId.toLong())
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
             IMHelper.postToUiObservers(FetchPrivateChatSessionResult(true, isFirst, sessions.isNullOrEmpty()))
             IMHelper.postToUiObservers(sessions, callId)
+        }
+    }
+
+    fun deleteSession(ownerId: Long) {
+        IMHelper.withDb {
+            val session = it.privateChatOwnerDao().findByGroupId(ownerId)
+            if (session != null) {
+                it.privateChatOwnerDao().delete(session)
+            }
+            it.sessionMsgDao().deleteBySessionId(session.ownerId.toLong())
+            IMHelper.postToUiObservers(session, ClientHubImpl.PAYLOAD_DELETE)
         }
     }
 }

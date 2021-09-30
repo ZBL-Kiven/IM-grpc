@@ -15,24 +15,39 @@ internal object SessionDbOperator {
         val info = try {
             Gson().fromJson(d, SessionInfoEntity::class.java)
         } catch (e: Exception) {
-            ImLogs.requireToPrintInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d"); return null
+            ImLogs.requireToPrintInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d")
+            return null
         }
         return IMHelper.withDb {
             val sessionDb = it.sessionDao()
             val lastMsgDb = it.sessionMsgDao()
-            val exists = sessionDb.findSessionById(info.groupId) == null
             val local = sessionDb.findSessionById(info.groupId)
-            if (local != null) {
+            val exists = local != null
+            if (exists) {
                 info.disturbStatus = local.disturbStatus
                 info.top = local.top
             }
-            val lastMsgInfo = lastMsgDb.findSessionMsgInfoBySessionId(info.groupId)
-            info.sessionMsgInfo = lastMsgInfo
-            sessionDb.insertOrChangeSession(info)
-            Pair(if (exists) ClientHubImpl.PAYLOAD_ADD else ClientHubImpl.PAYLOAD_CHANGED, info)
+            val needDelete = info.groupStatus == 3
+            if (!needDelete) {
+                val lastMsgInfo = lastMsgDb.findSessionMsgInfoBySessionId(info.groupId)
+                info.sessionMsgInfo = lastMsgInfo
+            }
+            if (needDelete) {
+                if (exists) sessionDb.deleteSession(local)
+            } else {
+                sessionDb.insertOrChangeSession(info)
+            }
+            Pair(if (exists) {
+                if (needDelete) {
+                    ClientHubImpl.PAYLOAD_DELETE
+                } else {
+                    ClientHubImpl.PAYLOAD_ADD
+                }
+            } else {
+                ClientHubImpl.PAYLOAD_CHANGED
+            }, info)
         }
     }
-
 
     fun notifyAllSession(callId: String?) {
         IMHelper.withDb {
