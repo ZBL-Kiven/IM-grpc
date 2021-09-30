@@ -32,7 +32,6 @@
     <color name="text_color_member_type_70">#4DFE6F0F</color>
     <color name="message_textColor_replyOthers_others">#FFA56807</color>
     <color name="text_color_self_reply_others">#FFB67408</color>
-    <color name="message_cc_video_send_time">#FFA6ACBF</color>
 
     <color name="frame_textview">#80FFFFFF</color>
     <color name="frame_solid_70">#4DFFFFFF</color>

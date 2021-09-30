@@ -84,15 +84,15 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getCCVideoContentVideoId(): String? {
-        return  ""
+        return ""
     }
 
     override fun getCCVideoContentVideoDescribe(): String? {
-        return  ""
+        return ""
     }
 
     override fun getCCVideoContentVideoTitle(): String? {
-        return  ""
+        return ""
     }
 
     //打赏相关
@@ -140,6 +140,26 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getReplyMsgTextContent(): String? {
         return info?.replyMsg?.textContent?.text
+    }
+
+    override fun getReplyMsgImgContent(): String? {
+        return null
+    }
+
+    override fun getReplyMsgImgWidth(): Int? {
+        return 0
+    }
+
+    override fun getReplyMsgImgHeight(): Int? {
+        return 0
+    }
+
+    override fun getReplyMsgCCVideoCoverContent(): String? {
+        return null
+    }
+
+    override fun getReplyMsgCCVideoId(): String? {
+        return null
     }
 
     override fun getReplyMsgType(): String? {
