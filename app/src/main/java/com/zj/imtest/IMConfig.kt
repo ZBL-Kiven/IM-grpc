@@ -23,16 +23,16 @@ object IMConfig : ImConfigIn {
 
     override fun getGrpcAddress(): Pair<String, Int> {
 
-        //        return Pair("grpc.ccdev.lerjin.com", 50003)
+        return Pair("grpc.ccdev.lerjin.com", 50003)
 
-        return Pair("192.168.50.213", 50003)
+        //        return Pair("192.168.50.213", 50003)
     }
 
     override fun getIMHost(): String {
 
-        //        return "https://im.ccdev.lerjin.com"
+        return "https://im.ccdev.lerjin.com"
 
-        return "http://172.16.1.75:8086"
+        //        return "http://172.16.1.75:8086"
     }
 
     override fun getHeatBeatsTimeOut(): Long {

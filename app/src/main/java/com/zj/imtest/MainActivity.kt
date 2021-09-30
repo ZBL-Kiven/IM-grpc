@@ -21,12 +21,14 @@ import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.error.FetchSessionResult
 import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.ui.MsgAdapter
@@ -154,17 +156,24 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, _ ->
-            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text}")
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, pl ->
+            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-
-        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, _ ->
-            Log.e("----- ", "on all unread count changed , cur is ${r?.dots}")
+        IMHelper.addReceiveObserver<PrivateFansEn>(0x1129).listen { r, l, pl ->
+            Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, _ ->
-            Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData}")
+        IMHelper.addReceiveObserver<PrivateOwnerEntity>(0x1130).listen { r, l, pl ->
+            Log.e("----- ", "on  private owner chat got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
+        }
+
+        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, pl ->
+            Log.e("----- ", "on all unread count changed , cur is ${r?.dots} , payload = $pl")
+        }
+
+        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, pl ->
+            Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
         }
     }
 }
