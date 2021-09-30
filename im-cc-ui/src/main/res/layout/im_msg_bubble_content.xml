@@ -15,6 +15,17 @@
         android:visibility="gone"
         tools:visibility="visible">
 
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/im_msg_bubble_img_owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="3dp"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/im_msg_item_group_leader"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_normal_text_tv_nickname"
             android:layout_width="wrap_content"
@@ -29,13 +40,15 @@
             />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/im_msg_bubble_img_owner"
+            android:id="@+id/im_msg_bubble_img_v"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:layout_marginTop="5dp"
             android:src="@drawable/im_msg_item_widget_reward_icon_owner"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
 
     </LinearLayout>
 
@@ -119,7 +132,15 @@
                 android:layout_marginLeft="6dp"
                 android:textColor="@color/text_color_gray"
                 android:textSize="16sp"
-                tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测" />
+                tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测"
+                />
+
+            <FrameLayout
+                android:id="@+id/im_msg_bubble_replied_stub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                />
 
         </LinearLayout>
 

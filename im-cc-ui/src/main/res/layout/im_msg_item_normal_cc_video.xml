@@ -51,8 +51,7 @@
             android:id="@+id/im_msg_item_normal_cc_video_img_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            />
+            android:scaleType="centerCrop" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/im_msg_item_normal_cc_video_img_flag"
