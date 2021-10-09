@@ -18,13 +18,11 @@ import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
-import com.zj.imUi.utils.RewardTimeCountdownUtils
+import com.zj.imUi.utils.MessageReplySendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
-import com.zj.imUi.widget.bottom.GroupMessageItemTime
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import com.zj.views.ut.DPUtils
 import java.util.*
-import kotlin.math.roundToInt
 
 /**
  * author: 李 祥
@@ -34,21 +32,32 @@ import kotlin.math.roundToInt
 class IMRewardItem @JvmOverloads constructor(context: Context,
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0) : BaseBubble(context, attributeSet, defStyle),
-    MessageSendTimeUtils.SendTImeListener, RewardTimeCountdownUtils.CountdownListener {
+    MessageSendTimeUtils.SendTImeListener ,MessageReplySendTimeUtils.SendTImeListener{
 
     private val tvName: GroupMessageItemTitle
     private var textQuestion: AppCompatTextView
+    private var textIsPublic: AppCompatTextView
     private var textReplyType: AppCompatTextView
     private var textResponseType: AppCompatTextView
-    private var imgCountdown: AppCompatImageView
-    private var tvCountdown: AppCompatTextView
-    private var llCountDown: LinearLayout
+    private var textReplyOwnerNickName: AppCompatTextView
+    private var textReplyOwnerSendTime: AppCompatTextView
+
+    //    private var imgCountdown: AppCompatImageView
+    //    private var tvCountdown: AppCompatTextView
+    //    private var llCountDown: LinearLayout
     private var llQuestion: LinearLayout
+    private var llReplyContentUser: LinearLayout
+    private var llReplyContentOwner: LinearLayout
+    private var replyContent: FrameLayout
+    private var replyOwnerContent: FrameLayout
+    private var llQuestionType: LinearLayout
     private var questionIcon: AppCompatImageView
-    private var timeBottom: GroupMessageItemTime
+
+    //    private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag: AppCompatTextView
     private val baseContentMargins = DPUtils.dp2px(12f)
-    private var frameFLag:FrameLayout
+    private var frameFLag: FrameLayout
+    private var curContentIn: ImContentIn? = null
 
 
     private var contentLayout: View = LayoutInflater.from(context)
@@ -59,62 +68,120 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             tvName = findViewById(R.id.im_msg_item_owner_reward_question_title)
             textQuestion = findViewById(R.id.im_msg_item_owner_reward_question_tv_content)
             textResponseType = findViewById(R.id.im_msg_item_owner_reward_question_tv_type)
-            imgCountdown = findViewById(R.id.im_msg_item_owner_reward_question_img_countdown)
-            tvCountdown = findViewById(R.id.im_msg_item_owner_reward_question_tv_countdown)
-            llCountDown = findViewById(R.id.im_msg_item_owner_reward_question_ll_countdown)
+            textReplyOwnerNickName = findViewById(R.id.im_msg_item_owner_tv_nickname)
+            textReplyOwnerSendTime = findViewById(R.id.im_msg_item_owner_tv_reply_time)
+            textIsPublic = findViewById(R.id.im_msg_item_owner_reward_question_tv_is_public)
+            replyContent = findViewById(R.id.im_msg_item_user_frame_reply_content)
+            replyOwnerContent = findViewById(R.id.im_msg_item_owner_frame_reply_content)
+            llQuestionType = findViewById(R.id.im_msg_item_owner_reward_ll_type)
+
             questionIcon = findViewById(R.id.im_msg_item_owner_reward_question_icon)
             textReplyType = findViewById(R.id.im_msg_item_owner_reward_question_tv_reply_type)
-            timeBottom = findViewById(R.id.im_msg_item_owner_reward_question_bottom_time)
             tvReliedFLag = findViewById(R.id.im_msg_item_owner_reward_widget_replied_flag)
             llQuestion = findViewById(R.id.im_msg_item_owner_reward_question_il)
             frameFLag = findViewById(R.id.im_msg_item_owner_reward_frame)
+
+            llReplyContentUser = findViewById(R.id.im_msg_item_reward_ll_reply_content)
+            llReplyContentOwner = findViewById(R.id.im_msg_item_owner_ll_reply_content)
         }
     }
 
-    override fun init(data: ImMsgIn) {
+    override fun init(data: ImMsgIn, isGroupChat: Boolean) {
         if (childCount == 0) {
             addView(contentLayout)
         }
-        contentLayout.setOnClickListener {
-            data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息
-        }
-
-        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins,baseContentMargins,baseContentMargins,0)
-        else llQuestion.setPadding(baseContentMargins,DPUtils.dp2px(8f),baseContentMargins,0)
-
-        //最开始此控件均不可见
+        llReplyContentOwner.visibility = View.GONE
+        llReplyContentUser.visibility = View.GONE
         textReplyType.visibility = View.GONE
         tvReliedFLag.visibility = View.GONE
+        llQuestionType.visibility = View.VISIBLE
+        questionIcon.visibility = View.VISIBLE
+
+        setTitle(data, isGroupChat)
+        if (isGroupChat || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
+            setChatRewardItem(data)
+        } else setPrivateChatItem(data)
+
+    }
+
+    private fun setPrivateChatItem(data: ImMsgIn) {
+        textQuestion.text = data.getQuestionTextContent()
+        if (data.getSelfUserId()==data.getSenderId()){
+            textQuestion.setTextColor(ContextCompat.getColor(context,R.color.im_msg_bg_color_white))
+        }else textQuestion.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_black))
+        llQuestionType.visibility = View.GONE
+        questionIcon.visibility = View.GONE
+        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
+        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, baseContentMargins) //普通消息变为自适应宽度
+        contentLayout.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+    }
+
+    private fun setChatRewardItem(data: ImMsgIn) {
+        contentLayout.setOnClickListener {
+            data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息，私聊
+        }
         setTextStyle()
-        setTitle(data)
         performRegisterTimer()
+        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, 0)
+        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, 0)
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
-        if (data.getQuestionStatus() == 0 && data.getSelfUserId() == data.getOwnerId()) {
-            textReplyType.visibility = VISIBLE
-            textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
-            if (data.getPublished()) {
-                textResponseType.text = context.getString(R.string.im_ui_public)
-                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.text_color_member_type))
-                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg)
-                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_origin_roundcornor_4dp)
-            } else {
-                textResponseType.text = context.getString(R.string.im_ui_private)
-                textResponseType.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_purple_private))
-                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
-                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_purple_round_corner_4dp)
+        if (data.getQuestionStatus() == 0) {
+            when {
+                data.getSelfUserId() == data.getOwnerId() -> {
+                    textReplyType.visibility = View.VISIBLE
+                    textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
+                    textReplyType.setOnClickListener {
+                        Log.d("LiXiang", "回复TextView点击")
+                        data.onReplyQuestion()
+                    }
+                }
+                data.getSenderId() ==data.getSelfUserId() -> {
+                    textReplyType.visibility = View.VISIBLE
+                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract)
+                    textReplyType.setOnClickListener {
+                        Log.d("LiXiang", "撤回TextView点击")
+                        data.userRetractRewardMsg()
+                    }
+                }
+                else -> {
+                    textReplyType.visibility = View.GONE
+                }
             }
-        } else textResponseType.text =
-            data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
-
-        textReplyType.setOnClickListener {
-            Log.d("LiXiang", "回复TextView点击")
-            data.onReplyQuestion()
+        } else { //已回复状态
+            if (data.getSelfUserId() == data.getOwnerId()) {
+                setReplyContent(data, replyOwnerContent)
+                llReplyContentOwner.visibility = View.VISIBLE
+            } else {
+                llReplyContentUser.visibility = View.VISIBLE
+                textReplyOwnerNickName.text = data.getAnswerContentSenderName()
+                setReplyContent(data, replyContent)
+            }
         }
 
-        tvCountdown.text = timeParseHour(data.getExpireTime()).toString()
+        textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+        textResponseType.visibility = View.VISIBLE
+        if (data.getSelfUserId() == data.getOwnerId()){
+            textResponseType.visibility = View.GONE
+        }
+
+        //textReplyType属性设置
+        if (data.getPublished()) {
+            textIsPublic.text = context.getString(R.string.im_ui_public)
+            if (data.getSelfUserId() == data.getOwnerId()) {
+                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_origin_roundcornor_4dp)
+                textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
+            }else{
+                textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_white_roundcornor_4dp)
+                textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_bg_origin))
+            }
+        } else {
+            textIsPublic.text = context.getString(R.string.im_ui_private)
+            textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_purple_round_corner_4dp)
+            textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
+        }
+
 
         when {
             data.getQuestionStatus() == 0 -> {
@@ -123,21 +190,56 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             data.getQuestionStatus() == 1 -> { //已回复
                 setAlreadyReplyBg()
             }
-            data.getQuestionStatus() == 2 -> {
-                setOutTimeBg()
-            }
-        } //底部时间及奖励展示
-        if (data.getSelfUserId() == data.getSenderId()) {
-            timeBottom.visibility = View.VISIBLE
-            timeBottom.setData(data)
-        } else timeBottom.visibility = View.GONE
+        }
+        //底部时间及奖励展示
+        //        if (data.getSelfUserId() == data.getSenderId()) {
+        //            timeBottom.visibility = View.VISIBLE
+        //            timeBottom.setData(data)
+        //        } else timeBottom.visibility = View.GONE
 
-
-        if (data.getSelfUserId() == data.getOwnerId()){
-            val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,FrameLayout.LayoutParams.WRAP_CONTENT)
-            lp.setMargins(0,DPUtils.dp2px(-60f),DPUtils.dp2px(10f),DPUtils.dp2px(10f))
+        if (data.getSelfUserId() == data.getOwnerId()) {
+            val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT)
+            lp.setMargins(0, DPUtils.dp2px(-60f), DPUtils.dp2px(10f), DPUtils.dp2px(10f))
             lp.gravity = Gravity.END
             tvReliedFLag.layoutParams = lp
+        }
+    }
+
+    private fun setReplyContent(data: ImMsgIn, frameLayout: FrameLayout) {
+        var isSameType = false
+        try {
+            val v: View = when (data.getAnswerMsgType()) {
+                UiMsgType.MSG_TYPE_TEXT -> {
+                    isSameType = curContentIn is IMContentTextView
+                    if (isSameType) null else IMContentTextView(context)
+                }
+
+                UiMsgType.MSG_TYPE_IMG -> {
+                    isSameType = curContentIn is IMContentImageView
+                    if (isSameType) null else IMContentImageView(context)
+                }
+
+                UiMsgType.MSG_TYPE_AUDIO -> {
+                    isSameType = curContentIn is IMContentAudioView
+                    if (isSameType) null else IMContentAudioView(context)
+                }
+                else -> null
+            } ?: return
+
+            if (!isSameType) {
+                frameLayout.removeAllViews()
+                curContentIn = v as? ImContentIn
+                frameLayout.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+                    frameLayout.setOnClickListener {
+                        Log.d("LiXiang", "bubbleAnswerContent点击")
+                        data.onViewLargePic()
+                    }
+                }
+            }
+        } finally {
+            curContentIn?.onSetData(data)
         }
     }
 
@@ -145,90 +247,66 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         tvReliedFLag.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         tvReliedFLag.paint.isFakeBoldText = true
         textQuestion.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
-        tvCountdown.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+        textIsPublic.typeface = Typeface.defaultFromStyle(Typeface.BOLD) //        tvCountdown.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         textReplyType.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         textResponseType.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+        textReplyOwnerNickName.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
     }
 
-    private fun setWaitReply(data: ImMsgIn) {
+    private fun setWaitReply(data: ImMsgIn) { //未回复
         questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_normal)
         if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
             if (data.getPublished()) {
-                textQuestion.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_white)) //回答方式背景
-                textResponseType.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_white))
-                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg) //有效期 图标
-                tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
-                imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_white)
-                llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg)
+                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
+                //回答方式背景
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
+                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg)
+                textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg)
+                textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
 
             } else {
-                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
-                textResponseType.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_purple_private))
+                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_purple_private))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
-
-                tvCountdown.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_origin_private))
-                imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_origin)
-                llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
+                textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
+                textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_purple_private)) //                imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_origin)
             }
-
-        } else { //消息发送者为其他群员
-            textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
-            if (data.getSelfUserId() != data.getOwnerId()) {
-                textResponseType.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_member_type))
-                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg) //有效期 图标
+        } else { //消息发送者为其他群员，且自己为大V才能看到打赏消息
+            if (data.getPublished()) {
+                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_member_type))
+                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg)
+                textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_origin_private))
+                textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_pink_frame_bg)
+            } else {
+                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+                textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_purple_private))
+                textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
+                textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_gray_frame_bg)
+                textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_purple_private))
             }
-            tvCountdown.setTextColor(ContextCompat.getColor(context,
-                R.color.text_color_origin_private))
-            imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_origin)
-            llCountDown.setBackgroundResource(R.drawable.im_msg_item_textview_frame_brown_roundcornor)
         }
-        llCountDown.visibility = View.VISIBLE
-
-        if (data.getExpireTime() in 1..3599999) {
-            llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
-        }
-
     }
 
-    private fun setTitle(data: ImMsgIn) {
-        tvName.visibility = View.VISIBLE
-        if (data.getSelfUserId() == data.getSenderId()) tvName.visibility = View.GONE
-        else {
-            tvName.setData(data)
+    private fun setTitle(data: ImMsgIn, isGroupChat: Boolean) {
+        if (data.getSelfUserId() !=data.getOwnerId()&&!isGroupChat){
+            tvName.visibility = View.GONE
+        }else{
             tvName.visibility = View.VISIBLE
+            tvName.setData(data, isGroupChat)
         }
     }
 
-    private fun setOutTimeBg() { //超时 的提问字体颜色不同
-        textQuestion.setTextColor(ContextCompat.getColor(context, R.color.reward_ll_color_timeout))
-        questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_gray) //回答方式背景
-        textResponseType.setTextColor(ContextCompat.getColor(context,
-            R.color.frame_textview_private))
-        textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg) //有效期 图标
-        tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.frame_textview_private))
-        imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_gray)
-        llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
-        llCountDown.visibility = View.VISIBLE
-        tvCountdown.text = context.getString(R.string.im_ui_question_no_time)
-    }
 
     private fun setAlreadyReplyBg() { //回答方式背景
-        textQuestion.setTextColor(ContextCompat.getColor(context, R.color.text_color_black))
+        textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+        questionIcon.visibility = View.VISIBLE
         questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_normal)
-        textResponseType.setTextColor(ContextCompat.getColor(context,
-            R.color.frame_textview_private))
-        textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg) //有效期 图标
-        tvCountdown.setTextColor(ContextCompat.getColor(context, R.color.frame_textview_private))
-        imgCountdown.setImageResource(R.drawable.im_msg_item_widget_reward_countdown_gray)
-        llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
-        llCountDown.visibility = View.GONE
+        textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_frame_textview_private))
+        textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
+        textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
+        textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_frame_textview_private))
         tvReliedFLag.visibility = View.VISIBLE
-        tvCountdown.text = context.getString(R.string.im_ui_question_no_time)
     }
 
     private fun setReplyTypeText(type: String): String? {
@@ -246,7 +324,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         when (type) {
             UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_reward_type_text)
             UiMsgType.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_reward_type_image)
-            UiMsgType.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_reward_type_audio)
+            UiMsgType.MSG_TYPE_AUDIO -> text =
+                context.getString(R.string.im_ui_msg_reward_type_audio)
         }
         return text
     }
@@ -254,31 +333,39 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private fun performRegisterTimer() {
         curData?.invoke()?.let {
             if (it.getSendState() == 0 || it.getSendState() == 3) {
-                RewardTimeCountdownUtils.registerCountdownObserver(it.getMsgId(),
-                    it.getExpireTime(),
-                    this)
                 TimeDiffUtils.timeDifference(it.getSendTime())?.let { it1 ->
                     MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
                 }
+                it.getAnswerContentSendTime()?.let { it1 ->
+                    TimeDiffUtils.timeDifference(it1)?.let { it1 ->
+                        MessageReplySendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
+                    }
+                }
             } else {
-                RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
+                //                RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
                 MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+                MessageReplySendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
             }
         }
     }
 
     override fun onResume() {
+        curContentIn?.onResume(curData?.invoke())
         performRegisterTimer()
     }
 
     override fun onStop() {
+        curContentIn?.onStop(curData?.invoke())
         curData?.invoke()?.let {
-            RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
+//            RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
             MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
+            MessageReplySendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
         }
     }
 
     override fun onDestroy() {
+        curContentIn?.onDestroy(curData?.invoke())
+        curContentIn = null
         removeAllViews()
     }
 
@@ -286,12 +373,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         super.notifyChange(pl)
         when (pl) {
             BaseImItem.NOTIFY_CHANGE_REWARD_STATE -> {
-                curData?.invoke()?.questionStatusOverdueChange()
-                curData?.invoke()?.let {
-                    setTitle(it)
-                    timeBottom.setData(it)
-                } //重绘
-                invalidate()
+
             }
             BaseImItem.NOTIFY_CHANGE_SENDING_STATE -> {
                 performRegisterTimer()
@@ -299,48 +381,17 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
     }
 
-    override fun onCountdown(msgId: String, remainingTime: Long) {
-        if (this.curData?.invoke()?.getQuestionStatus() == 0) {
-            if (msgId == this.curData?.invoke()?.getMsgId()) tvCountdown.text =
-                timeParseHour(remainingTime)
-            when {
-                remainingTime in 1..3599999 -> {
-                    llCountDown.setBackgroundResource(R.drawable.im_msg_item_reward_red_frame_bg)
-                }
-                remainingTime < 1 -> {
-                    setOutTimeBg()
-                    textReplyType.visibility = View.GONE
-                    notifyChange(BaseImItem.NOTIFY_CHANGE_REWARD_STATE)
-                }
-                else -> {
-                    this.curData?.invoke()?.let { setWaitReply(it) }
-                }
-            }
-        }
-    }
 
     override fun onSendTime(msgId: String, sendTime: Long) {
         if (msgId == this.curData?.invoke()?.getMsgId()) {
-            this.curData?.invoke()?.let { timeBottom.setDataWithTime(sendTime, it) }
+            tvName.setDataSendTime(sendTime)
         }
     }
 
-    private fun timeParseHour(duration: Long): String? {
-        if (duration < 1) return context.getString(R.string.im_ui_question_no_time)
-        var time: String? = ""
-        val hour = duration / 3600000
-        val minutes = duration % 3600000
-        var minute = (minutes.toFloat() / 60000).roundToInt()
-        if (hour < 1) {
-            time += 0
+    override fun onReplySendTime(msgId: String, sendTime: Long) {
+        if (msgId == this.curData?.invoke()?.getMsgId()) {
+            textReplyOwnerSendTime.text = TimeDiffUtils.setTimeText(sendTime, context)
         }
-        time += "$hour:"
-        if (minute < 10) {
-            time += "0"
-        } else if (minute == 60) {
-            minute = 59
-        }
-        time += minute
-        return time
     }
 }
+

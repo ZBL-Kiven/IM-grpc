@@ -27,7 +27,7 @@ class GroupRewardOwnerMeItem @JvmOverloads constructor(context: Context, attribu
     fun setData(imMsgIn: ImMsgIn) {
         textRewardNumber.text = "+ " + imMsgIn.getReplyMsgQuestionSpark()
         textRewardTime.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
-        textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+        textRewardTime.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
         textRewardNumber.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
     }
 

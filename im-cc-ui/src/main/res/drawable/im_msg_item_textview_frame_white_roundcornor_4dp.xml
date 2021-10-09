@@ -3,5 +3,5 @@
     <corners
         android:radius="4dp"/>
     <solid
-        android:color="@color/im_msg_bg_purple"/>
+        android:color="@color/im_msg_frame_textview_solid_white"/>
 </shape>

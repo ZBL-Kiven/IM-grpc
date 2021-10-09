@@ -110,6 +110,6 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     }
 
     override fun getTextColor(): Int {
-        return ContextCompat.getColor(context ?: return 0, R.color.text_color_gray)
+        return ContextCompat.getColor(context ?: return 0, R.color.im_msg_text_color_gray)
     }
 }

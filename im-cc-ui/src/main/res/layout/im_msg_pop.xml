@@ -59,4 +59,26 @@
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
+
+    <View
+        android:id="@+id/im_msg_pop_line3"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#44F5F7F9" />
+
+    <TextView
+        android:id="@+id/im_msg_pop_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minWidth="76dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="@string/im_ui_msg_delete"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
+
+
 </LinearLayout>

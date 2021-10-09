@@ -24,7 +24,7 @@
             android:ellipsize="end"
             android:maxWidth="180dp"
             android:maxLines="1"
-            android:textColor="@color/text_color_gray_nickname"
+            android:textColor="@color/im_msg_text_color_gray_nickname"
             android:textSize="14sp"
             tools:text="nick_name"
             />

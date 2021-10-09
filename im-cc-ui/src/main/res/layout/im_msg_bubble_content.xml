@@ -34,7 +34,7 @@
             android:ellipsize="end"
             android:maxWidth="180dp"
             android:maxLines="1"
-            android:textColor="@color/text_color_gray_nickname"
+            android:textColor="@color/im_msg_text_color_gray_nickname"
             android:textSize="14sp"
             tools:text="nick_name"
             />
@@ -110,7 +110,7 @@
                 android:ellipsize="end"
                 android:maxWidth="80dp"
                 android:maxLines="1"
-                android:textColor="@color/text_color_gray"
+                android:textColor="@color/im_msg_text_color_gray"
                 android:textSize="16sp"
                 tools:text="nick_name"
                 android:textStyle="bold"
@@ -121,7 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/im_ui_user_nickname_split"
-                android:textColor="@color/text_color_gray"
+                android:textColor="@color/im_msg_text_color_gray"
                 android:textStyle="bold"
                 android:textSize="16sp" />
 
@@ -130,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="6dp"
-                android:textColor="@color/text_color_gray"
+                android:textColor="@color/im_msg_text_color_gray"
                 android:textSize="16sp"
                 tools:text="测试测试测试测试测试测试测试测试测试测试测试测试测"
                 />

@@ -15,7 +15,7 @@
         android:layout_toStartOf="@id/im_msg_item_bottom_group_reward_item"
         android:alpha="0.7"
         android:maxLines="1"
-        android:textColor="@color/text_color_gray"
+        android:textColor="@color/im_msg_text_color_gray"
         tools:text="12 minutes ago" />
 
     <com.zj.imUi.widget.GroupRewardMeItem

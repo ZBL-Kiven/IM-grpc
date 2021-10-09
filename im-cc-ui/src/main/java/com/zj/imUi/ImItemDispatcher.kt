@@ -24,12 +24,22 @@ enum class MsgType(val type: String) {
 
 object ImItemDispatcher {
 
-    inline fun <reified R : BaseBubble> getItemWithData(imIn: ImMsgIn, context: Context): R? {
-        return when (imIn.getType()) {
-            UiMsgType.MSG_TYPE_QUESTION-> IMRewardItem(context) as R?
-            UiMsgType.MSG_TYPE_CC_VIDEO->IMContentCCVideoView(context)as R?
-            UiMsgType.MSG_TYPE_IMG,UiMsgType.MSG_TYPE_TEXT,UiMsgType.MSG_TYPE_AUDIO->IMBubbleContentItem(context) as R?
-            else -> IMBubbleNotAllowedTypeItem(context) as R?
-        }
+    inline fun <reified R : BaseBubble> getItemWithData(imIn: ImMsgIn, context: Context,isGroupChat:Boolean): R? {
+        return if(isGroupChat) {
+            when (imIn.getType()) {
+                UiMsgType.MSG_TYPE_QUESTION -> IMRewardItem(context) as R?
+                UiMsgType.MSG_TYPE_CC_VIDEO -> IMContentCCVideoView(context) as R?
+                UiMsgType.MSG_TYPE_IMG, UiMsgType.MSG_TYPE_TEXT, UiMsgType.MSG_TYPE_AUDIO -> IMBubbleContentItem(
+                    context) as R?
+                else -> IMBubbleNotAllowedTypeItem(context) as R?
+            }
+        }else
+            when (imIn.getType()) {
+                UiMsgType.MSG_TYPE_QUESTION -> IMRewardItem(context) as R?
+                UiMsgType.MSG_TYPE_CC_VIDEO -> IMContentCCVideoView(context) as R?
+                UiMsgType.MSG_TYPE_IMG, UiMsgType.MSG_TYPE_TEXT, UiMsgType.MSG_TYPE_AUDIO -> IMBubbleContentItem(
+                    context) as R?
+                else -> IMBubbleNotAllowedTypeItem(context) as R?
+            }
     }
 }

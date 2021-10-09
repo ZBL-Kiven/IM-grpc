@@ -52,6 +52,22 @@ class MsgPop(context: Context, data: ImMsgIn) {
                 popWindow.dismiss()
             }
         }
+
+
+        val delete = view.findViewById<TextView>(R.id.im_msg_pop_delete).apply {
+            visibility = if (data.getSendState() <0 ) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            setOnClickListener {
+                data.deleteSendLossMsg()
+                popWindow.dismiss()
+            }
+        }
+
+        view.findViewById<View>(R.id.im_msg_pop_line3).visibility = delete.visibility
+
         view.findViewById<View>(R.id.im_msg_pop_line1).visibility = copy.visibility
         val visibility = if (reply.visibility == View.VISIBLE || block.visibility == View.VISIBLE) {
             View.VISIBLE

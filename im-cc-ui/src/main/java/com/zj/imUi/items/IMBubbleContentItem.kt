@@ -63,8 +63,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
-    override fun init(data: ImMsgIn) {
+    override fun init(data: ImMsgIn,isGroupChat:Boolean) {
         tvName.text = data.getSenderName()
+        imgQuestion.visibility = View.GONE
+        imgReply.visibility = View.GONE
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
         } else {
@@ -79,11 +81,13 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             }
         }
         performRegisterTimer()
-        setIconVisibility(data)
         setViewStub(data)
-        setReplyContent(data)
-        setTime(data)
+        if(isGroupChat) {
+            setReplyContent(data)
+            setIconVisibility(data)
+        }
         setContentColor(data)
+        //        setTime(data)
     }
 
     private fun setTime(data: ImMsgIn) {
@@ -100,60 +104,60 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
             if (data.getSenderId() == data.getSelfUserId()) {
                 tvQuestionName.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_white))
-                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.text_color_white))
+                    R.color.im_msg_text_color_white))
+                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_white))
+                    R.color.im_msg_text_color_white))
             } else {
                 if (data.getReplyMsgQuestionIsPublished() == false) {
-                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
-                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_purple))
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.bg_purple))
+                        R.color.im_msg_bg_purple))
                 } else if (data.getReplySenderId() == data.getSelfUserId() && data.getReplyMsgQuestionIsPublished() == true) {
-                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
+                    tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.bg_origin))
+                        R.color.im_msg_bg_origin))
                 } else {
                     tvQuestionName.setTextColor(ContextCompat.getColor(context,
-                        R.color.reward_text_color_reply))
+                        R.color.im_msg_reward_text_color_reply))
                     tvFlag.setTextColor(ContextCompat.getColor(context,
-                        R.color.reward_text_color_reply))
+                        R.color.im_msg_reward_text_color_reply))
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.reward_text_color_reply))
+                        R.color.im_msg_reward_text_color_reply))
                 }
             }
         } else {
             if (data.getReplySenderId() == data.getSelfUserId()) { //被回复人是自己
-                tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
-                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.bg_origin))
+                tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
+                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                 if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.bg_origin))
+                        R.color.im_msg_bg_origin))
                 } else tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                    R.color.bg_green))
+                    R.color.im_msg_bg_green))
             } else { //    被回复人是其他人
                 if (data.getSenderId() == data.getSelfUserId()) {
                     tvQuestionName.setTextColor(ContextCompat.getColor(context,
-                        R.color.text_color_self_reply_others))
+                        R.color.im_msg_text_color_self_reply_others))
                     tvFlag.setTextColor(ContextCompat.getColor(context,
-                        R.color.text_color_self_reply_others))
+                        R.color.im_msg_text_color_self_reply_others))
                     if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                         tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                            R.color.text_color_self_reply_others))
+                            R.color.im_msg_text_color_self_reply_others))
                     } else tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.bg_green))
+                        R.color.im_msg_bg_green))
                 } else {
                     tvQuestionName.setTextColor(ContextCompat.getColor(context,
-                        R.color.reward_text_color_reply))
+                        R.color.im_msg_reward_text_color_reply))
                     tvFlag.setTextColor(ContextCompat.getColor(context,
-                        R.color.reward_text_color_reply))
+                        R.color.im_msg_reward_text_color_reply))
                     if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                         tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                            R.color.reward_text_color_reply))
+                            R.color.im_msg_reward_text_color_reply))
                     } else tvQuestionContent.setTextColor(ContextCompat.getColor(context,
-                        R.color.bg_green))
+                        R.color.im_msg_bg_green))
                 }
             }
         }
@@ -226,6 +230,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                         data.onViewLargePic()
                     }
                 }
+//                else if(data.getReplyMsgType() == UiMsgType.MSG_TYPE_AUDIO){
+//                    curContentInReply?.isGroupChat(isGroupChat)
+//                }
             }
         } finally {
             bubbleRepliedContent.setPadding(12,12,0,0)
@@ -255,36 +262,17 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             } ?: return
 
             if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) {
-                if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
-                else llContent.setPadding(baseContentMargins,
-                    baseContentMargins,
-                    baseContentMargins,
-                    DPUtils.dp2px(8f))
+                if (data.getReplyMsgClientMsgId() == null||!isGroupChat) llContent.setPadding(0, 0, 0, 0)
+                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
             } else if (v is IMContentAudioView && data.getSelfUserId() == data.getSenderId()) {
                 if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
-                else llContent.setPadding(baseContentMargins,
-                    baseContentMargins,
-                    baseContentMargins,
-                    DPUtils.dp2px(8f))
+                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
             } else if (data.getSenderId() != data.getSelfUserId()) {
-                if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(baseContentMargins,
-                    DPUtils.dp2px(6f),
-                    baseContentMargins,
-                    baseContentMargins)
-                else llContent.setPadding(baseContentMargins,
-                    DPUtils.dp2px(6f),
-                    baseContentMargins,
-                    DPUtils.dp2px(8f))
+                if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, baseContentMargins)
+                else llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, DPUtils.dp2px(8f))
             } else {
-                if (data.getReplyMsgClientMsgId() != null) {
-                    llContent.setPadding(baseContentMargins,
-                        baseContentMargins,
-                        baseContentMargins,
-                        DPUtils.dp2px(8f))
-                } else llContent.setPadding(baseContentMargins,
-                    baseContentMargins,
-                    baseContentMargins,
-                    baseContentMargins)
+                if (data.getReplyMsgClientMsgId() != null) { llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f)) }
+                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
             }
 
 
@@ -297,6 +285,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                         Log.d("LiXiang", "bubbleContent点击")
                         data.onViewLargePic()
                     }
+                }else if(data.getType() == UiMsgType.MSG_TYPE_AUDIO){
+                    curContentIn?.isGroupChat(isGroupChat)
                 }
                 bubbleContent.setOnLongClickListener {
                     Log.d("LiXiang", "bubbleContent长按点击响应")

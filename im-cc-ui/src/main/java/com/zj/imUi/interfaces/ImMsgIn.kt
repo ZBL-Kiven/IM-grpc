@@ -12,8 +12,6 @@ interface ImMsgIn {
 
     fun getReplyMsgId(): Long?
 
-    fun getSendingState(): Int
-
     fun getType(): String?
 
     fun getSendState(): Int
@@ -78,7 +76,21 @@ interface ImMsgIn {
     fun getReplyMsgQuestionSpark(): Int?
     fun getReplyMsgQuestionIsPublished(): Boolean?
 
+    fun getAnswerContentMsgType(): String?
+    fun getAnswerContentSendTime(): Long?
+    fun getAnswerContentSenderName(): String?
+    fun getAnswerContentSenderId(): Int?
+    fun getAnswerContentSenderAvatar(): String?
+    fun getAnswerContentTextContent(): String?
+    fun getAnswerContentImgContentUrl(): String?
+    fun getAnswerContentImgContentWidth(): Int?
+    fun getAnswerContentImgContentHeight(): Int?
+    fun getAnswerContentAudioContentUrl(): String?
+    fun getAnswerContentAudioContentDuration(): Long?
+
+
     /** ========================================= app interface ======================================== */
+
 
     fun getSelfUserId(): Int?
 
@@ -105,4 +117,9 @@ interface ImMsgIn {
     fun jumpToSenderRewardsPage()
 
     fun questionStatusOverdueChange()
+
+    //用户撤回
+    fun userRetractRewardMsg()
+    //删除发送失败的信息
+    fun deleteSendLossMsg()
 }

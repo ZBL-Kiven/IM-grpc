@@ -12,7 +12,7 @@
         android:id="@+id/im_msg_item_widget_reward_user_tv_reward_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/reward_text_color_not_reply"
+        android:textColor="@color/im_msg_reward_text_color_not_reply"
         android:textSize="17sp"
         android:textStyle="bold"
         tools:text="- 500" />

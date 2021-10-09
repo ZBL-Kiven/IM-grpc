@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="4dp"
-        android:textColor="@color/text_color_gray"
+        android:textColor="@color/im_msg_text_color_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:alpha="0.7"
@@ -32,7 +32,7 @@
             android:id="@+id/im_msg_item_owner_reward_bottom_tv_reward_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/im_msg_item_reward_number_color"
+            android:textColor="@color/im_msg_im_msg_item_reward_number_color"
             android:textSize="17sp"
             android:textStyle="bold"
             tools:text="+ 500" />

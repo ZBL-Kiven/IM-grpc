@@ -22,11 +22,20 @@ class IMContentTextView @JvmOverloads constructor(context: Context,
         setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
             Color.WHITE
         } else {
-            ContextCompat.getColor(context, R.color.message_textColor_replyMe)
+            ContextCompat.getColor(context, R.color.im_msg_message_textColor_replyMe)
         })
         if (data.getType() == UiMsgType.MSG_TYPE_TEXT) text = data.getTextContent()
+        else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+            //Q&A界面  回答文本
+            if (data.getSelfUserId() == data.getOwnerId()) {
+                setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
+            } else setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+            text = data.getAnswerContentTextContent()
+        }
     }
 
+    override fun isGroupChat(isGroupChat: Boolean) {
+    }
 
 
     override fun onResume(data: ImMsgIn?) {
