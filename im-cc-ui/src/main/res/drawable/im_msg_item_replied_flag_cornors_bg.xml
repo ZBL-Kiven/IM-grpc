@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <solid
-        android:color="@color/replied_bg"
+        android:color="@color/im_msg_replied_bg"
         />
     <corners
         android:topLeftRadius="5dp"
@@ -12,7 +12,7 @@
     </corners>
     <stroke
         android:width="2dp"
-        android:color="@color/replied_textview"
+        android:color="@color/im_msg_replied_textview"
         />
 </shape>
 

@@ -4,7 +4,7 @@
     android:layout_width="44dp"
     android:layout_height="44dp"
     android:id="@+id/im_msg_item_normal_cc_video_ll_jump"
-    tools:background="@color/text_color_red"
+    tools:background="@color/im_msg_text_color_red"
     >
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -28,7 +28,7 @@
         android:layout_height="10dp"
         android:layout_centerInParent="true"
         android:indeterminate="true"
-        android:indeterminateTint="@color/bg_gray_70"
+        android:indeterminateTint="@color/im_msg_bg_gray_70"
         android:visibility="gone"/>
 
 </RelativeLayout>

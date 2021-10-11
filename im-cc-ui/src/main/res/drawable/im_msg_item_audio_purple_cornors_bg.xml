@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <solid
-        android:color="@color/bg_purple"
+        android:color="@color/im_msg_bg_purple"
         />
     <corners
         android:topLeftRadius="0dp"

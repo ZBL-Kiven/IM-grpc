@@ -3,5 +3,5 @@
     <corners
         android:radius="4dp"/>
     <solid
-        android:color="@color/bg_origin"/>
+        android:color="@color/im_msg_bg_origin"/>
 </shape>

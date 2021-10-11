@@ -21,21 +21,13 @@ object BubbleRenderer : BaseBubbleRenderer {
         return null
     }
 
-    override fun drawBubble(context: Context,
-        canvas: Canvas,
-        data: ImMsgIn,
-        width: Int,
-        height: Int) {
-        drawBackGround(context, canvas, data, width, height)
+    override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,isGroupChat:Boolean) {
+        drawBackGround(context, canvas, data, width, height,isGroupChat)
     }
 
 
-    private fun drawBackGround(context: Context,
-        canvas: Canvas,
-        data: ImMsgIn,
-        width: Int,
-        height: Int) {
-        val mBgColorOrigin = ContextCompat.getColor(context, R.color.bg_origin)
+    private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,isGroupChat: Boolean) {
+        val mBgColorOrigin = ContextCompat.getColor(context, R.color.im_msg_bg_origin)
         isSelfMessage = data.getSelfUserId() == data.getSenderId()
         isOwner = data.getSenderId() == data.getOwnerId()
         if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic = data.getReplyMsgQuestionIsPublished() == true
@@ -44,7 +36,7 @@ object BubbleRenderer : BaseBubbleRenderer {
         val path = Path()
         paint.strokeWidth = 1f
         paint.style = Paint.Style.FILL
-        paint.color = setColor(context, data)
+        paint.color = setColor(context, data,isGroupChat)
         if (isSelfMessage) { //发送者为自己
             val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
             val radii = floatArrayOf(dpToPx(context, 8f),
@@ -100,36 +92,55 @@ object BubbleRenderer : BaseBubbleRenderer {
         return dipValue * scale + 0.5f
     }
 
-    private fun setColor(context: Context, data: ImMsgIn): Int {
-        return if (isSelfMessage) { //自己发送的消息
-            if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {
-                    ContextCompat.getColor(context, R.color.replied_bg)
+    private fun setColor(context: Context, data: ImMsgIn,isGroupChat: Boolean): Int {
+        return if (isGroupChat) {
+            if (isSelfMessage) { //自己发送的消息
+                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                    if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {
+                        ContextCompat.getColor(context, R.color.im_msg_replied_bg)
+                    } else {
+                        if (!data.getPublished()) { //打赏消息状态
+                            ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                        } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+                    }
+                } else if (data.getReplyMsgQuestionIsPublished() == false) {
+                    ContextCompat.getColor(context, R.color.im_msg_bg_purple)
+                } else if (data.getReplyMsgQuestionIsPublished() == true) {
+                    ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+                } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+            } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) ContextCompat.getColor(
+                    context,
+                    R.color.im_msg_replied_bg)
+                else if (data.getQuestionStatus() == 0 && !data.getPublished()) {
+                    ContextCompat.getColor(context, R.color.im_msg_message_item_private)
                 } else {
-                    if (!data.getPublished()) { //打赏消息状态
-                        ContextCompat.getColor(context, R.color.message_item_private)
-                    } else ContextCompat.getColor(context, R.color.bg_origin)
+                    ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                 }
-            } else if (data.getReplyMsgQuestionIsPublished() == false) {
-                ContextCompat.getColor(context, R.color.bg_purple)
-            } else if (data.getReplyMsgQuestionIsPublished() == true) {
-                ContextCompat.getColor(context, R.color.bg_origin)
-            } else ContextCompat.getColor(context, R.color.bg_origin)
-        } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) ContextCompat.getColor(
+            } else if (data.getReplyMsgQuestionIsPublished() == false) ContextCompat.getColor(
                 context,
-                R.color.replied_bg)
-            else if (data.getQuestionStatus() == 0 && !data.getPublished()) {
-                ContextCompat.getColor(context, R.color.message_item_private)
-            } else {
-                ContextCompat.getColor(context, R.color.bg_color_white)
+                R.color.im_msg_message_item_private)
+            else if (data.getReplyMsgQuestionIsPublished() == true) ContextCompat.getColor(context,
+                R.color.im_msg_bg_color_white)
+            else {
+                ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
             }
-        } else if (data.getReplyMsgQuestionIsPublished() == false) ContextCompat.getColor(context,
-            R.color.message_item_private)
-        else if (data.getReplyMsgQuestionIsPublished() == true) ContextCompat.getColor(context,
-            R.color.bg_color_white)
-        else {
-            ContextCompat.getColor(context, R.color.bg_color_white)
+        } else {
+            if (isSelfMessage) {
+                ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+            } else { //其他人的消息
+                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION){
+                    if (data.getQuestionStatus() == 1) {
+                        ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
+                    } else {
+                        if (!data.getPublished()) { //打赏消息状态
+                            ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                        } else ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
+                    }
+                }else{
+                    ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
+                }
+            }
         }
     }
 }

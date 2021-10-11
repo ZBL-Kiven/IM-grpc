@@ -31,7 +31,7 @@ class IMBubbleNotAllowedTypeItem @JvmOverloads constructor(context: Context, att
         llName = findViewById(R.id.im_msg_bubble_content_not_allowed_type_ll_title)
         tvTip = findViewById(R.id.im_msg_bubble_content_not_allowed_type_tv_tip)
     }
-    override fun init(data: ImMsgIn) {
+    override fun init(data: ImMsgIn,isGroupChat:Boolean) {
         if (data.getSelfUserId() == data.getSenderId()) {
             llName.visibility = View.GONE
         } else {

@@ -88,8 +88,8 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     protected fun postError(throws: Throwable?, deadly: Boolean) {
-        throws?.let { DataReceivedDispatcher.postError(it, deadly) }
         postToClose(throws?.message ?: "UN_KNOW_ERROR")
+        throws?.let { DataReceivedDispatcher.postError(it, deadly) }
     }
 
     protected fun isConnected(): Boolean {

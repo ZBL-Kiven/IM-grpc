@@ -37,11 +37,14 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
-        if (arrayInt != null&&data.getType() == UiMsgType.MSG_TYPE_IMG) {
+        if (arrayInt != null) {
             loadImg(data, arrayInt)
-        }else{
+        } else{
             loadImg2(data)
         }
+    }
+
+    override fun isGroupChat(isGroupChat: Boolean) {
     }
 
     private fun loadImg(data: ImMsgIn, arrayInt: Array<Int>) {
@@ -51,9 +54,9 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
         val lp = FrameLayout.LayoutParams(arrayInt[0], arrayInt[1])
         layoutParams = lp
         val imgUrl: String? =
-            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgImgContent() != null) {
-                data.getReplyMsgImgContent()
-            } else data.getImgContentUrl()
+            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgImgContent() != null) { data.getReplyMsgImgContent() }
+            else if (data.getAnswerContentImgContentUrl()!=null) data.getAnswerContentImgContentUrl()
+            else data.getImgContentUrl()
 
         imgUrl?.let {
             Glide.with(this).load(it)

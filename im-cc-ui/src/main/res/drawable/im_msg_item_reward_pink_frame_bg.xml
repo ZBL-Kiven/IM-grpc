@@ -3,7 +3,7 @@
     <corners
         android:radius="4dp"/>
     <stroke
-        android:color="@color/frame_textview_changes_77"
+        android:color="@color/im_msg_frame_textview_changes_77"
         android:width="1dp"/>
     <solid
         android:color="#12F0723B"/>

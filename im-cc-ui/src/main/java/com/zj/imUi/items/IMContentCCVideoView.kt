@@ -65,7 +65,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
         //        imgCCVideoCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
     }
 
-    override fun init(data: ImMsgIn) {
+    override fun init(data: ImMsgIn,isGroupChat:Boolean) {
         if (childCount == 0) {
             addView(contentLayout)
         }
@@ -121,9 +121,9 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
             tvCCVideoTitle.text = data.getCCVideoContentVideoTitle()
             if (data.getSelfUserId() == data.getSenderId()) {
                 tvCCVideoTitle.setTextColor(ContextCompat.getColor(context,
-                    R.color.text_color_white))
+                    R.color.im_msg_text_color_white))
             } else tvCCVideoTitle.setTextColor(ContextCompat.getColor(context,
-                R.color.text_color_black))
+                R.color.im_msg_text_color_black))
 
         }
         val timeDiff: Long? = TimeDiffUtils.timeDifference(data.getSendTime())
@@ -137,9 +137,9 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
             } else tvCCVideoSendTime.visibility = View.GONE
         }
         if(data.getSelfUserId() == data.getSenderId()){
-            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.text_color_self_reply_others))
+            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_self_reply_others))
         }else
-            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.message_cc_video_send_time))
+            tvCCVideoSendTime.setTextColor(ContextCompat.getColor(context,R.color.im_msg_message_cc_video_send_time))
 
 
     }

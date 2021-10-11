@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:textColor="@color/text_color_gray_nickname"
+        android:textColor="@color/im_msg_text_color_gray_nickname"
         android:textSize="14sp"
         android:maxWidth="180dp"
         android:maxLines="1"

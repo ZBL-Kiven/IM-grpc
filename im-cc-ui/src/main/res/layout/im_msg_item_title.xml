@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:maxWidth="280dp"
     android:layout_height="wrap_content">
 
@@ -10,13 +10,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginEnd="12dp"
         android:ellipsize="end"
         android:maxWidth="150dp"
         android:maxLines="1"
-        android:textColor="@color/text_color_gray_nickname"
+        android:textColor="@color/im_msg_text_color_gray_nickname"
         android:textSize="14sp"
+        android:textStyle="bold"
         tools:text="Nickname" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/im_msg_item_title_tv_send_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/im_msg_item_title_tv_nickname"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:textSize="10sp"
+        tools:text="12m ago" />
 
     <com.zj.imUi.widget.GroupRewardItem
         android:id="@+id/im_msg_item_title_group_reward_item"

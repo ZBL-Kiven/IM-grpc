@@ -36,18 +36,18 @@ class GroupMessageItemTime @JvmOverloads constructor(context: Context, attribute
         mTimeTextView?.text = (TimeDiffUtils.timeDifference(imMsgIn.getSendTime()))?.let { TimeDiffUtils.setTimeText(it,context) }
 
         if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId() && imMsgIn.getPublished()){
-            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
         }else
-            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray))
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_gray))
     }
 
     fun setDataWithTime(sendTime: Long,imMsgIn: ImMsgIn) {
         mTimeTextView?.text = TimeDiffUtils.setTimeText(sendTime,context)
 
         if(imMsgIn.getQuestionStatus() == 0&&imMsgIn.getSenderId() == imMsgIn.getSelfUserId() && imMsgIn.getPublished()){
-            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_white))
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
         }else
-            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.text_color_gray))
+            mTimeTextView?.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_gray))
     }
 
 

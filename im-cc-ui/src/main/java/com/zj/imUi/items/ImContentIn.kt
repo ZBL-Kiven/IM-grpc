@@ -6,6 +6,8 @@ interface ImContentIn {
 
     fun onSetData(data: ImMsgIn?)
 
+    fun isGroupChat(isGroupChat:Boolean)
+
     fun onResume(data: ImMsgIn?)
 
     fun onStop(data: ImMsgIn?)

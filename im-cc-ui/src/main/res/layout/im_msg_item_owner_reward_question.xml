@@ -5,11 +5,11 @@
     android:layout_height="wrap_content"
     android:clipChildren="false"
     android:orientation="vertical"
-    tools:background="@color/message_textColor_me">
+    tools:background="@color/im_msg_message_textColor_me">
 
     <com.zj.imUi.widget.top.GroupMessageItemTitle
         android:id="@+id/im_msg_item_owner_reward_question_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:visibility="gone"
@@ -34,7 +34,7 @@
             android:id="@+id/im_msg_item_owner_reward_question_tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/message_textColor_meReplyOthers"
+            android:textColor="@color/im_msg_message_textColor_meReplyOthers"
             android:textStyle="bold"
             android:textSize="16sp"
             tools:text="Let's go hiking together！" />
@@ -42,6 +42,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/im_msg_item_owner_reward_ll_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -49,7 +50,7 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/im_msg_item_owner_reward_question_tv_type"
+            android:id="@+id/im_msg_item_owner_reward_question_tv_is_public"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginStart="32dp"
@@ -63,38 +64,57 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:textStyle="bold"
-            tools:text="Text"
+            tools:text="Public"
             />
-
-        <LinearLayout
-            android:id="@+id/im_msg_item_owner_reward_question_ll_countdown"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/im_msg_item_owner_reward_question_tv_type"
             android:layout_width="wrap_content"
             android:layout_height="24dp"
             android:layout_marginStart="8dp"
             android:background="@drawable/im_msg_item_reward_white_frame_bg"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingEnd="8dp">
+            android:maxWidth="160dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            tools:text="Text"
+            />
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/im_msg_item_owner_reward_question_img_countdown"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginLeft="4dp"
-                android:src="@drawable/im_msg_item_widget_reward_countdown_origin" />
+<!--        <LinearLayout-->
+<!--            android:id="@+id/im_msg_item_owner_reward_question_ll_countdown"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="24dp"-->
+<!--            android:layout_marginStart="8dp"-->
+<!--            android:background="@drawable/im_msg_item_reward_white_frame_bg"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:paddingEnd="8dp"-->
+<!--            android:visibility="gone"-->
+<!--            >-->
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/im_msg_item_owner_reward_question_tv_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:text="24h" />
+<!--            <androidx.appcompat.widget.AppCompatImageView-->
+<!--                android:id="@+id/im_msg_item_owner_reward_question_img_countdown"-->
+<!--                android:layout_width="20dp"-->
+<!--                android:layout_height="20dp"-->
+<!--                android:layout_marginLeft="4dp"-->
+<!--                android:src="@drawable/im_msg_item_widget_reward_countdown_origin" />-->
 
-        </LinearLayout>
+<!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/im_msg_item_owner_reward_question_tv_countdown"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="2dp"-->
+<!--                android:gravity="center"-->
+<!--                android:textColor="@android:color/white"-->
+<!--                android:textSize="12sp"-->
+<!--                android:textStyle="bold"-->
+<!--                tools:text="24h" />-->
+
+<!--        </LinearLayout>-->
 
     </LinearLayout>
 
@@ -112,31 +132,108 @@
         android:textSize="14sp"
         android:visibility="gone"
         tools:text="REPLY BY TEXT"
+        tools:visibility="visible"
         android:textStyle="bold"/>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/im_msg_item_reward_gray3_frame_bg"
+        android:id="@+id/im_msg_item_reward_ll_reply_content"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/im_msg_item_owner_tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="liX" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/im_msg_item_owner_tv_reply_time"
+                tools:text = "12 m ago"
+                android:layout_alignParentEnd="true"
+                />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="12dp">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/im_msg_item_user_frame_reply_content"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        tools:background="@color/im_msg_replied_bg"
+        android:id="@+id/im_msg_item_owner_ll_reply_content"
+        >
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:src="@drawable/im_msg_item_widget_reward_icon_answer_normal"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/im_msg_item_owner_frame_reply_content"
+            />
+    </LinearLayout>
+
+
 
     <FrameLayout
         android:id="@+id/im_msg_item_owner_reward_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false">
-
-        <com.zj.imUi.widget.bottom.GroupMessageItemTime
-            android:id="@+id/im_msg_item_owner_reward_question_bottom_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:visibility="gone"
-            tools:visibility="visible"
-            />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="140dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="35dp"
-            android:layout_marginTop="-40dp"
+            android:layout_marginTop="-200dp"
             android:alpha="0.4"
             android:background="@drawable/im_msg_item_replied_flag_cornors_bg"
             android:paddingLeft="20dp"
@@ -145,7 +242,7 @@
             android:paddingBottom="2dp"
             android:rotation="-25"
             android:text="@string/im_ui_replied"
-            android:textColor="@color/replied_textview"
+            android:textColor="@color/im_msg_replied_textview"
             android:textSize="18sp"
             android:textStyle="bold"
             android:visibility="gone"

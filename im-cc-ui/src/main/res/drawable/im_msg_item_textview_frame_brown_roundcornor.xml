@@ -3,8 +3,8 @@
     <corners
         android:radius="4dp"/>
     <stroke
-        android:color="@color/frame_textview_brown_70"
+        android:color="@color/im_msg_frame_textview_brown_70"
         android:width="1dp"/>
     <solid
-        android:color="@color/bg_origin_70" />
+        android:color="@color/im_msg_bg_origin_70" />
 </shape>

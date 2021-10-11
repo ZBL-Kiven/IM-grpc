@@ -7,6 +7,7 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
+import com.zj.imUi.MsgType
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
@@ -73,6 +74,12 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
+        isGroupChat?.let {
+            if (!it){
+                if (data.getSelfUserId() ==data.getSenderId()&&(data.getType() == UiMsgType.MSG_TYPE_IMG||data.getType() == UiMsgType.MSG_TYPE_AUDIO))
+                    return null
+            }
+        }
         return BubbleRenderer
     }
 

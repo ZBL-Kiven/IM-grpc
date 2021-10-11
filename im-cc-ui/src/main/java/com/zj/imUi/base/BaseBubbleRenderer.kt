@@ -10,11 +10,11 @@ interface BaseBubbleRenderer {
 
     fun getBubble(context: Context, data: ImMsgIn, width: Int, height: Int): Drawable?
 
-    fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int)
+    fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,isGroupChat: Boolean)
 
-    fun onDrawBubble(context: Context, canvas: Canvas?, data: ImMsgIn, width: Int, height: Int) {
+    fun onDrawBubble(context: Context, canvas: Canvas?, data: ImMsgIn, width: Int, height: Int,isGroupChat:Boolean) {
         canvas?.save()?.let {
-            drawBubble(context, canvas, data, width, height)
+            drawBubble(context, canvas, data, width, height,isGroupChat)
             canvas.restoreToCount(it)
         }
     }
