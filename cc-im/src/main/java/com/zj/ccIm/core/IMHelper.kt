@@ -77,9 +77,9 @@ object IMHelper : IMInterface<Any?>() {
         Fetcher.refresh(GroupSessionFetcher)
     }
 
-    fun refreshOrGetChatMsg(bean: LastMsgReqBean? = lastMsgRegister) {
-        pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        bean?.let { routeToServer(bean, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES) }
+    fun getChatMsg(bean: LastMsgReqBean, callId: String) {
+        bean.callIdPrivate = callId
+        routeToServer(bean, Constance.CALL_ID_GET_MORE_MESSAGES)
     }
 
     fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {
@@ -119,7 +119,7 @@ object IMHelper : IMInterface<Any?>() {
             if (hasPrivateOwnerType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
             if (hasPrivateFansType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
         }
-        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, 0, channel)
+        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, null, channel)
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
@@ -171,7 +171,8 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     internal fun onMsgRegistered(lrb: LastMsgReqBean) {
-        refreshOrGetChatMsg(lrb)
+        pause(Constance.FETCH_OFFLINE_MSG_CODE)
+        routeToServer(lrb, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
     }
 
     fun close() {

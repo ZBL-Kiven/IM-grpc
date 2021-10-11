@@ -26,10 +26,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsgId
     }
 
-    override fun getSendingState(): Int {
-        return info?.sendingState ?: 0
-    }
-
     override fun getSendState(): Int {
         return info?.sendingState ?: SendMsgState.NONE.type
     }
@@ -211,6 +207,50 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.questionContent?.published
     }
 
+    override fun getAnswerContentMsgType(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentSendTime(): Long? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentSenderName(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentSenderId(): Int? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentSenderAvatar(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentTextContent(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentImgContentUrl(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentImgContentWidth(): Int? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentImgContentHeight(): Int? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentAudioContentUrl(): String? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAnswerContentAudioContentDuration(): Long? {
+        TODO("Not yet implemented")
+    }
+
     override fun getSelfUserId(): Int {
         return IMConfig.getUserId()
     }
@@ -263,6 +303,14 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun questionStatusOverdueChange() {
 
+    }
+
+    override fun userRetractRewardMsg() {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteSendLossMsg() {
+        TODO("Not yet implemented")
     }
 
 }

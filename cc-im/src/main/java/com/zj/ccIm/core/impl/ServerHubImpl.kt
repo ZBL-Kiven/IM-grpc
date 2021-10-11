@@ -1,22 +1,24 @@
 package com.zj.ccIm.core.impl
 
 import android.app.Application
-import com.zj.ccIm.core.Constance
-import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.SendMessageRespEn
-import com.zj.database.entity.SendMessageReqEn
-import com.zj.im.chat.interfaces.SendingCallBack
-import com.zj.protocol.grpc.*
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
+import java.lang.NullPointerException
 import com.zj.api.BaseApi
 import com.zj.api.base.BaseRetrofit
 import com.zj.api.utils.LoggerInterface
+import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.chat.interfaces.SendingCallBack
+import com.zj.protocol.grpc.*
+import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
+import com.zj.ccIm.core.bean.GetMoreMessagesInfo
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.ccIm.logger.ImLogs
 
@@ -62,6 +64,9 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         when (callId) {
             Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
                 if (isConnected()) getOfflineMessage(callId, data)
+            }
+            Constance.CALL_ID_GET_MORE_MESSAGES -> {
+                getOfflineMessage(callId, data, true)
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 deleteSession(data as DeleteSessionInfo)
@@ -159,14 +164,20 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     /**
      * Get the latest news of the conversation during the offline period, here is a distinction between group and single chat
      * */
-    private fun getOfflineMessage(callId: String, d: Any?) {
+    private fun getOfflineMessage(callId: String, d: Any?, fromType: Boolean = false) {
         val rq = (d as? LastMsgReqBean) ?: return
-        getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t ->
-            ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")
-            if (isOk && data != null) {
-                postReceivedMessage(callId, data, true, 0)
-                postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, rq, true, 0)
-            } else onParseError(t, false)
+        if (fromType && d.type == null) throw NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
+        getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t, a ->
+            if (fromType) {
+                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, data, d, a, t)
+                postReceivedMessage(callId, rsp, true, 0)
+            } else {
+                ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")
+                if (isOk && data != null) {
+                    postReceivedMessage(callId, data, true, 0)
+                    postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, rq, true, 0)
+                } else onParseError(t, false)
+            }
         }
     }
 

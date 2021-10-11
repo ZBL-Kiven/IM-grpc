@@ -35,11 +35,10 @@ object ImApi {
         return BaseApi.create<FunctionApi>(EH).baseUrl(baseUrl).header(header).build()
     }
 
-    fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?) -> Unit): BaseRetrofit.RequestCompo? {
+    fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
         val channelString = param.channels.map { it.serializeName }.toTypedArray()
-        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = channelString) }, result)
+        return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = channelString) }, result)
     }
-
 
     object EH : ErrorHandler {
 

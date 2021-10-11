@@ -108,7 +108,7 @@ class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
             onDispatchSentErrorMsg(d as LastMsgReqBean)
         }
-        if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
+        if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_MESSAGES) == true) {
             return false
         }
         return interruptDefault

@@ -43,11 +43,10 @@ internal object Constance {
 
     const val CALL_ID_DELETE_SESSION = INTERNAL_CALL_ID_PREFIX + "_delete_session"
 
-    const val CALL_ID_GET_OFFLINE_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_offline"
-    const val CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS = CALL_ID_GET_OFFLINE_MESSAGES + "_done"
-
-
-    const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_OFFLINE_MESSAGES + "_chat_messages"
+    const val CALL_ID_GET_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_message"
+    const val CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS = CALL_ID_GET_MESSAGES + "_offline_done"
+    const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_MESSAGES + "_offline"
+    const val CALL_ID_GET_MORE_MESSAGES = CALL_ID_GET_MESSAGES + "_more"
 
     /**-------------------------- TOPIC CHANNEL ------------------------------*/
 

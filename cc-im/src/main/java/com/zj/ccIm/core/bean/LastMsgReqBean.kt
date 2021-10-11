@@ -3,9 +3,11 @@ package com.zj.ccIm.core.bean
 import com.zj.ccIm.annos.MsgFetchType
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 
-data class LastMsgReqBean(val groupId: Long, val ownerId: Long, val targetUserid: Long?, val msgId: Long?, @MsgFetchType val type: Int, var channels: Array<out FetchMsgChannel>) {
+data class LastMsgReqBean constructor(val groupId: Long, val ownerId: Long, val targetUserid: Long?, val msgId: Long?, @MsgFetchType val type: Int? = null, var channels: Array<out FetchMsgChannel>) {
 
     private var channel: List<String>? = null
+
+    internal var callIdPrivate: String = ""
 
     internal fun setChannels() {
         val lst = arrayListOf<FetchMsgChannel>()
