@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.okhttp.Dispatcher
 import java.lang.StringBuilder
 import java.util.*
 import com.zj.album.AlbumIns
@@ -21,6 +20,8 @@ import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.GetMoreMessagesInfo
+import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.fecher.FetchMsgChannel
@@ -100,7 +101,8 @@ class MainActivity : AppCompatActivity() {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-        IMHelper.updateSessionStatus(groupId, null, 1)
+        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
+        IMHelper.getChatMsg(bean, "GET_0")
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -154,7 +156,11 @@ class MainActivity : AppCompatActivity() {
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
             }
-            if (!list.isNullOrEmpty() && pl == "internal_call_get_offline_group_messages") adapter?.change(list)
+            if (!list.isNullOrEmpty() && pl == FetchMsgChannel.OWNER_CLAP_HOUSE.serializeName) adapter?.change(list)
+        }
+
+        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131).listen { r, lr, payload ->
+            Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
         IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, pl ->

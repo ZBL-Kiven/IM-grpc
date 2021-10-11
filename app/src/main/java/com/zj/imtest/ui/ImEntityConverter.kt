@@ -1,7 +1,6 @@
 package com.zj.imtest.ui
 
 import android.util.Log
-import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.sender.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
@@ -9,6 +8,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.IMConfig
 
 class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
+
 
     override fun getOwnerId(): Int? {
         return info?.ownerId
@@ -25,6 +25,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     override fun getReplyMsgId(): Long? {
         return info?.replyMsgId
     }
+
 
     override fun getSendState(): Int {
         return info?.sendingState ?: SendMsgState.NONE.type
@@ -43,10 +44,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getTextContent(): String? {
-        return info?.textContent?.text
+        return info?.textContent?.text //        return "this is a normal message ???so what should i expression,emmm,dadada biubiubiubh h hg jj"
     }
 
-    override fun getType(): String? {
+    override fun getType(): String? { //        return "cc_video"
+        //        return "audio"
         return info?.msgType
     }
 
@@ -64,31 +66,32 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getImgContentHeight(): Int? {
         return info?.imgContent?.height
-
     }
 
-    override fun getAudioContentUrl(): String? {
+    override fun getAudioContentUrl(): String? { //        return "dauagiueagwdaweywaoew"
         return info?.audioContent?.url
     }
 
-    override fun getAudioContentDuration(): Long? {
+    override fun getAudioContentDuration(): Long? { //        return 22
         return info?.audioContent?.duration
     }
 
-    override fun getCCVideoContentImgPreviewRemoteStorageUrl(): String? {
-        return ""
+
+    override fun getCCVideoContentImgPreviewRemoteStorageUrl(): String? { //        return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
+        return info?.ccVideoContent?.imgPreviewRemoteStorageUrl
+
     }
 
     override fun getCCVideoContentVideoId(): String? {
-        return ""
+        return null
     }
 
     override fun getCCVideoContentVideoDescribe(): String? {
-        return ""
+        return null
     }
 
     override fun getCCVideoContentVideoTitle(): String? {
-        return ""
+        return null
     }
 
     //打赏相关
@@ -96,6 +99,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     override fun getAnswerMsgType(): String? {
         return info?.questionContent?.answerMsgType
     }
+
 
     override fun getQuestionContentType(): String? {
         return info?.questionContent?.contentType
@@ -105,16 +109,20 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.questionContent?.diamond ?: 0
     }
 
-    override fun getExpireTime(): Long {
-        return info?.questionContent?.expireTime ?: 0
+    override fun getExpireTime(): Long { //        return 3600000
+        return info?.questionContent?.expireTime ?: 0 //        return  0
+        //        return  if (a == 0) 60000
+        //        else 36600000
     }
+
 
     override fun getSpark(): Int {
-        return info?.questionContent?.spark ?: 0
+        return info?.questionContent?.spark ?: 0 //        return 10000
     }
 
+
     override fun getPublished(): Boolean {
-        return info?.questionContent?.published ?: true
+        return info?.questionContent?.published ?: true //            return  false
     }
 
     override fun getQuestionId(): Int {
@@ -122,7 +130,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getQuestionStatus(): Int {
-        return info?.questionContent?.questionStatus ?: 0
+        return 0 //        return info?.questionContent?.questionStatus ?: -2
     }
 
     override fun getQuestionTextContent(): String? {
@@ -138,33 +146,41 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.textContent?.text
     }
 
-    override fun getReplyMsgImgContent(): String? {
-        return null
-    }
-
-    override fun getReplyMsgImgWidth(): Int? {
-        return 0
-    }
-
-    override fun getReplyMsgImgHeight(): Int? {
-        return 0
-    }
-
-    override fun getReplyMsgCCVideoCoverContent(): String? {
-        return null
+    override fun getReplyMsgCCVideoCoverContent(): String? { //                return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
+        return info?.replyMsg?.ccVideoContent?.imgPreviewRemoteStorageUrl
     }
 
     override fun getReplyMsgCCVideoId(): String? {
-        return null
+        return info?.replyMsg?.ccVideoContent?.videoId
     }
 
-    override fun getReplyMsgType(): String? {
+    override fun getReplyMsgImgContent(): String? {
+        return info?.replyMsg?.imgContent?.url
+    }
+
+    override fun getReplyMsgImgWidth(): Int? {
+        return info?.replyMsg?.imgContent?.width
+    }
+
+    override fun getReplyMsgImgHeight(): Int? {
+        return info?.replyMsg?.imgContent?.height
+    }
+
+    override fun getReplyMsgType(): String? { //        return "cc_video"
         return info?.replyMsg?.msgType
     }
 
 
-    override fun getReplyMsgClientMsgId(): String? {
+    override fun getReplyMsgClientMsgId(): String? { //        return "asfaewdw"
         return info?.replyMsg?.clientMsgId
+    }
+
+    override fun getReplySenderId(): Int {
+        return info?.replyMsg?.sender?.senderId ?: 0
+    }
+
+    override fun getReplySenderName(): String? { //        return  "123"
+        return info?.replyMsg?.sender?.senderName
     }
 
     override fun getReplyMsgCreateTs(): Long? {
@@ -187,13 +203,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.sendingState ?: -2
     }
 
-    override fun getReplySenderId(): Int {
-        return info?.replyMsg?.sender?.senderId ?: 0
-    }
-
-    override fun getReplySenderName(): String? {
-        return info?.replyMsg?.sender?.senderName
-    }
 
     override fun getReplyMsgQuestionContent(): String? {
         return info?.replyMsg?.questionContent?.textContent?.text
@@ -208,47 +217,47 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getAnswerContentMsgType(): String? {
-        TODO("Not yet implemented")
+        return "text"
     }
 
     override fun getAnswerContentSendTime(): Long? {
-        TODO("Not yet implemented")
+        return 170000000
     }
 
     override fun getAnswerContentSenderName(): String? {
-        TODO("Not yet implemented")
+        return "亚尔总"
     }
 
     override fun getAnswerContentSenderId(): Int? {
-        TODO("Not yet implemented")
+        return 2222
     }
 
     override fun getAnswerContentSenderAvatar(): String? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun getAnswerContentTextContent(): String? {
-        TODO("Not yet implemented")
+        return "回答文本"
     }
 
     override fun getAnswerContentImgContentUrl(): String? {
-        TODO("Not yet implemented")
+        return null //         return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
     }
 
     override fun getAnswerContentImgContentWidth(): Int? {
-        TODO("Not yet implemented")
+        return 400
     }
 
     override fun getAnswerContentImgContentHeight(): Int? {
-        TODO("Not yet implemented")
+        return 400
     }
 
     override fun getAnswerContentAudioContentUrl(): String? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun getAnswerContentAudioContentDuration(): Long? {
-        TODO("Not yet implemented")
+        return null
     }
 
     override fun getSelfUserId(): Int {
@@ -282,35 +291,30 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun onReplyQuestion() {
-
     }
 
     override fun onViewLargePic() {
-
     }
 
     override fun jumpToVideoDetails() {
-
     }
+
 
     override fun jumpToUserHomePage() {
 
     }
 
     override fun jumpToSenderRewardsPage() {
-
     }
 
     override fun questionStatusOverdueChange() {
-
+        info?.questionContent?.questionStatus = 2
     }
 
     override fun userRetractRewardMsg() {
-        TODO("Not yet implemented")
     }
 
     override fun deleteSendLossMsg() {
-        TODO("Not yet implemented")
     }
 
 }

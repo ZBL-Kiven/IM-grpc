@@ -9,9 +9,9 @@ enum class FetchMsgChannel(val serializeName: String, val classification: Int) {
 
     OWNER_CLAP_HOUSE("owner_clap_house", 0),
     OWNER_MESSAGE("owner_message", 0),
-    OWNER_PRIVATE("owner_private", 1),
     FANS_CLAP_HOUSE("fans_clap_house", 0),
     FANS_MESSAGE("fans_message", 0),
+    OWNER_PRIVATE("owner_private", 1),
     FANS_PRIVATE("fans_private", 2);
 
 }

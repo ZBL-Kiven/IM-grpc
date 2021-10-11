@@ -1,13 +1,13 @@
 package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.bean.LastMsgReqBean
+import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.database.ut.Constance
 
 internal object BadgeDbOperator {
 
-    fun clearGroupBadge(info: LastMsgReqBean) {
+    fun clearGroupBadge(info: GetMsgReqBean) {
         var hasGroupType = false
         var hasPrivateOwnerType = false
         var hasPrivateFansType = false

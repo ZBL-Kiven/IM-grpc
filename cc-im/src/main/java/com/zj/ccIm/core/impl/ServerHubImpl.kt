@@ -19,7 +19,7 @@ import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
-import com.zj.ccIm.core.bean.LastMsgReqBean
+import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.logger.ImLogs
 
 class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
@@ -165,7 +165,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * Get the latest news of the conversation during the offline period, here is a distinction between group and single chat
      * */
     private fun getOfflineMessage(callId: String, d: Any?, fromType: Boolean = false) {
-        val rq = (d as? LastMsgReqBean) ?: return
+        val rq = (d as? GetMsgReqBean) ?: return
         if (fromType && d.type == null) throw NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
         getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t, a ->
             if (fromType) {

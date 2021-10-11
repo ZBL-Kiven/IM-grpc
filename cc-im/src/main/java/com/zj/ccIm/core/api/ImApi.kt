@@ -9,7 +9,7 @@ import com.zj.ccIm.core.IMHelper
 import retrofit2.HttpException
 import com.google.gson.Gson
 import com.zj.api.base.BaseRetrofit
-import com.zj.ccIm.core.bean.LastMsgReqBean
+import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.database.entity.MessageInfoEntity
 import java.net.UnknownHostException
 
@@ -35,7 +35,7 @@ object ImApi {
         return BaseApi.create<FunctionApi>(EH).baseUrl(baseUrl).header(header).build()
     }
 
-    fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
+    fun getMsgList(param: GetMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
         val channelString = param.channels.map { it.serializeName }.toTypedArray()
         return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = channelString) }, result)
     }

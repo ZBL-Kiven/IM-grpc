@@ -68,7 +68,9 @@ class ClientHubImpl : ClientHub<Any?>() {
                         }
                         payload = k
                         d = trans
+                        IMHelper.postToUiObservers(d, payload)
                     }
+                    onFinish();return
                 }
                 else -> {
                     if (d is Collection<*>) {
@@ -99,14 +101,15 @@ class ClientHubImpl : ClientHub<Any?>() {
     private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            val channel = Gson().fromJson(d?.toString(), LastMsgReqBean::class.java)
+            val channel = Gson().fromJson(d?.toString(), GetMsgReqBean::class.java)
             channel.setChannels()
             IMHelper.onMsgRegistered(channel)
             return true
         }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
             IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
-            onDispatchSentErrorMsg(d as LastMsgReqBean)
+            onDispatchSentErrorMsg(d as GetMsgReqBean)
+            return true
         }
         if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_MESSAGES) == true) {
             return false
@@ -164,7 +167,7 @@ class ClientHubImpl : ClientHub<Any?>() {
                 PrivateOwnerDbOperator.notifyAllSession(callId)
             }
             Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                BadgeDbOperator.clearGroupBadge(data as? LastMsgReqBean ?: return)
+                BadgeDbOperator.clearGroupBadge(data as? GetMsgReqBean ?: return)
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 val d = data as DeleteSessionInfo
@@ -181,7 +184,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         }
     }
 
-    private fun onDispatchSentErrorMsg(bean: LastMsgReqBean) {
+    private fun onDispatchSentErrorMsg(bean: GetMsgReqBean) {
         IMHelper.withDb {
             val resendMsg = it.sendMsgDao().findAllBySessionId(bean.groupId)
             resendMsg?.forEach { msg ->

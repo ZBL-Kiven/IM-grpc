@@ -123,7 +123,7 @@ object Sender {
 
     fun resendMessage(clientId: String) {
         IMHelper.withDb {
-            it?.sendMsgDao()?.findByCallId(clientId)
+            it.sendMsgDao().findByCallId(clientId)
         }?.let { resendMessage(it) }
     }
 

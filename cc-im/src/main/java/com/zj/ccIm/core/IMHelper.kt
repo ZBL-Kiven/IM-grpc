@@ -34,7 +34,7 @@ import com.zj.database.entity.SessionLastMsgInfo
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object IMHelper : IMInterface<Any?>() {
 
-    private var lastMsgRegister: LastMsgReqBean? = null
+    private var lastMsgRegister: GetMsgReqBean? = null
     internal lateinit var imConfig: ImConfigIn
 
     fun init(app: Application, imConfig: ImConfigIn) {
@@ -77,7 +77,7 @@ object IMHelper : IMInterface<Any?>() {
         Fetcher.refresh(GroupSessionFetcher)
     }
 
-    fun getChatMsg(bean: LastMsgReqBean, callId: String) {
+    fun getChatMsg(bean: GetMsgReqBean, callId: String) {
         bean.callIdPrivate = callId
         routeToServer(bean, Constance.CALL_ID_GET_MORE_MESSAGES)
     }
@@ -119,7 +119,7 @@ object IMHelper : IMInterface<Any?>() {
             if (hasPrivateOwnerType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
             if (hasPrivateFansType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
         }
-        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, null, channel)
+        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId, targetUserId, null, null, channel)
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
@@ -170,7 +170,7 @@ object IMHelper : IMInterface<Any?>() {
         super.postToUi(data, payload, onFinish ?: {})
     }
 
-    internal fun onMsgRegistered(lrb: LastMsgReqBean) {
+    internal fun onMsgRegistered(lrb: GetMsgReqBean) {
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         routeToServer(lrb, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
     }
