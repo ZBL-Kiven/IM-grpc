@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.zj.database.converter.MessageConverter
+import com.zj.database.ut.Constance
+import com.zj.database.ut.LastMsgTabType
+import java.lang.IllegalArgumentException
 
 @Entity(tableName = "SessionMsgInfo")
 class SessionLastMsgInfo {
@@ -12,7 +15,15 @@ class SessionLastMsgInfo {
     /**
      * the key set of , groupId in public chat , ownerId in private owner chat , -userId in private user chat.
      * */
-    @PrimaryKey var groupId: Long = -1
+    @PrimaryKey var key: String = ""
+
+    var tabType: String = ""
+
+    var groupId: Long = -1
+
+    var ownerId: Int = -1
+
+    var targetUserId: Int = -1
 
     // Last interactive message
     @TypeConverters(MessageConverter::class) var newMsg: MessageInfoEntity? = null
@@ -34,4 +45,15 @@ class SessionLastMsgInfo {
 
     // question message count
     var questionNum: Int = 0
+
+    companion object {
+        fun generateKey(@LastMsgTabType type: String, groupId: Long = -1, ownerId: Int = -1, userId: Int = -1): String {
+            return when (type) {
+                Constance.KEY_OF_PRIVATE_FANS -> Constance.generateKeyByTypedIds(type, userId)
+                Constance.KEY_OF_PRIVATE_OWNER -> Constance.generateKeyByTypedIds(type, ownerId)
+                Constance.KEY_OF_SESSIONS -> Constance.generateKeyByTypedIds(type, groupId)
+                else -> throw IllegalArgumentException("no such type-value can compile this key!")
+            }
+        }
+    }
 }

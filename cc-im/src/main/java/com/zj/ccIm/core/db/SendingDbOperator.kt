@@ -46,10 +46,11 @@ internal object SendingDbOperator {
             SendMsgState.FAIL, SendMsgState.TIME_OUT -> {
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
-                if (d.msgStatus == 1) sendDb?.deleteByCallId(d.clientMsgId)
+                if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE
                     d.msgStatus == 1 -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
+                    d.msgStatus == 2 -> ClientHubImpl.PAYLOAD_DELETE_FROM_NOT_FOLLOWING
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)

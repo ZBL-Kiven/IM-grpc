@@ -16,7 +16,6 @@ import com.zj.api.base.BaseRetrofit
 import com.zj.api.utils.LoggerInterface
 import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.api.IMRecordSizeApi
-import com.zj.ccIm.core.api.ImApi.EH.SENSITIVE_WORDS
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.LastMsgReqBean
 import com.zj.ccIm.logger.ImLogs
@@ -88,16 +87,11 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
                 when ((a as? ImApi.EH.HttpErrorBody)?.code) {
-                    SENSITIVE_WORDS -> {
-                        if (resp == null) resp = SendMessageRespEn().apply {
-                            this.clientMsgId = d.clientMsgId
-                            this.msgStatus = 1
-                            this.groupId = d.groupId
-                            this.diamondNum = d.diamondNum
-                            this.published = d.public
-                        } else {
-                            resp.msgStatus = 1
-                        }
+                    ImApi.EH.SENSITIVE_WORDS -> {
+                        resp = setErrorMsgResult(resp, d, 1)
+                    }
+                    ImApi.EH.NOT_FOLLOWING -> {
+                        resp = setErrorMsgResult(resp, d, 2)
                     }
                 }
             }
@@ -221,6 +215,20 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             else -> throw java.lang.IllegalArgumentException()
         }
         ImApi.getFunctionApi().call({ it.deleteSession(data.groupId, data.targetId, type) })
+    }
+
+    private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {
+        var resp = r
+        if (resp == null) resp = SendMessageRespEn().apply {
+            this.clientMsgId = d.clientMsgId
+            this.msgStatus = status
+            this.groupId = d.groupId
+            this.diamondNum = d.diamondNum
+            this.published = d.public
+        } else {
+            resp.msgStatus = status
+        }
+        return resp
     }
 
     override fun onParseError(t: Throwable?, deadly: Boolean) {

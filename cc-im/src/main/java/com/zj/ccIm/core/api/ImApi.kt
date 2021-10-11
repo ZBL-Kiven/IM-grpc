@@ -36,7 +36,8 @@ object ImApi {
     }
 
     fun getMsgList(param: LastMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?) -> Unit): BaseRetrofit.RequestCompo? {
-        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = param.channel) }, result)
+        val channelString = param.channels.map { it.serializeName }.toTypedArray()
+        return getRecordApi().call({ it.getMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, channels = channelString) }, result)
     }
 
 
@@ -70,6 +71,7 @@ object ImApi {
 
         private const val SERVER_ERROR = 555
         const val SENSITIVE_WORDS = 20004
+        const val NOT_FOLLOWING = 20006
 
         class HttpErrorBody {
             var code: Int = 0

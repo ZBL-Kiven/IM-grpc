@@ -4,8 +4,6 @@ import android.app.Application
 import android.app.Notification
 import android.util.Log
 import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.LastMsgReqBean
-import com.zj.ccIm.core.bean.SessionConfigReqEn
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.hub.ClientHub
@@ -20,7 +18,6 @@ import com.zj.database.entity.SessionInfoEntity
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
 import com.zj.ccIm.annos.DeleteSessionType
-import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.PrivateOwnerEntity
@@ -28,7 +25,10 @@ import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.RequestBody
 import com.google.gson.Gson
-import com.zj.ccIm.core.bean.DeleteSessionInfo
+import com.zj.ccIm.BuildConfig
+import com.zj.ccIm.core.bean.*
+import com.zj.ccIm.core.fecher.GroupSessionFetcher
+import com.zj.database.entity.SessionLastMsgInfo
 
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
@@ -56,6 +56,7 @@ object IMHelper : IMInterface<Any?>() {
 
     override fun onError(e: Throwable) {
         Log.e("------ ", "IM Error case : ${e.message}")
+        if (BuildConfig.DEBUG) throw  e
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {
@@ -73,7 +74,7 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun refreshSessions() {
-        Fetcher.onFetchSessions(true)
+        Fetcher.refresh(GroupSessionFetcher)
     }
 
     fun refreshOrGetChatMsg(bean: LastMsgReqBean? = lastMsgRegister) {
@@ -90,7 +91,8 @@ object IMHelper : IMInterface<Any?>() {
                     val sd = DbHelper.get(it)?.db?.sessionDao()
                     val smd = DbHelper.get(it)?.db?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
-                    val localMsg = smd?.findSessionMsgInfoBySessionId(d.groupId)
+                    val mk = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, d.groupId)
+                    val localMsg = smd?.findSessionMsgInfoByKey(mk)
                     local?.updateConfigs(disturbType, top, groupName, des)
                     local?.sessionMsgInfo = localMsg
                     if (local != null) {
@@ -103,21 +105,30 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun registerChatRoom(groupId: Long, ownerId: Long, targetUserId: Long? = null, vararg channel: FetchMsgChannel) {
-        val names = channel.map { it.serializeName }
-        this.registerChatRoom(groupId, ownerId, targetUserId, *names.toTypedArray())
-    }
-
-    private fun registerChatRoom(groupId: Long, ownerId: Long, targetUserId: Long? = null, vararg channel: String) {
+        val errorMsg = "your call register with channels $channel , but %s is invalid"
+        catching {
+            var hasGroupType = false
+            var hasPrivateOwnerType = false
+            var hasPrivateFansType = false
+            channel.forEach {
+                if (it.classification == 0) hasGroupType = true
+                if (it.classification == 1) hasPrivateOwnerType = true
+                if (it.classification == 2) hasPrivateFansType = true
+            }
+            if (hasGroupType && groupId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "groupId"))
+            if (hasPrivateOwnerType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
+            if (hasPrivateFansType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
+        }
+        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, 0, channel)
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
         data.ownerId = ownerId
         data.targetUserid = targetUserId ?: 0
-        channel.forEach { data.addChannel(it) }
-        this.lastMsgRegister = LastMsgReqBean(groupId, ownerId, targetUserId, null, 0, channel)
+        channel.forEach { data.addChannel(it.serializeName) }
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+        clearBadges()
     }
 
     fun leaveChatRoom(groupId: Long) {
@@ -126,7 +137,7 @@ object IMHelper : IMInterface<Any?>() {
         data.groupId = groupId
         this.lastMsgRegister = null
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        routeToClient(groupId, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+        clearBadges()
     }
 
     fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Long? = null, uidIfFans: Long? = null) {
@@ -143,9 +154,13 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
+    fun clearBadges() {
+        routeToClient(lastMsgRegister, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+    }
+
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channel)
+            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channels)
             return true
         }
         return false
@@ -161,7 +176,7 @@ object IMHelper : IMInterface<Any?>() {
 
     fun close() {
         lastMsgRegister = null
-        Fetcher.cancel()
+        Fetcher.cancelAll()
     }
 
     override fun shutdown(case: String) {

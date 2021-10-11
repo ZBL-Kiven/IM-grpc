@@ -53,10 +53,11 @@ internal object Constance {
 
     const val TOPIC_CONN_SUCCESS = "cc://im-rpc-req/ListenTopicData"
     const val TOPIC_MSG_REGISTRATION = "cc://im-rpc-req/GetImMessage"
-    const val TOPIC_IM_MSG = "cc://im-msg-topic/"
-    const val TOPIC_GROUP_INFO = "cc://group-info-topic"
-    const val TOPIC_CHAT_OWNER_INFO = "cc://chat-owner-info-topic"
 
+    const val TOPIC_GROUP_INFO = "cc://group-info-topic"
+
+    const val TOPIC_IM_MSG = "cc://im-msg-topic/"
+    const val TOPIC_CHAT_OWNER_INFO = "cc://chat-owner-info-topic"
     const val TOPIC_CHAT_FANS_INFO = "cc://chat-fans-info-topic"
 
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
@@ -94,6 +95,16 @@ internal fun <R> catching(run: () -> R?): R? {
     }
 }
 
+internal fun <R> catching(run: () -> R?, deal: (() -> Unit)? = null): R? {
+    return try {
+        run()
+    } catch (e: Exception) {
+        IMHelper.postError(e);deal?.invoke();null
+    } catch (e: java.lang.Exception) {
+        IMHelper.postError(e);deal?.invoke();null
+    }
+}
+
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
@@ -113,5 +124,4 @@ enum class MsgType(val type: String) {
             return type != QUESTION.type && !hasUploadType(type)
         }
     }
-
 }

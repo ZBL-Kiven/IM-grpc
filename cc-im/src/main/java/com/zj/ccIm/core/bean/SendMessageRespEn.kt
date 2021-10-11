@@ -48,7 +48,7 @@ class SendMessageRespEn {
     var expireTime: Long = -1L
 
     /**
-     * send msg state , 0: normal , 1 SensitiveWords
+     * send msg state , 0: normal , 1 SensitiveWords , 2 Not following
      * */
     var msgStatus: Int = 0
 

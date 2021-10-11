@@ -1,8 +1,20 @@
 package com.zj.ccIm.core.bean
 
 import com.zj.ccIm.annos.MsgFetchType
+import com.zj.ccIm.core.fecher.FetchMsgChannel
 
-data class LastMsgReqBean(val groupId: Long, val ownerId: Long, val targetUserid: Long?, val msgId: Long?, @MsgFetchType val type: Int, val channel: Array<out String>) {
+data class LastMsgReqBean(val groupId: Long, val ownerId: Long, val targetUserid: Long?, val msgId: Long?, @MsgFetchType val type: Int, var channels: Array<out FetchMsgChannel>) {
+
+    private var channel: List<String>? = null
+
+    internal fun setChannels() {
+        val lst = arrayListOf<FetchMsgChannel>()
+        channel?.forEach { v ->
+            val fc = FetchMsgChannel.values().firstOrNull { it.serializeName == v }
+            if (fc != null) lst.add(fc)
+        }
+        channels = lst.toTypedArray()
+    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -13,7 +25,7 @@ data class LastMsgReqBean(val groupId: Long, val ownerId: Long, val targetUserid
         if (groupId != other.groupId) return false
         if (ownerId != other.ownerId) return false
         if (targetUserid != other.targetUserid) return false
-        if (!channel.contentEquals(other.channel)) return false
+        if (!channels.contentEquals(other.channels)) return false
 
         return true
     }
@@ -22,7 +34,7 @@ data class LastMsgReqBean(val groupId: Long, val ownerId: Long, val targetUserid
         var result = groupId.hashCode()
         result = 31 * result + ownerId.hashCode()
         result = 31 * result + targetUserid.hashCode()
-        result = 31 * result + channel.contentHashCode()
+        result = 31 * result + channels.hashCode()
         return result
     }
 }

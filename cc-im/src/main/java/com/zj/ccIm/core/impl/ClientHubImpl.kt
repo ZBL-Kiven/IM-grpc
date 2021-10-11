@@ -3,16 +3,13 @@ package com.zj.ccIm.core.impl
 import android.util.Log
 import com.google.gson.Gson
 import com.zj.ccIm.core.Comment
-import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.bean.DeleteSessionInfo
+import com.zj.ccIm.core.bean.*
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
-import com.zj.ccIm.core.bean.LastMsgReqBean
-import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.db.*
 import com.zj.ccIm.core.sender.Converter
 import com.zj.ccIm.core.sender.Sender
@@ -28,6 +25,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_CHANGED = "change"
         const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "delete_case_sensitive_words"
+        const val PAYLOAD_DELETE_FROM_NOT_FOLLOWING = "delete_case_not_following"
     }
 
     /**
@@ -50,9 +48,9 @@ class ClientHubImpl : ClientHub<Any?>() {
                 onFinish();return
             }
             when (callId) {
-                Constance.TOPIC_IM_MSG -> {
+                Constance.TOPIC_IM_MSG, Constance.TOPIC_CHAT_OWNER_INFO, Constance.TOPIC_CHAT_FANS_INFO -> {
                     val info = Gson().fromJson(d?.toString(), SessionLastMsgInfo::class.java)
-                    val deal = SessionLastMsgDbOperator.onDealSessionLastMsgInfo(info)
+                    val deal = SessionLastMsgDbOperator.dealSessionLastMsgInfo(callId, info)
                     payload = deal?.first
                     d = if (deal?.second == null) d else deal.second
                 }
@@ -60,14 +58,6 @@ class ClientHubImpl : ClientHub<Any?>() {
                     val deal = SessionDbOperator.onDealSessionInfo(d?.toString())
                     payload = deal?.first ?: callId
                     d = if (deal?.second == null) d else deal.second
-                }
-                Constance.TOPIC_CHAT_OWNER_INFO -> {
-                    val info = Gson().fromJson(d?.toString(), PrivateOwnerEntity::class.java)
-                    PrivateOwnerDbOperator.insertANewChatInfo(info)
-                }
-                Constance.TOPIC_CHAT_FANS_INFO -> {
-                    val info = Gson().fromJson(d?.toString(), PrivateFansEn::class.java)
-                    IMHelper.postToUiObservers(info, PAYLOAD_ADD)
                 }
                 Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
                     cast<Any?, Map<String, List<MessageInfoEntity>>?>(data)?.forEach { (k, v) ->
@@ -109,12 +99,14 @@ class ClientHubImpl : ClientHub<Any?>() {
     private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            IMHelper.onMsgRegistered(Gson().fromJson(d?.toString(), LastMsgReqBean::class.java))
+            val channel = Gson().fromJson(d?.toString(), LastMsgReqBean::class.java)
+            channel.setChannels()
+            IMHelper.onMsgRegistered(channel)
             return true
         }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
             IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
-            onDispatchSentErrorMsg(d as Long)
+            onDispatchSentErrorMsg(d as LastMsgReqBean)
         }
         if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_OFFLINE_MESSAGES) == true) {
             return false
@@ -172,13 +164,14 @@ class ClientHubImpl : ClientHub<Any?>() {
                 PrivateOwnerDbOperator.notifyAllSession(callId)
             }
             Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                val deal = BadgeDbOperator.clearGroupBadge(data as Long)
-                IMHelper.postToUiObservers(deal?.second, deal?.first)
+                BadgeDbOperator.clearGroupBadge(data as? LastMsgReqBean ?: return)
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 val d = data as DeleteSessionInfo
                 when (d.pl) {
-                    Comment.DELETE_OWNER_SESSION -> PrivateOwnerDbOperator.deleteSession(d.targetId ?: return)
+                    Comment.DELETE_OWNER_SESSION -> {
+                        PrivateOwnerDbOperator.deleteSession(d.targetId ?: return)
+                    }
                     Comment.DELETE_FANS_SESSION -> {
                         val en = PrivateFansEn().apply { this.userId = d.targetId }
                         IMHelper.postToUiObservers(en, PAYLOAD_DELETE)
@@ -188,9 +181,9 @@ class ClientHubImpl : ClientHub<Any?>() {
         }
     }
 
-    private fun onDispatchSentErrorMsg(groupId: Long) {
+    private fun onDispatchSentErrorMsg(bean: LastMsgReqBean) {
         IMHelper.withDb {
-            val resendMsg = it.sendMsgDao().findAllBySessionId(groupId)
+            val resendMsg = it.sendMsgDao().findAllBySessionId(bean.groupId)
             resendMsg?.forEach { msg ->
                 if (msg.autoResendWhenBootStart) Sender.resendMessage(msg)
                 else dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)

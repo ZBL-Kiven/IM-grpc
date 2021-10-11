@@ -2,7 +2,7 @@ package com.zj.ccIm.core.bean
 
 import com.zj.database.entity.SessionLastMsgInfo
 
-class PrivateFansEn {
+class   PrivateFansEn {
 
     /**
      * 用户id

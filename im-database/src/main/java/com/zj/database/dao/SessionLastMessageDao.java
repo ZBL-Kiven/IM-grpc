@@ -17,13 +17,13 @@ public interface SessionLastMessageDao {
     @Query("SELECT * FROM sessionmsginfo")
     List<SessionLastMsgInfo> findAll();
 
-    @Query("SELECT * FROM sessionmsginfo WHERE groupId = :groupId")
-    SessionLastMsgInfo findSessionMsgInfoBySessionId(long groupId);
+    @Query("SELECT * FROM sessionmsginfo WHERE `key` = :key")
+    SessionLastMsgInfo findSessionMsgInfoByKey(String key);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOrUpdateSessionMsgInfo(SessionLastMsgInfo info);
 
-    @Query("DELETE FROM sessionmsginfo WHERE groupId = :sessionId")
-    void deleteBySessionId(long sessionId);
+    @Query("DELETE FROM sessionmsginfo WHERE `key` = :key")
+    void deleteByKey(String key);
 
 }

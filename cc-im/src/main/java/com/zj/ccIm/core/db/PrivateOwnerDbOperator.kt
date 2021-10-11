@@ -8,7 +8,10 @@ import com.zj.ccIm.error.FetchPrivateChatSessionResult
 import com.zj.database.IMDb
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
+import com.zj.database.entity.SessionInfoEntity
 import com.zj.database.entity.SessionLastMsgInfo
+import com.zj.database.entity.SessionLastMsgInfo.Companion.generateKey
+import com.zj.database.ut.Constance
 
 internal object PrivateOwnerDbOperator {
 
@@ -24,8 +27,10 @@ internal object PrivateOwnerDbOperator {
                 newChat.ownerId = session.ownerId
                 newChat.ownerName = session.groupName
                 val lastSessionMsg = SessionLastMsgInfo().apply {
+                    this.key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = session.ownerId)
                     this.newMsg = msg
-                    this.groupId = session.ownerId.toLong()
+                    this.groupId = session.groupId
+                    this.ownerId = session.ownerId
                     this.msgNum = 1
                 }
                 it.sessionMsgDao().insertOrUpdateSessionMsgInfo(lastSessionMsg)
@@ -36,19 +41,13 @@ internal object PrivateOwnerDbOperator {
         }
     }
 
-    fun insertANewChatInfo(info: PrivateOwnerEntity) {
-        IMHelper.withDb {
-            it.privateChatOwnerDao().insertOrUpdate(info)
-            IMHelper.postToUiObservers(info, ClientHubImpl.PAYLOAD_ADD)
-        }
-    }
-
     fun notifyAllSession(callId: String) {
         IMHelper.withDb {
             val sessions = it.privateChatOwnerDao().findAll()
             val lstMsgDao = it.sessionMsgDao()
             for (s in sessions) {
-                s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoBySessionId(s.ownerId.toLong())
+                val key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
+                s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
             IMHelper.postToUiObservers(FetchPrivateChatSessionResult(true, isFirst, sessions.isNullOrEmpty()))
@@ -62,8 +61,31 @@ internal object PrivateOwnerDbOperator {
             if (session != null) {
                 it.privateChatOwnerDao().delete(session)
             }
-            it.sessionMsgDao().deleteBySessionId(session.ownerId.toLong())
+            val key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = session.ownerId)
+            it.sessionMsgDao().deleteByKey(key)
             IMHelper.postToUiObservers(session, ClientHubImpl.PAYLOAD_DELETE)
+        }
+    }
+
+    fun updateSessionInfo(needDelete: Boolean, sessionInfoEntity: SessionInfoEntity) {
+        IMHelper.withDb {
+            val privateOwnerDb = it.privateChatOwnerDao()
+            val lastMsgDao = it.sessionMsgDao()
+            val en = privateOwnerDb.findByGroupId(sessionInfoEntity.groupId)
+            val lastMsgId = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = sessionInfoEntity.ownerId)
+            if (needDelete && en != null) {
+                privateOwnerDb.delete(en)
+                lastMsgDao.deleteByKey(lastMsgId)
+            } else {
+                en?.ownerName = sessionInfoEntity.ownerName
+                en?.avatar = sessionInfoEntity.logo
+                en?.sessionMsgInfo = lastMsgDao.findSessionMsgInfoByKey(lastMsgId)
+            }
+            IMHelper.postToUiObservers(en, if (needDelete) {
+                ClientHubImpl.PAYLOAD_DELETE
+            } else {
+                ClientHubImpl.PAYLOAD_ADD
+            })
         }
     }
 }

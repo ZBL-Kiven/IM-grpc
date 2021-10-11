@@ -8,6 +8,8 @@ import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.FetchSessionResult
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SessionInfoEntity
+import com.zj.database.entity.SessionLastMsgInfo
+import com.zj.database.ut.Constance
 
 internal object SessionDbOperator {
 
@@ -29,7 +31,8 @@ internal object SessionDbOperator {
             }
             val needDelete = info.groupStatus == 3
             if (!needDelete) {
-                val lastMsgInfo = lastMsgDb.findSessionMsgInfoBySessionId(info.groupId)
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
+                val lastMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
                 info.sessionMsgInfo = lastMsgInfo
             }
             if (needDelete) {
@@ -37,6 +40,7 @@ internal object SessionDbOperator {
             } else {
                 sessionDb.insertOrChangeSession(info)
             }
+            PrivateOwnerDbOperator.updateSessionInfo(needDelete, info)
             Pair(if (exists) {
                 if (needDelete) {
                     ClientHubImpl.PAYLOAD_DELETE
@@ -54,7 +58,8 @@ internal object SessionDbOperator {
             val sessions = it.sessionDao().allSessions
             val lastMsgDb = it.sessionMsgDao()
             sessions?.forEach { i ->
-                i.sessionMsgInfo = lastMsgDb.findSessionMsgInfoBySessionId(i.groupId)
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = i.groupId)
+                i.sessionMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
             IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty()))

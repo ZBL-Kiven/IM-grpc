@@ -29,4 +29,7 @@ public interface PrivateChatOwnerDao {
     @Query("SELECT * FROM private_owner")
     List<PrivateOwnerEntity> findAll();
 
+    @Query("DELETE FROM private_owner")
+    void deleteAll();
+
 }

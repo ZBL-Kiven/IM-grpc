@@ -19,6 +19,11 @@ class SessionInfoEntity {
     var groupName: String? = null
 
     /**
+     * 群主名称
+     */
+    var ownerName: String? = null
+
+    /**
      * 群主id
      */
     var ownerId: Int = 0

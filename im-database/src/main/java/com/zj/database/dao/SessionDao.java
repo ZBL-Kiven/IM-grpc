@@ -46,4 +46,7 @@ public interface SessionDao {
 
     @Delete
     int deleteSession(SessionInfoEntity info);
+
+    @Query("DELETE FROM sessions")
+    void deleteAll();
 }

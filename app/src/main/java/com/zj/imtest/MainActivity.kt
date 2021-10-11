@@ -26,7 +26,6 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.error.FetchSessionResult
-import com.zj.database.DbHelper
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
     private val groupId = 52L
+    private val ownerId = 151254L
     private var lastSelectData: FileInfo? = null
         set(value) {
             et.text = value?.path ?: ""
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, 151254, null, FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE)
+        IMHelper.registerChatRoom(groupId, ownerId, null, FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {

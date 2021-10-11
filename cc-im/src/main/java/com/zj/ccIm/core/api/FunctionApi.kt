@@ -1,5 +1,6 @@
 package com.zj.ccIm.core.api
 
+import com.zj.ccIm.core.bean.FetchPrivateOwnerSessionBean
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.ccIm.core.bean.FetcherSessionBean
 import com.zj.database.entity.MessageInfoEntity
@@ -14,6 +15,9 @@ interface FunctionApi {
 
     @GET("/im/message/read/last/message")
     fun fetchSessionLastMessage(@Query("groupId") groupIds: List<Long>?): Observable<List<SessionLastMsgInfo>?>
+
+    @GET("/im/group/read/private/list")
+    fun fetchPrivateOwnerSessions(@Query("timeStamp") ts: Long): Observable<FetchPrivateOwnerSessionBean?>
 
 
     @Multipart

@@ -14,7 +14,7 @@ import java.lang.NullPointerException
  * Created by ZJJ
  */
 
-@Suppress("unused", "SameParameterValue")
+@Suppress("unused")
 sealed class LogCollectionUtils {
 
     companion object {
