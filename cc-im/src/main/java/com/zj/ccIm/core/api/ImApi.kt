@@ -42,6 +42,14 @@ object ImApi {
 
     object EH : ErrorHandler {
 
+        private const val SERVER_ERROR = 555
+        const val NOT_ENOUGH = 125
+        const val REPEAT_ANSWER = 20001
+        const val GROUP_STOPPED = 20002
+        const val NOT_OWNER = 20003
+        const val SENSITIVE_WORD = 20004
+        const val GROUP_MEMBER_NOT_EXIST = 20006
+
         override fun onError(throwable: Throwable?): Pair<Boolean, Any?> {
             var msgBody: Any? = null
             if (throwable is HttpException) {
@@ -67,10 +75,6 @@ object ImApi {
             throwable?.printStackTrace()
             return Pair(false, msgBody)
         }
-
-        private const val SERVER_ERROR = 555
-        const val SENSITIVE_WORDS = 20004
-        const val NOT_FOLLOWING = 20006
 
         class HttpErrorBody {
             var code: Int = 0

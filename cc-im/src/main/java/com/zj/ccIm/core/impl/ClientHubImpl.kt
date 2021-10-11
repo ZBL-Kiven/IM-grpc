@@ -25,7 +25,11 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_CHANGED = "change"
         const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "delete_case_sensitive_words"
-        const val PAYLOAD_DELETE_FROM_NOT_FOLLOWING = "delete_case_not_following"
+        const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = "delete_case_not_following"
+        const val PAYLOAD_DELETE_NOT_ENOUGH = "delete_case_not_enough_coins"
+        const val PAYLOAD_DELETE_NOT_OWNER = "delete_case_not_owner"
+        const val PAYLOAD_DELETE_GROUP_STOPPED = "delete_case_group_stopped"
+        const val PAYLOAD_DELETE_REPEAT_ANSWER = "delete_case_not_repeat_answer"
     }
 
     /**

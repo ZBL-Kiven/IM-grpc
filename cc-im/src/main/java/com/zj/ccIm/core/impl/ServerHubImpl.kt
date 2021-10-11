@@ -91,14 +91,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             var resp = data
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
-                when ((a as? ImApi.EH.HttpErrorBody)?.code) {
-                    ImApi.EH.SENSITIVE_WORDS -> {
-                        resp = setErrorMsgResult(resp, d, 1)
-                    }
-                    ImApi.EH.NOT_FOLLOWING -> {
-                        resp = setErrorMsgResult(resp, d, 2)
-                    }
-                }
+                resp = setErrorMsgResult(resp, d, (a as? ImApi.EH.HttpErrorBody)?.code ?: 0)
             }
             callBack.result(isOk, resp, d.autoRetryResend, throwable, a)
         }

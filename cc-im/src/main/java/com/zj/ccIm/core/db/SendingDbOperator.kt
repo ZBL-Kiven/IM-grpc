@@ -1,6 +1,7 @@
 package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.impl.ClientHubImpl
@@ -49,8 +50,12 @@ internal object SendingDbOperator {
                 if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE
-                    d.msgStatus == 1 -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
-                    d.msgStatus == 2 -> ClientHubImpl.PAYLOAD_DELETE_FROM_NOT_FOLLOWING
+                    d.msgStatus == ImApi.EH.SENSITIVE_WORD -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
+                    d.msgStatus == ImApi.EH.NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
+                    d.msgStatus == ImApi.EH.NOT_OWNER -> ClientHubImpl.PAYLOAD_DELETE_NOT_OWNER
+                    d.msgStatus == ImApi.EH.GROUP_MEMBER_NOT_EXIST -> ClientHubImpl.PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST
+                    d.msgStatus == ImApi.EH.GROUP_STOPPED -> ClientHubImpl.PAYLOAD_DELETE_GROUP_STOPPED
+                    d.msgStatus == ImApi.EH.REPEAT_ANSWER -> ClientHubImpl.PAYLOAD_DELETE_REPEAT_ANSWER
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)
