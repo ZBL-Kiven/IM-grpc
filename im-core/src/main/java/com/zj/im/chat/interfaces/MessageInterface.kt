@@ -27,9 +27,12 @@ abstract class MessageInterface<T> {
             msgObservers?.put(option.getUnique(), option)
         }
 
-        internal fun removeAnObserver(option: UIOptions<*, *, *>?) {
-            if (option == null) return
-            msgObservers?.remove(option.getUnique())
+        internal fun hasObserver(unique: Any): Boolean {
+            return msgObservers?.contains(unique) ?: false
+        }
+
+        internal fun removeAnObserver(unique: Any): UIOptions<*, *, *>? {
+            return msgObservers?.remove(unique)
         }
 
         /**
