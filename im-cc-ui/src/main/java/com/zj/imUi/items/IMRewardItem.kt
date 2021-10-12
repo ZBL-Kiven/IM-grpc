@@ -42,9 +42,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var textReplyOwnerNickName: AppCompatTextView
     private var textReplyOwnerSendTime: AppCompatTextView
 
-    //    private var imgCountdown: AppCompatImageView
-    //    private var tvCountdown: AppCompatTextView
-    //    private var llCountDown: LinearLayout
     private var llQuestion: LinearLayout
     private var llReplyContentUser: LinearLayout
     private var llReplyContentOwner: LinearLayout
@@ -53,7 +50,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var llQuestionType: LinearLayout
     private var questionIcon: AppCompatImageView
 
-    //    private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag: AppCompatTextView
     private val baseContentMargins = DPUtils.dp2px(12f)
     private var frameFLag: FrameLayout
@@ -114,6 +110,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
         else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, baseContentMargins) //普通消息变为自适应宽度
         contentLayout.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        frameFLag.visibility = View.GONE
     }
 
     private fun setChatRewardItem(data: ImMsgIn) {
@@ -122,8 +119,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
         setTextStyle()
         performRegisterTimer()
-        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, 0)
-        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, 0)
+        //设置回复方式
+        textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+        textResponseType.visibility = View.VISIBLE
+
+        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(4f), baseContentMargins, 0)
+        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(4f), baseContentMargins, 0)
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
@@ -131,14 +132,14 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
+                    textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         data.onReplyQuestion()
                     }
                 }
                 data.getSenderId() ==data.getSelfUserId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).toUpperCase(Locale.getDefault())
+                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         data.userRetractRewardMsg()
                     }
@@ -148,6 +149,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 }
             }
         } else { //已回复状态
+            textReplyType.visibility = View.GONE
             if (data.getSelfUserId() == data.getOwnerId()) {
                 setReplyContent(data, replyOwnerContent)
                 llReplyContentOwner.visibility = View.VISIBLE
@@ -158,8 +160,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             }
         }
 
-        textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
-        textResponseType.visibility = View.VISIBLE
+
         if (data.getSelfUserId() == data.getOwnerId()){
             textResponseType.visibility = View.GONE
         }
@@ -189,12 +190,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 setAlreadyReplyBg()
             }
         }
-        //底部时间及奖励展示
-        //        if (data.getSelfUserId() == data.getSenderId()) {
-        //            timeBottom.visibility = View.VISIBLE
-        //            timeBottom.setData(data)
-        //        } else timeBottom.visibility = View.GONE
-
         if (data.getSelfUserId() == data.getOwnerId()) {
             val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT)
@@ -229,7 +224,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 frameLayout.removeAllViews()
                 curContentIn = v as? ImContentIn
                 frameLayout.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-                if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+                if (data.getAnswerMsgType() == UiMsgType.MSG_TYPE_IMG) {
                     frameLayout.setOnClickListener {
                         Log.d("LiXiang", "bubbleAnswerContent点击")
                         data.onViewLargePic()

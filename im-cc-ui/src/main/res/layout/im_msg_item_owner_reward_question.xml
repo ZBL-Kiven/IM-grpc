@@ -9,7 +9,7 @@
 
     <com.zj.imUi.widget.top.GroupMessageItemTitle
         android:id="@+id/im_msg_item_owner_reward_question_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:visibility="gone"
@@ -32,7 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_owner_reward_question_tv_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/im_msg_message_textColor_meReplyOthers"
             android:textStyle="bold"
@@ -84,37 +84,6 @@
             tools:text="Text"
             />
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/im_msg_item_owner_reward_question_ll_countdown"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="24dp"-->
-<!--            android:layout_marginStart="8dp"-->
-<!--            android:background="@drawable/im_msg_item_reward_white_frame_bg"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:paddingEnd="8dp"-->
-<!--            android:visibility="gone"-->
-<!--            >-->
-
-<!--            <androidx.appcompat.widget.AppCompatImageView-->
-<!--                android:id="@+id/im_msg_item_owner_reward_question_img_countdown"-->
-<!--                android:layout_width="20dp"-->
-<!--                android:layout_height="20dp"-->
-<!--                android:layout_marginLeft="4dp"-->
-<!--                android:src="@drawable/im_msg_item_widget_reward_countdown_origin" />-->
-
-<!--            <androidx.appcompat.widget.AppCompatTextView-->
-<!--                android:id="@+id/im_msg_item_owner_reward_question_tv_countdown"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="2dp"-->
-<!--                android:gravity="center"-->
-<!--                android:textColor="@android:color/white"-->
-<!--                android:textSize="12sp"-->
-<!--                android:textStyle="bold"-->
-<!--                tools:text="24h" />-->
-
-<!--        </LinearLayout>-->
 
     </LinearLayout>
 
@@ -224,6 +193,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false">
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_owner_reward_widget_replied_flag"
             android:layout_width="wrap_content"
