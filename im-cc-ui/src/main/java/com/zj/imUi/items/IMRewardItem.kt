@@ -122,6 +122,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
         setTextStyle()
         performRegisterTimer()
+        //设置回复方式
+        textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
+        textResponseType.visibility = View.VISIBLE
+
         if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, 0)
         else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, 0)
 
@@ -131,7 +135,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
+                    textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         Log.d("LiXiang", "回复TextView点击")
                         data.onReplyQuestion()
@@ -139,7 +143,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 }
                 data.getSenderId() ==data.getSelfUserId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).toUpperCase(Locale.getDefault())
+                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         Log.d("LiXiang", "撤回TextView点击")
                         data.userRetractRewardMsg()
@@ -150,6 +154,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 }
             }
         } else { //已回复状态
+            textReplyType.visibility = View.GONE
             if (data.getSelfUserId() == data.getOwnerId()) {
                 setReplyContent(data, replyOwnerContent)
                 llReplyContentOwner.visibility = View.VISIBLE
@@ -160,8 +165,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             }
         }
 
-        textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
-        textResponseType.visibility = View.VISIBLE
+
         if (data.getSelfUserId() == data.getOwnerId()){
             textResponseType.visibility = View.GONE
         }
