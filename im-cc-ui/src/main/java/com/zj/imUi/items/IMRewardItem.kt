@@ -126,8 +126,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
         textResponseType.visibility = View.VISIBLE
 
-        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, 0)
-        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, 0)
+        if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(4f), baseContentMargins, 0)
+        else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(4f), baseContentMargins, 0)
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
