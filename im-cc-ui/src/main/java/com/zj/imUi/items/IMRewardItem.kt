@@ -42,9 +42,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var textReplyOwnerNickName: AppCompatTextView
     private var textReplyOwnerSendTime: AppCompatTextView
 
-    //    private var imgCountdown: AppCompatImageView
-    //    private var tvCountdown: AppCompatTextView
-    //    private var llCountDown: LinearLayout
     private var llQuestion: LinearLayout
     private var llReplyContentUser: LinearLayout
     private var llReplyContentOwner: LinearLayout
@@ -53,7 +50,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var llQuestionType: LinearLayout
     private var questionIcon: AppCompatImageView
 
-    //    private var timeBottom: GroupMessageItemTime
     private var tvReliedFLag: AppCompatTextView
     private val baseContentMargins = DPUtils.dp2px(12f)
     private var frameFLag: FrameLayout
