@@ -38,7 +38,7 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
         mSendTime = findViewById(R.id.im_msg_item_title_tv_send_time)
     }
 
-    fun setData(data: ImMsgIn?, isGroupChat: Boolean) {
+    fun setData(data: ImMsgIn?, chatType:Any) {
         if (data == null) return
         mGroupRewardItem.visibility = View.VISIBLE
         mGroupRewardItem.setBackGround(data)
@@ -46,7 +46,7 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
         mSendTime.text = TimeDiffUtils.timeDifference(data.getSendTime())?.let { it1 ->
             TimeDiffUtils.setTimeText(it1, context)
         }
-        if (isGroupChat) {
+        if (chatType == 1) {
             if (data.getSelfUserId() == data.getOwnerId()) {
                 mNickname.visibility = View.VISIBLE
                 mNickname.setPadding(0, 1, 0, 0)

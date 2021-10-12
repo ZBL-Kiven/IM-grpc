@@ -32,13 +32,13 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
 
 
     @SuppressLint("SetTextI18n")
-    fun setData(data: ImMsgIn?,isGroupChat:Boolean): GroupMessageRecordItem {
+    fun setData(data: ImMsgIn?,chatType:Any): GroupMessageRecordItem {
         if (data == null) return this
         if (data.getAnswerContentAudioContentUrl() != null){
             // TODO: 2021/10/8 私聊状态下为白色
             audioTime.text = StringBuilder(data.getAnswerContentAudioContentDuration().toString()).append("''")
             if (data.getSelfUserId() == data.getOwnerId()){
-                if(isGroupChat) {
+                if(chatType == 1) {
                     audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                     audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))

@@ -74,7 +74,7 @@ class IMContentCCVideoWidgetVIew @JvmOverloads constructor(context: Context,
         }
     }
 
-    override fun isGroupChat(isGroupChat: Boolean) {
+    override fun chatType(chatType:Any) {
     }
 
     override fun onResume(data: ImMsgIn?) {

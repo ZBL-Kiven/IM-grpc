@@ -21,12 +21,13 @@ object BubbleRenderer : BaseBubbleRenderer {
         return null
     }
 
-    override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,isGroupChat:Boolean) {
-        drawBackGround(context, canvas, data, width, height,isGroupChat)
+
+    override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,chatType:Int) {
+        drawBackGround(context, canvas, data, width, height,chatType)
     }
 
 
-    private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,isGroupChat: Boolean) {
+    private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,chatType:Int) {
         val mBgColorOrigin = ContextCompat.getColor(context, R.color.im_msg_bg_origin)
         isSelfMessage = data.getSelfUserId() == data.getSenderId()
         isOwner = data.getSenderId() == data.getOwnerId()
@@ -36,7 +37,7 @@ object BubbleRenderer : BaseBubbleRenderer {
         val path = Path()
         paint.strokeWidth = 1f
         paint.style = Paint.Style.FILL
-        paint.color = setColor(context, data,isGroupChat)
+        paint.color = setColor(context, data,chatType)
         if (isSelfMessage) { //发送者为自己
             val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
             val radii = floatArrayOf(dpToPx(context, 8f),
@@ -92,8 +93,8 @@ object BubbleRenderer : BaseBubbleRenderer {
         return dipValue * scale + 0.5f
     }
 
-    private fun setColor(context: Context, data: ImMsgIn,isGroupChat: Boolean): Int {
-        return if (isGroupChat) {
+    private fun setColor(context: Context, data: ImMsgIn,chatType:Any): Int {
+        return if (chatType == 1) {
             if (isSelfMessage) { //自己发送的消息
                 if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                     if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {

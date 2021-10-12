@@ -12,9 +12,9 @@
     <string name="im_ui_msg_type_image">Image</string>
     <string name="im_ui_msg_type_audio">Voice</string>
 
-    <string name="im_ui_msg_reward_type_text">REPLY VIA TEXT</string>
-    <string name="im_ui_msg_reward_type_image">REPLY VIA IMAGE</string>
-    <string name="im_ui_msg_reward_type_audio">REPLY VIA VOICE</string>
+    <string name="im_ui_msg_reward_type_text">Text Reply</string>
+    <string name="im_ui_msg_reward_type_image">Image Reply</string>
+    <string name="im_ui_msg_reward_type_audio">Voice Reply</string>
 
     <string name="im_ui_msg_reply_type_image">[ Image ]</string>
     <string name="im_ui_msg_reply_type_audio">[ Voice ]</string>
@@ -29,7 +29,7 @@
     <string name="im_ui_msg_not_allowed">These type of messages can not be sent</string>
 
 
-    <string name="im_ui_msg_reward_user_retract">RETRACT</string>
+    <string name="im_ui_msg_reward_user_retract">Recall</string>
     <string name="im_ui_msg_delete">Delete</string>
 
 

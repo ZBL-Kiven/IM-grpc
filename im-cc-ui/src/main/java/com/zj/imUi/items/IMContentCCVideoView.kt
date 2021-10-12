@@ -65,7 +65,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
         //        imgCCVideoCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
     }
 
-    override fun init(data: ImMsgIn,isGroupChat:Boolean) {
+    override fun init(data: ImMsgIn,chatType:Any) {
         if (childCount == 0) {
             addView(contentLayout)
         }

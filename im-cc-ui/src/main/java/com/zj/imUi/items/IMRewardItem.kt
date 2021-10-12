@@ -86,7 +86,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
     }
 
-    override fun init(data: ImMsgIn, isGroupChat: Boolean) {
+    override fun init(data: ImMsgIn, chatType:Any) {
         if (childCount == 0) {
             addView(contentLayout)
         }
@@ -97,8 +97,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         llQuestionType.visibility = View.VISIBLE
         questionIcon.visibility = View.VISIBLE
 
-        setTitle(data, isGroupChat)
-        if (isGroupChat || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
+        setTitle(data, chatType)
+        if (chatType == 1 || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
             setChatRewardItem(data)
         } else setPrivateChatItem(data)
 
@@ -139,7 +139,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 }
                 data.getSenderId() ==data.getSelfUserId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract)
+                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).toUpperCase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         Log.d("LiXiang", "撤回TextView点击")
                         data.userRetractRewardMsg()
@@ -288,12 +288,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
     }
 
-    private fun setTitle(data: ImMsgIn, isGroupChat: Boolean) {
-        if (data.getSelfUserId() !=data.getOwnerId()&&!isGroupChat){
+    private fun setTitle(data: ImMsgIn, chatType:Any) {
+        if (data.getSelfUserId() !=data.getOwnerId()&&chatType == 2){
             tvName.visibility = View.GONE
         }else{
             tvName.visibility = View.VISIBLE
-            tvName.setData(data, isGroupChat)
+            tvName.setData(data, chatType)
         }
     }
 

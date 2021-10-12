@@ -63,7 +63,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
-    override fun init(data: ImMsgIn,isGroupChat:Boolean) {
+    override fun init(data: ImMsgIn,chatType:Any) {
         tvName.text = data.getSenderName()
         imgQuestion.visibility = View.GONE
         imgReply.visibility = View.GONE
@@ -82,7 +82,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         }
         performRegisterTimer()
         setViewStub(data)
-        if(isGroupChat) {
+        if(chatType == 1) {
             setReplyContent(data)
             setIconVisibility(data)
         }
@@ -230,9 +230,6 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                         data.onViewLargePic()
                     }
                 }
-//                else if(data.getReplyMsgType() == UiMsgType.MSG_TYPE_AUDIO){
-//                    curContentInReply?.isGroupChat(isGroupChat)
-//                }
             }
         } finally {
             bubbleRepliedContent.setPadding(12,12,0,0)
@@ -262,7 +259,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             } ?: return
 
             if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) {
-                if (data.getReplyMsgClientMsgId() == null||!isGroupChat) llContent.setPadding(0, 0, 0, 0)
+                if (data.getReplyMsgClientMsgId() == null||chatType == 2) llContent.setPadding(0, 0, 0, 0)
                 else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
             } else if (v is IMContentAudioView && data.getSelfUserId() == data.getSenderId()) {
                 if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
@@ -286,7 +283,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                         data.onViewLargePic()
                     }
                 }else if(data.getType() == UiMsgType.MSG_TYPE_AUDIO){
-                    curContentIn?.isGroupChat(isGroupChat)
+                    chatType?.let { curContentIn?.chatType(it) }
                 }
                 bubbleContent.setOnLongClickListener {
                     Log.d("LiXiang", "bubbleContent长按点击响应")

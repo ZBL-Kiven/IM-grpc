@@ -32,15 +32,6 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
                     initAvatar(d)
                     ivAvatar?.id?.let { addRule(RIGHT_OF, it) }
                 }
-
-                //                tvNickname?.visibility = View.VISIBLE
-                //                val nickname = tvNickname
-                //                if (nickname!=null){
-                //                    tvNickname?.id?.let { addRule(BELOW, it) }
-                //                } else {
-                //                    initName(d)
-                //                    tvNickname?.id?.let { addRule(BELOW, it) }
-                //                }
             }
         }
     }
@@ -74,8 +65,8 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
-        isGroupChat?.let {
-            if (!it){
+        type?.let {
+            if (it == 2){
                 if (data.getSelfUserId() ==data.getSenderId()&&(data.getType() == UiMsgType.MSG_TYPE_IMG||data.getType() == UiMsgType.MSG_TYPE_AUDIO))
                     return null
             }
