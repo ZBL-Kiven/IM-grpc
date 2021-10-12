@@ -71,6 +71,11 @@ class MessageInfoEntity {
     @TypeConverters(QuestionContentConverter::class) var questionContent: QuestionContent? = null
 
     /**
+     * 回答消息
+     * */
+    @TypeConverters(MessageConverter::class) var answerMsg: MessageInfoEntity? = null
+
+    /**
      * 发送者信息
      */
     @TypeConverters(SenderContentConverter::class) var sender: SenderInfo? = null

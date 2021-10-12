@@ -30,6 +30,7 @@ class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_DELETE_NOT_OWNER = "delete_case_not_owner"
         const val PAYLOAD_DELETE_GROUP_STOPPED = "delete_case_group_stopped"
         const val PAYLOAD_DELETE_REPEAT_ANSWER = "delete_case_not_repeat_answer"
+        const val PAYLOAD_DELETE_DIAMOND_NOT_ENOUGH = "delete_case_diamond_not_enough"
     }
 
     /**
