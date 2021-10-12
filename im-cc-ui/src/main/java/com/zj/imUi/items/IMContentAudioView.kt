@@ -7,14 +7,14 @@ import com.zj.imUi.widget.GroupMessageRecordItem
 
 class IMContentAudioView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : GroupMessageRecordItem(context, attrs, def), ImContentIn {
 
-    private var isGroupChat:Boolean = true
+    private var chatType:Any = 1
 
     override fun onSetData(data: ImMsgIn?) {
-        super.setData(data,isGroupChat)
+        super.setData(data,chatType)
     }
 
-    override fun isGroupChat(isGroupChat: Boolean) {
-        this.isGroupChat = isGroupChat
+    override fun chatType(chatType:Any) {
+        this.chatType = chatType
     }
 
     override fun onResume(data: ImMsgIn?) {

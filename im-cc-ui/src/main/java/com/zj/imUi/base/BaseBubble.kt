@@ -10,15 +10,15 @@ import kotlin.math.min
 abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def) {
 
     protected var curData: (() -> ImMsgIn?)? = null
-    protected var isGroupChat:Boolean = true
+    protected var chatType:Any ?= null
 
     private var baseBubbleRenderer: BaseBubbleRenderer? = null
 
-    internal fun onSetData(data: () -> ImMsgIn?,isGroupChat:Boolean) {
+    internal fun onSetData(data: () -> ImMsgIn?,chatType: Int?) {
         val d = data.invoke() ?: return
         this.curData = data
-        this.isGroupChat = isGroupChat
-        init(d,isGroupChat)
+        this.chatType = chatType
+        chatType?.let { init(d, it) }
         postInvalidate()
     }
 
@@ -31,7 +31,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
         if (canvas == null || width <= 0 || height <= 0) return
         curData?.invoke()?.let { d ->
             baseBubbleRenderer?.let {
-                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context, canvas, d, width, height,isGroupChat)
+                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context, canvas, d, width, height, chatType as Int?)
             }
         }
         super.dispatchDraw(canvas)
@@ -51,7 +51,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
         onDestroy()
     }
 
-    abstract fun init(data: ImMsgIn,isGroupChat: Boolean)
+    abstract fun init(data: ImMsgIn, chatType: Any)
 
     abstract fun onResume()
 

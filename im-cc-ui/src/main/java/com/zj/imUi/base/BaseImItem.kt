@@ -32,21 +32,20 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
 
     private var curData: T? = null
     private var lastDataType: String? = null
-    open var isGroupChat : Boolean? = true
+    open var type : Any? = null
     open var tvNickname: TextView? = null
     open var bubbleView: BaseBubble? = null
     open var ivAvatar: ImageView? = null
     open var ivSendStatus: ImageView? = null
 
-    fun setData(data: T?,isGroupChat:Boolean) {
+    fun setData(data: T?,chatType:Any?) {
         if (data == null) {
             onLog("set data failed ,the data must not be null!!")
         } else {
             this.curData = data
-            this.isGroupChat = isGroupChat
+            this.type = chatType
             removeAllViews()
-            initBubble(data,isGroupChat)
-            //            initName(data)
+            initBubble(data,type)
             initAvatar(data)
             initSendStatus(data)
             lastDataType = data.getType()
@@ -92,7 +91,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
     }
 
-    private fun initBubble(data: T,isGroupChat: Boolean) {
+    private fun initBubble(data: T,chatType:Any?) {
         if (bubbleView != null) {
             val curQuestion = lastDataType == UiMsgType.MSG_TYPE_QUESTION
             if (curQuestion != (data.getType() == UiMsgType.MSG_TYPE_QUESTION)) {
@@ -106,14 +105,13 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             }
         }
         if (bubbleView == null) {
-            bubbleView = ImItemDispatcher.getItemWithData(data, context,isGroupChat)
+            bubbleView = ImItemDispatcher.getItemWithData(data, context)
             bubbleView?.id = R.id.im_item_message_bubble
         }
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
-        bubbleView?.onSetData({ curData },isGroupChat)
+        bubbleView?.onSetData({ curData }, chatType as Int?)
         bubbleView?.setOnLongClickListener {
-            Log.d("LiXiang", "长按点击响应")
             val isNotSelf = data.getSelfUserId() != data.getSenderId()
             if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
                 MsgPop(context, data).show(it)

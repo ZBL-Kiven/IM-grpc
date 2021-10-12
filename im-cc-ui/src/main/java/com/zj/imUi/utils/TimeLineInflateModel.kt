@@ -54,7 +54,8 @@ object TimeLineInflateModel {
             } else {
                 result = getTime(timestamp, yearTimeFormat)
             }
-            return result
+            return if (result == "null") ""
+            else result
         } catch (e: Exception) {
             return ""
         }
