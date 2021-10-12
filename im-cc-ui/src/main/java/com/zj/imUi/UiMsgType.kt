@@ -7,4 +7,6 @@ object UiMsgType {
     const val MSG_TYPE_AUDIO = "audio"
     const val MSG_TYPE_CC_VIDEO= "cc_video"
 
+    const val GROUP_CHAT = 1
+    const val PRIVATE_CHAT = 2
 }
