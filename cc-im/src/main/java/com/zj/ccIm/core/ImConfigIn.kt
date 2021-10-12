@@ -10,6 +10,8 @@ interface ImConfigIn {
 
     fun getToken(): String
 
+    fun onAuthenticationError()
+
     fun getGrpcAddress(): Pair<String, Int>
 
     fun getIMHost(): String

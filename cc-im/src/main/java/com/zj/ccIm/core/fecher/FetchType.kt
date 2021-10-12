@@ -12,7 +12,6 @@ internal class FetchType {
 
     var flags: Int = 0
     var dealCls: BaseFetcher? = null
-    var bundleParams: Bundle? = null
     var compo: BaseRetrofit.RequestCompo? = null
 
     override fun equals(other: Any?): Boolean {

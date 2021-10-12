@@ -178,7 +178,7 @@ class ClientHubImpl : ClientHub<Any?>() {
                 val d = data as DeleteSessionInfo
                 when (d.pl) {
                     Comment.DELETE_OWNER_SESSION -> {
-                        PrivateOwnerDbOperator.deleteSession(d.targetId ?: return)
+                        PrivateOwnerDbOperator.deleteSession(d.groupId)
                     }
                     Comment.DELETE_FANS_SESSION -> {
                         val en = PrivateFansEn().apply { this.userId = d.targetId }

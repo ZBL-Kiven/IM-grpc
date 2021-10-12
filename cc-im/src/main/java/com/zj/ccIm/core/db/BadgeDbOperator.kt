@@ -2,36 +2,41 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.GetMsgReqBean
+import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.database.ut.Constance
+import java.lang.IllegalArgumentException
 
 internal object BadgeDbOperator {
 
     fun clearGroupBadge(info: GetMsgReqBean) {
-        var hasGroupType = false
-        var hasPrivateOwnerType = false
-        var hasPrivateFansType = false
         info.channels.forEach {
-            if (it.classification == 0) hasGroupType = true
-            if (it.classification == 1) hasPrivateOwnerType = true
-            if (it.classification == 2) hasPrivateFansType = true
-        }
-        if (hasGroupType) {
-            val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
-            changeBadge(key)
-        }
-        if (hasPrivateOwnerType) {
-            val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId.toInt())
-            changeBadge(key)
-        }
-        if (hasPrivateFansType) {
-            val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid?.toInt() ?: -1)
-            changeBadge(key)
+            getSessionLastMsgKeyForClassification(it.classification, info)
         }
     }
 
-    private fun changeBadge(key: String) {
-        IMHelper.withDb {
+    private fun getSessionLastMsgKeyForClassification(classification: Int, info: GetMsgReqBean) {
+        when (classification) {
+            FetchMsgChannel.FANS_PRIVATE.classification -> {
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId.toInt())
+                SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(changeBadge(key))
+            }
+            FetchMsgChannel.OWNER_PRIVATE.classification -> {
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid?.toInt() ?: -1)
+                SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(changeBadge(key))
+            }
+            0 -> {
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
+                SessionLastMsgDbOperator.onDealSessionLastMsgInfo(changeBadge(key))
+            }
+            else -> throw IllegalArgumentException("unknown classification!")
+        }?.let { p ->
+            IMHelper.postToUiObservers(p.second, p.first)
+        }
+    }
+
+    private fun changeBadge(key: String): SessionLastMsgInfo? {
+        return IMHelper.withDb {
             val last = it.sessionMsgDao().findSessionMsgInfoByKey(key)
             last?.ownerMsgId = null
             last?.ownerReplyMsgId = null
@@ -39,8 +44,6 @@ internal object BadgeDbOperator {
             last?.replyMeMsgId = null
             last?.msgNum = 0
             last
-        }?.let {
-            SessionLastMsgDbOperator.onDealSessionLastMsgInfo(it)
         }
     }
 }

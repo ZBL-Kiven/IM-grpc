@@ -110,28 +110,28 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun registerChatRoom(groupId: Long, ownerId: Long, targetUserId: Long? = null, vararg channel: FetchMsgChannel) {
+    fun registerChatRoom(groupId: Long, ownerId: Int, targetUserId: Int? = null, vararg channel: FetchMsgChannel) {
         val errorMsg = "your call register with channels $channel , but %s is invalid"
         catching {
             var hasGroupType = false
-            var hasPrivateOwnerType = false
             var hasPrivateFansType = false
+            var hasPrivateOwnerType = false
             channel.forEach {
                 if (it.classification == 0) hasGroupType = true
-                if (it.classification == 1) hasPrivateOwnerType = true
-                if (it.classification == 2) hasPrivateFansType = true
+                if (it.classification == 1) hasPrivateFansType = true
+                if (it.classification == 2) hasPrivateOwnerType = true
             }
             if (hasGroupType && groupId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "groupId"))
-            if (hasPrivateOwnerType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
-            if (hasPrivateFansType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
+            if (hasPrivateFansType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
+            if (hasPrivateOwnerType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
         }
-        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId, targetUserId, null, null, channel)
+        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
-        data.ownerId = ownerId
-        data.targetUserid = targetUserId ?: 0
+        data.ownerId = ownerId.toLong()
+        data.targetUserid = targetUserId?.toLong() ?: 0
         channel.forEach { data.addChannel(it.serializeName) }
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
         clearBadges()
@@ -146,7 +146,7 @@ object IMHelper : IMInterface<Any?>() {
         clearBadges()
     }
 
-    fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Long? = null, uidIfFans: Long? = null) {
+    fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
         val errorMsg = "your call delete session with type :$type ,but %s is null"
         catching {
             val targetId = when (type) {

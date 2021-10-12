@@ -1,6 +1,7 @@
 package com.zj.imtest
 
 import android.Manifest
+import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,6 @@ import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
-import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.fecher.FetchMsgChannel
@@ -39,6 +39,10 @@ import com.zj.imtest.ui.MsgAdapter
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        var app: Application? = null
+    }
+
     private var incId = 0
         get() {
             return field++
@@ -48,7 +52,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
     private val groupId = 32L
-    private val ownerId = 151120L
+    private val ownerId = 151120
     private var lastSelectData: FileInfo? = null
         set(value) {
             et.text = value?.path ?: ""
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = this.application
         setContentView(R.layout.activity_main)
         rv = findViewById(R.id.main_erv)
         tv = findViewById(R.id.main_tv_conn)
@@ -70,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, 120516, FetchMsgChannel.OWNER_PRIVATE)
+        IMHelper.registerChatRoom(groupId, ownerId, 0, FetchMsgChannel.FANS_PRIVATE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -103,10 +108,10 @@ class MainActivity : AppCompatActivity() {
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
 
-        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
-        IMHelper.getChatMsg(bean, "GET_0")
+        //        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
+        //        IMHelper.getChatMsg(bean, "GET_0")
 
-        //        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/

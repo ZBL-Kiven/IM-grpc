@@ -2,12 +2,12 @@ package com.zj.ccIm.core.bean
 
 import com.zj.database.entity.SessionLastMsgInfo
 
-class   PrivateFansEn {
+class PrivateFansEn {
 
     /**
      * 用户id
      */
-    var userId: Long? = null
+    var userId: Int? = null
 
     /**
      * 用户名

@@ -218,7 +218,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             Comment.DELETE_OWNER_SESSION -> 0
             else -> throw java.lang.IllegalArgumentException()
         }
-        ImApi.getFunctionApi().call({ it.deleteSession(data.groupId, data.targetId, type) })
+        ImApi.getFunctionApi().call({ it.deleteSession(data.targetId, data.groupId, type) })
     }
 
     private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {
