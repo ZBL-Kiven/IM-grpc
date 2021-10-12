@@ -110,6 +110,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
         else llQuestion.setPadding(baseContentMargins, DPUtils.dp2px(8f), baseContentMargins, baseContentMargins) //普通消息变为自适应宽度
         contentLayout.layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
+        frameFLag.visibility = View.GONE
     }
 
     private fun setChatRewardItem(data: ImMsgIn) {
@@ -191,12 +192,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 setAlreadyReplyBg()
             }
         }
-        //底部时间及奖励展示
-        //        if (data.getSelfUserId() == data.getSenderId()) {
-        //            timeBottom.visibility = View.VISIBLE
-        //            timeBottom.setData(data)
-        //        } else timeBottom.visibility = View.GONE
-
         if (data.getSelfUserId() == data.getOwnerId()) {
             val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT)
