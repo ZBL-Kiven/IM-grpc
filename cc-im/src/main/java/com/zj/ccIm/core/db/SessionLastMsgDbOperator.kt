@@ -16,12 +16,12 @@ internal object SessionLastMsgDbOperator {
     fun dealSessionLastMsgInfo(callId: String, info: SessionLastMsgInfo): Pair<String, Any?>? {
         return catching {
             info.key = when (callId) {
-                Constance.TOPIC_CHAT_OWNER_INFO -> {
+                Constance.TOPIC_CHAT_FANS_INFO -> {
                     val owner = info.ownerId
                     if (owner < 0) throw IllegalArgumentException("error case: the session last msg info ,owner id is invalid!")
                     SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = owner)
                 }
-                Constance.TOPIC_CHAT_FANS_INFO -> {
+                Constance.TOPIC_CHAT_OWNER_INFO -> {
                     val target = info.targetUserId
                     if (target < 0) throw IllegalArgumentException("error case: the session last msg info ,target user id is invalid!")
                     SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = target)

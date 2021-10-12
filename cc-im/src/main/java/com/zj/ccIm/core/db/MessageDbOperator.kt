@@ -44,4 +44,10 @@ internal object MessageDbOperator {
     }
 
 
+    fun deleteMsg(clientId: String) {
+        IMHelper.withDb {
+            it.messageDao().deleteMsgByClientId(clientId)
+        }
+    }
+
 }

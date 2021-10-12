@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, 151253, FetchMsgChannel.FANS_PRIVATE)
+        IMHelper.registerChatRoom(groupId, ownerId, 120516, FetchMsgChannel.OWNER_PRIVATE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -102,9 +102,11 @@ class MainActivity : AppCompatActivity() {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-        //        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
-        //        IMHelper.getChatMsg(bean, "GET_0")
-        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+
+        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
+        IMHelper.getChatMsg(bean, "GET_0")
+
+        //        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -157,7 +159,7 @@ class MainActivity : AppCompatActivity() {
                 ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
-                else-> adapter?.removeIfEquals(d)
+                else -> adapter?.removeIfEquals(d)
             }
             if (!list.isNullOrEmpty()) adapter?.change(list)
         }

@@ -21,7 +21,7 @@ object IMConfig : ImConfigIn {
     override fun getToken(): String {
 //        return "NjRlN2ViMjYtNjAxNi00NDIxLTkwNmEtZjc4NWU3ZWExZmI5"
 
-                return "NWNhNTQ3NGYtMjFjZi00MTQyLWJlODYtZjAwZjU4M2YzZDgw"  //v
+                return "MmRlMGQzOTgtNDViNS00NGU5LTk1NDUtYTNkMmVkMThmZTc3"  //v
     }
 
     override fun getGrpcAddress(): Pair<String, Int> {

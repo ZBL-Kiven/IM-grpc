@@ -27,7 +27,9 @@ import okhttp3.RequestBody
 import com.google.gson.Gson
 import com.zj.ccIm.BuildConfig
 import com.zj.ccIm.core.bean.*
+import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
+import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
 import com.zj.database.entity.SessionLastMsgInfo
 
 
@@ -75,6 +77,10 @@ object IMHelper : IMInterface<Any?>() {
 
     fun refreshSessions() {
         Fetcher.refresh(GroupSessionFetcher)
+    }
+
+    fun refreshPrivateOwnerSessions() {
+        Fetcher.refresh(PrivateOwnerSessionFetcher)
     }
 
     fun getChatMsg(bean: GetMsgReqBean, callId: String) {
@@ -156,6 +162,10 @@ object IMHelper : IMInterface<Any?>() {
 
     fun clearBadges() {
         routeToClient(lastMsgRegister, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+    }
+
+    fun deleteMsgByClientId(clientId: String) {
+        MessageDbOperator.deleteMsg(clientId)
     }
 
     internal fun tryToRegisterAfterConnected(): Boolean {

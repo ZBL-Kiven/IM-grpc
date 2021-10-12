@@ -162,7 +162,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (fromType && d.type == null) throw NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
         getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t, a ->
             if (fromType) {
-                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, data, d, a, t)
+                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, isOk, data, d, a, t)
                 postReceivedMessage(callId, rsp, true, 0)
             } else {
                 ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")

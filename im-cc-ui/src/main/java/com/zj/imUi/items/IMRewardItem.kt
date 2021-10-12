@@ -133,7 +133,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                     textReplyType.visibility = View.VISIBLE
                     textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.toUpperCase(Locale.getDefault())
                     textReplyType.setOnClickListener {
-                        Log.d("LiXiang", "回复TextView点击")
                         data.onReplyQuestion()
                     }
                 }
@@ -141,7 +140,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                     textReplyType.visibility = View.VISIBLE
                     textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).toUpperCase(Locale.getDefault())
                     textReplyType.setOnClickListener {
-                        Log.d("LiXiang", "撤回TextView点击")
                         data.userRetractRewardMsg()
                     }
                 }
