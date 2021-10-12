@@ -9,7 +9,7 @@
 
     <com.zj.imUi.widget.top.GroupMessageItemTitle
         android:id="@+id/im_msg_item_owner_reward_question_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:visibility="gone"
@@ -32,7 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/im_msg_item_owner_reward_question_tv_content"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/im_msg_message_textColor_meReplyOthers"
             android:textStyle="bold"
