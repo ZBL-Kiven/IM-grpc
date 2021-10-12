@@ -45,7 +45,6 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
      */
     @SuppressLint("ResourceAsColor")
     fun setBackGround(data: ImMsgIn) {
-//        setSpark(data.getQuestionStatus())
         var plus = ""
 
         if(data.getSelfUserId() == data.getOwnerId()){
@@ -58,6 +57,9 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
                 rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained)
                 plus = ""
             }
+            data.getSpark().let {
+                textRewardNumber.text = StringBuilder(plus).append(it)
+            }
         }else{
             if (data.getQuestionStatus()== 0){
                 textRewardNumber.setTextColor(ContextCompat.getColor(context, R.color.im_msg_reward_text_color_member_waitReply))
@@ -69,11 +71,11 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
                 sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_diamonds_gray)
                 plus = "- "
             }
+            data.getDiamonds().let {
+                textRewardNumber.text = StringBuilder(plus).append(it)
+            }
         }
 
-        data.getSpark().let {
-            textRewardNumber.text = StringBuilder(plus).append(it)
-        }
     }
 }
 

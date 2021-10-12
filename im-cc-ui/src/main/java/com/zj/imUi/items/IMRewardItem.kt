@@ -127,7 +127,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
-        if (data.getQuestionStatus() == 0) {
+        if (data.getQuestionStatus() == 0&&(data.getSendState() == 0||data.getSendState() == 3)) {
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
                     textReplyType.visibility = View.VISIBLE
