@@ -30,6 +30,7 @@ import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
+import com.zj.ccIm.error.ConnectionError
 import com.zj.database.entity.SessionLastMsgInfo
 
 
@@ -58,7 +59,7 @@ object IMHelper : IMInterface<Any?>() {
 
     override fun onError(e: Throwable) {
         Log.e("------ ", "IM Error case : ${e.message}")
-        if (BuildConfig.DEBUG) throw  e
+        if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {

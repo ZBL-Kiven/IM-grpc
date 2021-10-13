@@ -20,6 +20,7 @@ import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
 import com.zj.ccIm.core.bean.GetMsgReqBean
+import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.logger.ImLogs
 
 open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
@@ -243,7 +244,7 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     ImLogs.requireToPrintInFile("------ ", "onCanceled with message : ${t.message}")
                 }
                 else -> {
-                    super.onParseError(IllegalStateException("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
+                    super.onParseError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
                 }
             }
         } ?: super.onParseError(t, deadly)

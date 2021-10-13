@@ -131,7 +131,9 @@ open class ClientHubImpl : ClientHub<Any?>() {
                 if (d != null) {
                     val sst = sendingState ?: SendMsgState.SENDING
                     val data = d as SendMessageReqEn
-                    data.diamondNum?.let { AssetsChangedOperator.onAssetsChanged(callId, -it, null) }
+                    if (sst == SendMsgState.SENDING) data.diamondNum?.let {
+                        AssetsChangedOperator.onAssetsChanged(callId, -it, null)
+                    }
                     val msg = Converter.exchangeMsgInfoBySendingInfo(data, sst)
                     val r = MessageDbOperator.onDealMessages(msg, callId, sendingState)
                     first = r?.first

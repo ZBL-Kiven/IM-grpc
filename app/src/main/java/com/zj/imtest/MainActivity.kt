@@ -22,6 +22,7 @@ import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
@@ -53,6 +54,8 @@ class MainActivity : AppCompatActivity() {
     private var adapter: MsgAdapter? = null
     private val groupId = 32L
     private val ownerId = 151120
+    private var curSpark = 0
+    private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
         set(value) {
             et.text = value?.path ?: ""
@@ -169,27 +172,37 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty()) adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, lr, payload ->
+            r?.diamondNum?.let {
+                curDiamond += it
+            }
+            r?.spark?.let {
+                curSpark += it
+            }
+            Log.e("----- ", "on assets changed, diamond = $curDiamond    spark = $curSpark")
+        }
+
+        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, lr, payload ->
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128, this).listen { r, l, pl ->
             Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<PrivateFansEn>(0x1129).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<PrivateFansEn>(0x1129, this).listen { r, l, pl ->
             Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<PrivateOwnerEntity>(0x1130).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<PrivateOwnerEntity>(0x1130, this).listen { r, l, pl ->
             Log.e("----- ", "on  private owner chat got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, pl ->
+        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125, this).listen { r, _, pl ->
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, pl ->
+        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127, this).listen { r, _, pl ->
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
         }
     }

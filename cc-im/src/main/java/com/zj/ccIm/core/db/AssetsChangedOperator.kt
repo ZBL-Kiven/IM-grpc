@@ -5,7 +5,7 @@ import com.zj.ccIm.core.bean.AssetsChanged
 
 object AssetsChangedOperator {
 
-    fun onAssetsChanged(callId: String?, sparkNum: Int?, diamondNum: Int?) {
+    fun onAssetsChanged(callId: String?, diamondNum: Int?, sparkNum: Int?) {
         if (sparkNum != null || diamondNum != null) {
             IMHelper.postToUiObservers(AssetsChanged(sparkNum, diamondNum), callId)
         }
