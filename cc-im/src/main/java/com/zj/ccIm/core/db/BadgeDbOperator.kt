@@ -18,11 +18,11 @@ internal object BadgeDbOperator {
     private fun getSessionLastMsgKeyForClassification(classification: Int, info: GetMsgReqBean) {
         when (classification) {
             FetchMsgChannel.FANS_PRIVATE.classification -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId.toInt())
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId)
                 SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(changeBadge(key))
             }
             FetchMsgChannel.OWNER_PRIVATE.classification -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid?.toInt() ?: -1)
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserId ?: 0)
                 SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(changeBadge(key))
             }
             0 -> {

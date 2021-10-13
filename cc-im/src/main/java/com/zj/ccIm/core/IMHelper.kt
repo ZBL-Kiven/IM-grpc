@@ -112,21 +112,8 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun registerChatRoom(groupId: Long, ownerId: Int, targetUserId: Int? = null, vararg channel: FetchMsgChannel) {
-        val errorMsg = "your call register with channels $channel , but %s is invalid"
-        catching {
-            var hasGroupType = false
-            var hasPrivateFansType = false
-            var hasPrivateOwnerType = false
-            channel.forEach {
-                if (it.classification == 0) hasGroupType = true
-                if (it.classification == 1) hasPrivateFansType = true
-                if (it.classification == 2) hasPrivateOwnerType = true
-            }
-            if (hasGroupType && groupId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "groupId"))
-            if (hasPrivateFansType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
-            if (hasPrivateOwnerType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
-        }
         this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
+        if (this.lastMsgRegister?.checkValid() != true) return
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
@@ -135,16 +122,16 @@ object IMHelper : IMInterface<Any?>() {
         data.targetUserid = targetUserId?.toLong() ?: 0
         channel.forEach { data.addChannel(it.serializeName) }
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges()
+        clearBadges(lastMsgRegister?.getCopyData())
     }
 
     fun leaveChatRoom(groupId: Long) {
         val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
-        this.lastMsgRegister = null
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges()
+        clearBadges(lastMsgRegister?.getCopyData())
+        this.lastMsgRegister = null
     }
 
     fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
@@ -161,8 +148,8 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun clearBadges() {
-        routeToClient(lastMsgRegister, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+    fun clearBadges(copyData: GetMsgReqBean?) {
+        routeToClient(copyData, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
 
     fun deleteMsgByClientId(clientId: String) {
@@ -171,7 +158,7 @@ object IMHelper : IMInterface<Any?>() {
 
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channels)
+            registerChatRoom(it.groupId, it.ownerId, it.targetUserId, *it.channels)
             return true
         }
         return false

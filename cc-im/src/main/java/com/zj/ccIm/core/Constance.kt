@@ -97,13 +97,13 @@ internal fun <R> catching(run: () -> R?): R? {
     }
 }
 
-internal fun <R> catching(run: () -> R?, deal: (() -> Unit)? = null): R? {
+internal fun <R> catching(run: () -> R?, deal: (() -> R?)? = null): R? {
     return try {
         run()
     } catch (e: Exception) {
-        IMHelper.postError(e);deal?.invoke();null
+        IMHelper.postError(e);deal?.invoke()
     } catch (e: java.lang.Exception) {
-        IMHelper.postError(e);deal?.invoke();null
+        IMHelper.postError(e);deal?.invoke()
     }
 }
 
