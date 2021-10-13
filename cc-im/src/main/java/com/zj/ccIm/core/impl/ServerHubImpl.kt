@@ -22,7 +22,7 @@ import com.zj.ccIm.core.bean.GetMoreMessagesInfo
 import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.logger.ImLogs
 
-class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
+open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
 
     private var subscribeTopics = mutableListOf<String>()
     private var getMsgRequestCompo: BaseRetrofit.RequestCompo? = null

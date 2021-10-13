@@ -2,7 +2,6 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.dao.MessageDao
@@ -31,11 +30,6 @@ internal object SendingDbOperator {
         localMsg?.sendTime = d.sendTime
         localMsg?.questionContent?.published = d.published
         localMsg?.questionContent?.expireTime = d.expireTime
-        val spark = d.sparkNum
-        val diamond = d.diamondNum
-        if (spark != null || diamond != null) {
-            IMHelper.postToUiObservers(AssetsChanged(spark, diamond), callId)
-        }
         return when (sendingState) {
             SendMsgState.SENDING -> null
 

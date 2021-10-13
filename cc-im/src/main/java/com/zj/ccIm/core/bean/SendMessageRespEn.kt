@@ -28,12 +28,12 @@ class SendMessageRespEn {
     var sendTime: Long = 0
 
     /**
-     * 钻石余额
+     * 钻石 变化
      */
     var diamondNum: Int? = null
 
     /**
-     * spark余额
+     * spark 变化
      */
     var sparkNum: Int? = null
 

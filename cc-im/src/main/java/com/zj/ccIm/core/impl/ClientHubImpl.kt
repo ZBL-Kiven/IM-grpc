@@ -17,7 +17,7 @@ import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 
-class ClientHubImpl : ClientHub<Any?>() {
+open class ClientHubImpl : ClientHub<Any?>() {
 
     companion object {
         const val PAYLOAD_ADD = "add"
@@ -130,7 +130,9 @@ class ClientHubImpl : ClientHub<Any?>() {
             SendMessageReqEn::class.java -> {
                 if (d != null) {
                     val sst = sendingState ?: SendMsgState.SENDING
-                    val msg = Converter.exchangeMsgInfoBySendingInfo(d as SendMessageReqEn, sst)
+                    val data = d as SendMessageReqEn
+                    data.diamondNum?.let { AssetsChangedOperator.onAssetsChanged(callId, -it, null) }
+                    val msg = Converter.exchangeMsgInfoBySendingInfo(data, sst)
                     val r = MessageDbOperator.onDealMessages(msg, callId, sendingState)
                     first = r?.first
                     pl = r?.second
@@ -138,7 +140,17 @@ class ClientHubImpl : ClientHub<Any?>() {
             }
             SendMessageRespEn::class.java -> {
                 if (d != null) {
-                    val r = SendingDbOperator.onDealMsgSentInfo(d as SendMessageRespEn, callId, sendingState)
+                    val data = d as SendMessageRespEn
+                    run assets@{
+                        if (sendingState != SendMsgState.SUCCESS && sendingState != SendMsgState.NONE) {
+                            val diamond = data.diamondNum ?: return@assets
+                            AssetsChangedOperator.onAssetsChanged(callId, diamond, null)
+                        } else {
+                            val sparks = data.sparkNum ?: return@assets
+                            AssetsChangedOperator.onAssetsChanged(callId, null, sparks)
+                        }
+                    }
+                    val r = SendingDbOperator.onDealMsgSentInfo(data, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
