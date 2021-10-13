@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 import com.zj.database.dao.*
 import com.zj.database.entity.*
 
-@Database(entities = [SessionInfoEntity::class, MessageInfoEntity::class, SendMessageReqEn::class, SessionLastMsgInfo::class, PrivateOwnerEntity::class], version = 2, exportSchema = false)
+@Database(entities = [SessionInfoEntity::class, MessageInfoEntity::class, SendMessageReqEn::class, SessionLastMsgInfo::class, PrivateOwnerEntity::class], version = 3, exportSchema = false)
 abstract class IMDb : RoomDatabase() {
 
     abstract fun sessionDao(): SessionDao

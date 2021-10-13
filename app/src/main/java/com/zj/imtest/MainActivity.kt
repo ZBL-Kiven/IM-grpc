@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, 0, FetchMsgChannel.FANS_PRIVATE)
+        IMHelper.registerChatRoom(groupId, ownerId, IMConfig.getUserId(), FetchMsgChannel.OWNER_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {
