@@ -212,6 +212,6 @@ object IMHelper : IMInterface<Any?>() {
     object Sender : MsgSender(SendMsgConfig())
 
     fun withCustomSender(): SendMsgConfig {
-        return SendMsgConfig()
+        return SendMsgConfig(true)
     }
 }
