@@ -21,7 +21,6 @@ import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
@@ -105,6 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     fun sendUrlImg(view: View) {
 
+
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
 
@@ -114,9 +114,9 @@ class MainActivity : AppCompatActivity() {
         IMHelper.refreshSessions {
             Log.e("------ ", "refreshSessions ====> ${it.success}")
         }
-        IMHelper.refreshPrivateOwnerSessions {
-            Log.e("------ ", "refreshPrivateOwnerSessions ====> ${it.success}")
-        }
+//        IMHelper.refreshPrivateOwnerSessions {
+//            Log.e("------ ", "refreshPrivateOwnerSessions ====> ${it.success}")
+//        }
 
         //        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }

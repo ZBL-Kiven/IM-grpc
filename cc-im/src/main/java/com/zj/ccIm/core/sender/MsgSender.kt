@@ -9,7 +9,7 @@ import com.zj.database.entity.SendMessageReqEn
 @Suppress("unused")
 open class MsgSender internal constructor(private val config: SendMsgConfig) {
 
-    fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean) {
+    fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean): String {
         val sen = SendMessageReqEn()
         sen.content = content
         sen.msgType = MsgType.QUESTION.type
@@ -20,9 +20,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.public = isPublic
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        return config.callId
     }
 
-    fun sendText(content: String, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendText(content: String, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.content = content
         sen.msgType = MsgType.TEXT.type
@@ -31,9 +32,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        return config.callId
     }
 
-    fun sendUrlImg(url: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendUrlImg(url: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.url = url
         sen.clientMsgId = url
@@ -45,9 +47,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        return config.callId
     }
 
-    fun sendImg(filePath: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendImg(filePath: String, width: Int, height: Int, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
         sen.msgType = MsgType.IMG.type
@@ -58,9 +61,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        return config.callId
     }
 
-    fun sendAudio(filePath: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendAudio(filePath: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
         sen.msgType = MsgType.AUDIO.type
@@ -70,9 +74,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        return config.callId
     }
 
-    fun sendUrlAudio(url: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendUrlAudio(url: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.url = url
         sen.msgType = MsgType.AUDIO.type
@@ -82,9 +87,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        return config.callId
     }
 
-    fun sendVideo(filePath: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendVideo(filePath: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
         sen.msgType = MsgType.VIDEO.type
@@ -96,9 +102,10 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        return config.callId
     }
 
-    fun sendUrlVideo(url: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null) {
+    fun sendUrlVideo(url: String, width: Int, height: Int, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.url = url
         sen.msgType = MsgType.VIDEO.type
@@ -110,6 +117,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.replyMsg = replyMsg
         setRetryProp(sen)
         IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        return config.callId
     }
 
     fun resendMessage(clientId: String) {
