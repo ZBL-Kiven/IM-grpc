@@ -1,7 +1,8 @@
 package com.zj.imtest.ui
 
 import android.util.Log
-import com.zj.ccIm.core.sender.Sender
+import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.sender.MsgSender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
@@ -287,11 +288,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun resend() {
-        Sender.resendMessage(getMsgId())
+        IMHelper.Sender.resendMessage(getMsgId())
     }
 
     override fun onReplyQuestion() {
-        Sender.sendText("ok thanks", getGroupId(), info)
+        IMHelper.Sender.sendText("ok thanks", getGroupId(), info)
     }
 
     override fun onViewLargePic() {

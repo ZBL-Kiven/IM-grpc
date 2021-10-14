@@ -4,14 +4,19 @@ import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.bean.FetchResult
+import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
-import com.zj.ccIm.error.FetchPrivateChatSessionResult
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.DbHelper
 import com.zj.database.entity.SessionLastMsgInfo
 import io.reactivex.schedulers.Schedulers
 
 internal object PrivateOwnerSessionFetcher : BaseFetcher() {
+
+    override fun getPayload(): String {
+        return ClientHubImpl.PAYLOAD_FETCH_OWNER_SESSION
+    }
 
     override fun startFetch(prop: FetchType): BaseRetrofit.RequestCompo? {
         val lastTs = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L
@@ -24,12 +29,11 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                     if (sessions.isNullOrEmpty()) {
                         if (isFirstFetch) {
                             ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group is null result for first time !")
-                            IMHelper.postToUiObservers(FetchPrivateChatSessionResult(success = true, isFirstFetch = true, isNullData = true))
                             DbHelper.get(Constance.app)?.db?.privateChatOwnerDao()?.deleteAll()
-                            finishAFetch(prop, true)
+                            finishAFetch(prop, FetchResult(true, isFirstFetch, true))
                         } else {
                             ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group is null ,trying to fetch last msg by localed !")
-                            fetchLastMsg(prop)
+                            fetchLastMsg(prop, isFirstFetch)
                         }
                     } else {
                         ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group success, new ts is ${d.timeStamp}, changed group is [${sessions.joinToString { "${it.ownerName} , " }}]")
@@ -38,10 +42,10 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                         sessions.forEach { s ->
                             sessionDao?.insertOrUpdate(s)
                         }
-                        fetchLastMsg(prop)
+                        fetchLastMsg(prop, isFirstFetch)
                     }
                 } else {
-                    finishAFetch(prop, isSuccess = false, "PrivateOwnerSessionFetcher: fetch owner group failed with:${e?.message} !!")
+                    finishAFetch(prop, FetchResult(false, isFirstFetch, true, "PrivateOwnerSessionFetcher: fetch owner group failed with:${e?.message} !!"))
                 }
             } catch (e: Exception) {
                 cancel(prop)
@@ -50,7 +54,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
         }
     }
 
-    private fun fetchLastMsg(prop: FetchType) {
+    private fun fetchLastMsg(prop: FetchType, isFirstFetch: Boolean) {
         val sessions = DbHelper.get(Constance.app)?.db?.privateChatOwnerDao()?.findAll()
         if (!sessions.isNullOrEmpty()) {
             val oIds = sessions.map { ms -> ms.ownerId }
@@ -62,17 +66,17 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                         fi.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = fi.ownerId)
                         fmDao?.insertOrUpdateSessionMsgInfo(fi)
                     }
-                    mergeSessionAndPushToUi(prop)
+                    mergeSessionAndPushToUi(prop, isFirstFetch)
                 } finally {
                     cancel(prop)
                 }
             }
         } else {
-            finishAFetch(prop, true, "the sessions is null")
+            finishAFetch(prop, FetchResult(true, isFirstFetch, true, "the sessions is null"))
         }
     }
 
-    private fun mergeSessionAndPushToUi(prop: FetchType) {
+    private fun mergeSessionAndPushToUi(prop: FetchType, isFirstFetch: Boolean) {
         val sessions = DbHelper.get(Constance.app)?.db?.privateChatOwnerDao()?.findAll()
         val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
         sessions?.forEach { s ->
@@ -80,7 +84,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
         IMHelper.postToUiObservers(sessions, null) {
-            finishAFetch(prop, isSuccess = true)
+            finishAFetch(prop, FetchResult(true, isFirstFetch, false))
         }
     }
 }

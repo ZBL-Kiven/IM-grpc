@@ -1,6 +1,5 @@
 package com.zj.ccIm.core.fecher
 
-import android.os.Bundle
 import com.zj.api.base.BaseRetrofit
 
 internal class FetchType {
@@ -10,6 +9,7 @@ internal class FetchType {
         const val FETCH_FLAG_REFRESH = 2
     }
 
+    var fetchIds = mutableSetOf<Int>()
     var flags: Int = 0
     var dealCls: BaseFetcher? = null
     var compo: BaseRetrofit.RequestCompo? = null

@@ -2,10 +2,10 @@ package com.zj.ccIm.core.db
 
 import com.google.gson.Gson
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
-import com.zj.ccIm.error.FetchSessionResult
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.database.entity.SessionLastMsgInfo
@@ -62,7 +62,7 @@ internal object SessionDbOperator {
                 i.sessionMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
-            IMHelper.postToUiObservers(FetchSessionResult(true, isFirst, sessions.isNullOrEmpty()))
+            IMHelper.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
             IMHelper.postToUiObservers(sessions, callId)
         }
     }

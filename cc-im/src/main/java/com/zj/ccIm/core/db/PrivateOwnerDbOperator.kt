@@ -1,10 +1,10 @@
 package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
-import com.zj.ccIm.error.FetchPrivateChatSessionResult
 import com.zj.database.IMDb
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
@@ -50,7 +50,7 @@ internal object PrivateOwnerDbOperator {
                 s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
-            IMHelper.postToUiObservers(FetchPrivateChatSessionResult(true, isFirst, sessions.isNullOrEmpty()))
+            IMHelper.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
             IMHelper.postToUiObservers(sessions, callId)
         }
     }

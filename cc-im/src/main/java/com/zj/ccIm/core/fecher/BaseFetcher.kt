@@ -2,10 +2,13 @@ package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.catching
 import java.util.concurrent.LinkedBlockingDeque
 
 internal abstract class BaseFetcher {
+
+    abstract fun getPayload(): String
 
     private var selfInFetching = false
 
@@ -23,19 +26,19 @@ internal abstract class BaseFetcher {
         fun startFetch(vararg from: BaseFetcher) {
             if (fetching) return
             fetching = true
-            from.forEach { getOrCreateFetcher(it, FetchType.FETCH_FLAG_PENDING) }
+            from.forEach { getOrCreateFetcher(it, null, FetchType.FETCH_FLAG_PENDING) }
             fetch()
         }
 
-        fun refresh(vararg f: BaseFetcher) {
-            f.forEach { getOrCreateFetcher(it, FetchType.FETCH_FLAG_REFRESH) }
+        fun refresh(fetchId: Int, vararg f: BaseFetcher) {
+            f.forEach { getOrCreateFetcher(it, fetchId, FetchType.FETCH_FLAG_REFRESH) }
             fetch()
         }
 
         private fun fetch() {
             val prop = cachedFetchers.poll()
             if (prop == null) {
-                Fetcher.endOfFetch();return
+                Fetcher.endOfFetch(FetchType(), null);return
             }
             if (prop.dealCls?.selfInFetching == true) return
             prop.dealCls?.selfInFetching = true
@@ -46,7 +49,7 @@ internal abstract class BaseFetcher {
             })
         }
 
-        private fun getOrCreateFetcher(from: BaseFetcher, flags: Int): FetchType {
+        private fun getOrCreateFetcher(from: BaseFetcher, fetchId: Int?, flags: Int): FetchType {
             var f = cachedFetchers.firstOrNull { it.dealCls?.equals(from) == true }
             if (f == null) {
                 f = FetchType()
@@ -57,6 +60,7 @@ internal abstract class BaseFetcher {
                 f.dealCls = from
             }
             f.flags = f.flags or flags
+            if (fetchId != null) f.fetchIds.add(fetchId)
             return f
         }
     }
@@ -65,24 +69,24 @@ internal abstract class BaseFetcher {
         prop.compo?.cancel()
     }
 
-    protected fun finishAFetch(prop: FetchType, isSuccess: Boolean, case: String = "") {
+    protected fun finishAFetch(prop: FetchType, result: FetchResult) {
         selfInFetching = false
         if (prop.flags.and(FetchType.FETCH_FLAG_PENDING) != 0) {
-            if (isSuccess) {
+            if (result.success) {
                 if (cachedFetchers.all { prop.flags.and(FetchType.FETCH_FLAG_PENDING) == 0 }) {
                     fetching = false
                     selfInFetching = false
-                    Fetcher.endOfFetch()
+                    Fetcher.endOfFetch(prop, result)
                 } else {
                     fetch()
                 }
             } else {
                 fetching = false
-                IMHelper.reconnect("fetch failed , case :$case !!")
+                IMHelper.reconnect("fetch failed , case :${result.errorMsg} !!")
             }
         }
         if (prop.flags.and(FetchType.FETCH_FLAG_REFRESH) != 0) {
-            Fetcher.abortOrFinishFetch(prop, isSuccess)
+            Fetcher.endOfRefresh(prop, result)
         }
     }
 

@@ -22,14 +22,11 @@ import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
-import com.zj.ccIm.core.bean.AssetsChanged
-import com.zj.ccIm.core.bean.GetMoreMessagesInfo
-import com.zj.ccIm.core.bean.MessageTotalDots
-import com.zj.ccIm.core.bean.PrivateFansEn
+import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.sender.Sender
-import com.zj.ccIm.error.FetchSessionResult
+import com.zj.ccIm.core.sender.MsgSender
+import com.zj.ccIm.core.IMHelper.Sender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -90,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     fun sendText(view: View) {
         /**
-         *  调用以发送一条消息，多类型的消息可参考 [Sender] ,
+         *  调用以发送一条消息，多类型的消息可参考 [MsgSender] ,
          *  发送消息时 callId 会被默认指定为 UUID (不传入任何值的情况下)。
          *  为保证消息回流得到认证，此值尽量保持唯一。
          * */
@@ -114,7 +111,14 @@ class MainActivity : AppCompatActivity() {
         //        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
         //        IMHelper.getChatMsg(bean, "GET_0")
 
-        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        IMHelper.refreshSessions {
+            Log.e("------ ", "refreshSessions ====> ${it.success}")
+        }
+        IMHelper.refreshPrivateOwnerSessions {
+            Log.e("------ ", "refreshPrivateOwnerSessions ====> ${it.success}")
+        }
+
+        //        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -202,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127, this).listen { r, _, pl ->
+        IMHelper.addReceiveObserver<FetchResult>(0x1127, this).listen { r, _, pl ->
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
         }
     }

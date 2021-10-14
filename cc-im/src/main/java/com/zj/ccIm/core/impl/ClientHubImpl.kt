@@ -12,7 +12,6 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.ccIm.core.db.*
 import com.zj.ccIm.core.sender.Converter
-import com.zj.ccIm.core.sender.Sender
 import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
@@ -20,17 +19,21 @@ import com.zj.protocol.grpc.ImMessage
 open class ClientHubImpl : ClientHub<Any?>() {
 
     companion object {
-        const val PAYLOAD_ADD = "add"
-        const val PAYLOAD_DELETE = "delete"
-        const val PAYLOAD_CHANGED = "change"
-        const val PAYLOAD_CHANGED_SEND_STATE = "change_send_state"
-        const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "delete_case_sensitive_words"
-        const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = "delete_case_not_following"
-        const val PAYLOAD_DELETE_NOT_ENOUGH = "delete_case_not_enough_coins"
-        const val PAYLOAD_DELETE_NOT_OWNER = "delete_case_not_owner"
-        const val PAYLOAD_DELETE_GROUP_STOPPED = "delete_case_group_stopped"
-        const val PAYLOAD_DELETE_REPEAT_ANSWER = "delete_case_not_repeat_answer"
-        const val PAYLOAD_DELETE_DIAMOND_NOT_ENOUGH = "delete_case_diamond_not_enough"
+
+        const val PAYLOAD_FETCH_GROUP_SESSION = "ClientHubImpl.payload_fetch_group_session"
+        const val PAYLOAD_FETCH_OWNER_SESSION = "ClientHubImpl.payload_fetch_owner_session"
+
+        const val PAYLOAD_ADD = "ClientHubImpl.payload_add"
+        const val PAYLOAD_DELETE = "ClientHubImpl.payload_delete"
+        const val PAYLOAD_CHANGED = "ClientHubImpl.payload_change"
+        const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
+        const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "ClientHubImpl.payload_delete_case_sensitive_words"
+        const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = "ClientHubImpl.payload_delete_case_not_following"
+        const val PAYLOAD_DELETE_NOT_ENOUGH = "ClientHubImpl.payload_delete_case_not_enough_coins"
+        const val PAYLOAD_DELETE_NOT_OWNER = "ClientHubImpl.payload_delete_case_not_owner"
+        const val PAYLOAD_DELETE_GROUP_STOPPED = "ClientHubImpl.payload_delete_case_group_stopped"
+        const val PAYLOAD_DELETE_REPEAT_ANSWER = "ClientHubImpl.payload_delete_case_not_repeat_answer"
+        const val PAYLOAD_DELETE_DIAMOND_NOT_ENOUGH = "ClientHubImpl.payload_delete_case_diamond_not_enough"
     }
 
     /**
@@ -207,7 +210,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         IMHelper.withDb {
             val resendMsg = it.sendMsgDao().findAllBySessionId(bean.groupId)
             resendMsg?.forEach { msg ->
-                if (msg.autoResendWhenBootStart) Sender.resendMessage(msg)
+                if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
                 else dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
             }
         }

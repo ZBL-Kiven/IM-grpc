@@ -30,6 +30,8 @@ import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
+import com.zj.ccIm.core.sender.MsgSender
+import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
 import com.zj.database.entity.SessionLastMsgInfo
 
@@ -76,12 +78,12 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun refreshSessions() {
-        Fetcher.refresh(GroupSessionFetcher)
+    fun refreshSessions(result: (FetchResult) -> Unit) {
+        Fetcher.refresh(GroupSessionFetcher, result)
     }
 
-    fun refreshPrivateOwnerSessions() {
-        Fetcher.refresh(PrivateOwnerSessionFetcher)
+    fun refreshPrivateOwnerSessions(result: (FetchResult) -> Unit) {
+        Fetcher.refresh(PrivateOwnerSessionFetcher, result)
     }
 
     fun getChatMsg(bean: GetMsgReqBean, callId: String) {
@@ -205,5 +207,11 @@ object IMHelper : IMInterface<Any?>() {
         } catch (e: Exception) {
             ImLogs.requireToPrintInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
         }
+    }
+
+    object Sender : MsgSender(SendMsgConfig())
+
+    fun withCustomSender(): SendMsgConfig {
+        return SendMsgConfig()
     }
 }
