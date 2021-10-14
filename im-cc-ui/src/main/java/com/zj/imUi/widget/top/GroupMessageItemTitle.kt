@@ -51,12 +51,13 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                 mNickname.visibility = View.VISIBLE
                 mNickname.setPadding(0, 1, 0, 0)
                 mSendTime.textSize = 10f
-                if (data.getPublished()) {
+                if (data.getPublished()||data.getQuestionStatus() == 1) {
                     mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
                 } else mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple_60))
             } else {
                 mNickname.visibility = View.GONE
                 mSendTime.setPadding(0, 12, 0, 0)
+                mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
                 mSendTime.textSize = 12f
             }
         } else {

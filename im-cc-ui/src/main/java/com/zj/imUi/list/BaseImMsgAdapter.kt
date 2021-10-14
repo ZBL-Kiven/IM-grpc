@@ -92,7 +92,7 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
 
     private var lastTime: Long = 0
 
-    private fun onChangeTimeline(d: T) {
+    open fun onChangeTimeline(d: T) {
         val curTime = getSendTime(d)
         val res = context?.let { ctx ->
             TimeLineInflateModel.inflateTimeLine(ctx, curTime, lastTime)

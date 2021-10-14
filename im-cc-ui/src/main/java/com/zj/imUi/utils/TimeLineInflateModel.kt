@@ -2,6 +2,7 @@ package com.zj.imUi.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import com.zj.imUi.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,9 +35,7 @@ object TimeLineInflateModel {
 
                         // 0 -> getTime(timestamp, hourTimeFormat)
 
-                        0 -> TimeDiffUtils.timeDifference(timestamp)?.let {
-                            TimeDiffUtils.setTimeText(it, ctx).toString()
-                        }.toString()
+                        0 -> TimeDiffUtils.timeDifference(timestamp)?.let { TimeDiffUtils.setTimeText(it, ctx).toString() }.toString()
 
                         //                        1 -> "${ctx.getString(R.string.im_ui_yesterday)} ${
                         //                            getTime(timestamp, hourTimeFormat)
@@ -45,7 +44,6 @@ object TimeLineInflateModel {
                         //                            val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
                         //                            "${weekNames[dayOfWeek - 1]} ${getTime(timestamp, hourTimeFormat)}"
                         //                        }
-
                         else -> getTime(timestamp, monthTimeFormat)
                     }
                 } else {
@@ -54,6 +52,7 @@ object TimeLineInflateModel {
             } else {
                 result = getTime(timestamp, yearTimeFormat)
             }
+            Log.d("TimeLine",result)
             return if (result == "null") ""
             else result
         } catch (e: Exception) {
