@@ -5,6 +5,7 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.sender.OnSendBefore
 
 @Suppress("unused")
 open class MsgSender internal constructor(private val config: SendMsgConfig) {
@@ -19,7 +20,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.diamondNum = diamondNum
         sen.public = isPublic
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        send(sen)
         return config.callId
     }
 
@@ -31,7 +32,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.clientMsgId = config.callId
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        send(sen)
         return config.callId
     }
 
@@ -46,7 +47,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.height = height
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        send(sen)
         return config.callId
     }
 
@@ -60,7 +61,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.height = height
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        send(sen)
         return config.callId
     }
 
@@ -73,7 +74,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.duration = duration
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        send(sen)
         return config.callId
     }
 
@@ -86,7 +87,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.duration = duration
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = FileSender(sen))
+        send(sen)
         return config.callId
     }
 
@@ -101,7 +102,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.duration = duration
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        send(sen)
         return config.callId
     }
 
@@ -116,7 +117,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         sen.duration = duration
         sen.replyMsg = replyMsg
         setRetryProp(sen)
-        IMHelper.send(sen, config.callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = null)
+        send(sen)
         return config.callId
     }
 
@@ -130,11 +131,17 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         val sendBefore = if (MsgType.hasUploadType(info.msgType)) {
             if (!info.url.isNullOrEmpty()) null else FileSender(info)
         } else null
-        IMHelper.resend(info, info.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = config.sendConditionCheck, ignoreConnecting = config.connectionStateCheck, sendBefore = sendBefore)
+        send(info, sendBefore)
     }
 
     private fun setRetryProp(sen: SendMessageReqEn) {
+        sen.ignoreConnectionState = config.connectionStateCheck
+        sen.ignoreSendConditionState = config.sendConditionCheck
         sen.autoRetryResend = !config.fromCustom && MsgType.canRetryType(sen.msgType)
         sen.autoResendWhenBootStart = !config.fromCustom && MsgType.canRetryWhenBootStartType(sen.msgType)
+    }
+
+    private fun send(sen: SendMessageReqEn, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
+        IMHelper.send(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
     }
 }

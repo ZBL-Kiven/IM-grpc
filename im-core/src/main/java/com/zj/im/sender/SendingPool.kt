@@ -47,6 +47,7 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
         if (sending) return null
         if (sendMsgQueue.isEmpty()) return null
         sendMsgQueue.getFirst { it.ignoreConnecting }?.let {
+            sendMsgQueue.remove(it)
             return it
         }
         if (!DataReceivedDispatcher.isDataEnable()) {

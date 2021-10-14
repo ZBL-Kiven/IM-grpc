@@ -9,16 +9,19 @@ class SendMsgConfig internal constructor(internal val fromCustom: Boolean = fals
     internal var sendConditionCheck = false
     internal var connectionStateCheck = false
 
-    fun customCallId(callId: String) {
+    fun customCallId(callId: String): SendMsgConfig {
         this.callId = callId
+        return this
     }
 
-    fun ignoreSendConditionCheck(b: Boolean) {
+    fun ignoreSendConditionCheck(b: Boolean): SendMsgConfig {
         this.sendConditionCheck = b
+        return this
     }
 
-    fun ignoreConnectionStateCheck(b: Boolean) {
+    fun ignoreConnectionStateCheck(b: Boolean): SendMsgConfig {
         this.connectionStateCheck = b
+        return this
     }
 
     fun build(): MsgSender {
