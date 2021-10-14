@@ -20,9 +20,10 @@ import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
 import com.zj.ccIm.core.bean.GetMsgReqBean
+import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.logger.ImLogs
 
-class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
+open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
 
     private var subscribeTopics = mutableListOf<String>()
     private var getMsgRequestCompo: BaseRetrofit.RequestCompo? = null
@@ -162,7 +163,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (fromType && d.type == null) throw NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
         getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t, a ->
             if (fromType) {
-                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, data, d, a, t)
+                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, isOk, data, d, a, t)
                 postReceivedMessage(callId, rsp, true, 0)
             } else {
                 ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")
@@ -218,7 +219,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             Comment.DELETE_OWNER_SESSION -> 0
             else -> throw java.lang.IllegalArgumentException()
         }
-        ImApi.getFunctionApi().call({ it.deleteSession(data.groupId, data.targetId, type) })
+        ImApi.getFunctionApi().call({ it.deleteSession(data.targetId, data.groupId, type) })
     }
 
     private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {
@@ -243,7 +244,7 @@ class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     ImLogs.requireToPrintInFile("------ ", "onCanceled with message : ${t.message}")
                 }
                 else -> {
-                    super.onParseError(IllegalStateException("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
+                    super.onParseError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
                 }
             }
         } ?: super.onParseError(t, deadly)

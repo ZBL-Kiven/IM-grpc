@@ -37,7 +37,7 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
     override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
         val m = ImEntityConverter(module)
         (holder?.itemView as? ImMsgView)?.let {
-            if (payloads.isNullOrEmpty()) it.setData(m, false)
+            if (payloads.isNullOrEmpty()) it.setData(m, 1)
             else it.notifyChange(m, payloads.firstOrNull())
         }
     }

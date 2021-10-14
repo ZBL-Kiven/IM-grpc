@@ -27,7 +27,10 @@ import okhttp3.RequestBody
 import com.google.gson.Gson
 import com.zj.ccIm.BuildConfig
 import com.zj.ccIm.core.bean.*
+import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
+import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
+import com.zj.ccIm.error.ConnectionError
 import com.zj.database.entity.SessionLastMsgInfo
 
 
@@ -56,7 +59,7 @@ object IMHelper : IMInterface<Any?>() {
 
     override fun onError(e: Throwable) {
         Log.e("------ ", "IM Error case : ${e.message}")
-        if (BuildConfig.DEBUG) throw  e
+        if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {
@@ -75,6 +78,10 @@ object IMHelper : IMInterface<Any?>() {
 
     fun refreshSessions() {
         Fetcher.refresh(GroupSessionFetcher)
+    }
+
+    fun refreshPrivateOwnerSessions() {
+        Fetcher.refresh(PrivateOwnerSessionFetcher)
     }
 
     fun getChatMsg(bean: GetMsgReqBean, callId: String) {
@@ -104,43 +111,30 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun registerChatRoom(groupId: Long, ownerId: Long, targetUserId: Long? = null, vararg channel: FetchMsgChannel) {
-        val errorMsg = "your call register with channels $channel , but %s is invalid"
-        catching {
-            var hasGroupType = false
-            var hasPrivateOwnerType = false
-            var hasPrivateFansType = false
-            channel.forEach {
-                if (it.classification == 0) hasGroupType = true
-                if (it.classification == 1) hasPrivateOwnerType = true
-                if (it.classification == 2) hasPrivateFansType = true
-            }
-            if (hasGroupType && groupId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "groupId"))
-            if (hasPrivateOwnerType && ownerId < 0) throw java.lang.IllegalArgumentException(String.format(errorMsg, "ownerId"))
-            if (hasPrivateFansType && (targetUserId == null || targetUserId < 0)) throw java.lang.IllegalArgumentException(String.format(errorMsg, "targetUserId"))
-        }
-        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId, targetUserId, null, null, channel)
+    fun registerChatRoom(groupId: Long, ownerId: Int, targetUserId: Int? = null, vararg channel: FetchMsgChannel) {
+        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
+        if (this.lastMsgRegister?.checkValid() != true) return
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         val callId = Constance.CALL_ID_REGISTER_CHAT
         val data = GetImMessageReq.newBuilder()
         data.groupId = groupId
-        data.ownerId = ownerId
-        data.targetUserid = targetUserId ?: 0
+        data.ownerId = ownerId.toLong()
+        data.targetUserid = targetUserId?.toLong() ?: 0
         channel.forEach { data.addChannel(it.serializeName) }
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges()
+        clearBadges(lastMsgRegister?.getCopyData())
     }
 
     fun leaveChatRoom(groupId: Long) {
         val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
         val data = LeaveImGroupReq.newBuilder()
         data.groupId = groupId
-        this.lastMsgRegister = null
         send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges()
+        clearBadges(lastMsgRegister?.getCopyData())
+        this.lastMsgRegister = null
     }
 
-    fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Long? = null, uidIfFans: Long? = null) {
+    fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
         val errorMsg = "your call delete session with type :$type ,but %s is null"
         catching {
             val targetId = when (type) {
@@ -154,13 +148,17 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun clearBadges() {
-        routeToClient(lastMsgRegister, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+    fun clearBadges(copyData: GetMsgReqBean?) {
+        routeToClient(copyData, Constance.CALL_ID_CLEAR_SESSION_BADGE)
+    }
+
+    fun deleteMsgByClientId(clientId: String) {
+        MessageDbOperator.deleteMsg(clientId)
     }
 
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channels)
+            registerChatRoom(it.groupId, it.ownerId, it.targetUserId, *it.channels)
             return true
         }
         return false

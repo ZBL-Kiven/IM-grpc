@@ -291,6 +291,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun onReplyQuestion() {
+        Sender.sendText("ok thanks", getGroupId(), info)
     }
 
     override fun onViewLargePic() {

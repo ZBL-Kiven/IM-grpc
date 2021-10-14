@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import androidx.lifecycle.LifecycleOwner
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.exceptions.NecessaryAttributeEmptyException
@@ -49,14 +50,14 @@ import java.util.concurrent.LinkedBlockingDeque
 @Suppress("unused")
 abstract class IMInterface<T> : MessageInterface<T>() {
 
-    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any): UIHandlerCreator<T, R> {
+    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         setNewListener(R::class.java, "UT2F-E17T-33I-9112")
-        return UIHandlerCreator(uniqueCode, T::class.java, R::class.java)
+        return UIHandlerCreator(uniqueCode, lifecycleOwner, T::class.java, R::class.java)
     }
 
-    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any): UIHelperCreator<T, T, *> {
+    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
         setNewListener(T::class.java, "UT2Q-99BR-E88-2271")
-        return UIHelperCreator(uniqueCode, T::class.java, T::class.java, null)
+        return UIHelperCreator(uniqueCode, lifecycleOwner, T::class.java, T::class.java, null)
     }
 
     fun <X> setNewListener(cls: Class<*>, imm: X) {

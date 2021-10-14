@@ -25,7 +25,7 @@ internal object PrivateOwnerDbOperator {
                 newChat.avatar = session.logo
                 newChat.groupId = session.groupId
                 newChat.ownerId = session.ownerId
-                newChat.ownerName = session.groupName
+                newChat.ownerName = session.ownerName
                 val lastSessionMsg = SessionLastMsgInfo().apply {
                     this.key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = session.ownerId)
                     this.newMsg = msg
@@ -55,9 +55,9 @@ internal object PrivateOwnerDbOperator {
         }
     }
 
-    fun deleteSession(ownerId: Long) {
+    fun deleteSession(groupId: Long) {
         IMHelper.withDb {
-            val session = it.privateChatOwnerDao().findByGroupId(ownerId)
+            val session = it.privateChatOwnerDao().findByGroupId(groupId)
             if (session != null) {
                 it.privateChatOwnerDao().delete(session)
             }

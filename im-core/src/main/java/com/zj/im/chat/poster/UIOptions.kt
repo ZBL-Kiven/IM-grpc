@@ -4,14 +4,32 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.OnLifecycleEvent
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.utils.log.logger.printInFile
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val creator: UIHelperCreator<T, R, L>, private val result: (R?, List<R>?, String?) -> Unit) {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleObserver {
 
     init {
+        lifecycleOwner?.let {
+            try {
+                if (MessageInterface.hasObserver(uniqueCode)) {
+                    MessageInterface.removeAnObserver(uniqueCode)?.let { old ->
+                        it.lifecycle.removeObserver(old)
+                    }
+                }
+                it.lifecycle.addObserver(this)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
         MessageInterface.putAnObserver(this)
     }
 
@@ -57,10 +75,12 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
         return uniqueCode
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     fun destroy() {
         try {
-            MessageInterface.removeAnObserver(this)
+            MessageInterface.removeAnObserver(this.getUnique())
             handler.removeCallbacksAndMessages(null)
+            lifecycleOwner?.lifecycle?.removeObserver(this)
         } catch (e: Exception) {
             e.printStackTrace()
         }

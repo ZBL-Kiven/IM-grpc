@@ -29,7 +29,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                             finishAFetch(prop, true)
                         } else {
                             ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group is null ,trying to fetch last msg by localed !")
-                            mergeSessionAndPushToUi(prop)
+                            fetchLastMsg(prop)
                         }
                     } else {
                         ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group success, new ts is ${d.timeStamp}, changed group is [${sessions.joinToString { "${it.ownerName} , " }}]")
@@ -38,7 +38,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                         sessions.forEach { s ->
                             sessionDao?.insertOrUpdate(s)
                         }
-                        mergeSessionAndPushToUi(prop)
+                        fetchLastMsg(prop)
                     }
                 } else {
                     finishAFetch(prop, isSuccess = false, "PrivateOwnerSessionFetcher: fetch owner group failed with:${e?.message} !!")
@@ -47,6 +47,28 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                 cancel(prop)
                 IMHelper.postError(e)
             }
+        }
+    }
+
+    private fun fetchLastMsg(prop: FetchType) {
+        val sessions = DbHelper.get(Constance.app)?.db?.privateChatOwnerDao()?.findAll()
+        if (!sessions.isNullOrEmpty()) {
+            val oIds = sessions.map { ms -> ms.ownerId }
+            ImLogs.d("GroupSessionFetcher", "start fetch private owner sessions last message info by  ${prop.flags} , owners = $oIds")
+            prop.compo = ImApi.getFunctionApi().call({ it.fetchPrivateOwnerLastMessage(oIds) }, Schedulers.io(), Schedulers.newThread()) { _, d, _ ->
+                try {
+                    val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
+                    d?.forEach { fi ->
+                        fi.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = fi.ownerId)
+                        fmDao?.insertOrUpdateSessionMsgInfo(fi)
+                    }
+                    mergeSessionAndPushToUi(prop)
+                } finally {
+                    cancel(prop)
+                }
+            }
+        } else {
+            finishAFetch(prop, true, "the sessions is null")
         }
     }
 

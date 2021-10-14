@@ -2,7 +2,6 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.dao.MessageDao
@@ -31,11 +30,6 @@ internal object SendingDbOperator {
         localMsg?.sendTime = d.sendTime
         localMsg?.questionContent?.published = d.published
         localMsg?.questionContent?.expireTime = d.expireTime
-        val spark = d.sparkNum
-        val diamond = d.diamondNum
-        if (spark != null || diamond != null) {
-            IMHelper.postToUiObservers(AssetsChanged(spark, diamond), callId)
-        }
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
@@ -56,6 +50,7 @@ internal object SendingDbOperator {
                     d.msgStatus == ImApi.EH.GROUP_MEMBER_NOT_EXIST -> ClientHubImpl.PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST
                     d.msgStatus == ImApi.EH.GROUP_STOPPED -> ClientHubImpl.PAYLOAD_DELETE_GROUP_STOPPED
                     d.msgStatus == ImApi.EH.REPEAT_ANSWER -> ClientHubImpl.PAYLOAD_DELETE_REPEAT_ANSWER
+                    d.msgStatus == ImApi.EH.DIAMOND_NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_REPEAT_ANSWER
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)

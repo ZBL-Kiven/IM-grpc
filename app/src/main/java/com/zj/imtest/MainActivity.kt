@@ -1,6 +1,7 @@
 package com.zj.imtest
 
 import android.Manifest
+import android.app.Application
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -20,8 +21,9 @@ import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
-import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.fecher.FetchMsgChannel
@@ -38,6 +40,10 @@ import com.zj.imtest.ui.MsgAdapter
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        var app: Application? = null
+    }
+
     private var incId = 0
         get() {
             return field++
@@ -46,8 +52,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 52L
-    private val ownerId = 151254L
+    private val groupId = 32L
+    private val ownerId = 151120
+    private var curSpark = 0
+    private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
         set(value) {
             et.text = value?.path ?: ""
@@ -56,6 +64,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        app = this.application
         setContentView(R.layout.activity_main)
         rv = findViewById(R.id.main_erv)
         tv = findViewById(R.id.main_tv_conn)
@@ -69,7 +78,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, null, FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE)
+        IMHelper.registerChatRoom(groupId, ownerId, IMConfig.getUserId(), FetchMsgChannel.OWNER_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -101,8 +110,11 @@ class MainActivity : AppCompatActivity() {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
-        IMHelper.getChatMsg(bean, "GET_0")
+
+        //        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
+        //        IMHelper.getChatMsg(bean, "GET_0")
+
+        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -155,31 +167,42 @@ class MainActivity : AppCompatActivity() {
                 ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                 ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                 ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
+                else -> adapter?.removeIfEquals(d)
             }
-            if (!list.isNullOrEmpty() && pl == FetchMsgChannel.OWNER_CLAP_HOUSE.serializeName) adapter?.change(list)
+            if (!list.isNullOrEmpty()) adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, lr, payload ->
+            r?.diamondNum?.let {
+                curDiamond += it
+            }
+            r?.spark?.let {
+                curSpark += it
+            }
+            Log.e("----- ", "on assets changed, diamond = $curDiamond    spark = $curSpark")
+        }
+
+        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, lr, payload ->
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128, this).listen { r, l, pl ->
             Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<PrivateFansEn>(0x1129).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<PrivateFansEn>(0x1129, this).listen { r, l, pl ->
             Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<PrivateOwnerEntity>(0x1130).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<PrivateOwnerEntity>(0x1130, this).listen { r, l, pl ->
             Log.e("----- ", "on  private owner chat got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125).listen { r, _, pl ->
+        IMHelper.addReceiveObserver<MessageTotalDots>(0x1125, this).listen { r, _, pl ->
             Log.e("----- ", "on all unread count changed , cur is ${r?.dots} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127).listen { r, _, pl ->
+        IMHelper.addReceiveObserver<FetchSessionResult>(0x1127, this).listen { r, _, pl ->
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
         }
     }

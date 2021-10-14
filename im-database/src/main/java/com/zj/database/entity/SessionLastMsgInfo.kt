@@ -46,6 +46,12 @@ class SessionLastMsgInfo {
     // question message count
     var questionNum: Int = 0
 
+    //Spark total num
+    var totalRewardNum: Int? = null
+
+    //unread question num
+    var unreadQuesNum: Int? = null
+
     companion object {
         fun generateKey(@LastMsgTabType type: String, groupId: Long = -1, ownerId: Int = -1, userId: Int = -1): String {
             return when (type) {
