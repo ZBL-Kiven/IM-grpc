@@ -37,7 +37,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
-        if (arrayInt != null&&data.getAnswerContentImgContentUrl() ==null) {
+        if (arrayInt != null) {
             loadImg(data, arrayInt)
         } else{
             loadImg2(data)
