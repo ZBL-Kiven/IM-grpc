@@ -9,7 +9,6 @@ import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.main.impl.IMInterface
-import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sp.SPHelper
@@ -18,7 +17,6 @@ import com.zj.database.entity.SessionInfoEntity
 import com.zj.protocol.grpc.GetImMessageReq
 import com.zj.protocol.grpc.LeaveImGroupReq
 import com.zj.ccIm.annos.DeleteSessionType
-import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.PrivateOwnerEntity
 import io.reactivex.schedulers.Schedulers
@@ -28,6 +26,8 @@ import com.google.gson.Gson
 import com.zj.ccIm.BuildConfig
 import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.db.MessageDbOperator
+import com.zj.ccIm.core.fecher.*
+import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
 import com.zj.ccIm.core.sender.MsgSender
@@ -78,11 +78,11 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun refreshSessions(result: (FetchResult) -> Unit) {
+    fun refreshSessions(result: FetchResultRunner) {
         Fetcher.refresh(GroupSessionFetcher, result)
     }
 
-    fun refreshPrivateOwnerSessions(result: (FetchResult) -> Unit) {
+    fun refreshPrivateOwnerSessions(result: FetchResultRunner) {
         Fetcher.refresh(PrivateOwnerSessionFetcher, result)
     }
 

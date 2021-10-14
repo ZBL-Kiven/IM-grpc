@@ -1,5 +1,7 @@
 package com.zj.ccIm.core.fecher
 
+import android.os.Handler
+import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
@@ -16,7 +18,8 @@ internal object Fetcher {
         get() {
             return field++
         }
-    private val cachedResultListener = mutableMapOf<Int, WeakReference<(FetchResult) -> Unit>>()
+    private val cachedResultListener = mutableMapOf<Int, WeakReference<FetchResultRunner>>()
+    private val handler = Handler(Looper.getMainLooper())
 
     fun init() {
         IMHelper.registerConnectionStateChangeListener("main_fetcher_observer") {
@@ -34,10 +37,10 @@ internal object Fetcher {
         }
     }
 
-    fun refresh(f: BaseFetcher, onFetchResult: (FetchResult) -> Unit) {
+    fun refresh(f: BaseFetcher, result: FetchResultRunner) {
         val code = FETCH_CODE_INCREMENT
         synchronized(this) {
-            cachedResultListener[code] = WeakReference(onFetchResult)
+            cachedResultListener[code] = WeakReference(result)
             BaseFetcher.refresh(code, f)
         }
     }
@@ -52,7 +55,9 @@ internal object Fetcher {
 
     fun endOfRefresh(prop: FetchType, result: FetchResult, formRefresh: Boolean = true) {
         prop.fetchIds.forEach {
-            cachedResultListener.remove(it)?.get()?.invoke(result)
+            val r = cachedResultListener.remove(it)?.get() ?: return
+            r.result = result
+            handler.post(r)
         }
         if (formRefresh) ImLogs.d("Fetcher", "on refresh result : ${result.success}")
         IMHelper.postToUiObservers(result, prop.dealCls?.getPayload())
@@ -60,5 +65,6 @@ internal object Fetcher {
 
     fun cancelAll() {
         BaseFetcher.cancelAll()
+        handler.removeCallbacksAndMessages(null)
     }
 }
