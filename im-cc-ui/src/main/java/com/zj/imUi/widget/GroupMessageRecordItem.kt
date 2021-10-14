@@ -70,7 +70,8 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
                         audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                     }
                 }else{
-                    if (data.getReplyMsgQuestionIsPublished() == false) audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_purple_cornors_bg)
+                    if (data.getReplyMsgQuestionIsPublished() == false&&chatType == 1)
+                        audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_purple_cornors_bg)
                     else audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_origin_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
                     audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))

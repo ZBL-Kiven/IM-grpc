@@ -37,7 +37,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         val arrayInt: Array<Int>? = setImgLp(data)
-        if (arrayInt != null) {
+        if (arrayInt != null&&data.getAnswerContentImgContentUrl() ==null) {
             loadImg(data, arrayInt)
         } else{
             loadImg2(data)
@@ -48,9 +48,11 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
     }
 
     private fun loadImg(data: ImMsgIn, arrayInt: Array<Int>) {
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-            8f,
-            context.resources.displayMetrics).toInt()
+        val corners = if (data.getImgContentUrl() != null)
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
+        else
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
+
         val lp = FrameLayout.LayoutParams(arrayInt[0], arrayInt[1])
         layoutParams = lp
         val imgUrl: String? =
@@ -85,7 +87,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
         }
     }
     private fun loadImg2(data: ImMsgIn) {
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
+        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
         val imgW = DPUtils.dp2px(44f)
         val imgH = DPUtils.dp2px(44f)
         val lp = FrameLayout.LayoutParams(imgW,imgH)
@@ -133,8 +135,9 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
         val imgHeight: Int?
         if (data.getImgContentHeight() != null) {
             imgHeight = data.getImgContentHeight()
-        } else {
-            imgHeight = data.getReplyMsgImgHeight()
+        } else  {
+            imgHeight = if (data.getAnswerContentImgContentUrl()!=null) data.getAnswerContentImgContentHeight()
+            else data.getReplyMsgImgHeight()
             maxW = DPUtils.dp2px(44f)
             maxH = DPUtils.dp2px(44f)
         }
