@@ -26,6 +26,7 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
+import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -111,14 +112,11 @@ class MainActivity : AppCompatActivity() {
         //        val bean = GetMsgReqBean(groupId, ownerId, null, null, type = 0, channels = arrayOf(FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.OWNER_MESSAGE))
         //        IMHelper.getChatMsg(bean, "GET_0")
 
-        IMHelper.refreshSessions {
-            Log.e("------ ", "refreshSessions ====> ${it.success}")
-        }
-//        IMHelper.refreshPrivateOwnerSessions {
-//            Log.e("------ ", "refreshPrivateOwnerSessions ====> ${it.success}")
-//        }
+        //        IMHelper.refreshPrivateOwnerSessions {
+        //            Log.e("------ ", "refreshPrivateOwnerSessions ====> ${it.success}")
+        //        }
 
-        //        Sender.sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        IMHelper.withCustomSender().ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/

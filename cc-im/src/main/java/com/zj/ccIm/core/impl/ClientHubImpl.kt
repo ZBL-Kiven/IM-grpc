@@ -211,7 +211,10 @@ open class ClientHubImpl : ClientHub<Any?>() {
             val resendMsg = it.sendMsgDao().findAllBySessionId(bean.groupId)
             resendMsg?.forEach { msg ->
                 if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
-                else dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
+                else {
+                    val fm = dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
+                    IMHelper.postToUiObservers(fm.first, fm.third)
+                }
             }
         }
     }

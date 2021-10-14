@@ -9,6 +9,18 @@ import com.zj.database.entity.SendMessageReqEn
 
 internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(Constance.app, d, d.clientMsgId) {
 
+    companion object {
+
+        fun getIfSupport(d: SendMessageReqEn): FileSender? {
+            return when (d.msgType) {
+                MsgType.IMG.type, MsgType.VIDEO.type, MsgType.AUDIO.type -> {
+                    FileSender(d)
+                }
+                else -> null
+            }
+        }
+    }
+
     private val mVideoOutputPath = "/compress/im/${d.clientMsgId}.mp4"
     private val mImageOutputPath = "/compress/im/${d.clientMsgId}"
 

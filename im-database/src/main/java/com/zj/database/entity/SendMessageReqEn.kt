@@ -78,6 +78,16 @@ class SendMessageReqEn {
     var autoResendWhenBootStart: Boolean = true
 
     /**
+     * 是否忽略当前网络连接状态
+     * */
+    var ignoreConnectionState: Boolean = false
+
+    /**
+     * 是否忽略当前 GRPC 连接状态和 Fetch 状态
+     * */
+    var ignoreSendConditionState: Boolean = false
+
+    /**
      *回复的消息,不参与上传，但是参与存储
      */
     @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
