@@ -38,7 +38,7 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
         mSendTime = findViewById(R.id.im_msg_item_title_tv_send_time)
     }
 
-    fun setData(data: ImMsgIn?, chatType:Any) {
+    fun setData(data: ImMsgIn?, chatType: Any) {
         if (data == null) return
         mGroupRewardItem.visibility = View.VISIBLE
         mGroupRewardItem.setBackGround(data)
@@ -51,13 +51,19 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                 mNickname.visibility = View.VISIBLE
                 mNickname.setPadding(0, 1, 0, 0)
                 mSendTime.textSize = 10f
-                if (data.getPublished()||data.getQuestionStatus() == 1) {
-                    mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
-                } else mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple_60))
+                if (data.getPublished() || data.getQuestionStatus() == 1) {
+                    mSendTime.setTextColor(ContextCompat.getColor(context,
+                        R.color.im_msg_text_color_gray))
+                } else mSendTime.setTextColor(ContextCompat.getColor(context,
+                    R.color.im_msg_bg_purple_60))
             } else {
                 mNickname.visibility = View.GONE
                 mSendTime.setPadding(0, 12, 0, 0)
-                mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
+                if (data.getQuestionStatus() == 0) mSendTime.setTextColor(ContextCompat.getColor(
+                    context,
+                    R.color.im_msg_text_color_black))
+                else mSendTime.setTextColor(ContextCompat.getColor(context,
+                    R.color.im_msg_text_color_gray))
                 mSendTime.textSize = 12f
             }
         } else {
