@@ -60,7 +60,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
                 audioPlayView.setPaintColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
             }else if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION ) {
                 if (data.getSenderId() == data.getSelfUserId()){//大v自己发送打赏录音消息
-                    if (data.getReplyMsgQuestionIsPublished() == false){
+                    if (data.getReplyMsgQuestionIsPublished() == false&&chatType == 1){
                         audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                         audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
                         audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))

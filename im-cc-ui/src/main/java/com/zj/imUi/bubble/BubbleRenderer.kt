@@ -62,8 +62,8 @@ object BubbleRenderer : BaseBubbleRenderer {
                 dpToPx(context, 8f),
                 dpToPx(context, 8f))
             path.addRoundRect(rectF, radii, Path.Direction.CW)
-            canvas.drawPath(path, paint) //发送者为大V
-            if (isOwner && isOwnerReplyQuestionIsPublic) {
+            canvas.drawPath(path, paint)
+            if (isOwner && (isOwnerReplyQuestionIsPublic||chatType == 2)) {
                 paint.strokeWidth = 1.5f
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE //画金色边框
