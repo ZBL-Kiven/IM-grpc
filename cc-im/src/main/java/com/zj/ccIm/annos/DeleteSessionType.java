@@ -1,5 +1,6 @@
 package com.zj.ccIm.annos;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.StringDef;
 
 import com.zj.ccIm.core.Comment;
@@ -13,7 +14,7 @@ import java.lang.annotation.Target;
 /**
  * the value 1 means load history messages , 0 meas new
  */
-@StringDef(value = {Comment.DELETE_OWNER_SESSION, Comment.DELETE_FANS_SESSION})
+@IntDef(value = {Comment.DELETE_OWNER_SESSION, Comment.DELETE_FANS_SESSION})
 @Inherited
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.SOURCE)

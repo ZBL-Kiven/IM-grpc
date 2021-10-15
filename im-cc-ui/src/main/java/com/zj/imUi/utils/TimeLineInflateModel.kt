@@ -52,7 +52,6 @@ object TimeLineInflateModel {
             } else {
                 result = getTime(timestamp, yearTimeFormat)
             }
-            Log.d("TimeLine",result)
             return if (result == "null") ""
             else result
         } catch (e: Exception) {

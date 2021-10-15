@@ -30,14 +30,19 @@ internal object MessageDbOperator {
                         PrivateOwnerDbOperator.createPrivateChatInfoIfNotExits(it, msg)
                     }
                 }
-                if (localMsg != null && (sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
+                /**
+                 * status == 1 means recalled
+                 * */
+                if (localMsg != null && (msg.status == 1 || sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
                     val sendDb = it.sendMsgDao()
                     val localSendCache = if (callId.isNullOrEmpty()) null else sendDb.findByCallId(callId)
                     sendDb.delete(localSendCache)
                     msgDb.deleteMsgByClientId(callId)
                 }
                 msg.sendingState = sendingState?.type ?: SendMsgState.NONE.type
-                val pl = if (localMsg == null) ClientHubImpl.PAYLOAD_ADD else ClientHubImpl.PAYLOAD_CHANGED
+                val pl = if (msg.status == 1) ClientHubImpl.PAYLOAD_DELETE_FROM_RECALLED else {
+                    if (localMsg == null) ClientHubImpl.PAYLOAD_ADD else ClientHubImpl.PAYLOAD_CHANGED
+                }
                 Pair(msg, pl)
             }
         } else return null

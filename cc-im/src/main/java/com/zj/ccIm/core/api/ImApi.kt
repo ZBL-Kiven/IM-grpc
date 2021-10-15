@@ -37,7 +37,7 @@ object ImApi {
 
     fun getMsgList(param: GetMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
         val channelString = param.channels.map { it.serializeName }.toTypedArray()
-        return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserId, param.type, channels = channelString) }, result)
+        return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, param.type, channels = channelString) }, result)
     }
 
     object EH : ErrorHandler {

@@ -8,7 +8,14 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
 
 @Suppress("unused")
-open class MsgSender internal constructor(private val config: SendMsgConfig) {
+open class MsgSender internal constructor() {
+
+    private lateinit var config: SendMsgConfig
+
+    internal fun createConfig(config: SendMsgConfig): MsgSender {
+        this.config = config
+        return this
+    }
 
     fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean): String {
         val sen = SendMessageReqEn()

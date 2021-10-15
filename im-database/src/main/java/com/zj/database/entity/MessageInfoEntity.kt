@@ -81,14 +81,19 @@ class MessageInfoEntity {
     @TypeConverters(SenderContentConverter::class) var sender: SenderInfo? = null
 
     /**
+     * 回复消息
+     */
+    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
+
+    /**
      * 回复消息id
      */
     var replyMsgId: Long? = null
 
     /**
-     * 回复消息
-     */
-    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
+     * 0 正常， 1 撤回
+     * */
+    var status: Int = 0
 
     //----------------------------------------------------------------- 本地辅助字段 ⬇️--------------------------------------------------------------
 

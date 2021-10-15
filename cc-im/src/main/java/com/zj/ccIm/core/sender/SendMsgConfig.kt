@@ -25,7 +25,7 @@ class SendMsgConfig internal constructor(internal val fromCustom: Boolean = fals
     }
 
     fun build(): MsgSender {
-        return MsgSender(this)
+        return MsgSender().createConfig(this)
     }
 
 }

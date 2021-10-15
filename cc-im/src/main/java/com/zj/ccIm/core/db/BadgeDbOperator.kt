@@ -22,7 +22,7 @@ internal object BadgeDbOperator {
                 SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(changeBadge(key))
             }
             FetchMsgChannel.OWNER_PRIVATE.classification -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserId ?: 0)
+                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid ?: 0)
                 SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(changeBadge(key))
             }
             0 -> {

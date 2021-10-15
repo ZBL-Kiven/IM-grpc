@@ -5,7 +5,7 @@ import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import java.lang.IllegalArgumentException
 
-data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val targetUserId: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, var channels: Array<out FetchMsgChannel>) {
+data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val targetUserid: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, var channels: Array<out FetchMsgChannel>) {
 
     internal fun checkValid(): Boolean {
         val errorMsg = "your call register with channels $channels , but %s is invalid"
@@ -20,7 +20,7 @@ data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val ta
             }
             if (hasGroupType && groupId < 0) throw IllegalArgumentException(String.format(errorMsg, "groupId"))
             if (hasPrivateFansType && ownerId < 0) throw IllegalArgumentException(String.format(errorMsg, "ownerId"))
-            if (hasPrivateOwnerType && (targetUserId == null || targetUserId < 0)) throw IllegalArgumentException(String.format(errorMsg, "targetUserId"))
+            if (hasPrivateOwnerType && (targetUserid == null || targetUserid < 0)) throw IllegalArgumentException(String.format(errorMsg, "targetUserId"))
             true
         }, { false }) ?: false
     }
@@ -39,7 +39,7 @@ data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val ta
     }
 
     internal fun getCopyData(): GetMsgReqBean {
-        return GetMsgReqBean(groupId, ownerId, targetUserId, msgId, type, channels)
+        return GetMsgReqBean(groupId, ownerId, targetUserid, msgId, type, channels)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -50,7 +50,7 @@ data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val ta
 
         if (groupId != other.groupId) return false
         if (ownerId != other.ownerId) return false
-        if (targetUserId != other.targetUserId) return false
+        if (targetUserid != other.targetUserid) return false
         if (!channels.contentEquals(other.channels)) return false
 
         return true
@@ -59,7 +59,7 @@ data class GetMsgReqBean constructor(val groupId: Long, val ownerId: Int, val ta
     override fun hashCode(): Int {
         var result = groupId.hashCode()
         result = 31 * result + ownerId.hashCode()
-        result = 31 * result + targetUserId.hashCode()
+        result = 31 * result + targetUserid.hashCode()
         result = 31 * result + channels.hashCode()
         return result
     }

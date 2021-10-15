@@ -6,7 +6,7 @@ import com.zj.ccIm.core.ImConfigIn
 object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
-        return 151253
+        return 151254
 
         // return 151120 //v
     }
