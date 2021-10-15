@@ -18,15 +18,15 @@ internal object BadgeDbOperator {
     private fun getSessionLastMsgKeyForClassification(classification: Int, info: GetMsgReqBean) {
         when (classification) {
             FetchMsgChannel.FANS_PRIVATE.classification -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId)
+                val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId)
                 SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(changeBadge(key))
             }
             FetchMsgChannel.OWNER_PRIVATE.classification -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid ?: 0)
+                val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid ?: 0)
                 SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(changeBadge(key))
             }
             0 -> {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
+                val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
                 SessionLastMsgDbOperator.onDealSessionLastMsgInfo(changeBadge(key))
             }
             else -> throw IllegalArgumentException("unknown classification!")

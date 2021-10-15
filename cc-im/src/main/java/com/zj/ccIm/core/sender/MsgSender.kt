@@ -149,6 +149,6 @@ open class MsgSender internal constructor() {
     }
 
     private fun send(sen: SendMessageReqEn, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
-        IMHelper.send(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
+        IMHelper.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
     }
 }

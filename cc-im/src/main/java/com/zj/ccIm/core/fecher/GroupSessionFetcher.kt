@@ -72,7 +72,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
                 try {
                     val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
                     d?.forEach { fi ->
-                        fi.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = fi.groupId)
+                        fi.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = fi.groupId)
                         fmDao?.insertOrUpdateSessionMsgInfo(fi)
                     }
                     mergeSessionAndPushToUi(prop, isFirstFetch)
@@ -89,7 +89,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
         val sessions = DbHelper.get(Constance.app)?.db?.sessionDao()?.allSessions
         val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
         sessions?.forEach { s ->
-            val key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = s.groupId)
+            val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = s.groupId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
         IMHelper.postToUiObservers(sessions, null) {

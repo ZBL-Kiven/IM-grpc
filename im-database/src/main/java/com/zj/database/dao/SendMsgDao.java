@@ -23,8 +23,8 @@ public interface SendMsgDao {
      * Query by session id
      */
     @WorkerThread
-    @Query("SELECT * FROM sendingMsg WHERE groupId = :gid")
-    List<SendMessageReqEn> findAllBySessionId(long gid);
+    @Query("SELECT * FROM sendingMsg WHERE `key` = :key")
+    List<SendMessageReqEn> findAllByKey(String key);
 
     @WorkerThread
     @Query("SELECT * FROM sendingMsg WHERE clientMsgId = :callId")

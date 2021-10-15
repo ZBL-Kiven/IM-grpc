@@ -27,7 +27,7 @@ internal object SendingDbOperator {
         val localMsg = msgDb?.findMsgByClientId(callId)
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
-        localMsg?.sendTime = d.sendTime
+        localMsg?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
         localMsg?.questionContent?.published = d.published
         localMsg?.questionContent?.expireTime = d.expireTime
         return when (sendingState) {

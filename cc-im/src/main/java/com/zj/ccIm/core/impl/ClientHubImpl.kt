@@ -209,7 +209,8 @@ open class ClientHubImpl : ClientHub<Any?>() {
 
     private fun onDispatchSentErrorMsg(bean: GetMsgReqBean) {
         IMHelper.withDb {
-            val resendMsg = it.sendMsgDao().findAllBySessionId(bean.groupId)
+            val key = IMHelper.getCurrentChannelSendingKey(bean.groupId)
+            val resendMsg = it.sendMsgDao().findAllByKey(key)
             resendMsg?.forEach { msg ->
                 if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
                 else {

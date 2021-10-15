@@ -10,8 +10,8 @@ import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.database.entity.SessionLastMsgInfo
-import com.zj.database.entity.SessionLastMsgInfo.Companion.generateKey
 import com.zj.database.ut.Constance
+import com.zj.database.ut.Constance.generateKey
 
 internal object PrivateOwnerDbOperator {
 

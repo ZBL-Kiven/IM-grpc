@@ -31,7 +31,7 @@ internal object SessionDbOperator {
             }
             val needDelete = info.groupStatus == 3
             if (!needDelete) {
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
+                val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
                 val lastMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
                 info.sessionMsgInfo = lastMsgInfo
             }
@@ -58,7 +58,7 @@ internal object SessionDbOperator {
             val sessions = it.sessionDao().allSessions
             val lastMsgDb = it.sessionMsgDao()
             sessions?.forEach { i ->
-                val key = SessionLastMsgInfo.generateKey(Constance.KEY_OF_SESSIONS, groupId = i.groupId)
+                val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = i.groupId)
                 i.sessionMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0

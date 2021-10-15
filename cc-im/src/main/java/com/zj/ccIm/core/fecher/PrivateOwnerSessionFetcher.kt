@@ -63,7 +63,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                 try {
                     val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
                     d?.forEach { fi ->
-                        fi.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = fi.ownerId)
+                        fi.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = fi.ownerId)
                         fmDao?.insertOrUpdateSessionMsgInfo(fi)
                     }
                     mergeSessionAndPushToUi(prop, isFirstFetch)
@@ -80,7 +80,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
         val sessions = DbHelper.get(Constance.app)?.db?.privateChatOwnerDao()?.findAll()
         val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
         sessions?.forEach { s ->
-            val key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
+            val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
         IMHelper.postToUiObservers(sessions, null) {

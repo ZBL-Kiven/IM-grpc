@@ -11,9 +11,10 @@ internal object Converter {
         val msg = MessageInfoEntity()
         msg.groupId = sen.groupId
         msg.msgType = sen.msgType
-        msg.sendingState = sendingState.type
-        msg.clientMsgId = sen.clientMsgId
         msg.replyMsg = sen.replyMsg
+        msg.clientMsgId = sen.clientMsgId
+        msg.sendingState = sendingState.type
+        msg.sendTime = System.currentTimeMillis()
         msg.sender = SenderInfo().apply {
             this.senderId = IMHelper.imConfig.getUserId()
             this.senderAvatar = IMHelper.imConfig.getUserAvatar()
@@ -57,7 +58,7 @@ internal object Converter {
                 }
             }
         }
-        IMHelper.withDb {
+        if (sen.key.isNotEmpty()) IMHelper.withDb {
             it.sendMsgDao().insertOrChange(sen)
         }
         return msg

@@ -82,6 +82,7 @@ internal abstract class BaseFetcher {
                 }
             } else {
                 fetching = false
+                Fetcher.resetIncrementTsForProp(prop)
                 IMHelper.reconnect("fetch failed , case :${result.errorMsg} !!")
             }
         }

@@ -1,5 +1,7 @@
 package com.zj.database.ut
 
+import java.lang.IllegalArgumentException
+
 object Constance {
 
     const val KEY_OF_PRIVATE_OWNER = "private_owner"
@@ -9,7 +11,16 @@ object Constance {
     /**
      * the key set of , groupId in public chat , ownerId in private owner chat , -userId in private user chat.
      * */
-    fun generateKeyByTypedIds(@LastMsgTabType type: String, id: Any): String {
+    private fun generateKeyByTypedIds(@LastMsgTabType type: String, id: Any): String {
         return "$type:$id"
+    }
+
+    fun generateKey(@LastMsgTabType type: String, groupId: Long = -1, ownerId: Int = -1, userId: Int = -1): String {
+        return when (type) {
+            KEY_OF_PRIVATE_FANS -> generateKeyByTypedIds(type, userId)
+            KEY_OF_PRIVATE_OWNER -> generateKeyByTypedIds(type, ownerId)
+            KEY_OF_SESSIONS -> generateKeyByTypedIds(type, groupId)
+            else -> throw IllegalArgumentException("no such type-value can compile this key!")
+        }
     }
 }

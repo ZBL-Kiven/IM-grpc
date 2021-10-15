@@ -51,15 +51,4 @@ class SessionLastMsgInfo {
 
     //unread question num
     var unreadQuesNum: Int? = null
-
-    companion object {
-        fun generateKey(@LastMsgTabType type: String, groupId: Long = -1, ownerId: Int = -1, userId: Int = -1): String {
-            return when (type) {
-                Constance.KEY_OF_PRIVATE_FANS -> Constance.generateKeyByTypedIds(type, userId)
-                Constance.KEY_OF_PRIVATE_OWNER -> Constance.generateKeyByTypedIds(type, ownerId)
-                Constance.KEY_OF_SESSIONS -> Constance.generateKeyByTypedIds(type, groupId)
-                else -> throw IllegalArgumentException("no such type-value can compile this key!")
-            }
-        }
-    }
 }

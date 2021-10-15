@@ -6,6 +6,7 @@ import com.zj.im.chat.enums.ConnectionState
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.FetchResult
+import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import java.lang.ref.WeakReference
 
@@ -66,5 +67,16 @@ internal object Fetcher {
     fun cancelAll() {
         BaseFetcher.cancelAll()
         handler.removeCallbacksAndMessages(null)
+    }
+
+    fun resetIncrementTsForProp(prop: FetchType) {
+        when (prop.dealCls) {
+            GroupSessionFetcher::class.java -> {
+                SPHelper.put(SP_FETCH_SESSIONS_TS, 0)
+            }
+            PrivateOwnerSessionFetcher::class.java -> {
+                SPHelper.put(SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0)
+            }
+        }
     }
 }

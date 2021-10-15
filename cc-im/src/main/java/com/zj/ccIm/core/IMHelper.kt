@@ -33,7 +33,8 @@ import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
-import com.zj.database.entity.SessionLastMsgInfo
+import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.sender.OnSendBefore
 import java.lang.StringBuilder
 
 
@@ -101,7 +102,7 @@ object IMHelper : IMInterface<Any?>() {
                     val sd = DbHelper.get(it)?.db?.sessionDao()
                     val smd = DbHelper.get(it)?.db?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
-                    val mk = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, d.groupId)
+                    val mk = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, d.groupId)
                     val localMsg = smd?.findSessionMsgInfoByKey(mk)
                     local?.updateConfigs(disturbType, top, groupName, des)
                     local?.sessionMsgInfo = localMsg
@@ -215,6 +216,11 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
+    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<Any?>?) {
+        sen.key = getCurrentChannelSendingKey(sen.groupId)
+        super.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
+    }
+
     val Sender: MsgSender; get() = MsgSender().createConfig(SendMsgConfig())
 
     val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
@@ -228,5 +234,12 @@ object IMHelper : IMInterface<Any?>() {
             sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
         }
         return sb
+    }
+
+    internal fun getCurrentChannelSendingKey(groupId: Long): String {
+        return if (lastMsgRegister != null) {
+            val channel = lastMsgRegister?.channels?.firstOrNull()
+            if (channel != null) "${channel.serializeName}:$groupId" else ""
+        } else ""
     }
 }

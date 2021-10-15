@@ -18,20 +18,20 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
                 Constance.TOPIC_CHAT_OWNER_INFO -> {
                     val owner = info.ownerId
                     if (owner < 0) throw IllegalArgumentException("error case: the session last msg info ,owner id is invalid!")
-                    info.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = owner)
+                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = owner)
                     onDealPrivateOwnerSessionLastMsgInfo(info)
                 }
                 Constance.TOPIC_CHAT_FANS_INFO -> {
                     val target = info.targetUserId
                     if (target < 0) throw IllegalArgumentException("error case: the session last msg info ,target user id is invalid!")
-                    info.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = target)
+                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = target)
                     onDealPrivateFansSessionLastMsgInfo(info)
                 }
                 Constance.TOPIC_IM_MSG -> {
                     var groupId = info.groupId
                     if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
                     if (groupId <= 0) throw IllegalArgumentException("error case: the session last msg info ,group id is invalid!")
-                    info.key = SessionLastMsgInfo.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = groupId)
+                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = groupId)
                     onDealSessionLastMsgInfo(info)
                 }
                 else -> throw IllegalArgumentException("the callId $callId can not to parsed to a Key of lase session message")
@@ -40,12 +40,13 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
     }
 
     override fun onDealSessionLastMsgInfo(info: SessionLastMsgInfo?): Pair<String, Any?>? {
-        if (info?.key.isNullOrEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
+        if (info == null) return null
+        if (info.key.isEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
         return IMHelper.withDb {
             val sessionDb = it.sessionDao()
             val lastMsgDb = it.sessionMsgDao()
-            var groupId = info?.groupId ?: 0
-            if (groupId <= 0) groupId = info?.newMsg?.groupId ?: -1L
+            var groupId = info.groupId
+            if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
             if (groupId <= 0) throw IllegalArgumentException("error case: the session last msg info ,group id is invalid!")
             val sessionInfo = sessionDb.findSessionById(groupId)
             val exists = sessionInfo != null
@@ -57,14 +58,15 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
     }
 
     override fun onDealPrivateFansSessionLastMsgInfo(info: SessionLastMsgInfo?): Pair<String, Any?>? {
-        if (info?.key.isNullOrEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
+        if (info == null) return null
+        if (info.key.isEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
         return IMHelper.withDb {
             val sessionInfo = PrivateFansEn()
             sessionInfo.lastMsgInfo = info
-            sessionInfo.avatar = info?.newMsg?.sender?.senderAvatar
-            sessionInfo.userName = info?.newMsg?.sender?.senderName
-            sessionInfo.userId = info?.targetUserId
-            sessionInfo.groupId = info?.groupId
+            sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
+            sessionInfo.userName = info.newMsg?.sender?.senderName
+            sessionInfo.userId = info.targetUserId
+            sessionInfo.groupId = info.groupId
             val lastMsgDb = it.sessionMsgDao()
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
             notifyAllSessionDots()
