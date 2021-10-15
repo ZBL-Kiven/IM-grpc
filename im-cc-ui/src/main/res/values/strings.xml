@@ -29,8 +29,8 @@
     <string name="im_ui_msg_not_allowed">These type of messages can not be sent</string>
 
 
-    <string name="im_ui_msg_reward_user_retract">Recall</string>
-    <string name="im_ui_msg_delete">Delete</string>
+    <string name="im_ui_msg_button_recall">Recall</string>
+    <string name="im_chat_delete">Delete</string>
 
 
     <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
