@@ -28,10 +28,8 @@
     <string name="im_ui_question_no_time">Expired</string>
     <string name="im_ui_msg_not_allowed">These type of messages can not be sent</string>
 
-
     <string name="im_ui_msg_button_recall">Recall</string>
     <string name="im_chat_delete">Delete</string>
-
 
     <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
     <string name="im_ui_month_time_format" translatable="false">MM-dd HH: mm</string>
@@ -46,7 +44,5 @@
     <string name="im_ui_friday" translatable="false">friday</string>
     <string name="im_ui_saturday" translatable="false">saturday</string>
     <string name="im_ui_yesterday" translatable="false">yesterday</string>
-
-
 
 </resources>

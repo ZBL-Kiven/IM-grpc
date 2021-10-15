@@ -139,7 +139,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 }
                 data.getSenderId() ==data.getSelfUserId() -> {
                     textReplyType.visibility = View.VISIBLE
-                    textReplyType.text = context.getString(R.string.im_ui_msg_reward_user_retract).uppercase(Locale.getDefault())
+                    textReplyType.text = context.getString(R.string.im_ui_msg_button_recall).uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         data.userRetractRewardMsg()
                     }
