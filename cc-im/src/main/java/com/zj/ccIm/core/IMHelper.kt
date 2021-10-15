@@ -34,6 +34,7 @@ import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
 import com.zj.database.entity.SessionLastMsgInfo
+import java.lang.StringBuilder
 
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
@@ -136,7 +137,7 @@ object IMHelper : IMInterface<Any?>() {
         this.lastMsgRegister = null
     }
 
-    fun deleteSession(@DeleteSessionType type: String, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
+    fun deleteSession(@DeleteSessionType type: Int, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
         val errorMsg = "your call delete session with type :$type ,but %s is null"
         catching {
             val targetId = when (type) {
@@ -160,7 +161,7 @@ object IMHelper : IMInterface<Any?>() {
 
     internal fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId, it.targetUserId, *it.channels)
+            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channels)
             return true
         }
         return false
@@ -196,8 +197,13 @@ object IMHelper : IMInterface<Any?>() {
         }.start()
     }
 
+    fun deleteSendingMsgByClientId(clientId: String) {
+        withDb {
+            it.sendMsgDao().deleteByCallId(clientId)
+        }
+    }
 
-    fun <R> withDb(app: Application? = null, imDb: IMDb? = null, run: (IMDb) -> R?): R? {
+    internal fun <R> withDb(app: Application? = null, imDb: IMDb? = null, run: (IMDb) -> R?): R? {
 
         return try {
             val ctx = app ?: getAppContext() ?: throw NullPointerException()
@@ -209,9 +215,18 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    object Sender : MsgSender(SendMsgConfig())
+    val Sender: MsgSender; get() = MsgSender().createConfig(SendMsgConfig())
 
-    fun withCustomSender(): SendMsgConfig {
-        return SendMsgConfig(true)
+    val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
+
+    fun queryAllDBColumnsCount(): StringBuilder {
+        val sb = StringBuilder()
+        withDb {
+            sb.append("messageCount = ${it.messageDao().findAll().size}\n")
+            sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
+            sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
+            sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
+        }
+        return sb
     }
 }

@@ -1,9 +1,11 @@
 package com.zj.ccIm.core.api
 
+import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.FetchPrivateOwnerSessionBean
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.ccIm.core.bean.FetcherSessionBean
 import io.reactivex.Observable
+import org.json.JSONObject
 import retrofit2.http.*
 
 interface FunctionApi {
@@ -20,7 +22,6 @@ interface FunctionApi {
     @GET("/im/message/read/last/group/private/message")
     fun fetchPrivateOwnerLastMessage(@Query("ownerId") groupIds: List<Int>?): Observable<List<SessionLastMsgInfo>?>
 
-    @Multipart
     @POST("/im/group/private/chat/remove")
-    fun deleteSession(@Field("targetUserId") targetUserId: Int?, @Field("groupId") groupId: Long?, @Field("status") status: Int?): Observable<String?>
+    fun deleteSession(@Body data: DeleteSessionInfo): Observable<JSONObject>
 }

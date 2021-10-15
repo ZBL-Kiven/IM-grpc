@@ -73,12 +73,13 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
     }
 
     override fun onDealPrivateOwnerSessionLastMsgInfo(info: SessionLastMsgInfo?): Pair<String, Any?>? {
-        if (info?.key.isNullOrEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
+        if (info == null) return null
+        if (info.key.isEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
         return IMHelper.withDb {
             val sessionDb = it.privateChatOwnerDao()
             val lastMsgDb = it.sessionMsgDao()
-            var groupId = info?.groupId ?: -1
-            if (groupId <= 0) groupId = info?.newMsg?.groupId ?: -1L
+            var groupId = info.groupId
+            if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
             if (groupId <= 0) throw IllegalArgumentException("error case: the session last msg info ,group id is invalid!")
             val sessionInfo = sessionDb.findByGroupId(groupId)
             val exists = sessionInfo != null

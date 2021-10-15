@@ -180,4 +180,10 @@ public interface ImMessageOrBuilder extends
    * <code>.app.ImMessage replyMsg = 15;</code>
    */
   ImMessageOrBuilder getReplyMsgOrBuilder();
+
+  /**
+   * <code>int32 status = 16;</code>
+   * @return The status.
+   */
+  int getStatus();
 }

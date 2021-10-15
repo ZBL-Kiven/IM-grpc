@@ -6,8 +6,8 @@ import java.security.NoSuchAlgorithmException
 
 
 object Comment {
-    const val DELETE_OWNER_SESSION = "delete_owner_session"
-    const val DELETE_FANS_SESSION = "delete_fans_session"
+    const val DELETE_OWNER_SESSION = 1
+    const val DELETE_FANS_SESSION = 2
 }
 
 internal object Constance {

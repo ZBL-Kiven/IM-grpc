@@ -191,6 +191,11 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 128: {
+
+            status_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -562,6 +567,17 @@ private static final long serialVersionUID = 0L;
     return getReplyMsg();
   }
 
+  public static final int STATUS_FIELD_NUMBER = 16;
+  private int status_;
+  /**
+   * <code>int32 status = 16;</code>
+   * @return The status.
+   */
+  @java.lang.Override
+  public int getStatus() {
+    return status_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -620,6 +636,9 @@ private static final long serialVersionUID = 0L;
     }
     if (replyMsg_ != null) {
       output.writeMessage(15, getReplyMsg());
+    }
+    if (status_ != 0) {
+      output.writeInt32(16, status_);
     }
     unknownFields.writeTo(output);
   }
@@ -687,6 +706,10 @@ private static final long serialVersionUID = 0L;
     if (replyMsg_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(15, getReplyMsg());
+    }
+    if (status_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(16, status_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -757,6 +780,8 @@ private static final long serialVersionUID = 0L;
       if (!getReplyMsg()
           .equals(other.getReplyMsg())) return false;
     }
+    if (getStatus()
+        != other.getStatus()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -819,6 +844,8 @@ private static final long serialVersionUID = 0L;
       hash = (37 * hash) + REPLYMSG_FIELD_NUMBER;
       hash = (53 * hash) + getReplyMsg().hashCode();
     }
+    hash = (37 * hash) + STATUS_FIELD_NUMBER;
+    hash = (53 * hash) + getStatus();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -1014,6 +1041,8 @@ private static final long serialVersionUID = 0L;
         replyMsg_ = null;
         replyMsgBuilder_ = null;
       }
+      status_ = 0;
+
       return this;
     }
 
@@ -1087,6 +1116,7 @@ private static final long serialVersionUID = 0L;
       } else {
         result.replyMsg_ = replyMsgBuilder_.build();
       }
+      result.status_ = status_;
       onBuilt();
       return result;
     }
@@ -1181,6 +1211,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.hasReplyMsg()) {
         mergeReplyMsg(other.getReplyMsg());
+      }
+      if (other.getStatus() != 0) {
+        setStatus(other.getStatus());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -2444,6 +2477,37 @@ private static final long serialVersionUID = 0L;
         replyMsg_ = null;
       }
       return replyMsgBuilder_;
+    }
+
+    private int status_ ;
+    /**
+     * <code>int32 status = 16;</code>
+     * @return The status.
+     */
+    @java.lang.Override
+    public int getStatus() {
+      return status_;
+    }
+    /**
+     * <code>int32 status = 16;</code>
+     * @param value The status to set.
+     * @return This builder for chaining.
+     */
+    public Builder setStatus(int value) {
+      
+      status_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int32 status = 16;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearStatus() {
+      
+      status_ = 0;
+      onChanged();
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

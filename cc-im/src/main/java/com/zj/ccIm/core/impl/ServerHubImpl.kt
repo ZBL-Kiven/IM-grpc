@@ -15,7 +15,6 @@ import com.zj.protocol.grpc.*
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
-import com.zj.ccIm.core.Comment
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.GetMoreMessagesInfo
@@ -214,12 +213,7 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     private fun deleteSession(data: DeleteSessionInfo) {
-        val type = when (data.pl) {
-            Comment.DELETE_FANS_SESSION -> 1
-            Comment.DELETE_OWNER_SESSION -> 0
-            else -> throw java.lang.IllegalArgumentException()
-        }
-        ImApi.getFunctionApi().call({ it.deleteSession(data.targetId, data.groupId, type) })
+        ImApi.getFunctionApi().call({ it.deleteSession(data) })
     }
 
     private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {

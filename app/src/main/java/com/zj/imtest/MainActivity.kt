@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.StringBuilder
 import java.util.*
 import com.zj.album.AlbumIns
 import com.zj.album.nModule.FileInfo
@@ -26,7 +25,6 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
-import com.zj.ccIm.core.fecher.FetchResultRunner
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -49,8 +47,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 32L
-    private val ownerId = 151120
+    private val groupId = 50L
+    private val ownerId = 151254
     private var curSpark = 0
     private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
@@ -75,7 +73,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, IMConfig.getUserId(), FetchMsgChannel.OWNER_MESSAGE)
+        IMHelper.registerChatRoom(groupId, ownerId, 151253, FetchMsgChannel.OWNER_PRIVATE, FetchMsgChannel.FANS_PRIVATE)
     }
 
     fun leaveChatRoom(view: View) {
@@ -109,11 +107,13 @@ class MainActivity : AppCompatActivity() {
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
 
-        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
-            override fun result(result: FetchResult) {
-                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
-            }
-        })
+        //        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
+        //            override fun result(result: FetchResult) {
+        //                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
+        //            }
+        //        })
+
+        //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
         //        IMHelper.withCustomSender().ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
@@ -121,13 +121,7 @@ class MainActivity : AppCompatActivity() {
     /**====================================================== READ ME ⬆️ ===========================================================*/
 
     fun queryCurrent(view: View) {
-        val sb = StringBuilder()
-        IMHelper.withDb {
-            sb.append("messageCount = ${it.messageDao().findAll().size}\n")
-            sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
-            sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
-            sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
-        }
+        val sb = IMHelper.queryAllDBColumnsCount()
         Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show()
     }
 

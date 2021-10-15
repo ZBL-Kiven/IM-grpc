@@ -27,6 +27,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_DELETE = "ClientHubImpl.payload_delete"
         const val PAYLOAD_CHANGED = "ClientHubImpl.payload_change"
         const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
+        const val PAYLOAD_DELETE_FROM_RECALLED = "ClientHubImpl.payload_delete_case_recalled"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "ClientHubImpl.payload_delete_case_sensitive_words"
         const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = "ClientHubImpl.payload_delete_case_not_following"
         const val PAYLOAD_DELETE_NOT_ENOUGH = "ClientHubImpl.payload_delete_case_not_enough_coins"
@@ -193,12 +194,12 @@ open class ClientHubImpl : ClientHub<Any?>() {
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 val d = data as DeleteSessionInfo
-                when (d.pl) {
+                when (d.status) {
                     Comment.DELETE_OWNER_SESSION -> {
                         PrivateOwnerDbOperator.deleteSession(d.groupId)
                     }
                     Comment.DELETE_FANS_SESSION -> {
-                        val en = PrivateFansEn().apply { this.userId = d.targetId }
+                        val en = PrivateFansEn().apply { this.userId = d.targetUserId }
                         IMHelper.postToUiObservers(en, PAYLOAD_DELETE)
                     }
                 }

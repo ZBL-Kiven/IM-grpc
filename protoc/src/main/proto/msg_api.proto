@@ -24,12 +24,12 @@ message ListenTopicReply{
 }
 
 message GetImMessageReq {
-  uint64 groupId      = 1;
-  uint64 ownerId      = 2;
+  uint64          groupId      = 1;
+  uint64          ownerId      = 2;
   /*owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private*/
   repeated string channel      = 3;
   /* fans user id*/
-  uint64 targetUserid = 4;
+  uint64          targetUserid = 4;
 }
 
 message ImMessage{
@@ -48,6 +48,7 @@ message ImMessage{
   SenderInfo      sender          = 13;
   uint64          replyMsgId      = 14;
   ImMessage       replyMsg        = 15;
+  int32           status          = 16;
 }
 
 message ImgContent{
@@ -113,6 +114,25 @@ message PingReq{
 message Pong{
 }
 
+message LiveRoomMessageReq {
+  enum Op{
+    JOIN  = 0;
+    LEAVE = 1;
+  }
+  Op     op        = 1;
+  int32  roomId    = 2;
+  int64  liveId    = 3;
+  bool   liverIsMe = 4;
+  uint64 userId    = 5;
+}
+
+message LiveRoomMessageReply{
+  int32  roomId  = 1;
+  int64  liveId  = 2;
+  string msgType = 3;
+  string content = 4;
+}
+
 service MsgApi{
 
   rpc ListenTopicData(stream ListenTopicReq) returns (stream ListenTopicReply){}
@@ -120,6 +140,8 @@ service MsgApi{
   rpc GetImMessage(GetImMessageReq) returns (stream ImMessage){}
 
   rpc LeaveImGroup(LeaveImGroupReq) returns (LeaveImGroupReply){}
+
+  rpc LiveRoomMessage(stream LiveRoomMessageReq) returns (stream LiveRoomMessageReply){}
 
   rpc Ping(PingReq) returns (Pong){}
 

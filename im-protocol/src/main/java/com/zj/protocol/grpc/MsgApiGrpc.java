@@ -101,6 +101,35 @@ public final class MsgApiGrpc {
     return getLeaveImGroupMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<LiveRoomMessageReq, LiveRoomMessageReply> getLiveRoomMessageMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "LiveRoomMessage",
+      requestType = LiveRoomMessageReq.class,
+      responseType = LiveRoomMessageReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+  public static io.grpc.MethodDescriptor<LiveRoomMessageReq, LiveRoomMessageReply> getLiveRoomMessageMethod() {
+    io.grpc.MethodDescriptor<LiveRoomMessageReq, LiveRoomMessageReply> getLiveRoomMessageMethod;
+    if ((getLiveRoomMessageMethod = MsgApiGrpc.getLiveRoomMessageMethod) == null) {
+      synchronized (MsgApiGrpc.class) {
+        if ((getLiveRoomMessageMethod = MsgApiGrpc.getLiveRoomMessageMethod) == null) {
+          MsgApiGrpc.getLiveRoomMessageMethod = getLiveRoomMessageMethod =
+              io.grpc.MethodDescriptor.<LiveRoomMessageReq, LiveRoomMessageReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "LiveRoomMessage"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  LiveRoomMessageReq.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  LiveRoomMessageReply.getDefaultInstance()))
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("LiveRoomMessage"))
+              .build();
+        }
+      }
+    }
+    return getLiveRoomMessageMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<PingReq, Pong> getPingMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
@@ -201,6 +230,13 @@ public final class MsgApiGrpc {
 
     /**
      */
+    public io.grpc.stub.StreamObserver<LiveRoomMessageReq> liveRoomMessage(
+        io.grpc.stub.StreamObserver<LiveRoomMessageReply> responseObserver) {
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getLiveRoomMessageMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void ping(PingReq request,
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
@@ -223,6 +259,11 @@ public final class MsgApiGrpc {
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<LeaveImGroupReq, LeaveImGroupReply>(
                   this, METHODID_LEAVE_IM_GROUP)))
+          .addMethod(
+            getLiveRoomMessageMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+              new MethodHandlers<LiveRoomMessageReq, LiveRoomMessageReply>(
+                  this, METHODID_LIVE_ROOM_MESSAGE)))
           .addMethod(
             getPingMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -268,6 +309,14 @@ public final class MsgApiGrpc {
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getLeaveImGroupMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<LiveRoomMessageReq> liveRoomMessage(
+        io.grpc.stub.StreamObserver<LiveRoomMessageReply> responseObserver) {
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
+          getChannel().newCall(getLiveRoomMessageMethod(), getCallOptions()), responseObserver);
     }
 
     /**
@@ -351,6 +400,7 @@ public final class MsgApiGrpc {
   private static final int METHODID_LEAVE_IM_GROUP = 1;
   private static final int METHODID_PING = 2;
   private static final int METHODID_LISTEN_TOPIC_DATA = 3;
+  private static final int METHODID_LIVE_ROOM_MESSAGE = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -394,6 +444,9 @@ public final class MsgApiGrpc {
         case METHODID_LISTEN_TOPIC_DATA:
           return (io.grpc.stub.StreamObserver<Req>) serviceImpl.listenTopicData(
               (io.grpc.stub.StreamObserver<ListenTopicReply>) responseObserver);
+        case METHODID_LIVE_ROOM_MESSAGE:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.liveRoomMessage(
+              (io.grpc.stub.StreamObserver<LiveRoomMessageReply>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -448,6 +501,7 @@ public final class MsgApiGrpc {
               .addMethod(getListenTopicDataMethod())
               .addMethod(getGetImMessageMethod())
               .addMethod(getLeaveImGroupMethod())
+              .addMethod(getLiveRoomMessageMethod())
               .addMethod(getPingMethod())
               .build();
         }
