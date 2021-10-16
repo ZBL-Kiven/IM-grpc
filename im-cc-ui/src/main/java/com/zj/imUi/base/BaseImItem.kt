@@ -113,7 +113,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.onSetData({ curData }, chatType as Int?)
         bubbleView?.setOnLongClickListener {
             val isNotSelf = data.getSelfUserId() != data.getSenderId()
-            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
+            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
                 MsgPop(context, data).show(it)
             }
             true

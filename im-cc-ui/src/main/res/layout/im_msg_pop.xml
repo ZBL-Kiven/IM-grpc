@@ -76,7 +76,7 @@
         android:minWidth="76dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/im_ui_msg_delete"
+        android:text="@string/im_chat_delete"
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
