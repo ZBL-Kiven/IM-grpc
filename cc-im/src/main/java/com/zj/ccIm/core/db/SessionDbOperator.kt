@@ -8,7 +8,6 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SessionInfoEntity
-import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.database.ut.Constance
 
 internal object SessionDbOperator {
@@ -39,8 +38,8 @@ internal object SessionDbOperator {
                 if (exists) sessionDb.deleteSession(local)
             } else {
                 sessionDb.insertOrChangeSession(info)
+                PrivateOwnerDbOperator.updateSessionInfo(info)
             }
-            PrivateOwnerDbOperator.updateSessionInfo(needDelete, info)
             Pair(if (exists) {
                 if (needDelete) {
                     ClientHubImpl.PAYLOAD_DELETE
