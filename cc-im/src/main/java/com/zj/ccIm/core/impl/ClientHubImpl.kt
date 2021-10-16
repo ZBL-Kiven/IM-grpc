@@ -200,6 +200,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     }
                     Comment.DELETE_FANS_SESSION -> {
                         val en = PrivateFansEn().apply { this.userId = d.targetUserId }
+                        BadgeDbOperator.notifyOwnerSessionBadgeWithFansSessionChanged(d.targetUserId, d.groupId)
                         IMHelper.postToUiObservers(en, PAYLOAD_DELETE)
                     }
                 }

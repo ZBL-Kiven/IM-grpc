@@ -16,13 +16,11 @@ internal object BadgeDbOperator {
                 FetchMsgChannel.FANS_PRIVATE.classification -> {
                     val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId)
                     val sessionBadgeInfo = changeBadge(key)
-                    notifyOwnerSessionBadge(sessionBadgeInfo?.first ?: 0, info.groupId)
                     SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(sessionBadgeInfo?.second)
                 }
                 FetchMsgChannel.OWNER_PRIVATE.classification -> {
-                    val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = info.targetUserid ?: 0)
-                    val sessionBadgeInfo = changeBadge(key)
-                    SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(sessionBadgeInfo?.second)
+                    val last = notifyOwnerSessionBadgeWithFansSessionChanged(info.targetUserid, info.groupId)
+                    SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(last)
                 }
                 0 -> {
                     val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
@@ -36,18 +34,21 @@ internal object BadgeDbOperator {
         }
     }
 
-    private fun notifyOwnerSessionBadge(unReadCount: Int, groupId: Long) {
+    fun notifyOwnerSessionBadgeWithFansSessionChanged(targetUserId: Int?, groupId: Long): SessionLastMsgInfo? {
+        val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = targetUserId ?: 0)
+        val sessionBadgeInfo = changeBadge(key) ?: return null
         IMHelper.withDb { db ->
             val ownerKey = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = groupId)
             val ownerLastMsgDao = db.sessionMsgDao()
             val ownerLastMsg = ownerLastMsgDao.findSessionMsgInfoByKey(ownerKey)
             val unreadQuesNum = ownerLastMsg.unreadQuesNum ?: 0
-            ownerLastMsg.unreadQuesNum = (unreadQuesNum - unReadCount).coerceAtLeast(0)
+            ownerLastMsg.unreadQuesNum = (unreadQuesNum - (sessionBadgeInfo.first)).coerceAtLeast(0)
             ownerLastMsgDao.insertOrUpdateSessionMsgInfo(ownerLastMsg)
             val ownerSession = db.sessionDao().findSessionById(groupId)
             ownerSession?.sessionMsgInfo = ownerLastMsg
             IMHelper.postToUiObservers(ownerSession, ClientHubImpl.PAYLOAD_CHANGED)
         }
+        return sessionBadgeInfo.second
     }
 
     private fun changeBadge(key: String): Pair<Int, SessionLastMsgInfo?>? {
