@@ -35,8 +35,8 @@ fun <T : Any> getValidate(vararg params: T?, predicate: (T?) -> Boolean): T? {
     return null
 }
 
-internal fun <R : Any> R?.runSync(block: (R) -> Unit) {
-    this?.let {
+internal fun <R : Any, T> R?.runSync(block: (R) -> T?): T? {
+    return this?.let {
         synchronized(it) {
             block(it)
         }
@@ -160,6 +160,12 @@ internal class CustomList<OUT> {
                     }
                 }
             }
+        }
+    }
+
+    fun group(predicate: (i: OUT) -> Boolean): Map<Boolean, List<OUT>>? {
+        return lst.runSync {
+            it.groupBy(predicate)
         }
     }
 

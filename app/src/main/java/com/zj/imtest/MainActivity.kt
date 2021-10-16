@@ -47,8 +47,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 50L
-    private val ownerId = 151254
+    private val groupId = 32L
+    private val ownerId = 151120
     private var curSpark = 0
     private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
@@ -96,7 +96,11 @@ class MainActivity : AppCompatActivity() {
         lastSelectData?.let {
             val path = it.path
             val duration = it.duration
-            if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
+            if (lastSelectData?.isImage == true) {
+
+                // Sender.sendImg(path, 200, 200, groupId)
+                IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendImg(path, 200, 200, groupId)
+            }
             if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
         }
     }

@@ -22,13 +22,13 @@ internal class BaseMsgInfo<T> private constructor() {
 
     var ignoreConnecting: Boolean = false
 
+    var ignoreStateCheck: Boolean = false
+
     var createdTs: Double = 0.0
 
     var type: MessageHandleType? = null
 
     var data: T? = null
-
-    var isSpecialData: Boolean = false
 
     var connStateChange: ConnectionState? = null
 
@@ -95,7 +95,7 @@ internal class BaseMsgInfo<T> private constructor() {
             return baseInfo
         }
 
-        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, joinInTop: Boolean): BaseMsgInfo<T> {
+        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, joinInTop: Boolean): BaseMsgInfo<T> {
             return BaseMsgInfo<T>().apply {
                 this.data = data
                 this.callId = callId
@@ -104,11 +104,11 @@ internal class BaseMsgInfo<T> private constructor() {
                 this.joinInTop = joinInTop
                 this.onSendBefore = sendBefore
                 this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
-                this.isSpecialData = isSpecialData
                 this.createdTs = getIncrementNumber()
                 this.type = MessageHandleType.SEND_MSG
-                this.ignoreConnecting = ignoreConnecting
                 this.sendingState = SendMsgState.SENDING
+                this.ignoreStateCheck = ignoreStateCheck
+                this.ignoreConnecting = ignoreConnecting
             }
         }
 
@@ -117,7 +117,7 @@ internal class BaseMsgInfo<T> private constructor() {
             baseInfo.data = data
             baseInfo.callId = callId
             baseInfo.sendingState = SendMsgState.NONE
-            baseInfo.isSpecialData = isSpecialData
+            baseInfo.ignoreStateCheck = isSpecialData
             baseInfo.type = MessageHandleType.RECEIVED_MSG
             return baseInfo
         }

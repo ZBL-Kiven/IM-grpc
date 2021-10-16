@@ -46,17 +46,17 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
     fun pop(): BaseMsgInfo<T>? {
         if (sending) return null
         if (sendMsgQueue.isEmpty()) return null
-        sendMsgQueue.getFirst { it.ignoreConnecting }?.let {
-            sendMsgQueue.remove(it)
-            return it
-        }
         if (!DataReceivedDispatcher.isDataEnable()) {
-            sendMsgQueue.forEach {
-                it.joinInTop = true
-                DataReceivedDispatcher.pushData(it)
-            }
+            val grouped = sendMsgQueue.group {
+                it.ignoreConnecting
+            } ?: return null
             sendMsgQueue.clear()
-            return null
+            sendMsgQueue.addAll(grouped[true])
+            grouped[false]?.forEach { ds ->
+                ds.joinInTop = true
+                DataReceivedDispatcher.pushData(ds)
+            }
+            if (sendMsgQueue.isEmpty()) return null
         }
         var firstInStay = sendMsgQueue.getFirst()
         if (firstInStay?.sendingUp == SendingUp.WAIT) {

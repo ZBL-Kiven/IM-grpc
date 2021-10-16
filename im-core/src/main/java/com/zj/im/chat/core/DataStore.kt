@@ -48,7 +48,7 @@ internal class DataStore<T> {
                 connectStateChanged.addOnly(info)
             }
             MessageHandleType.SEND_MSG -> {
-                if (info.isSpecialData) simpleStatusFound.add(info) else {
+                if (info.ignoreStateCheck) simpleStatusFound.add(info) else {
                     val index = if (info.joinInTop) 0 else -1
                     sendMsg.addIf(info, index = index) { `in`, other ->
                         `in`.callId != other.callId
@@ -57,7 +57,7 @@ internal class DataStore<T> {
                 }
             }
             MessageHandleType.RECEIVED_MSG -> {
-                if (info.isSpecialData) simpleStatusFound.add(info)
+                if (info.ignoreStateCheck) simpleStatusFound.add(info)
                 else receivedMsg.add(info)
             }
             MessageHandleType.SEND_STATE_CHANGE -> {

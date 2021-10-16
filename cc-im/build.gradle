@@ -38,7 +38,7 @@ dependencies {
     implementation 'com.cc.android:api:1.1.9'
     implementation 'com.cc.android:compress:1.1.1'
 
-    api 'com.cc.android:cc-im-core:1.2.2'
+    api 'com.cc.android:cc-im-core:1.2.3'
     api 'com.cc.android:cc-im-protoc:1.0.9'
     api 'com.cc.android:cc-im-db:1.1.7'
 
