@@ -6,6 +6,7 @@ import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.impl.ClientHubImpl
+import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionLastMsgInfo
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
@@ -83,10 +84,18 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             var groupId = info.groupId
             if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
             if (groupId <= 0) throw IllegalArgumentException("error case: the session last msg info ,group id is invalid!")
-            val sessionInfo = sessionDb.findByGroupId(groupId)
+            var sessionInfo = sessionDb.findByGroupId(groupId)
             val exists = sessionInfo != null
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
-            sessionInfo?.sessionMsgInfo = info
+            if (sessionInfo == null && info.newMsg?.sender?.senderId == info.ownerId) {
+                sessionInfo = PrivateOwnerEntity()
+                sessionInfo.ownerId = info.ownerId
+                sessionInfo.ownerName = info.newMsg?.sender?.senderName
+                sessionInfo.groupId = info.groupId
+                sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
+                sessionDb.insertOrUpdate(sessionInfo)
+            }
+            sessionInfo.sessionMsgInfo = info
             notifyAllSessionDots()
             Pair(if (!exists) ClientHubImpl.PAYLOAD_ADD else ClientHubImpl.PAYLOAD_CHANGED, sessionInfo)
         }

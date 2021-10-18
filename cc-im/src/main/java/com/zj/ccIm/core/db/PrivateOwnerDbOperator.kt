@@ -67,25 +67,16 @@ internal object PrivateOwnerDbOperator {
         }
     }
 
-    fun updateSessionInfo(needDelete: Boolean, sessionInfoEntity: SessionInfoEntity) {
+    fun updateSessionInfo(sessionInfoEntity: SessionInfoEntity) {
         IMHelper.withDb {
             val privateOwnerDb = it.privateChatOwnerDao()
             val lastMsgDao = it.sessionMsgDao()
             val en = privateOwnerDb.findByGroupId(sessionInfoEntity.groupId)
             val lastMsgId = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = sessionInfoEntity.ownerId)
-            if (needDelete && en != null) {
-                privateOwnerDb.delete(en)
-                lastMsgDao.deleteByKey(lastMsgId)
-            } else {
-                en?.ownerName = sessionInfoEntity.ownerName
-                en?.avatar = sessionInfoEntity.logo
-                en?.sessionMsgInfo = lastMsgDao.findSessionMsgInfoByKey(lastMsgId)
-            }
-            IMHelper.postToUiObservers(en, if (needDelete) {
-                ClientHubImpl.PAYLOAD_DELETE
-            } else {
-                ClientHubImpl.PAYLOAD_ADD
-            })
+            en?.ownerName = sessionInfoEntity.ownerName
+            en?.avatar = sessionInfoEntity.logo
+            en?.sessionMsgInfo = lastMsgDao.findSessionMsgInfoByKey(lastMsgId)
+            IMHelper.postToUiObservers(en, ClientHubImpl.PAYLOAD_CHANGED)
         }
     }
 }
