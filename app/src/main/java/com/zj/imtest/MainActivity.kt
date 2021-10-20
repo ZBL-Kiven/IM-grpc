@@ -25,6 +25,7 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
+import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -96,21 +97,18 @@ class MainActivity : AppCompatActivity() {
         lastSelectData?.let {
             val path = it.path
             val duration = it.duration
-            if (lastSelectData?.isImage == true) {
+            if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
 
-                // Sender.sendImg(path, 200, 200, groupId)
-                IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendImg(path, 200, 200, groupId)
-            }
+            // IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendImg(path, 200, 200, groupId)
+
             if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
         }
     }
 
     fun sendUrlImg(view: View) {
 
-
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-
         //        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
         //            override fun result(result: FetchResult) {
         //                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
@@ -119,7 +117,7 @@ class MainActivity : AppCompatActivity() {
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
-        //        IMHelper.withCustomSender().ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -146,8 +144,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startAlbum(@Suppress("UNUSED_PARAMETER") v: View?) {
-        val i = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        if (i != PackageManager.PERMISSION_GRANTED) {
+        val i = ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val i1 = ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (i == PackageManager.PERMISSION_GRANTED && i1 == PackageManager.PERMISSION_GRANTED) {
             start()
         } else ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
     }

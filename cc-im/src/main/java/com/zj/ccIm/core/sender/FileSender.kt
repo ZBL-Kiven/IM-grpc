@@ -79,7 +79,7 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(Cons
         val cu = CompressUtils.with(c).load(d.localFilePath)
         when (d.msgType) {
             MsgType.IMG.type -> {
-                cu.asImage().ignoreBy(1024).setTargetPath(mImageOutputPath).start(onImgCompressListener)
+                cu.asImage().ignoreBy(300).setTargetPath(mImageOutputPath).start(onImgCompressListener)
             }
 
             MsgType.VIDEO.type -> {
