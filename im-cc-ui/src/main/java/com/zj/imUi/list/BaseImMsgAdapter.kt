@@ -1,9 +1,8 @@
 package com.zj.imUi.list
 
 
-import androidx.core.content.ContextCompat
+import android.graphics.Color
 import androidx.recyclerview.widget.RecyclerView
-import com.zj.imUi.R
 import com.zj.imUi.ui.ImMsgView
 import com.zj.imUi.utils.ImMessageDecoration
 import com.zj.imUi.utils.TimeLineInflateModel
@@ -13,7 +12,8 @@ import com.zj.views.ut.DPUtils
 
 
 @Suppress("unused")
-abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, builder: ViewBuilder) : BaseAdapter<T>(builder), ImMessageDecoration.TimeLineViewBuilder<T> {
+abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, builder: ViewBuilder) :
+    BaseAdapter<T>(builder), ImMessageDecoration.TimeLineViewBuilder<T> {
 
     abstract fun exchangeWhenUpdate(new: T, old: T)
     abstract fun getSendTime(d: T): Long
@@ -110,6 +110,10 @@ abstract class BaseImMsgAdapter<T>(private val recyclerView: RecyclerView, build
     }
 
     override fun getTextColor(): Int {
-        return ContextCompat.getColor(context ?: return 0, R.color.im_msg_text_color_gray)
+        return Color.parseColor("#FF9395AE")
+    }
+
+    override fun getTextBackgroundColor(): Int {
+        return Color.WHITE
     }
 }
