@@ -101,7 +101,12 @@ message SenderInfo{
 
 
 message LeaveImGroupReq {
-  uint64 groupId = 1;
+  uint64          groupId      = 1;
+  uint64          ownerId      = 2;
+  /*owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private*/
+  repeated string channel      = 3;
+  /* fans user id*/
+  uint64          targetUserid = 4;
 }
 
 message LeaveImGroupReply {

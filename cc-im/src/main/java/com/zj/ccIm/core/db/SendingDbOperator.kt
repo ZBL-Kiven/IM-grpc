@@ -10,7 +10,6 @@ import com.zj.im.chat.enums.SendMsgState
 
 internal object SendingDbOperator {
 
-
     /**
      * When the message is sent, the state callback event,
      * here is the message that the database already exists in the database and is sent to the UI.

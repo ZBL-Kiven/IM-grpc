@@ -16,7 +16,7 @@ import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 
-open class ClientHubImpl : ClientHub<Any?>() {
+internal open class ClientHubImpl : ClientHub<Any?>() {
 
     companion object {
 
@@ -115,6 +115,10 @@ open class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.onMsgRegistered(channel)
             return true
         }
+        if (callId == Constance.CALL_ID_REGISTER_CHAT || callId == Constance.CALL_ID_LEAVE_CHAT_ROOM) {
+            BadgeDbOperator.clearGroupBadge(d as GetMsgReqBean)
+            return true
+        }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
             IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
             onDispatchSentErrorMsg(d as GetMsgReqBean)
@@ -188,9 +192,6 @@ open class ClientHubImpl : ClientHub<Any?>() {
             }
             Constance.CALL_ID_START_LISTEN_PRIVATE_OWNER_CHAT -> {
                 PrivateOwnerDbOperator.notifyAllSession(callId)
-            }
-            Constance.CALL_ID_CLEAR_SESSION_BADGE -> {
-                BadgeDbOperator.clearGroupBadge(data as? GetMsgReqBean ?: return)
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 val d = data as DeleteSessionInfo

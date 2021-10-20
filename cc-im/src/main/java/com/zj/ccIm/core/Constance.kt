@@ -26,7 +26,6 @@ internal object Constance {
 
 
     /**-------------------------- CALL IDS ------------------------------*/
-    const val CALL_ID_CLEAR_SESSION_BADGE = "internal_clear_session_badge"
 
     const val INTERNAL_CALL_ID_PREFIX = "internal_call"
     const val CALL_ID_START_LISTEN_SESSION = INTERNAL_CALL_ID_PREFIX + "_start_listen_session"

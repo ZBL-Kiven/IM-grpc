@@ -144,24 +144,26 @@ public final class IMProtoc {
       "\022\025\n\ranswerMsgType\030\t \001(\t\022\023\n\013contentType\030\n" +
       " \001(\t\"`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\n" +
       "senderName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026" +
-      "\n\016senderPlatform\030\004 \001(\t\"\"\n\017LeaveImGroupRe" +
-      "q\022\017\n\007groupId\030\001 \001(\004\"$\n\021LeaveImGroupReply\022" +
-      "\017\n\007success\030\001 \001(\010\"\t\n\007PingReq\"\006\n\004Pong\"\232\001\n\022" +
-      "LiveRoomMessageReq\022&\n\002op\030\001 \001(\0162\032.app.Liv" +
-      "eRoomMessageReq.Op\022\016\n\006roomId\030\002 \001(\005\022\016\n\006li" +
-      "veId\030\003 \001(\003\022\021\n\tliverIsMe\030\004 \001(\010\022\016\n\006userId\030" +
-      "\005 \001(\004\"\031\n\002Op\022\010\n\004JOIN\020\000\022\t\n\005LEAVE\020\001\"X\n\024Live" +
-      "RoomMessageReply\022\016\n\006roomId\030\001 \001(\005\022\016\n\006live" +
-      "Id\030\002 \001(\003\022\017\n\007msgType\030\003 \001(\t\022\017\n\007content\030\004 \001" +
-      "(\t2\267\002\n\006MsgApi\022C\n\017ListenTopicData\022\023.app.L" +
-      "istenTopicReq\032\025.app.ListenTopicReply\"\000(\001" +
-      "0\001\0228\n\014GetImMessage\022\024.app.GetImMessageReq" +
-      "\032\016.app.ImMessage\"\0000\001\022>\n\014LeaveImGroup\022\024.a" +
-      "pp.LeaveImGroupReq\032\026.app.LeaveImGroupRep" +
-      "ly\"\000\022K\n\017LiveRoomMessage\022\027.app.LiveRoomMe" +
-      "ssageReq\032\031.app.LiveRoomMessageReply\"\000(\0010" +
-      "\001\022!\n\004Ping\022\014.app.PingReq\032\t.app.Pong\"\000B\033\n\r" +
-      "com.zj.im.genB\010IMProtocP\001b\006proto3"
+      "\n\016senderPlatform\030\004 \001(\t\"Z\n\017LeaveImGroupRe" +
+      "q\022\017\n\007groupId\030\001 \001(\004\022\017\n\007ownerId\030\002 \001(\004\022\017\n\007c" +
+      "hannel\030\003 \003(\t\022\024\n\014targetUserid\030\004 \001(\004\"$\n\021Le" +
+      "aveImGroupReply\022\017\n\007success\030\001 \001(\010\"\t\n\007Ping" +
+      "Req\"\006\n\004Pong\"\232\001\n\022LiveRoomMessageReq\022&\n\002op" +
+      "\030\001 \001(\0162\032.app.LiveRoomMessageReq.Op\022\016\n\006ro" +
+      "omId\030\002 \001(\005\022\016\n\006liveId\030\003 \001(\003\022\021\n\tliverIsMe\030" +
+      "\004 \001(\010\022\016\n\006userId\030\005 \001(\004\"\031\n\002Op\022\010\n\004JOIN\020\000\022\t\n" +
+      "\005LEAVE\020\001\"X\n\024LiveRoomMessageReply\022\016\n\006room" +
+      "Id\030\001 \001(\005\022\016\n\006liveId\030\002 \001(\003\022\017\n\007msgType\030\003 \001(" +
+      "\t\022\017\n\007content\030\004 \001(\t2\267\002\n\006MsgApi\022C\n\017ListenT" +
+      "opicData\022\023.app.ListenTopicReq\032\025.app.List" +
+      "enTopicReply\"\000(\0010\001\0228\n\014GetImMessage\022\024.app" +
+      ".GetImMessageReq\032\016.app.ImMessage\"\0000\001\022>\n\014" +
+      "LeaveImGroup\022\024.app.LeaveImGroupReq\032\026.app" +
+      ".LeaveImGroupReply\"\000\022K\n\017LiveRoomMessage\022" +
+      "\027.app.LiveRoomMessageReq\032\031.app.LiveRoomM" +
+      "essageReply\"\000(\0010\001\022!\n\004Ping\022\014.app.PingReq\032" +
+      "\t.app.Pong\"\000B\033\n\rcom.zj.im.genB\010IMProtocP" +
+      "\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -238,7 +240,7 @@ public final class IMProtoc {
     internal_static_app_LeaveImGroupReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_LeaveImGroupReq_descriptor,
-        new java.lang.String[] { "GroupId", });
+        new java.lang.String[] { "GroupId", "OwnerId", "Channel", "TargetUserid", });
     internal_static_app_LeaveImGroupReply_descriptor =
       getDescriptor().getMessageTypes().get(12);
     internal_static_app_LeaveImGroupReply_fieldAccessorTable = new

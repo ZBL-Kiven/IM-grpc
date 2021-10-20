@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * 离开聊天页面，调用此接口后，即时聊天消息接收停止工作
          * */
-        IMHelper.leaveChatRoom(groupId)
+        IMHelper.leaveChatRoom()
     }
 
     fun sendText(view: View) {
