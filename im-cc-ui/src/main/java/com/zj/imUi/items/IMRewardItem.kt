@@ -92,6 +92,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         tvReliedFLag.visibility = View.GONE
         llQuestionType.visibility = View.VISIBLE
         questionIcon.visibility = View.VISIBLE
+        textReplyOwnerSendTime.visibility = View.GONE
+
 
         setTitle(data, chatType)
         if (chatType == 1 || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
@@ -128,7 +130,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
-        if (data.getQuestionStatus() == 0&&(data.getSendState() == 0||data.getSendState() == 3)) {
+        val messageNormal = data.getSendState() == 0 ||data.getSendState() == 3
+        if (data.getQuestionStatus() == 0 && messageNormal) {
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
                     textReplyType.visibility = View.VISIBLE
@@ -148,7 +151,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                     textReplyType.visibility = View.GONE
                 }
             }
-        } else { //已回复状态
+            llReplyContentUser.visibility = View.GONE
+            llReplyContentOwner.visibility = View.GONE
+        } else if (data.getQuestionStatus() == 1) { //已回复状态
             textReplyType.visibility = View.GONE
             if (data.getSelfUserId() == data.getOwnerId()) {
                 setReplyContent(data, replyOwnerContent)
