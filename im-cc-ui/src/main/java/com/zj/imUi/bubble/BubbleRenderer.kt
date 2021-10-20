@@ -22,22 +22,33 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
 
-    override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,chatType:Int) {
-        drawBackGround(context, canvas, data, width, height,chatType)
+    override fun drawBubble(context: Context,
+        canvas: Canvas,
+        data: ImMsgIn,
+        width: Int,
+        height: Int,
+        chatType: Int) {
+        drawBackGround(context, canvas, data, width, height, chatType)
     }
 
 
-    private fun drawBackGround(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int,chatType:Int) {
+    private fun drawBackGround(context: Context,
+        canvas: Canvas,
+        data: ImMsgIn,
+        width: Int,
+        height: Int,
+        chatType: Int) {
         val mBgColorOrigin = ContextCompat.getColor(context, R.color.im_msg_bg_origin)
         isSelfMessage = data.getSelfUserId() == data.getSenderId()
         isOwner = data.getSenderId() == data.getOwnerId()
-        if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic = data.getReplyMsgQuestionIsPublished() == true
+        if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic =
+            data.getReplyMsgQuestionIsPublished() == true
 
 
         val path = Path()
         paint.strokeWidth = 1f
         paint.style = Paint.Style.FILL
-        paint.color = setColor(context, data,chatType)
+        paint.color = setColor(context, data, chatType)
         if (isSelfMessage) { //发送者为自己
             val rectF = RectF(0f, 0f, width.toFloat(), height.toFloat())
             val radii = floatArrayOf(dpToPx(context, 8f),
@@ -63,7 +74,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                 dpToPx(context, 8f))
             path.addRoundRect(rectF, radii, Path.Direction.CW)
             canvas.drawPath(path, paint)
-            if (isOwner && (isOwnerReplyQuestionIsPublic||chatType == 2)) {
+            if (isOwner && (isOwnerReplyQuestionIsPublic || chatType == UiMsgType.GROUP_CHAT)) {
                 paint.strokeWidth = 1.5f
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE //画金色边框
@@ -93,8 +104,8 @@ object BubbleRenderer : BaseBubbleRenderer {
         return dipValue * scale + 0.5f
     }
 
-    private fun setColor(context: Context, data: ImMsgIn,chatType:Any): Int {
-        return if (chatType == 1) {
+    private fun setColor(context: Context, data: ImMsgIn, chatType: Any): Int {
+        return if (chatType == UiMsgType.GROUP_CHAT) {
             if (isSelfMessage) { //自己发送的消息
                 if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                     if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {
@@ -130,7 +141,7 @@ object BubbleRenderer : BaseBubbleRenderer {
             if (isSelfMessage) {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息
-                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION){
+                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                     if (data.getQuestionStatus() == 1) {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
@@ -138,7 +149,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                             ContextCompat.getColor(context, R.color.im_msg_message_item_private)
                         } else ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     }
-                }else{
+                } else {
                     ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                 }
             }
