@@ -41,9 +41,6 @@ object BubbleRenderer : BaseBubbleRenderer {
         val mBgColorOrigin = ContextCompat.getColor(context, R.color.im_msg_bg_origin)
         isSelfMessage = data.getSelfUserId() == data.getSenderId()
         isOwner = data.getSenderId() == data.getOwnerId()
-        if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic =
-            data.getReplyMsgQuestionIsPublished() == true
-
 
         val path = Path()
         paint.strokeWidth = 1f
@@ -74,7 +71,9 @@ object BubbleRenderer : BaseBubbleRenderer {
                 dpToPx(context, 8f))
             path.addRoundRect(rectF, radii, Path.Direction.CW)
             canvas.drawPath(path, paint)
-            if (isOwner && (isOwnerReplyQuestionIsPublic || chatType == UiMsgType.GROUP_CHAT)) {
+            isOwnerReplyQuestionIsPublic = true
+            if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic = data.getReplyMsgQuestionIsPublished() == true
+            if (isOwner && (isOwnerReplyQuestionIsPublic || chatType == UiMsgType.PRIVATE_CHAT)) {
                 paint.strokeWidth = 1.5f
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE //画金色边框
