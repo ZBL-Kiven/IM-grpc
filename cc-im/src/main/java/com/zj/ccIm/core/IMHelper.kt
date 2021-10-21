@@ -222,6 +222,7 @@ object IMHelper : IMInterface<Any?>() {
             sb.append("messageCount = ${it.messageDao().findAll().size}\n")
             sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
             sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
+            sb.append("privateOwnerSession = ${it.privateChatOwnerDao().findAll().size}\n")
             sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
         }
         return sb

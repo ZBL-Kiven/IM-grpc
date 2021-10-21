@@ -2,6 +2,7 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.catching
@@ -87,7 +88,10 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             var sessionInfo = sessionDb.findByGroupId(groupId)
             val exists = sessionInfo != null
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
-            if (sessionInfo == null && info.newMsg?.sender?.senderId == info.ownerId) {
+            val fromV = info.newMsg?.sender?.senderId == info.ownerId
+            val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig.getUserId()
+            val isQuestion = info.newMsg?.msgType == MsgType.QUESTION.type
+            if (sessionInfo == null && (fromV || (fromSend && isQuestion))) {
                 sessionInfo = PrivateOwnerEntity()
                 sessionInfo.ownerId = info.ownerId
                 sessionInfo.ownerName = info.newMsg?.sender?.senderName

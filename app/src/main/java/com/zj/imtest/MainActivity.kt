@@ -19,6 +19,7 @@ import com.zj.album.nutils.MimeType
 import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
+import com.zj.api.BaseApi
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.fecher.FetchMsgChannel
@@ -33,6 +34,8 @@ import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
+import com.zj.imtest.api.CCApi
+import com.zj.imtest.api.TestApi
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -51,8 +54,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 32L
-    private val ownerId = 151120
+    private val groupId = 100L
+    private val ownerId = 151473
     private var curSpark = 0
     private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
@@ -77,14 +80,17 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, 151253, FetchMsgChannel.FANS_CLAP_HOUSE, FetchMsgChannel.FANS_MESSAGE)
+        IMHelper.registerChatRoom(groupId, ownerId, IMConfig.getUserId(), FetchMsgChannel.FANS_CLAP_HOUSE, FetchMsgChannel.FANS_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {
         /**
          * 离开聊天页面，调用此接口后，即时聊天消息接收停止工作
          * */
-        IMHelper.leaveChatRoom()
+
+        // IMHelper.leaveChatRoom()
+
+        CCApi.getTestApi().call({ it.setUserRelationshipFollow(IMConfig.getUserId(), IMConfig.getToken(), ownerId, 0) })
     }
 
     fun sendText(view: View) {
@@ -120,10 +126,8 @@ class MainActivity : AppCompatActivity() {
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
-        //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
 
-        val li = LiveReqInfo(4, 18, false, IMConfig.getUserId())
-        LiveIMHelper.joinToLiveRoom(li)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
