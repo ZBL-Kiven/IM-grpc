@@ -49,8 +49,11 @@ object IMHelper : IMInterface<Any?>() {
         Constance.app = app
         Fetcher.init()
         SPHelper.init("im_sp_main", app)
-        val option = BaseOption.create(app).debug().logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000).setNotify(Notification()).build()
-        initChat(option)
+        val option = BaseOption.create(app)
+        if (imConfig.debugAble()) option.debug()
+        if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
+        option.setNotify(Notification())
+        initChat(option.build())
     }
 
     override fun getClient(): ClientHub<Any?> {

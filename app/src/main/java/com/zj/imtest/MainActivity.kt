@@ -26,6 +26,9 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.live.LiveIMHelper
+import com.zj.ccIm.live.LiveInfoEn
+import com.zj.ccIm.live.LiveReqInfo
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -118,6 +121,9 @@ class MainActivity : AppCompatActivity() {
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
         //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+
+        val li = LiveReqInfo(4, 18, false, IMConfig.getUserId())
+        LiveIMHelper.joinToLiveRoom(li)
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -202,6 +208,10 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<FetchResult>(0x1127, this).listen { r, _, pl ->
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
+        }
+
+        IMHelper.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, l, pl ->
+            Log.e("----- ", "on Live msg ${r?.content} , payload = $pl")
         }
     }
 }

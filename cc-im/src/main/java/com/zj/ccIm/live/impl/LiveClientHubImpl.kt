@@ -7,7 +7,7 @@ import com.zj.ccIm.live.LiveInfoEn
 import com.zj.im.chat.enums.SendMsgState
 
 
-internal class LiveClientHubImpl : ClientHubImpl() {
+class LiveClientHubImpl : ClientHubImpl() {
 
     companion object {
         const val TYPE_USER_JOIN = "user_join"

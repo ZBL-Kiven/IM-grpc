@@ -5,6 +5,14 @@ import com.zj.ccIm.core.ImConfigIn
 
 object IMConfig : ImConfigIn {
 
+    override fun logAble(): Boolean {
+        return true
+    }
+
+    override fun debugAble(): Boolean {
+        return true
+    }
+
     override fun getUserId(): Int {
 
         return 151120
@@ -41,7 +49,7 @@ object IMConfig : ImConfigIn {
 
         return "https://im.ccdev.lerjin.com"
 
-//                return "http://172.16.1.75:8086"
+        //                return "http://172.16.1.75:8086"
     }
 
     override fun getHeatBeatsTimeOut(): Long {

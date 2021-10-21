@@ -16,7 +16,7 @@ import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 
-internal open class ClientHubImpl : ClientHub<Any?>() {
+open class ClientHubImpl : ClientHub<Any?>() {
 
     companion object {
 

@@ -2,6 +2,10 @@ package com.zj.ccIm.core
 
 interface ImConfigIn {
 
+    fun logAble(): Boolean
+
+    fun debugAble(): Boolean
+
     fun getUserId(): Int
 
     fun getUserName(): String

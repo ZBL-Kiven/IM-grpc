@@ -18,9 +18,13 @@ object LiveIMHelper : (ConnectionState) -> Unit {
 
 
     fun joinToLiveRoom(req: LiveReqInfo) {
+        IMHelper.registerConnectionStateChangeListener(LiveIMHelper::class.java.name, this)
+        joinToLiveRoomIfChecked(req)
+    }
+
+    private fun joinToLiveRoomIfChecked(req: LiveReqInfo) {
         this.checkLastLiveRoomInfo = req
         IMHelper.routeToServer(req, CALL_ID_LIVE_REGISTER_LIVE_ROOM)
-        IMHelper.registerConnectionStateChangeListener(LiveIMHelper::class.java.name, this)
     }
 
     fun leaveLiveRoom(req: LiveReqInfo? = checkLastLiveRoomInfo) {
@@ -44,7 +48,7 @@ object LiveIMHelper : (ConnectionState) -> Unit {
 
     override fun invoke(s: ConnectionState) {
         if (s == ConnectionState.CONNECTED && checkLastLiveRoomInfo != null) {
-            checkLastLiveRoomInfo?.let { joinToLiveRoom(it) }
+            checkLastLiveRoomInfo?.let { joinToLiveRoomIfChecked(it) }
         }
     }
 }
