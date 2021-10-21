@@ -1,19 +1,13 @@
 package com.zj.ccIm.core.db
 
 import com.google.gson.Gson
-import com.zj.api.interceptor.Interceptor.Companion.toMediaTypeOrNull
-import com.zj.api.interceptor.Interceptor.Companion.toRequestBody
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
-import com.zj.database.IMDb
-import com.zj.database.entity.MessageInfoEntity
-import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
-import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.database.ut.Constance
 
 internal object SessionDbOperator {
@@ -38,7 +32,12 @@ internal object SessionDbOperator {
             val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
             if (!needDelete) {
                 val lastMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
-                info.sessionMsgInfo = lastMsgInfo
+                info.sessionMsgInfo?.let { lm ->
+                    lm.key = key
+                    lastMsgDb.insertOrUpdateSessionMsgInfo(lm)
+                } ?: run {
+                    info.sessionMsgInfo = lastMsgInfo
+                }
             }
             if (needDelete) {
                 if (exists) {
@@ -47,7 +46,9 @@ internal object SessionDbOperator {
                 }
             } else {
                 sessionDb.insertOrChangeSession(info)
-                PrivateOwnerDbOperator.updateSessionInfo(info)
+                if (exists) {
+                    PrivateOwnerDbOperator.updateSessionInfo(info)
+                }
             }
             Pair(if (exists) {
                 if (needDelete) {
