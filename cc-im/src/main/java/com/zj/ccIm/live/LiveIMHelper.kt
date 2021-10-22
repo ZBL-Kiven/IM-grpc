@@ -16,6 +16,9 @@ object LiveIMHelper : (ConnectionState) -> Unit {
     private var checkLastLiveRoomInfo: LiveReqInfo? = null
     private var onLiveConnectListener: ((Boolean) -> Unit)? = null
 
+    fun setLiveConnectionListener(l: ((Boolean) -> Unit)?) {
+        this.onLiveConnectListener = l
+    }
 
     fun joinToLiveRoom(req: LiveReqInfo) {
         IMHelper.registerConnectionStateChangeListener(LiveIMHelper::class.java.name, this)

@@ -92,12 +92,24 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig.getUserId()
             val isQuestion = info.newMsg?.msgType == MsgType.QUESTION.type
             if (sessionInfo == null && (fromV || (fromSend && isQuestion))) {
-                sessionInfo = PrivateOwnerEntity()
-                sessionInfo.ownerId = info.ownerId
-                sessionInfo.ownerName = info.newMsg?.sender?.senderName
-                sessionInfo.groupId = info.groupId
-                sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
-                sessionDb.insertOrUpdate(sessionInfo)
+                if (fromV) {
+                    sessionInfo = PrivateOwnerEntity()
+                    sessionInfo.ownerId = info.ownerId
+                    sessionInfo.ownerName = info.newMsg?.sender?.senderName
+                    sessionInfo.groupId = info.groupId
+                    sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
+                    sessionDb.insertOrUpdate(sessionInfo)
+                } else {
+                    val group = it.sessionDao().findSessionById(info.groupId)
+                    if (group != null) {
+                        sessionInfo = PrivateOwnerEntity()
+                        sessionInfo.ownerId = group.ownerId
+                        sessionInfo.ownerName = group.ownerName
+                        sessionInfo.groupId = group.groupId
+                        sessionInfo.avatar = group.logo
+                        sessionDb.insertOrUpdate(sessionInfo)
+                    }
+                }
             }
             sessionInfo.sessionMsgInfo = info
             notifyAllSessionDots()
