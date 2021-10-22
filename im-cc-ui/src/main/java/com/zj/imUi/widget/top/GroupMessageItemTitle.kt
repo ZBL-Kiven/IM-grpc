@@ -16,6 +16,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardItem
+import com.zj.views.ut.DPUtils
 
 /**
  * author: 李 祥
@@ -52,10 +53,10 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                 mNickname.setPadding(0, 1, 0, 0)
                 mSendTime.textSize = 10f
                 if (data.getPublished() || data.getQuestionStatus() == 1) {
-                    mSendTime.setTextColor(ContextCompat.getColor(context,
-                        R.color.im_msg_text_color_gray))
-                } else mSendTime.setTextColor(ContextCompat.getColor(context,
-                    R.color.im_msg_bg_purple_60))
+                    mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
+                } else mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple_60))
+
+
             } else {
                 mNickname.visibility = View.GONE
                 mSendTime.setPadding(0, 12, 0, 0)
@@ -66,6 +67,12 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                     R.color.im_msg_text_color_gray))
                 mSendTime.textSize = 12f
             }
+
+            if (data.getQuestionStatus() == 1){
+                mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
+            }
+
+
         } else {
             if (data.getQuestionStatus() == 1) {
                 mGroupRewardItem.visibility = View.GONE
@@ -74,6 +81,11 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
             mNickname.visibility = View.VISIBLE
             mSendTime.visibility = View.GONE
         }
+
+        if (data.getQuestionStatus() == 0&&data.getPublished()){
+            mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
+        }
+
     }
 
     fun setDataSendTime(sendTime: Long) {
