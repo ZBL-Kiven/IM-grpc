@@ -24,17 +24,17 @@ open class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_FETCH_OWNER_SESSION = "ClientHubImpl.payload_fetch_owner_session"
 
         const val PAYLOAD_ADD = "ClientHubImpl.payload_add"
-        const val PAYLOAD_DELETE = "ClientHubImpl.payload_delete"
+        const val PAYLOAD_DELETE = "PAYLOAD_DELETE"
         const val PAYLOAD_CHANGED = "ClientHubImpl.payload_change"
         const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
-        const val PAYLOAD_DELETE_FROM_RECALLED = "ClientHubImpl.payload_delete_case_recalled"
-        const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = "ClientHubImpl.payload_delete_case_sensitive_words"
-        const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = "ClientHubImpl.payload_delete_case_not_following"
-        const val PAYLOAD_DELETE_NOT_ENOUGH = "ClientHubImpl.payload_delete_case_not_enough_coins"
-        const val PAYLOAD_DELETE_NOT_OWNER = "ClientHubImpl.payload_delete_case_not_owner"
-        const val PAYLOAD_DELETE_GROUP_STOPPED = "ClientHubImpl.payload_delete_case_group_stopped"
-        const val PAYLOAD_DELETE_REPEAT_ANSWER = "ClientHubImpl.payload_delete_case_not_repeat_answer"
-        const val PAYLOAD_DELETE_DIAMOND_NOT_ENOUGH = "ClientHubImpl.payload_delete_case_diamond_not_enough"
+        const val PAYLOAD_DELETE_FROM_RECALLED = PAYLOAD_DELETE + "_case_recalled"
+        const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words"
+        const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = PAYLOAD_DELETE + "_case_not_following"
+        const val PAYLOAD_DELETE_NOT_ENOUGH = PAYLOAD_DELETE + "_case_not_enough_coins"
+        const val PAYLOAD_DELETE_NOT_OWNER = PAYLOAD_DELETE + "_case_not_owner"
+        const val PAYLOAD_DELETE_GROUP_STOPPED = PAYLOAD_DELETE + "_case_group_stopped"
+        const val PAYLOAD_DELETE_REPEAT_ANSWER = PAYLOAD_DELETE + "_case_not_repeat_answer"
+        const val PAYLOAD_DELETE_DIAMOND_NOT_ENOUGH = PAYLOAD_DELETE + "_case_diamond_not_enough"
     }
 
     /**
