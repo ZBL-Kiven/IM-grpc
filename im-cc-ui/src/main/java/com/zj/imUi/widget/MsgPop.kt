@@ -22,6 +22,8 @@ import kotlin.math.max
 class MsgPop(context: Context, data: ImMsgIn) {
 
     private val popWindow: PopupWindow = PopupWindow(context)
+    private val isOwner = data.getSelfUserId() == data.getOwnerId()
+    private var isSelfMessage = data.getSelfUserId() == data.getSenderId()
 
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.im_msg_pop, null, false)
@@ -66,8 +68,20 @@ class MsgPop(context: Context, data: ImMsgIn) {
             }
         }
 
-        view.findViewById<View>(R.id.im_msg_pop_line3).visibility = delete.visibility
+        val recall = view.findViewById<TextView>(R.id.im_msg_pop_recall).apply {
+            visibility = if (isOwner&&isSelfMessage) {
+                View.VISIBLE
+            } else {
+                View.GONE
+            }
+            setOnClickListener {
+                data.ownerRecallGroupMsg()
+                popWindow.dismiss()
+            }
+        }
 
+        view.findViewById<View>(R.id.im_msg_pop_line3).visibility = delete.visibility
+        view.findViewById<View>(R.id.im_msg_pop_line4).visibility = recall.visibility
         view.findViewById<View>(R.id.im_msg_pop_line1).visibility = copy.visibility
         val visibility = if (reply.visibility == View.VISIBLE || block.visibility == View.VISIBLE) {
             View.VISIBLE

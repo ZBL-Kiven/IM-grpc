@@ -47,6 +47,10 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
         mSendTime.text = TimeDiffUtils.timeDifference(data.getSendTime())?.let { it1 ->
             TimeDiffUtils.setTimeText(it1, context)
         }
+
+        mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
+
+
         if (chatType == 1) {
             if (data.getSelfUserId() == data.getOwnerId()) {
                 mNickname.visibility = View.VISIBLE
@@ -68,10 +72,6 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                 mSendTime.textSize = 12f
             }
 
-            if (data.getQuestionStatus() == 1){
-                mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
-            }
-
 
         } else {
             if (data.getQuestionStatus() == 1) {
@@ -80,10 +80,6 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
             mNickname.setPadding(0, 12, 0, 0)
             mNickname.visibility = View.VISIBLE
             mSendTime.visibility = View.GONE
-        }
-
-        if (data.getQuestionStatus() == 0&&data.getPublished()){
-            mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
         }
 
     }

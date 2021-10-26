@@ -122,4 +122,6 @@ interface ImMsgIn {
     fun userRetractRewardMsg()
     //删除发送失败的信息
     fun deleteSendLossMsg()
+
+    fun ownerRecallGroupMsg()
 }
