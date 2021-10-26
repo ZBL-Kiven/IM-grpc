@@ -151,7 +151,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
                         if (!data.getPublished()) { //打赏消息状态
-                            ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                            ContextCompat.getColor(context, R.color.im_msg_message_item_private_100)
                         } else ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     }
                 } else {

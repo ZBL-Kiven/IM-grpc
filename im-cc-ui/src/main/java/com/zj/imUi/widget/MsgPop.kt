@@ -69,7 +69,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
         }
 
         val recall = view.findViewById<TextView>(R.id.im_msg_pop_recall).apply {
-            visibility = if (isOwner&&!isSelfMessage) {
+            visibility = if (isOwner&&!isSelfMessage&&data.getType() ==UiMsgType.MSG_TYPE_TEXT) {
                 View.VISIBLE
             } else {
                 View.GONE
