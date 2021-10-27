@@ -16,6 +16,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardItem
+import com.zj.views.ut.DPUtils
 
 /**
  * author: 李 祥
@@ -46,16 +47,20 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
         mSendTime.text = TimeDiffUtils.timeDifference(data.getSendTime())?.let { it1 ->
             TimeDiffUtils.setTimeText(it1, context)
         }
+
+        mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
+
+
         if (chatType == 1) {
             if (data.getSelfUserId() == data.getOwnerId()) {
                 mNickname.visibility = View.VISIBLE
                 mNickname.setPadding(0, 1, 0, 0)
                 mSendTime.textSize = 10f
                 if (data.getPublished() || data.getQuestionStatus() == 1) {
-                    mSendTime.setTextColor(ContextCompat.getColor(context,
-                        R.color.im_msg_text_color_gray))
-                } else mSendTime.setTextColor(ContextCompat.getColor(context,
-                    R.color.im_msg_bg_purple_60))
+                    mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
+                } else mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple_60))
+
+
             } else {
                 mNickname.visibility = View.GONE
                 mSendTime.setPadding(0, 12, 0, 0)
@@ -66,6 +71,8 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
                     R.color.im_msg_text_color_gray))
                 mSendTime.textSize = 12f
             }
+
+
         } else {
             if (data.getQuestionStatus() == 1) {
                 mGroupRewardItem.visibility = View.GONE
@@ -74,6 +81,7 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
             mNickname.visibility = View.VISIBLE
             mSendTime.visibility = View.GONE
         }
+
     }
 
     fun setDataSendTime(sendTime: Long) {

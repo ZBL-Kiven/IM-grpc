@@ -56,6 +56,7 @@
     <color name="im_msg_message_cc_video_send_time">#FFC7C7DA</color>
 
     <color name="im_msg_message_item_private">#33944DE3</color>
+    <color name="im_msg_message_item_private_100">#E1D4F4</color>
     <color name="im_msg_message_item_timeout_add_replied">#FFE2E5EF</color>
     <color name="im_msg_message_item_need_reply">#FFFEA30F</color>
     <color name="im_msg_recycle_view_bg">#FFF5F7F9</color>

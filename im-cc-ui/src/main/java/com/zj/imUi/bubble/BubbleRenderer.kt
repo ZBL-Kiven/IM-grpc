@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
+import com.zj.imUi.MsgType
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
@@ -74,9 +75,14 @@ object BubbleRenderer : BaseBubbleRenderer {
             isOwnerReplyQuestionIsPublic = true
             if (data.getReplyMsgQuestionIsPublished() != null) isOwnerReplyQuestionIsPublic = data.getReplyMsgQuestionIsPublished() == true
             if (isOwner && (isOwnerReplyQuestionIsPublic || chatType == UiMsgType.PRIVATE_CHAT)) {
-                paint.strokeWidth = 1.5f
+                paint.strokeWidth = 1f
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE //画金色边框
+                canvas.drawPath(drawRect(context, width, height), paint)
+            } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0 && data.getPublished()){
+                paint.strokeWidth = 1f
+                paint.color = mBgColorOrigin
+                paint.style = Paint.Style.STROKE
                 canvas.drawPath(drawRect(context, width, height), paint)
             }
         }
@@ -145,7 +151,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
                         if (!data.getPublished()) { //打赏消息状态
-                            ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                            ContextCompat.getColor(context, R.color.im_msg_message_item_private_100)
                         } else ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     }
                 } else {
