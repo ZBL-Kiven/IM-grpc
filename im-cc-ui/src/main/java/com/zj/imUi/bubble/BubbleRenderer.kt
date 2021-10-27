@@ -110,7 +110,7 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
     private fun setColor(context: Context, data: ImMsgIn, chatType: Any): Int {
-        return if (chatType == UiMsgType.GROUP_CHAT) {
+        return if (chatType == UiMsgType.GROUP_CHAT || chatType == 3) {
             if (isSelfMessage) { //自己发送的消息
                 if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                     if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {

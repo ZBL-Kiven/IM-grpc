@@ -9,4 +9,5 @@ object UiMsgType {
 
     const val GROUP_CHAT = 1
     const val PRIVATE_CHAT = 2
+    const val PICK_FANS_USER_CHAT = 3
 }

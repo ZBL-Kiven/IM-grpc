@@ -38,7 +38,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
             // TODO: 2021/10/8 私聊状态下为白色
             audioTime.text = StringBuilder(data.getAnswerContentAudioContentDuration().toString()).append("''")
             if (data.getSelfUserId() == data.getOwnerId()){
-                if(chatType == 1) {
+                if(chatType == 1 &&chatType == 3) {
                     audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                     audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
@@ -60,7 +60,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
                 audioPlayView.setPaintColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
             }else if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION ) {
                 if (data.getSenderId() == data.getSelfUserId()){//大v自己发送打赏录音消息
-                    if (data.getReplyMsgQuestionIsPublished() == false && chatType == 1){
+                    if (data.getReplyMsgQuestionIsPublished() == false && chatType == 1||chatType == 3){
                         audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_white_cornors_bg)
                         audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
                         audioPlayView.setPaintColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
@@ -76,7 +76,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
                         }
                     }
                 }else{
-                    if (data.getReplyMsgQuestionIsPublished() == false&&chatType == 1)
+                    if (data.getReplyMsgQuestionIsPublished() == false&&(chatType == 1||chatType == 3))
                         audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_purple_cornors_bg)
                     else audioLinearLayout.setBackgroundResource(R.drawable.im_msg_item_audio_origin_cornors_bg)
                     audioTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))

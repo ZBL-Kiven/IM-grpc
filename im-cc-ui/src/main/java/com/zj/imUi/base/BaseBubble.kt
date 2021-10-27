@@ -7,14 +7,16 @@ import android.widget.RelativeLayout
 import com.zj.imUi.interfaces.ImMsgIn
 import kotlin.math.min
 
-abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def) {
+abstract class BaseBubble @JvmOverloads constructor(context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0) : RelativeLayout(context, attrs, def) {
 
     protected var curData: (() -> ImMsgIn?)? = null
-    protected var chatType:Any ?= null
+    protected var chatType: Any? = null
 
     private var baseBubbleRenderer: BaseBubbleRenderer? = null
 
-    internal fun onSetData(data: () -> ImMsgIn?,chatType: Int?) {
+    internal fun onSetData(data: () -> ImMsgIn?, chatType: Int?) {
         val d = data.invoke() ?: return
         this.curData = data
         this.chatType = chatType
@@ -31,7 +33,12 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
         if (canvas == null || width <= 0 || height <= 0) return
         curData?.invoke()?.let { d ->
             baseBubbleRenderer?.let {
-                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context, canvas, d, width, height, chatType as Int?)
+                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context,
+                    canvas,
+                    d,
+                    width,
+                    height,
+                    chatType as Int?)
             }
         }
         super.dispatchDraw(canvas)
@@ -40,7 +47,9 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
     //设置气泡最大宽度为屏幕80%
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val size = MeasureSpec.getSize(widthMeasureSpec)
-        val maxWidth = (resources.displayMetrics.widthPixels * 0.8).toInt()
+        val maxWidth = if (chatType == 3 && curData?.invoke()?.getSelfUserId() ==curData?.invoke()?.getSenderId()) {
+            (resources.displayMetrics.widthPixels * 1).toInt()
+        } else (resources.displayMetrics.widthPixels * 0.8).toInt()
         val min = min(size, maxWidth)
         val measureSpec = MeasureSpec.makeMeasureSpec(min, MeasureSpec.AT_MOST)
         super.onMeasure(measureSpec, heightMeasureSpec)

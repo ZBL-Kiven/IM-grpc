@@ -1,9 +1,12 @@
 package com.zj.imUi.ui
 
 import android.content.Context
+import android.graphics.Color
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -19,10 +22,17 @@ import com.zj.views.ut.DPUtils
 class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
-        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
+        return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
             if (d.getSenderId() == d.getSelfUserId()) {
-                ivAvatar?.visibility = View.GONE
-                addRule(ALIGN_PARENT_END)
+                if (type == 3 && d.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                    ivAvatar?.visibility = View.GONE
+                    addRule(CENTER_IN_PARENT)
+//                    leftMargin = DPUtils.dp2px(12f)
+//                    rightMargin = DPUtils.dp2px(12f)
+                } else {
+                    ivAvatar?.visibility = View.GONE
+                    addRule(ALIGN_PARENT_END)
+                }
             } else {
                 ivAvatar?.visibility = View.VISIBLE
                 val avatar: ImageView? = ivAvatar
@@ -58,22 +68,21 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
-        Glide.with(iv)
-            .load(d.getSenderAvatar())
-            .circleCrop()
-//            .centerInside()
-//            .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-            .placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
+        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+            20f,
+            context.resources.displayMetrics).toInt()
+        Glide.with(iv).load(d.getSenderAvatar()).circleCrop() //            .centerInside()
+            //            .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
+            .placeholder(R.drawable.im_msg_item_default_avatar)
+            .error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
         type?.let {
-            if (it == 2){
-                if (data.getSelfUserId() ==data.getSenderId()&&(data.getType() == UiMsgType.MSG_TYPE_IMG||data.getType() == UiMsgType.MSG_TYPE_AUDIO))
-                    return null
+            if (it == 2) {
+                if (data.getSelfUserId() == data.getSenderId() && (data.getType() == UiMsgType.MSG_TYPE_IMG || data.getType() == UiMsgType.MSG_TYPE_AUDIO)) return null
             }
         }
         return BubbleRenderer

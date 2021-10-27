@@ -86,6 +86,14 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         if (childCount == 0) {
             addView(contentLayout)
         }
+        if (chatType == 3&&data.getSelfUserId() == data.getSenderId()){
+            contentLayout.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT)
+            val lp = textReplyType.layoutParams as LinearLayout.LayoutParams
+            lp.width = LayoutParams.MATCH_PARENT
+            lp.marginStart = DPUtils.dp2px(12f)
+            lp.marginEnd = DPUtils.dp2px(12f)
+            textReplyType.layoutParams = lp
+        }
         llReplyContentOwner.visibility = View.GONE
         llReplyContentUser.visibility = View.GONE
         textReplyType.visibility = View.GONE
@@ -96,7 +104,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
 
         setTitle(data, chatType)
-        if (chatType == 1 || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
+        if (chatType == UiMsgType.GROUP_CHAT||chatType ==UiMsgType.PICK_FANS_USER_CHAT || (data.getSelfUserId() == data.getOwnerId() && data.getQuestionStatus() == 0)) {
             setChatRewardItem(data)
         } else setPrivateChatItem(data)
 
