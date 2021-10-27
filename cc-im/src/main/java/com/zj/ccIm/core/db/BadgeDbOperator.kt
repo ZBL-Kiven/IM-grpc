@@ -29,7 +29,7 @@ internal object BadgeDbOperator {
                 }
                 else -> throw IllegalArgumentException("unknown classification!")
             }?.let { p ->
-                IMHelper.postToUiObservers(p.second, p.first)
+                IMHelper.postToUiObservers(null, p.second, p.first)
             }
         }
     }

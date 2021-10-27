@@ -24,6 +24,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         const val NOTIFY_CHANGE_VIDEO = "notify_change_video"
         const val NOTIFY_CHANGE_SENDING_STATE = "notify_change_send_state"
         const val NOTIFY_CHANGE_REWARD_STATE = "notify_change_reward_state"
+        const val NOTIFY_CHANGE_BTN_ENABLED = "notify_change_reply_btn_enable"
 
         fun onLog(s: String) {
             Log.e("------ BaseImItem", "  error case: $s")
@@ -70,8 +71,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         if (d != curData) curData = d
         when (pl) {
             NOTIFY_CHANGE_SENDING_STATE -> setLoadingState(d)
-            else -> bubbleView?.notifyChange(pl)
         }
+        bubbleView?.notifyChange(pl)
     }
 
     open fun initAvatar(data: T) {

@@ -24,6 +24,8 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
+import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.fecher.FetchResultRunner
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.LiveInfoEn
 import com.zj.ccIm.live.LiveReqInfo
@@ -114,17 +116,19 @@ class MainActivity : AppCompatActivity() {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-        //        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
-        //            override fun result(result: FetchResult) {
-        //                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
-        //            }
-        //        })
+        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
+            override fun result(result: FetchResult) {
+                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
+            }
+        })
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
         //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
 
-        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
+//        Sender.sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+
+        //        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
 
     }
 
@@ -169,11 +173,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         IMHelper.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
-            if (d != null) when (pl) {
-                ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
-                ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
-                ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
-                else -> adapter?.removeIfEquals(d)
+            if (d != null) {
+                d.replyMsg?.let {
+                    if (adapter?.isMsgReplying(it) == true) adapter?.setRewardViewState(it, false)
+                }
+                when (pl) {
+                    ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+                    ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
+                    ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
+                    else -> adapter?.removeIfEquals(d)
+                }
             }
             if (!list.isNullOrEmpty()) adapter?.change(list)
         }

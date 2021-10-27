@@ -24,7 +24,6 @@ interface ImMsgIn {
 
     fun getTextContent(): String?
 
-
     fun getSenderAvatar(): String?
 
     fun getImgContentUrl(): String?
@@ -37,10 +36,10 @@ interface ImMsgIn {
 
     fun getAudioContentDuration(): Long?
 
-    fun getCCVideoContentImgPreviewRemoteStorageUrl():String?
-    fun getCCVideoContentVideoId():String?
-    fun getCCVideoContentVideoDescribe():String?
-    fun getCCVideoContentVideoTitle():String?
+    fun getCCVideoContentImgPreviewRemoteStorageUrl(): String?
+    fun getCCVideoContentVideoId(): String?
+    fun getCCVideoContentVideoDescribe(): String?
+    fun getCCVideoContentVideoTitle(): String?
 
     //打赏相关
     fun getAnswerMsgType(): String?
@@ -120,8 +119,13 @@ interface ImMsgIn {
 
     //用户撤回
     fun userRetractRewardMsg()
+
     //删除发送失败的信息
     fun deleteSendLossMsg()
 
     fun ownerRecallGroupMsg()
+
+    fun isMsgReplying(): Boolean
+
+    fun setMsgReplyState(isReplying: Boolean)
 }

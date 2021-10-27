@@ -8,7 +8,7 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.IMConfig
 
-class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
+abstract class ImEntityConverter(val info: MessageInfoEntity?) : ImMsgIn {
 
 
     override fun getOwnerId(): Int? {
@@ -317,6 +317,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun deleteSendLossMsg() {
+    }
+
+    override fun ownerRecallGroupMsg() {
+
     }
 
 }

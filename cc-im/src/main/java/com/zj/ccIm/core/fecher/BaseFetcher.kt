@@ -78,6 +78,7 @@ internal abstract class BaseFetcher {
                     selfInFetching = false
                     Fetcher.endOfFetch(prop, result)
                 } else {
+                    Fetcher.notifyNodeEnd(prop, result)
                     fetch()
                 }
             } else {

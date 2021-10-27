@@ -8,10 +8,16 @@ class UIHelperCreator<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqu
 
     var filterIn: ((T, String?) -> Boolean)? = null
     var filterOut: ((R, String?) -> Boolean)? = null
+    var ignoreNullData: Boolean = true
     private var onDataReceived: ((R?, List<R>?, String?) -> Unit)? = null
     private var isPaused: Boolean = false
     private val cacheData = hashSetOf<CacheData<R>>()
     private var options: UIOptions<T, R, L>? = null
+
+    fun ignoreNullData(ignore: Boolean): UIHelperCreator<T, R, L> {
+        this.ignoreNullData = ignore
+        return this
+    }
 
     fun filterIn(filter: (T, String?) -> Boolean): UIHelperCreator<T, R, L> {
         this.filterIn = filter

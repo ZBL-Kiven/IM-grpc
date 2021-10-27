@@ -27,7 +27,7 @@ abstract class ClientHub<T> {
 
     protected open fun onMsgPatch(data: T?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
         try {
-            MessageInterface.postToUIObservers(data, callId, onFinish)
+            MessageInterface.postToUIObservers(null, data, callId, onFinish)
         } catch (e: Exception) {
             printInFile("client hub error ", " the ui poster throw an error case: ${e.message}")
         }

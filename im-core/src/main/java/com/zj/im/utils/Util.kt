@@ -3,6 +3,7 @@
 package com.zj.im.utils
 
 import com.zj.im.chat.exceptions.ParamPathNotFoundException
+import java.lang.reflect.Type
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap

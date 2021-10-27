@@ -211,8 +211,8 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return option?.context
     }
 
-    protected open fun postToUi(data: Any?, payload: String? = null, onFinish: () -> Unit) {
-        postToUIObservers(data, payload, onFinish)
+    protected open fun <A> postToUi(cls: Class<*>?, data: A?, payload: String? = null, onFinish: () -> Unit) {
+        postToUIObservers(cls, data, payload, onFinish)
     }
 
     open fun shutdown(case: String) {

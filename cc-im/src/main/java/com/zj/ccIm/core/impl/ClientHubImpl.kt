@@ -77,7 +77,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                         }
                         payload = k
                         d = trans
-                        IMHelper.postToUiObservers(d, payload)
+                        IMHelper.postToUiObservers(MessageInfoEntity::class.java, d, payload)
                     }
                     onFinish();return
                 }
@@ -217,7 +217,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                 if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
                 else {
                     val fm = dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
-                    IMHelper.postToUiObservers(fm.first, fm.third)
+                    IMHelper.postToUiObservers(null, fm.first, fm.third)
                 }
             }
         }

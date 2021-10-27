@@ -3,7 +3,6 @@ package com.zj.imUi.items
 import android.content.Context
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -29,10 +28,7 @@ import java.util.*
  * date:   2021/8/9  6:44 下午
  * description: 消息列表Item 打赏内容
  */
-class IMRewardItem @JvmOverloads constructor(context: Context,
-    attributeSet: AttributeSet? = null,
-    defStyle: Int = 0) : BaseBubble(context, attributeSet, defStyle),
-    MessageSendTimeUtils.SendTImeListener ,MessageReplySendTimeUtils.SendTImeListener{
+class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : BaseBubble(context, attributeSet, defStyle), MessageSendTimeUtils.SendTImeListener, MessageReplySendTimeUtils.SendTImeListener {
 
     private val tvName: GroupMessageItemTitle
     private var textQuestion: AppCompatTextView
@@ -56,8 +52,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var curContentIn: ImContentIn? = null
 
 
-    private var contentLayout: View = LayoutInflater.from(context)
-        .inflate(R.layout.im_msg_item_owner_reward_question, this, false)
+    private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)
 
     init {
         with(contentLayout) {
@@ -82,7 +77,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
     }
 
-    override fun init(data: ImMsgIn, chatType:Any) {
+    override fun init(data: ImMsgIn, chatType: Any) {
         if (childCount == 0) {
             addView(contentLayout)
         }
@@ -104,9 +99,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
     private fun setPrivateChatItem(data: ImMsgIn) {
         textQuestion.text = data.getQuestionTextContent()
-        if (data.getSelfUserId()==data.getSenderId()){
-            textQuestion.setTextColor(ContextCompat.getColor(context,R.color.im_msg_bg_color_white))
-        }else textQuestion.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_black))
+        if (data.getSelfUserId() == data.getSenderId()) {
+            textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
+        } else textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
         llQuestionType.visibility = View.GONE
         questionIcon.visibility = View.GONE
         if (data.getSenderId() == data.getSelfUserId()) llQuestion.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
@@ -120,8 +115,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             data.jumpToSenderRewardsPage() //跳转到该用户的所有打赏消息，私聊
         }
         setTextStyle()
-        performRegisterTimer()
-        //设置回复方式
+        performRegisterTimer() //设置回复方式
         textResponseType.text = data.getAnswerMsgType().toString().let { setReplyTypeText(it) }
         textResponseType.visibility = View.VISIBLE
 
@@ -130,7 +124,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
-        val messageNormal = data.getSendState() == 0 ||data.getSendState() == 3
+        val messageNormal = data.getSendState() == 0 || data.getSendState() == 3
         if (data.getQuestionStatus() == 0 && messageNormal) {
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
@@ -138,9 +132,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                     textReplyType.text = setReplyTypeTextUP(data.getAnswerMsgType().toString())?.uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
                         data.onReplyQuestion()
+                        data.setMsgReplyState(true)
                     }
                 }
-                data.getSenderId() ==data.getSelfUserId() -> {
+                data.getSenderId() == data.getSelfUserId() -> {
                     textReplyType.visibility = View.VISIBLE
                     textReplyType.text = context.getString(R.string.im_ui_msg_button_recall).uppercase(Locale.getDefault())
                     textReplyType.setOnClickListener {
@@ -166,7 +161,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
 
 
-        if (data.getSelfUserId() == data.getOwnerId()){
+        if (data.getSelfUserId() == data.getOwnerId()) {
             textResponseType.visibility = View.GONE
         }
 
@@ -175,17 +170,16 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             textIsPublic.text = context.getString(R.string.im_ui_public)
             if (data.getSelfUserId() == data.getOwnerId()) {
                 textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_origin_roundcornor_4dp)
-                textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
-            }else{
+                textReplyType.setTextColor(ContextCompat.getColorStateList(context, R.color.im_msg_item_reward_btn_text_color_white))
+            } else {
                 textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_white_roundcornor_4dp)
-                textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_bg_origin))
+                textReplyType.setTextColor(ContextCompat.getColorStateList(context, R.color.im_msg_item_reward_btn_text_color_orange))
             }
         } else {
             textIsPublic.text = context.getString(R.string.im_ui_private)
             textReplyType.setBackgroundResource(R.drawable.im_msg_item_textview_frame_purple_round_corner_4dp)
-            textReplyType.setTextColor(ContextCompat.getColor(context,R.color.im_msg_text_color_white))
+            textReplyType.setTextColor(ContextCompat.getColorStateList(context, R.color.im_msg_item_reward_btn_text_color_white))
         }
-
 
         when {
             data.getQuestionStatus() == 0 -> {
@@ -196,8 +190,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             }
         }
         if (data.getSelfUserId() == data.getOwnerId()) {
-            val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT)
+            val lp = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
             lp.setMargins(0, DPUtils.dp2px(-60f), DPUtils.dp2px(10f), DPUtils.dp2px(10f))
             lp.gravity = Gravity.END
             tvReliedFLag.layoutParams = lp
@@ -254,8 +247,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_normal)
         if (data.getSenderId() == data.getSelfUserId()) {      //消息发送者是自己
             if (data.getPublished()) {
-                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
-                //回答方式背景
+                textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white)) //回答方式背景
                 textResponseType.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
                 textResponseType.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg)
                 textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_white_frame_bg)
@@ -285,10 +277,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         }
     }
 
-    private fun setTitle(data: ImMsgIn, chatType:Any) {
-        if (data.getSelfUserId() !=data.getOwnerId()&&chatType == 2){
+    private fun setTitle(data: ImMsgIn, chatType: Any) {
+        if (data.getSelfUserId() != data.getOwnerId() && chatType == 2) {
             tvName.visibility = View.GONE
-        }else{
+        } else {
             tvName.visibility = View.VISIBLE
             tvName.setData(data, chatType)
         }
@@ -321,8 +313,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         when (type) {
             UiMsgType.MSG_TYPE_TEXT -> text = context.getString(R.string.im_ui_msg_reward_type_text)
             UiMsgType.MSG_TYPE_IMG -> text = context.getString(R.string.im_ui_msg_reward_type_image)
-            UiMsgType.MSG_TYPE_AUDIO -> text =
-                context.getString(R.string.im_ui_msg_reward_type_audio)
+            UiMsgType.MSG_TYPE_AUDIO -> text = context.getString(R.string.im_ui_msg_reward_type_audio)
         }
         return text
     }
@@ -334,12 +325,11 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                     MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
                 }
                 it.getAnswerContentSendTime()?.let { it1 ->
-                    TimeDiffUtils.timeDifference(it1)?.let { it1 ->
-                        MessageReplySendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
+                    TimeDiffUtils.timeDifference(it1)?.let { it2 ->
+                        MessageReplySendTimeUtils.registerSendTimeObserver(it.getMsgId(), it2, this)
                     }
                 }
             } else {
-                //                RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
                 MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
                 MessageReplySendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
             }
@@ -354,7 +344,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     override fun onStop() {
         curContentIn?.onStop(curData?.invoke())
         curData?.invoke()?.let {
-//            RewardTimeCountdownUtils.unRegisterCountdownObserver(it.getMsgId())
             MessageSendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
             MessageReplySendTimeUtils.unRegisterSendTImeObserver(it.getMsgId())
         }
@@ -367,15 +356,16 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     }
 
     override fun notifyChange(pl: Any?) {
-        super.notifyChange(pl)
         when (pl) {
-            BaseImItem.NOTIFY_CHANGE_REWARD_STATE -> {
-
+            BaseImItem.NOTIFY_CHANGE_BTN_ENABLED -> {
+                curData?.invoke()?.let { textReplyType.isEnabled = !it.isMsgReplying() }
             }
             BaseImItem.NOTIFY_CHANGE_SENDING_STATE -> {
+                curData?.invoke()?.let { setChatRewardItem(it) }
                 performRegisterTimer()
             }
         }
+        super.notifyChange(pl)
     }
 
 

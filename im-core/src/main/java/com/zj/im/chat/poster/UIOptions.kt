@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.printInFile
 import java.util.*
 import kotlin.collections.ArrayList
@@ -87,29 +88,18 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun post(data: Any, payload: String?): Boolean {
-        if (data is Collection<*>) {
-            (data as? Collection<*>)?.let {
-                it.firstOrNull()?.let { c ->
-                    if (c.javaClass == creator.inCls) {
-                        (data as? Collection<T>)?.let { co ->
-                            postData(null, co, payload)
-                            return true
-                        }
-                    }
-                }
-            }
-        }
-        if (data.javaClass == creator.inCls || data.javaClass.simpleName == creator.inCls.simpleName) {
-            postData(data as? T?, null, payload)
+    fun post(cls: Class<*>?, data: Any?, ld: Collection<*>?, payload: String?): Boolean {
+        if (cls == creator.inCls || cls?.simpleName == creator.inCls.simpleName) {
+            postData(cls, cast(data), cast(ld), payload)
             return true
         }
         return false
     }
 
-    private fun postData(data: T?, lst: Collection<T>?, payload: String?) {
-        if (data == null && lst.isNullOrEmpty()) {
-            log("why are you post a null data and also register a type-null observer?");return
+    private fun postData(cls: Class<*>?, data: T?, lst: Collection<T>?, payload: String?) {
+        if (creator.ignoreNullData && data == null && lst.isNullOrEmpty()) {
+            log("the null data with type [${cls?.name}] are ignored by filter ,you can receive it by set ignoreNullData(false) in your Observer.")
+            return
         }
         run(data, lst, payload) { d, ls, p ->
             val a: Any = d ?: (ls ?: return@run)

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <color name="im_msg_reward_text_color_not_reply">#FFF0723B</color>
     <color name="im_msg_reward_text_color_reply">#FFA6ACBF</color>
     <color name="im_msg_reward_text_color_timeout">#FFEAECF3</color>

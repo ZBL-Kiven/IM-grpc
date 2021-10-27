@@ -9,6 +9,7 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.DbHelper
+import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionLastMsgInfo
 import io.reactivex.schedulers.Schedulers
 
@@ -83,7 +84,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
             val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
-        IMHelper.postToUiObservers(sessions, null) {
+        IMHelper.postToUiObservers(PrivateOwnerEntity::class.java, sessions, null) {
             finishAFetch(prop, FetchResult(true, isFirstFetch, false))
         }
     }

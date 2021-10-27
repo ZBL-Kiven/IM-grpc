@@ -111,7 +111,7 @@ object IMHelper : IMInterface<Any?>() {
                     local?.sessionMsgInfo = localMsg
                     if (local != null) {
                         sd.insertOrChangeSession(local)
-                        postToUiObservers(local, ClientHubImpl.PAYLOAD_CHANGED)
+                        postToUiObservers(SessionInfoEntity::class.java, local, ClientHubImpl.PAYLOAD_CHANGED)
                     }
                 }
             }
@@ -157,8 +157,12 @@ object IMHelper : IMInterface<Any?>() {
         return false
     }
 
-    internal fun postToUiObservers(data: Any?, payload: String? = null, onFinish: (() -> Unit)? = null) {
-        super.postToUi(data, payload, onFinish ?: {})
+    internal fun <T : Any> postToUiObservers(data: T, payload: String? = null, onFinish: (() -> Unit)? = null) {
+        postToUiObservers(data::class.java, data, payload, onFinish)
+    }
+
+    internal fun <T : Any> postToUiObservers(cls: Class<*>?, data: T?, payload: String? = null, onFinish: (() -> Unit)? = null) {
+        super.postToUi(cls, data, payload, onFinish ?: {})
     }
 
     internal fun onMsgRegistered(lrb: GetMsgReqBean) {

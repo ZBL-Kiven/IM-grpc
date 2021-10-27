@@ -9,6 +9,7 @@ import com.zj.im.main.StatusHub
 import com.zj.im.utils.log.NetWorkRecordInfo
 import com.zj.im.utils.log.NetRecordChangedListener
 import com.zj.im.utils.log.logger.d
+import java.lang.RuntimeException
 import java.util.concurrent.ConcurrentHashMap
 
 abstract class MessageInterface<T> {
@@ -39,20 +40,30 @@ abstract class MessageInterface<T> {
          * post a data into msg processor ,
          * only supported type Data or List<Data>
          * */
-        internal fun postToUIObservers(data: Any?, payload: String? = null, onFinish: () -> Unit) {
-            if (data == null) {
+        internal fun postToUIObservers(cls: Class<*>?, data: Any?, payload: String? = null, onFinish: () -> Unit) {
+            if (cls == null && data == null) {
                 onFinish()
                 return
             }
             var isUsed = false
+            val c: Class<*>?
+            var d: Any? = null
+            var ld: Collection<*>? = null
+            if (data is Collection<*>) {
+                c = data.firstOrNull()?.javaClass ?: cls
+                ld = data
+            } else {
+                c = if (data != null) data::class.java else cls
+                d = data
+            }
+            if (cls != null && cls != c) throw RuntimeException("The sent non-empty type [${c?.name}] is inconsistent with the declared type ${cls.name}!")
             msgObservers?.forEach { (_, v) ->
-                if (v.post(data, payload)) {
+                if (v.post(c, d, ld, payload)) {
                     isUsed = true
                     d("postToUIObservers", "the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")
                 }
             }
             onFinish()
-            val cls = if (data is Collection<*>) data.firstOrNull()?.javaClass else data.javaClass
             if (!isUsed) d("postToUIObservers", "the data ${cls?.simpleName}.class has been abandon with none consumer")
         }
     }

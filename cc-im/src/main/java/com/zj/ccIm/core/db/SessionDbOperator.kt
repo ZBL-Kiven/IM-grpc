@@ -12,7 +12,7 @@ import com.zj.database.ut.Constance
 
 internal object SessionDbOperator {
 
-    fun onDealSessionInfo(d: String?): Pair<String, Any?>? {
+    fun onDealSessionInfo(d: String?): Pair<String, SessionInfoEntity?>? {
         val info = try {
             Gson().fromJson(d, SessionInfoEntity::class.java)
         } catch (e: Exception) {
