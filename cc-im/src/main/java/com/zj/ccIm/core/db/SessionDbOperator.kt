@@ -72,7 +72,7 @@ internal object SessionDbOperator {
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
             IMHelper.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
-            IMHelper.postToUiObservers(sessions, callId)
+            IMHelper.postToUiObservers(SessionInfoEntity::class.java, sessions, callId)
         }
     }
 }

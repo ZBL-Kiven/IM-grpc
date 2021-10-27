@@ -51,7 +51,7 @@ internal object PrivateOwnerDbOperator {
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
             IMHelper.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
-            IMHelper.postToUiObservers(sessions, callId)
+            IMHelper.postToUiObservers(PrivateOwnerEntity::class.java, sessions, callId)
         }
     }
 

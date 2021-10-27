@@ -116,11 +116,11 @@ class MainActivity : AppCompatActivity() {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
-            override fun result(result: FetchResult) {
-                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
-            }
-        })
+//        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
+//            override fun result(result: FetchResult) {
+//                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
+//            }
+//        })
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
@@ -130,6 +130,9 @@ class MainActivity : AppCompatActivity() {
 
         //        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
 
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128, this).listen { r, l, pl ->
+            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
+        }
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -201,9 +204,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128, this).listen { r, l, pl ->
-            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
-        }
+
 
         IMHelper.addReceiveObserver<PrivateFansEn>(0x1129, this).listen { r, l, pl ->
             Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")

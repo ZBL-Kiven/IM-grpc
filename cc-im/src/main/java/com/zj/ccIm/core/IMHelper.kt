@@ -158,7 +158,12 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     internal fun <T : Any> postToUiObservers(data: T, payload: String? = null, onFinish: (() -> Unit)? = null) {
-        postToUiObservers(data::class.java, data, payload, onFinish)
+        val cls = if (data is Collection<*>) {
+            throw NullPointerException("To send an array, you need to specify the Class type, and call [postToUiObservers(cls: Class<>?,...)] to handle this problem.")
+        } else {
+            data::class.java
+        }
+        postToUiObservers(cls, data, payload, onFinish)
     }
 
     internal fun <T : Any> postToUiObservers(cls: Class<*>?, data: T?, payload: String? = null, onFinish: (() -> Unit)? = null) {

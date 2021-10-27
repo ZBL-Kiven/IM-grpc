@@ -2,7 +2,7 @@ rootProject.name = "IMTest"
 include ':app'
 include ':cc-im'
 include ':im-cc-ui'
-include ':im-core'
+//include ':im-core'
 //include ':im-protocol'
 //include ':im-database'
 //include ':protoc'
