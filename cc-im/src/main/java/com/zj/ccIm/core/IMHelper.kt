@@ -2,7 +2,6 @@ package com.zj.ccIm.core
 
 import android.app.Application
 import android.app.Notification
-import android.util.Log
 import com.zj.ccIm.core.api.ImApi
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
@@ -27,6 +26,7 @@ import com.zj.ccIm.core.fecher.*
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
+import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
@@ -57,15 +57,15 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     override fun getClient(): ClientHub<Any?> {
-        return LiveClientHubImpl()
+        return if (imConfig.useLive()) LiveClientHubImpl() else ClientHubImpl()
     }
 
     override fun getServer(): ServerHub<Any?> {
-        return LiveServerHubImpl()
+        return if (imConfig.useLive()) LiveServerHubImpl() else ServerHubImpl()
     }
 
     override fun onError(e: Throwable) {
-        Log.e("------ ", "IM Error case : ${e.message}")
+        ImLogs.requireToPrintInFile("IM Error case:", "\n${e.message}")
         if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
     }
 

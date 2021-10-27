@@ -10,4 +10,8 @@ class LiveInfoEn(
 
     val content: String? = null
 
-)
+) {
+    override fun toString(): String {
+        return "roomId = $roomId , liveId = $liveId , msgType = $msgType \ncontent = $content"
+    }
+}

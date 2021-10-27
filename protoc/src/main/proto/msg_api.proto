@@ -49,6 +49,7 @@ message ImMessage{
   uint64          replyMsgId      = 14;
   ImMessage       replyMsg        = 15;
   int32           status          = 16;
+  LiveContent     liveContent     = 17;
 }
 
 message ImgContent{
@@ -91,6 +92,17 @@ message QuestionContent{
   string      contentType    = 10;
 }
 
+message LiveContent{
+  uint64 id        = 1;
+  bool   status    = 2;
+  uint32 roomId    = 3;
+  string name      = 4;
+  string area      = 5;
+  string introduce = 6;
+  string cover     = 7;
+  uint32 userId    = 8;
+  string channelId = 9;
+}
 
 message SenderInfo{
   uint64 senderId       = 1;
@@ -98,7 +110,6 @@ message SenderInfo{
   string senderAvatar   = 3;
   string senderPlatform = 4;
 }
-
 
 message LeaveImGroupReq {
   uint64          groupId      = 1;

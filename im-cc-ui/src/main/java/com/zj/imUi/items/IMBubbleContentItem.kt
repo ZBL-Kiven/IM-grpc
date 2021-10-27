@@ -226,7 +226,6 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 bubbleRepliedContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG) {
                     bubbleRepliedContent.setOnClickListener {
-                        Log.d("LiXiang", "bubbleRContent点击")
                         data.onViewLargePic()
                     }
                 }
@@ -279,14 +278,12 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
                     bubbleContent.setOnClickListener {
-                        Log.d("LiXiang", "bubbleContent点击")
                         data.onViewLargePic()
                     }
                 }else if(data.getType() == UiMsgType.MSG_TYPE_AUDIO){
                     chatType?.let { curContentIn?.chatType(it) }
                 }
                 bubbleContent.setOnLongClickListener {
-                    Log.d("LiXiang", "bubbleContent长按点击响应")
                     val isNotSelf = data.getSelfUserId() != data.getSenderId()
                     if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
                         MsgPop(context, data).show(it)

@@ -86,7 +86,6 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         addViewToSelf(ivAvatar, getAvatarLayoutParams(data))
         onLoadAvatar(ivAvatar, data)
         ivAvatar?.setOnClickListener {
-            Log.d("LiXiang", "头像点击响应")
             data.jumpToUserHomePage()
         }
     }

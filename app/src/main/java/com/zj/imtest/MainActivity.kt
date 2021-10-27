@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.zj.album.AlbumIns
@@ -19,14 +18,12 @@ import com.zj.album.nutils.MimeType
 import com.zj.album.options.AlbumOptions
 import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
-import com.zj.api.BaseApi
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
-import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.LiveInfoEn
 import com.zj.ccIm.live.LiveReqInfo
@@ -35,7 +32,6 @@ import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.api.CCApi
-import com.zj.imtest.api.TestApi
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -126,7 +122,9 @@ class MainActivity : AppCompatActivity() {
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
-        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+        //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+
+        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
 
     }
 
@@ -180,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty()) adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, _, _ ->
             r?.diamondNum?.let {
                 curDiamond += it
             }
@@ -190,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "on assets changed, diamond = $curDiamond    spark = $curSpark")
         }
 
-        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, _, _ ->
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
@@ -214,7 +212,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
         }
 
-        IMHelper.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, l, pl ->
+        IMHelper.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, _, pl ->
             Log.e("----- ", "on Live msg ${r?.content} , payload = $pl")
         }
     }

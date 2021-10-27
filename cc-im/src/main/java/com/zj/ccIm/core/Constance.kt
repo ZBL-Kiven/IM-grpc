@@ -109,7 +109,7 @@ internal fun <R> catching(run: () -> R?, deal: (() -> R?)? = null): R? {
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
-    TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question");
+    TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question"), LIVE("live");
 
     companion object {
 

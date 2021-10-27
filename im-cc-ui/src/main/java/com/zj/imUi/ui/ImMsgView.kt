@@ -1,13 +1,9 @@
 package com.zj.imUi.ui
 
 import android.content.Context
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
-import com.zj.imUi.MsgType
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
@@ -58,12 +54,9 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20f, context.resources.displayMetrics).toInt()
         Glide.with(iv)
             .load(d.getSenderAvatar())
             .circleCrop()
-//            .centerInside()
-//            .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
             .placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 

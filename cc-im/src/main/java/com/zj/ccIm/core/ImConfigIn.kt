@@ -2,6 +2,8 @@ package com.zj.ccIm.core
 
 interface ImConfigIn {
 
+    fun useLive(): Boolean = false
+
     fun logAble(): Boolean
 
     fun debugAble(): Boolean

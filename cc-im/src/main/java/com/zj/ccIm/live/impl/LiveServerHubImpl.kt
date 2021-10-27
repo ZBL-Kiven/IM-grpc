@@ -6,6 +6,7 @@ import com.zj.ccIm.core.impl.ServerImplGrpc
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.LiveInfoEn
 import com.zj.ccIm.live.LiveReqInfo
+import com.zj.ccIm.logger.ImLogs
 import com.zj.protocol.grpc.LiveRoomMessageReply
 import com.zj.protocol.grpc.LiveRoomMessageReq
 import io.grpc.stub.StreamObserver
@@ -40,6 +41,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         val respInfo = LiveInfoEn(data.roomId, data.liveId, data.msgType, data.content)
+                        ImLogs.d("on live data received:", respInfo.toString())
                         when (data.msgType) {
                             LiveClientHubImpl.TYPE_USER_JOIN -> {
                                 postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_REGISTER_LIVE_ROOM, respInfo, false, data.serializedSize.toLong())
@@ -64,5 +66,6 @@ internal class LiveServerHubImpl : ServerHubImpl() {
         info.liverIsMe = data.isLiver
         info.op = type
         liveStreamObserver?.onNext(info.build())
+        ImLogs.d("live req sent to server:", data.toString() + ", type = ${type.name}")
     }
 }

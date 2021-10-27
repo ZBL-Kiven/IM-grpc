@@ -186,4 +186,19 @@ public interface ImMessageOrBuilder extends
    * @return The status.
    */
   int getStatus();
+
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   * @return Whether the liveContent field is set.
+   */
+  boolean hasLiveContent();
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   * @return The liveContent.
+   */
+  LiveContent getLiveContent();
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   */
+  LiveContentOrBuilder getLiveContentOrBuilder();
 }
