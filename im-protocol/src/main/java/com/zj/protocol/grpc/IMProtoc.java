@@ -65,6 +65,11 @@ public final class IMProtoc {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_app_QuestionContent_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_app_LiveContent_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_app_LiveContent_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_app_SenderInfo_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -115,7 +120,7 @@ public final class IMProtoc {
       "\r\n\005topic\030\001 \001(\t\022\014\n\004data\030\002 \001(\t\"Z\n\017GetImMes" +
       "sageReq\022\017\n\007groupId\030\001 \001(\004\022\017\n\007ownerId\030\002 \001(" +
       "\004\022\017\n\007channel\030\003 \003(\t\022\024\n\014targetUserid\030\004 \001(\004" +
-      "\"\325\003\n\tImMessage\022\017\n\007groupId\030\001 \001(\004\022\017\n\007owner" +
+      "\"\374\003\n\tImMessage\022\017\n\007groupId\030\001 \001(\004\022\017\n\007owner" +
       "Id\030\002 \001(\004\022\020\n\010sendTime\030\003 \001(\004\022\r\n\005msgId\030\004 \001(" +
       "\004\022\023\n\013clientMsgId\030\005 \001(\t\022\017\n\007msgType\030\006 \001(\t\022" +
       "#\n\nimgContent\030\007 \001(\0132\017.app.ImgContent\022\'\n\014" +
@@ -126,42 +131,49 @@ public final class IMProtoc {
       "nt\022-\n\017questionContent\030\014 \001(\0132\024.app.Questi" +
       "onContent\022\037\n\006sender\030\r \001(\0132\017.app.SenderIn" +
       "fo\022\022\n\nreplyMsgId\030\016 \001(\004\022 \n\010replyMsg\030\017 \001(\013" +
-      "2\016.app.ImMessage\022\016\n\006status\030\020 \001(\005\"8\n\nImgC" +
-      "ontent\022\013\n\003url\030\001 \001(\t\022\016\n\006height\030\002 \001(\r\022\r\n\005w" +
-      "idth\030\003 \001(\r\"L\n\014VideoContent\022\013\n\003url\030\001 \001(\t\022" +
-      "\016\n\006height\030\002 \001(\t\022\r\n\005width\030\003 \001(\t\022\020\n\010durati" +
-      "on\030\004 \001(\004\"\033\n\013TextContent\022\014\n\004text\030\001 \001(\t\"-\n" +
-      "\014AudioContent\022\013\n\003url\030\001 \001(\t\022\020\n\010duration\030\002" +
-      " \001(\004\"\241\001\n\016CCVideoContent\022\017\n\007videoId\030\001 \001(\t" +
-      "\022\022\n\nvideoTitle\030\002 \001(\t\022\025\n\rvideoDescribe\030\003 " +
-      "\001(\t\022\020\n\010duration\030\004 \001(\001\022\r\n\005width\030\005 \001(\r\022\016\n\006" +
-      "height\030\006 \001(\r\022\"\n\032imgPreviewRemoteStorageU" +
-      "rl\030\007 \001(\t\"\351\001\n\017QuestionContent\022%\n\013textCont" +
-      "ent\030\001 \001(\0132\020.app.TextContent\022\026\n\016questionS" +
-      "tatus\030\002 \001(\r\022\022\n\nquestionId\030\003 \001(\004\022\r\n\005spark" +
-      "\030\004 \001(\004\022\017\n\007diamond\030\005 \001(\004\022\021\n\tpublished\030\006 \001" +
-      "(\010\022\020\n\010sendTime\030\007 \001(\004\022\022\n\nexpireTime\030\010 \001(\004" +
-      "\022\025\n\ranswerMsgType\030\t \001(\t\022\023\n\013contentType\030\n" +
-      " \001(\t\"`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\n" +
-      "senderName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026" +
-      "\n\016senderPlatform\030\004 \001(\t\"\"\n\017LeaveImGroupRe" +
-      "q\022\017\n\007groupId\030\001 \001(\004\"$\n\021LeaveImGroupReply\022" +
-      "\017\n\007success\030\001 \001(\010\"\t\n\007PingReq\"\006\n\004Pong\"\232\001\n\022" +
-      "LiveRoomMessageReq\022&\n\002op\030\001 \001(\0162\032.app.Liv" +
-      "eRoomMessageReq.Op\022\016\n\006roomId\030\002 \001(\005\022\016\n\006li" +
-      "veId\030\003 \001(\003\022\021\n\tliverIsMe\030\004 \001(\010\022\016\n\006userId\030" +
-      "\005 \001(\004\"\031\n\002Op\022\010\n\004JOIN\020\000\022\t\n\005LEAVE\020\001\"X\n\024Live" +
-      "RoomMessageReply\022\016\n\006roomId\030\001 \001(\005\022\016\n\006live" +
-      "Id\030\002 \001(\003\022\017\n\007msgType\030\003 \001(\t\022\017\n\007content\030\004 \001" +
-      "(\t2\267\002\n\006MsgApi\022C\n\017ListenTopicData\022\023.app.L" +
-      "istenTopicReq\032\025.app.ListenTopicReply\"\000(\001" +
-      "0\001\0228\n\014GetImMessage\022\024.app.GetImMessageReq" +
-      "\032\016.app.ImMessage\"\0000\001\022>\n\014LeaveImGroup\022\024.a" +
-      "pp.LeaveImGroupReq\032\026.app.LeaveImGroupRep" +
-      "ly\"\000\022K\n\017LiveRoomMessage\022\027.app.LiveRoomMe" +
-      "ssageReq\032\031.app.LiveRoomMessageReply\"\000(\0010" +
-      "\001\022!\n\004Ping\022\014.app.PingReq\032\t.app.Pong\"\000B\033\n\r" +
-      "com.zj.im.genB\010IMProtocP\001b\006proto3"
+      "2\016.app.ImMessage\022\016\n\006status\030\020 \001(\005\022%\n\013live" +
+      "Content\030\021 \001(\0132\020.app.LiveContent\"8\n\nImgCo" +
+      "ntent\022\013\n\003url\030\001 \001(\t\022\016\n\006height\030\002 \001(\r\022\r\n\005wi" +
+      "dth\030\003 \001(\r\"L\n\014VideoContent\022\013\n\003url\030\001 \001(\t\022\016" +
+      "\n\006height\030\002 \001(\t\022\r\n\005width\030\003 \001(\t\022\020\n\010duratio" +
+      "n\030\004 \001(\004\"\033\n\013TextContent\022\014\n\004text\030\001 \001(\t\"-\n\014" +
+      "AudioContent\022\013\n\003url\030\001 \001(\t\022\020\n\010duration\030\002 " +
+      "\001(\004\"\241\001\n\016CCVideoContent\022\017\n\007videoId\030\001 \001(\t\022" +
+      "\022\n\nvideoTitle\030\002 \001(\t\022\025\n\rvideoDescribe\030\003 \001" +
+      "(\t\022\020\n\010duration\030\004 \001(\001\022\r\n\005width\030\005 \001(\r\022\016\n\006h" +
+      "eight\030\006 \001(\r\022\"\n\032imgPreviewRemoteStorageUr" +
+      "l\030\007 \001(\t\"\351\001\n\017QuestionContent\022%\n\013textConte" +
+      "nt\030\001 \001(\0132\020.app.TextContent\022\026\n\016questionSt" +
+      "atus\030\002 \001(\r\022\022\n\nquestionId\030\003 \001(\004\022\r\n\005spark\030" +
+      "\004 \001(\004\022\017\n\007diamond\030\005 \001(\004\022\021\n\tpublished\030\006 \001(" +
+      "\010\022\020\n\010sendTime\030\007 \001(\004\022\022\n\nexpireTime\030\010 \001(\004\022" +
+      "\025\n\ranswerMsgType\030\t \001(\t\022\023\n\013contentType\030\n " +
+      "\001(\t\"\232\001\n\013LiveContent\022\n\n\002id\030\001 \001(\004\022\016\n\006statu" +
+      "s\030\002 \001(\010\022\016\n\006roomId\030\003 \001(\r\022\014\n\004name\030\004 \001(\t\022\014\n" +
+      "\004area\030\005 \001(\t\022\021\n\tintroduce\030\006 \001(\t\022\r\n\005cover\030" +
+      "\007 \001(\t\022\016\n\006userId\030\010 \001(\r\022\021\n\tchannelId\030\t \001(\t" +
+      "\"`\n\nSenderInfo\022\020\n\010senderId\030\001 \001(\004\022\022\n\nsend" +
+      "erName\030\002 \001(\t\022\024\n\014senderAvatar\030\003 \001(\t\022\026\n\016se" +
+      "nderPlatform\030\004 \001(\t\"Z\n\017LeaveImGroupReq\022\017\n" +
+      "\007groupId\030\001 \001(\004\022\017\n\007ownerId\030\002 \001(\004\022\017\n\007chann" +
+      "el\030\003 \003(\t\022\024\n\014targetUserid\030\004 \001(\004\"$\n\021LeaveI" +
+      "mGroupReply\022\017\n\007success\030\001 \001(\010\"\t\n\007PingReq\"" +
+      "\006\n\004Pong\"\232\001\n\022LiveRoomMessageReq\022&\n\002op\030\001 \001" +
+      "(\0162\032.app.LiveRoomMessageReq.Op\022\016\n\006roomId" +
+      "\030\002 \001(\005\022\016\n\006liveId\030\003 \001(\003\022\021\n\tliverIsMe\030\004 \001(" +
+      "\010\022\016\n\006userId\030\005 \001(\004\"\031\n\002Op\022\010\n\004JOIN\020\000\022\t\n\005LEA" +
+      "VE\020\001\"X\n\024LiveRoomMessageReply\022\016\n\006roomId\030\001" +
+      " \001(\005\022\016\n\006liveId\030\002 \001(\003\022\017\n\007msgType\030\003 \001(\t\022\017\n" +
+      "\007content\030\004 \001(\t2\267\002\n\006MsgApi\022C\n\017ListenTopic" +
+      "Data\022\023.app.ListenTopicReq\032\025.app.ListenTo" +
+      "picReply\"\000(\0010\001\0228\n\014GetImMessage\022\024.app.Get" +
+      "ImMessageReq\032\016.app.ImMessage\"\0000\001\022>\n\014Leav" +
+      "eImGroup\022\024.app.LeaveImGroupReq\032\026.app.Lea" +
+      "veImGroupReply\"\000\022K\n\017LiveRoomMessage\022\027.ap" +
+      "p.LiveRoomMessageReq\032\031.app.LiveRoomMessa" +
+      "geReply\"\000(\0010\001\022!\n\004Ping\022\014.app.PingReq\032\t.ap" +
+      "p.Pong\"\000B\033\n\rcom.zj.im.genB\010IMProtocP\001b\006p" +
+      "roto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -190,7 +202,7 @@ public final class IMProtoc {
     internal_static_app_ImMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_ImMessage_descriptor,
-        new java.lang.String[] { "GroupId", "OwnerId", "SendTime", "MsgId", "ClientMsgId", "MsgType", "ImgContent", "VideoContent", "TextContent", "AudioContent", "CcVideoContent", "QuestionContent", "Sender", "ReplyMsgId", "ReplyMsg", "Status", });
+        new java.lang.String[] { "GroupId", "OwnerId", "SendTime", "MsgId", "ClientMsgId", "MsgType", "ImgContent", "VideoContent", "TextContent", "AudioContent", "CcVideoContent", "QuestionContent", "Sender", "ReplyMsgId", "ReplyMsg", "Status", "LiveContent", });
     internal_static_app_ImgContent_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_app_ImgContent_fieldAccessorTable = new
@@ -227,44 +239,50 @@ public final class IMProtoc {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_QuestionContent_descriptor,
         new java.lang.String[] { "TextContent", "QuestionStatus", "QuestionId", "Spark", "Diamond", "Published", "SendTime", "ExpireTime", "AnswerMsgType", "ContentType", });
-    internal_static_app_SenderInfo_descriptor =
+    internal_static_app_LiveContent_descriptor =
       getDescriptor().getMessageTypes().get(10);
+    internal_static_app_LiveContent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_app_LiveContent_descriptor,
+        new java.lang.String[] { "Id", "Status", "RoomId", "Name", "Area", "Introduce", "Cover", "UserId", "ChannelId", });
+    internal_static_app_SenderInfo_descriptor =
+      getDescriptor().getMessageTypes().get(11);
     internal_static_app_SenderInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_SenderInfo_descriptor,
         new java.lang.String[] { "SenderId", "SenderName", "SenderAvatar", "SenderPlatform", });
     internal_static_app_LeaveImGroupReq_descriptor =
-      getDescriptor().getMessageTypes().get(11);
+      getDescriptor().getMessageTypes().get(12);
     internal_static_app_LeaveImGroupReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_LeaveImGroupReq_descriptor,
-        new java.lang.String[] { "GroupId", });
+        new java.lang.String[] { "GroupId", "OwnerId", "Channel", "TargetUserid", });
     internal_static_app_LeaveImGroupReply_descriptor =
-      getDescriptor().getMessageTypes().get(12);
+      getDescriptor().getMessageTypes().get(13);
     internal_static_app_LeaveImGroupReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_LeaveImGroupReply_descriptor,
         new java.lang.String[] { "Success", });
     internal_static_app_PingReq_descriptor =
-      getDescriptor().getMessageTypes().get(13);
+      getDescriptor().getMessageTypes().get(14);
     internal_static_app_PingReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_PingReq_descriptor,
         new java.lang.String[] { });
     internal_static_app_Pong_descriptor =
-      getDescriptor().getMessageTypes().get(14);
+      getDescriptor().getMessageTypes().get(15);
     internal_static_app_Pong_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_Pong_descriptor,
         new java.lang.String[] { });
     internal_static_app_LiveRoomMessageReq_descriptor =
-      getDescriptor().getMessageTypes().get(15);
+      getDescriptor().getMessageTypes().get(16);
     internal_static_app_LiveRoomMessageReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_LiveRoomMessageReq_descriptor,
         new java.lang.String[] { "Op", "RoomId", "LiveId", "LiverIsMe", "UserId", });
     internal_static_app_LiveRoomMessageReply_descriptor =
-      getDescriptor().getMessageTypes().get(16);
+      getDescriptor().getMessageTypes().get(17);
     internal_static_app_LiveRoomMessageReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_app_LiveRoomMessageReply_descriptor,

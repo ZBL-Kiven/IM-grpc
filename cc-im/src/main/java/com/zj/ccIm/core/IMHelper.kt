@@ -2,7 +2,6 @@ package com.zj.ccIm.core
 
 import android.app.Application
 import android.app.Notification
-import android.util.Log
 import com.zj.ccIm.core.api.ImApi
 import com.zj.database.DbHelper
 import com.zj.im.chat.core.BaseOption
@@ -10,12 +9,9 @@ import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.main.impl.IMInterface
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.IMDb
 import com.zj.database.entity.SessionInfoEntity
-import com.zj.protocol.grpc.GetImMessageReq
-import com.zj.protocol.grpc.LeaveImGroupReq
 import com.zj.ccIm.annos.DeleteSessionType
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.PrivateOwnerEntity
@@ -30,9 +26,13 @@ import com.zj.ccIm.core.fecher.*
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
+import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
+import com.zj.ccIm.live.LiveIMHelper
+import com.zj.ccIm.live.impl.LiveClientHubImpl
+import com.zj.ccIm.live.impl.LiveServerHubImpl
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
 import java.lang.StringBuilder
@@ -49,20 +49,23 @@ object IMHelper : IMInterface<Any?>() {
         Constance.app = app
         Fetcher.init()
         SPHelper.init("im_sp_main", app)
-        val option = BaseOption.create(app).debug().logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000).setNotify(Notification()).build()
-        initChat(option)
+        val option = BaseOption.create(app)
+        if (imConfig.debugAble()) option.debug()
+        if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
+        option.setNotify(Notification())
+        initChat(option.build())
     }
 
     override fun getClient(): ClientHub<Any?> {
-        return ClientHubImpl()
+        return if (imConfig.useLive()) LiveClientHubImpl() else ClientHubImpl()
     }
 
     override fun getServer(): ServerHub<Any?> {
-        return ServerHubImpl()
+        return if (imConfig.useLive()) LiveServerHubImpl() else ServerHubImpl()
     }
 
     override fun onError(e: Throwable) {
-        Log.e("------ ", "IM Error case : ${e.message}")
+        ImLogs.requireToPrintInFile("IM Error case:", "\n${e.message}")
         if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
     }
 
@@ -119,22 +122,12 @@ object IMHelper : IMInterface<Any?>() {
         this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
         if (this.lastMsgRegister?.checkValid() != true) return
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        val callId = Constance.CALL_ID_REGISTER_CHAT
-        val data = GetImMessageReq.newBuilder()
-        data.groupId = groupId
-        data.ownerId = ownerId.toLong()
-        data.targetUserid = targetUserId?.toLong() ?: 0
-        channel.forEach { data.addChannel(it.serializeName) }
-        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges(lastMsgRegister?.getCopyData())
+        send(lastMsgRegister?.getCopyData(), Constance.CALL_ID_REGISTER_CHAT, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
     }
 
-    fun leaveChatRoom(groupId: Long) {
+    fun leaveChatRoom() {
         val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
-        val data = LeaveImGroupReq.newBuilder()
-        data.groupId = groupId
-        send(data.build(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        clearBadges(lastMsgRegister?.getCopyData())
+        send(lastMsgRegister?.getCopyData(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
         this.lastMsgRegister = null
     }
 
@@ -150,10 +143,6 @@ object IMHelper : IMInterface<Any?>() {
             routeToServer(data, Constance.CALL_ID_DELETE_SESSION)
             routeToClient(data, Constance.CALL_ID_DELETE_SESSION)
         }
-    }
-
-    fun clearBadges(copyData: GetMsgReqBean?) {
-        routeToClient(copyData, Constance.CALL_ID_CLEAR_SESSION_BADGE)
     }
 
     fun deleteMsgByClientId(clientId: String) {
@@ -180,6 +169,7 @@ object IMHelper : IMInterface<Any?>() {
     fun close() {
         lastMsgRegister = null
         Fetcher.cancelAll()
+        LiveIMHelper.close()
     }
 
     override fun shutdown(case: String) {
@@ -218,6 +208,7 @@ object IMHelper : IMInterface<Any?>() {
 
     fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<Any?>?) {
         sen.key = getCurrentChannelSendingKey(sen.groupId)
+        ImLogs.d("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
         super.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
     }
 
@@ -231,6 +222,7 @@ object IMHelper : IMInterface<Any?>() {
             sb.append("messageCount = ${it.messageDao().findAll().size}\n")
             sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
             sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
+            sb.append("privateOwnerSession = ${it.privateChatOwnerDao().findAll().size}\n")
             sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
         }
         return sb
@@ -238,8 +230,9 @@ object IMHelper : IMInterface<Any?>() {
 
     internal fun getCurrentChannelSendingKey(groupId: Long): String {
         return if (lastMsgRegister != null) {
-            val channel = lastMsgRegister?.channels?.firstOrNull()
-            if (channel != null) "${channel.serializeName}:$groupId" else ""
+            val channelGroups = lastMsgRegister?.channels?.groupBy { it.classification }
+            val groupPrefix = channelGroups?.keys?.joinToString { "$it:" }
+            if (!groupPrefix.isNullOrEmpty()) "$groupPrefix$groupId" else ""
         } else ""
     }
 }

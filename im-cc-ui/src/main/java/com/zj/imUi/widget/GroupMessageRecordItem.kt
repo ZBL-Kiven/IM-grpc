@@ -99,7 +99,6 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
         }
 
         setOnLongClickListener {
-            Log.d("LiXiang", "audio长按点击响应")
             val isNotSelf = data.getSelfUserId() != data.getSenderId()
             if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
                 MsgPop(context, data).show(it)

@@ -239,7 +239,6 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
                 frameLayout.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getAnswerMsgType() == UiMsgType.MSG_TYPE_IMG) {
                     frameLayout.setOnClickListener {
-                        Log.d("LiXiang", "bubbleAnswerContent点击")
                         data.onViewLargePic()
                     }
                 }

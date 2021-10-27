@@ -22,7 +22,7 @@ import com.zj.ccIm.core.bean.GetMsgReqBean
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.logger.ImLogs
 
-open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
+internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
 
     private var subscribeTopics = mutableListOf<String>()
     private var getMsgRequestCompo: BaseRetrofit.RequestCompo? = null
@@ -44,11 +44,11 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 }
             }
             Constance.CALL_ID_LEAVE_CHAT_ROOM -> {
-                leaveChatRoom(params)
+                leaveChatRoom((params as? GetMsgReqBean) ?: return 0)
             }
 
             Constance.CALL_ID_REGISTER_CHAT -> {
-                registerMsgReceiver(params)
+                registerMsgReceiver((params as? GetMsgReqBean) ?: return 0)
             }
             else -> null
         }
@@ -102,11 +102,15 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * @param d ProtocolBuf request serialization object
      * @see [GetImMessageReq]
      * */
-    private fun registerMsgReceiver(d: Any?) {
-        val req = (d as? GetImMessageReq) ?: return
+    private fun registerMsgReceiver(d: GetMsgReqBean) {
+        val data = GetImMessageReq.newBuilder()
+        data.groupId = d.groupId
+        data.ownerId = d.ownerId.toLong()
+        data.targetUserid = d.targetUserid?.toLong() ?: 0
+        d.channels.forEach { data.addChannel(it.serializeName) }
         ImLogs.requireToPrintInFile("server hub event ", "call on register msg receiver with ${d.groupId}")
         withChannel {
-            it.getImMessage(req, object : CusObserver<ImMessage>() {
+            it.getImMessage(data.build(), object : CusObserver<ImMessage>() {
                 override fun onResult(isOk: Boolean, data: ImMessage?, t: Throwable?) {
                     ImLogs.i("server hub event ", "new Msg in group ${data?.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
                     if (isOk && data != null) {
@@ -114,6 +118,29 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                         val size = data.serializedSize.toLong()
                         postReceivedMessage(data.clientMsgId, data, false, size)
                     } else onParseError(t, false)
+                }
+            })
+        }
+    }
+
+    /**
+     * When you no longer want to receive a message from a chat room,
+     * trigger this message through CallId and exit this type of channel monitoring.
+     * @param d The ID protocolBuf builder of the group to leave
+     * */
+    private fun leaveChatRoom(d: GetMsgReqBean) {
+        val rq = LeaveImGroupReq.newBuilder()
+        rq.groupId = d.groupId
+        rq.ownerId = d.ownerId.toLong()
+        rq.targetUserid = d.targetUserid?.toLong() ?: 0L
+        d.channels.forEach { rq.addChannel(it.serializeName) }
+        getMsgRequestCompo?.cancel()
+        getMsgRequestCompo = null
+        ImLogs.requireToPrintInFile("server hub event ", "leave from receiver with ${d.groupId}")
+        withChannel(false) {
+            it.leaveImGroup(rq.build(), object : CusObserver<LeaveImGroupReply>() {
+                override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
+                    if (!isOk) t?.let { onParseError(t, false) }
                 }
             })
         }
@@ -190,25 +217,6 @@ open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             } catch (e: Exception) {
                 it.onError(e)
             }
-        }
-    }
-
-    /**
-     * When you no longer want to receive a message from a chat room,
-     * trigger this message through CallId and exit this type of channel monitoring.
-     * @param d The ID protocolBuf builder of the group to leave
-     * */
-    private fun leaveChatRoom(d: Any?) {
-        val rq = (d as? LeaveImGroupReq) ?: return
-        getMsgRequestCompo?.cancel()
-        getMsgRequestCompo = null
-        ImLogs.requireToPrintInFile("server hub event ", "leave from receiver with ${d.groupId}")
-        withChannel(false) {
-            it.leaveImGroup(rq, object : CusObserver<LeaveImGroupReply>() {
-                override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
-                    if (!isOk) t?.let { onParseError(t, false) }
-                }
-            })
         }
     }
 

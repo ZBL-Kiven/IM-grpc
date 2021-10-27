@@ -10,7 +10,7 @@ import com.zj.protocol.grpc.*
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 
-abstract class ServerImplGrpc : ServerHub<Any?>() {
+internal abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     private var channel: Grpc.CachedChannel? = null
 

@@ -26,7 +26,6 @@ internal object Constance {
 
 
     /**-------------------------- CALL IDS ------------------------------*/
-    const val CALL_ID_CLEAR_SESSION_BADGE = "internal_clear_session_badge"
 
     const val INTERNAL_CALL_ID_PREFIX = "internal_call"
     const val CALL_ID_START_LISTEN_SESSION = INTERNAL_CALL_ID_PREFIX + "_start_listen_session"
@@ -110,7 +109,7 @@ internal fun <R> catching(run: () -> R?, deal: (() -> R?)? = null): R? {
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
-    TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question");
+    TEXT("text"), IMG("img"), AUDIO("audio"), VIDEO("video"), QUESTION("question"), LIVE("live");
 
     companion object {
 

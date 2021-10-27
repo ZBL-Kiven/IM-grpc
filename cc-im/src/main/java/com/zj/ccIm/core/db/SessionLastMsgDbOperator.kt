@@ -2,6 +2,7 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.catching
@@ -87,13 +88,28 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             var sessionInfo = sessionDb.findByGroupId(groupId)
             val exists = sessionInfo != null
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
-            if (sessionInfo == null && info.newMsg?.sender?.senderId == info.ownerId) {
-                sessionInfo = PrivateOwnerEntity()
-                sessionInfo.ownerId = info.ownerId
-                sessionInfo.ownerName = info.newMsg?.sender?.senderName
-                sessionInfo.groupId = info.groupId
-                sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
-                sessionDb.insertOrUpdate(sessionInfo)
+            val fromV = info.newMsg?.sender?.senderId == info.ownerId
+            val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig.getUserId()
+            val isQuestion = info.newMsg?.msgType == MsgType.QUESTION.type
+            if (sessionInfo == null && (fromV || (fromSend && isQuestion))) {
+                if (fromV) {
+                    sessionInfo = PrivateOwnerEntity()
+                    sessionInfo.ownerId = info.ownerId
+                    sessionInfo.ownerName = info.newMsg?.sender?.senderName
+                    sessionInfo.groupId = info.groupId
+                    sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
+                    sessionDb.insertOrUpdate(sessionInfo)
+                } else {
+                    val group = it.sessionDao().findSessionById(info.groupId)
+                    if (group != null) {
+                        sessionInfo = PrivateOwnerEntity()
+                        sessionInfo.ownerId = group.ownerId
+                        sessionInfo.ownerName = group.ownerName
+                        sessionInfo.groupId = group.groupId
+                        sessionInfo.avatar = group.logo
+                        sessionDb.insertOrUpdate(sessionInfo)
+                    }
+                }
             }
             sessionInfo.sessionMsgInfo = info
             notifyAllSessionDots()

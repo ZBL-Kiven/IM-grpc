@@ -196,6 +196,19 @@ private static final long serialVersionUID = 0L;
             status_ = input.readInt32();
             break;
           }
+          case 138: {
+            LiveContent.Builder subBuilder = null;
+            if (liveContent_ != null) {
+              subBuilder = liveContent_.toBuilder();
+            }
+            liveContent_ = input.readMessage(LiveContent.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(liveContent_);
+              liveContent_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -578,6 +591,32 @@ private static final long serialVersionUID = 0L;
     return status_;
   }
 
+  public static final int LIVECONTENT_FIELD_NUMBER = 17;
+  private LiveContent liveContent_;
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   * @return Whether the liveContent field is set.
+   */
+  @java.lang.Override
+  public boolean hasLiveContent() {
+    return liveContent_ != null;
+  }
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   * @return The liveContent.
+   */
+  @java.lang.Override
+  public LiveContent getLiveContent() {
+    return liveContent_ == null ? LiveContent.getDefaultInstance() : liveContent_;
+  }
+  /**
+   * <code>.app.LiveContent liveContent = 17;</code>
+   */
+  @java.lang.Override
+  public LiveContentOrBuilder getLiveContentOrBuilder() {
+    return getLiveContent();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -639,6 +678,9 @@ private static final long serialVersionUID = 0L;
     }
     if (status_ != 0) {
       output.writeInt32(16, status_);
+    }
+    if (liveContent_ != null) {
+      output.writeMessage(17, getLiveContent());
     }
     unknownFields.writeTo(output);
   }
@@ -711,6 +753,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(16, status_);
     }
+    if (liveContent_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(17, getLiveContent());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -782,6 +828,11 @@ private static final long serialVersionUID = 0L;
     }
     if (getStatus()
         != other.getStatus()) return false;
+    if (hasLiveContent() != other.hasLiveContent()) return false;
+    if (hasLiveContent()) {
+      if (!getLiveContent()
+          .equals(other.getLiveContent())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -846,6 +897,10 @@ private static final long serialVersionUID = 0L;
     }
     hash = (37 * hash) + STATUS_FIELD_NUMBER;
     hash = (53 * hash) + getStatus();
+    if (hasLiveContent()) {
+      hash = (37 * hash) + LIVECONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + getLiveContent().hashCode();
+    }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -1043,6 +1098,12 @@ private static final long serialVersionUID = 0L;
       }
       status_ = 0;
 
+      if (liveContentBuilder_ == null) {
+        liveContent_ = null;
+      } else {
+        liveContent_ = null;
+        liveContentBuilder_ = null;
+      }
       return this;
     }
 
@@ -1117,6 +1178,11 @@ private static final long serialVersionUID = 0L;
         result.replyMsg_ = replyMsgBuilder_.build();
       }
       result.status_ = status_;
+      if (liveContentBuilder_ == null) {
+        result.liveContent_ = liveContent_;
+      } else {
+        result.liveContent_ = liveContentBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -1214,6 +1280,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
+      }
+      if (other.hasLiveContent()) {
+        mergeLiveContent(other.getLiveContent());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -2508,6 +2577,122 @@ private static final long serialVersionUID = 0L;
       status_ = 0;
       onChanged();
       return this;
+    }
+
+    private LiveContent liveContent_;
+    private com.google.protobuf.SingleFieldBuilderV3<LiveContent, LiveContent.Builder, LiveContentOrBuilder> liveContentBuilder_;
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     * @return Whether the liveContent field is set.
+     */
+    public boolean hasLiveContent() {
+      return liveContentBuilder_ != null || liveContent_ != null;
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     * @return The liveContent.
+     */
+    public LiveContent getLiveContent() {
+      if (liveContentBuilder_ == null) {
+        return liveContent_ == null ? LiveContent.getDefaultInstance() : liveContent_;
+      } else {
+        return liveContentBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public Builder setLiveContent(LiveContent value) {
+      if (liveContentBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        liveContent_ = value;
+        onChanged();
+      } else {
+        liveContentBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public Builder setLiveContent(
+        LiveContent.Builder builderForValue) {
+      if (liveContentBuilder_ == null) {
+        liveContent_ = builderForValue.build();
+        onChanged();
+      } else {
+        liveContentBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public Builder mergeLiveContent(LiveContent value) {
+      if (liveContentBuilder_ == null) {
+        if (liveContent_ != null) {
+          liveContent_ =
+            LiveContent.newBuilder(liveContent_).mergeFrom(value).buildPartial();
+        } else {
+          liveContent_ = value;
+        }
+        onChanged();
+      } else {
+        liveContentBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public Builder clearLiveContent() {
+      if (liveContentBuilder_ == null) {
+        liveContent_ = null;
+        onChanged();
+      } else {
+        liveContent_ = null;
+        liveContentBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public LiveContent.Builder getLiveContentBuilder() {
+      
+      onChanged();
+      return getLiveContentFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    public LiveContentOrBuilder getLiveContentOrBuilder() {
+      if (liveContentBuilder_ != null) {
+        return liveContentBuilder_.getMessageOrBuilder();
+      } else {
+        return liveContent_ == null ?
+            LiveContent.getDefaultInstance() : liveContent_;
+      }
+    }
+    /**
+     * <code>.app.LiveContent liveContent = 17;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<LiveContent, LiveContent.Builder, LiveContentOrBuilder>
+        getLiveContentFieldBuilder() {
+      if (liveContentBuilder_ == null) {
+        liveContentBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<LiveContent, LiveContent.Builder, LiveContentOrBuilder>(
+                getLiveContent(),
+                getParentForChildren(),
+                isClean());
+        liveContent_ = null;
+      }
+      return liveContentBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

@@ -29,16 +29,26 @@ internal object SessionDbOperator {
                 info.top = local.top
             }
             val needDelete = info.groupStatus == 3
+            val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
             if (!needDelete) {
-                val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
                 val lastMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
-                info.sessionMsgInfo = lastMsgInfo
+                info.sessionMsgInfo?.let { lm ->
+                    lm.key = key
+                    lastMsgDb.insertOrUpdateSessionMsgInfo(lm)
+                } ?: run {
+                    info.sessionMsgInfo = lastMsgInfo
+                }
             }
             if (needDelete) {
-                if (exists) sessionDb.deleteSession(local)
+                if (exists) {
+                    sessionDb.deleteSession(local)
+                    lastMsgDb.deleteByKey(key)
+                }
             } else {
                 sessionDb.insertOrChangeSession(info)
-                PrivateOwnerDbOperator.updateSessionInfo(info)
+                if (exists) {
+                    PrivateOwnerDbOperator.updateSessionInfo(info)
+                }
             }
             Pair(if (exists) {
                 if (needDelete) {

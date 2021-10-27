@@ -55,7 +55,6 @@ class IMContentCCVideoWidgetVIew @JvmOverloads constructor(context: Context,
     override fun onSetData(data: ImMsgIn?) {
 
         imgCCVideoCover.setOnClickListener {
-            Log.d("LiXiang","ccVideo点击")
             data?.jumpToVideoDetails() //跳转大V作品视频播放
         }
 

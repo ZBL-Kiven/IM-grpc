@@ -26,13 +26,20 @@ internal object MessageDbOperator {
                     msgDb.insertOrChangeMessage(msg)
                     if (msg.msgType == MsgType.QUESTION.type && msg.ownerId != IMHelper.imConfig.getUserId()) {
 
-                        //if private chat is not exists , then create an object to db
+                        //private chat is not exists , then create an object to db
                         PrivateOwnerDbOperator.createPrivateChatInfoIfNotExits(it, msg)
                     }
+
+                    //if (msg.ownerId != IMHelper.imConfig.getUserId() && msg.replyMsg?.msgType == MsgType.QUESTION.type) {
+                    //    private fans chat is not exists , deal in [onDealPrivateFansSessionLastMsgInfo] when last msg patched
+                    //}
+
+                    //if (msg.sender?.senderId == IMHelper.imConfig.getUserId()) {
+                    //   session is not exists
+                    //}
                 }
-                /**
-                 * status == 1 means recalled
-                 * */
+
+                // status == 1 means recalled
                 if (localMsg != null && (msg.status == 1 || sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
                     val sendDb = it.sendMsgDao()
                     val localSendCache = if (callId.isNullOrEmpty()) null else sendDb.findByCallId(callId)

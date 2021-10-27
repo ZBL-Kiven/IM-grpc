@@ -1,5 +1,9 @@
 package com.zj.ccIm.core.sender
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.core.content.ContextCompat
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
@@ -149,6 +153,25 @@ open class MsgSender internal constructor() {
     }
 
     private fun send(sen: SendMessageReqEn, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
-        IMHelper.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
+        val p = if (sendBefore != null) checkPermission() else null
+        if (sendBefore == null || p?.first == true) {
+            IMHelper.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
+        } else {
+            IMHelper.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
+        }
+    }
+
+    private fun checkPermission(): Pair<Boolean, String>? {
+        return IMHelper.getAppContext()?.let {
+            val i = ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            val i1 = ContextCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            val s = when {
+                !i && !i1 -> "${Manifest.permission.READ_EXTERNAL_STORAGE},${Manifest.permission.WRITE_EXTERNAL_STORAGE}"
+                !i -> Manifest.permission.READ_EXTERNAL_STORAGE
+                !i1 -> Manifest.permission.WRITE_EXTERNAL_STORAGE
+                else -> "NONE"
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) Pair(i, s) else Pair(i && i1, s)
+        }
     }
 }

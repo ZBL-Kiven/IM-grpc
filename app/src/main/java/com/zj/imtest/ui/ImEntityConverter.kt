@@ -69,16 +69,16 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.imgContent?.height
     }
 
-    override fun getAudioContentUrl(): String? { //        return "dauagiueagwdaweywaoew"
+    override fun getAudioContentUrl(): String? {
         return info?.audioContent?.url
     }
 
-    override fun getAudioContentDuration(): Long? { //        return 22
+    override fun getAudioContentDuration(): Long? {
         return info?.audioContent?.duration
     }
 
 
-    override fun getCCVideoContentImgPreviewRemoteStorageUrl(): String? { //        return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
+    override fun getCCVideoContentImgPreviewRemoteStorageUrl(): String? {
         return info?.ccVideoContent?.imgPreviewRemoteStorageUrl
 
     }
@@ -242,7 +242,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getAnswerContentImgContentUrl(): String? {
-        return null //         return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
+        return null
     }
 
     override fun getAnswerContentImgContentWidth(): Int? {

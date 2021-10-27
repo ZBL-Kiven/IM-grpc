@@ -10,7 +10,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import java.util.*
 import com.zj.album.AlbumIns
@@ -25,10 +24,14 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
+import com.zj.ccIm.live.LiveIMHelper
+import com.zj.ccIm.live.LiveInfoEn
+import com.zj.ccIm.live.LiveReqInfo
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
+import com.zj.imtest.api.CCApi
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -47,8 +50,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var et: TextView
     private lateinit var tv: TextView
     private var adapter: MsgAdapter? = null
-    private val groupId = 32L
-    private val ownerId = 151120
+    private val groupId = 100L
+    private val ownerId = 151473
     private var curSpark = 0
     private var curDiamond = 100
     private var lastSelectData: FileInfo? = null
@@ -73,14 +76,17 @@ class MainActivity : AppCompatActivity() {
         /**
          * 进入聊天页面，调用此接口后，即时聊天消息接收开始工作
          * */
-        IMHelper.registerChatRoom(groupId, ownerId, 151253, FetchMsgChannel.FANS_CLAP_HOUSE, FetchMsgChannel.FANS_MESSAGE)
+        IMHelper.registerChatRoom(groupId, ownerId, IMConfig.getUserId(), FetchMsgChannel.FANS_CLAP_HOUSE, FetchMsgChannel.FANS_MESSAGE)
     }
 
     fun leaveChatRoom(view: View) {
         /**
          * 离开聊天页面，调用此接口后，即时聊天消息接收停止工作
          * */
-        IMHelper.leaveChatRoom(groupId)
+
+        // IMHelper.leaveChatRoom()
+
+        CCApi.getTestApi().call({ it.setUserRelationshipFollow(IMConfig.getUserId(), IMConfig.getToken(), ownerId, 0) })
     }
 
     fun sendText(view: View) {
@@ -96,21 +102,18 @@ class MainActivity : AppCompatActivity() {
         lastSelectData?.let {
             val path = it.path
             val duration = it.duration
-            if (lastSelectData?.isImage == true) {
+            if (lastSelectData?.isImage == true) Sender.sendImg(path, 200, 200, groupId)
 
-                // Sender.sendImg(path, 200, 200, groupId)
-                IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendImg(path, 200, 200, groupId)
-            }
+            // IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendImg(path, 200, 200, groupId)
+
             if (lastSelectData?.isVideo == true) Sender.sendVideo(path, 200, 200, duration, groupId)
         }
     }
 
     fun sendUrlImg(view: View) {
 
-
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
         //        Sender.sendUrlImg(url, 640, 426, groupId)
-
         //        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
         //            override fun result(result: FetchResult) {
         //                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
@@ -119,7 +122,10 @@ class MainActivity : AppCompatActivity() {
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
-        //        IMHelper.withCustomSender().ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 1, MsgType.TEXT, true)
+        //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+
+        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
+
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
@@ -146,8 +152,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startAlbum(@Suppress("UNUSED_PARAMETER") v: View?) {
-        val i = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-        if (i != PackageManager.PERMISSION_GRANTED) {
+        val i = ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val i1 = ActivityCompat.checkSelfPermission(applicationContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (i == PackageManager.PERMISSION_GRANTED && i1 == PackageManager.PERMISSION_GRANTED) {
             start()
         } else ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
     }
@@ -171,7 +178,7 @@ class MainActivity : AppCompatActivity() {
             if (!list.isNullOrEmpty()) adapter?.change(list)
         }
 
-        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, _, _ ->
             r?.diamondNum?.let {
                 curDiamond += it
             }
@@ -181,7 +188,7 @@ class MainActivity : AppCompatActivity() {
             Log.e("----- ", "on assets changed, diamond = $curDiamond    spark = $curSpark")
         }
 
-        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, lr, payload ->
+        IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, _, _ ->
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
 
@@ -203,6 +210,10 @@ class MainActivity : AppCompatActivity() {
 
         IMHelper.addReceiveObserver<FetchResult>(0x1127, this).listen { r, _, pl ->
             Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
+        }
+
+        IMHelper.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, _, pl ->
+            Log.e("----- ", "on Live msg ${r?.content} , payload = $pl")
         }
     }
 }
