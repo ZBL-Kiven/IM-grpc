@@ -24,13 +24,13 @@ enum class MsgType(val type: String) {
 
 object ImItemDispatcher {
 
-    inline fun <reified R : BaseBubble> getItemWithData(imIn: ImMsgIn, context: Context): R? {
+    fun  getItemWithData(imIn: ImMsgIn, context: Context): BaseBubble {
         return when (imIn.getType()) {
-                UiMsgType.MSG_TYPE_QUESTION -> IMRewardItem(context) as R?
-                UiMsgType.MSG_TYPE_CC_VIDEO -> IMContentCCVideoView(context) as R?
+                UiMsgType.MSG_TYPE_QUESTION -> IMRewardItem(context)
+                UiMsgType.MSG_TYPE_CC_VIDEO -> IMContentCCVideoView(context)
                 UiMsgType.MSG_TYPE_IMG, UiMsgType.MSG_TYPE_TEXT, UiMsgType.MSG_TYPE_AUDIO -> IMBubbleContentItem(
-                    context) as R?
-                else -> IMBubbleNotAllowedTypeItem(context) as R?
+                    context)
+                else -> IMBubbleNotAllowedTypeItem(context)
             }
     }
 }
