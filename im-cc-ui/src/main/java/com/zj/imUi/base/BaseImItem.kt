@@ -75,7 +75,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
-        if (data.getSelfUserId() == data.getSenderId()) {
+        if (data.getSelfUserId() == data.getSenderId()||data.getMsgIsRecalled()==true) {
             removeIfNotContains(ivAvatar, true)
             return
         }

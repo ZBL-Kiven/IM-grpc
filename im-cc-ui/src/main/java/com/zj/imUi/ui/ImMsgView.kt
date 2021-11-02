@@ -17,12 +17,13 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            if (d.getSenderId() == d.getSelfUserId()) {
+            if (d.getMsgIsRecalled() == true){
+                ivAvatar?.visibility = View.GONE
+                addRule(CENTER_IN_PARENT)
+            }else if (d.getSenderId() == d.getSelfUserId()) {
                 if (type == 3 && d.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                     ivAvatar?.visibility = View.GONE
                     addRule(CENTER_IN_PARENT)
-//                    leftMargin = DPUtils.dp2px(12f)
-//                    rightMargin = DPUtils.dp2px(12f)
                 } else {
                     ivAvatar?.visibility = View.GONE
                     addRule(ALIGN_PARENT_END)
@@ -69,6 +70,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
+        if (data.getMsgIsRecalled() == true) return null
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
         type?.let {
