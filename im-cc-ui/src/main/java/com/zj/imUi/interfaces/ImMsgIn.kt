@@ -93,6 +93,8 @@ interface ImMsgIn {
     fun getMsgIsSensitive():Boolean?
     //打赏是否被拒绝
     fun getMsgIsReject():Boolean?
+    //是否是管理员
+    fun getIsAdmin():Boolean?
 
 
     /** ========================================= app interface ======================================== */
@@ -131,6 +133,10 @@ interface ImMsgIn {
     //群主撤回用户消息
     fun ownerRecallGroupMsg()
     //群主拒绝回答
-    fun rejectRewardMsg()
+    fun rejectRewardMsg(id:String)
+    //跳直播间
+    fun jumpToLiveRoom()
+
+    fun reportGroupUserMsg(id:String)
 
 }

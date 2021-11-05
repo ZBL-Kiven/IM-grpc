@@ -1,6 +1,7 @@
 package com.zj.imUi.items
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.Log
@@ -163,6 +164,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             lp.gravity = Gravity.END
             lp.setMargins(0,DPUtils.dp2px(-60f),DPUtils.dp2px(10f),10)
             tvReliedFLag.layoutParams = lp
+            tvReliedFLag.setBackgroundResource(R.drawable.im_msg_item_rejected_flag_cornor_bg)
+            tvReliedFLag.setTextColor(Color.parseColor("#FFFF3B30"))
             tvReliedFLag.visibility = View.VISIBLE
         }else if (data.getQuestionStatus() == 0 && messageNormal) {
             when {

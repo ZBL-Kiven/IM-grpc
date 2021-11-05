@@ -47,7 +47,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context,
     //设置气泡最大宽度为屏幕80%
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val size = MeasureSpec.getSize(widthMeasureSpec)
-        val isFull = (chatType == 3 && curData?.invoke()?.getSelfUserId() ==curData?.invoke()?.getSenderId())||curData?.invoke()?.getMsgIsRecalled() == true
+        val isFull = (chatType == 3 && curData?.invoke()?.getSelfUserId() ==curData?.invoke()?.getSenderId())||curData?.invoke()?.getMsgIsRecalled() == true||curData?.invoke()?.getMsgIsSensitive() == true
         val maxWidth = if (isFull) {
             (resources.displayMetrics.widthPixels * 1).toInt()
         } else (resources.displayMetrics.widthPixels * 0.8).toInt()

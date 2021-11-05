@@ -17,6 +17,7 @@ import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
+import com.zj.views.ut.DPUtils
 
 @SuppressLint("ResourceAsColor")
 class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
@@ -27,23 +28,26 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
     private var tvContent: AppCompatTextView = AppCompatTextView(context)
 
     private var contentLayout: LinearLayout = LinearLayout(context, attrs, def)
+    private var basePadding = DPUtils.dp2px(12f)
 
     init {
         //需设置成垂直的
         contentLayout.orientation = LinearLayout.VERTICAL
         val lp = LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        lp.setMargins(12,0,12,0)
+        lp.setMargins(basePadding,0,basePadding,0)
         contentLayout.layoutParams = lp
 
-        tvContent.textSize = 12f
+        tvContent.textSize = 13f
         tvContent.maxLines = 3
         tvContent.ellipsize =TextUtils.TruncateAt.END
-        tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
-//
-//        val lpTv = LinearLayout.LayoutParams((resources.displayMetrics.widthPixels*0.5).toInt(), LayoutParams.WRAP_CONTENT)
-//        tvContent.layoutParams = lpTv
+        tvContent.gravity = Gravity.CENTER_HORIZONTAL
+        tvContent.setPadding(basePadding,basePadding/2,basePadding,basePadding/2)
+        tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
+        tvContent.setBackgroundResource(R.drawable.im_msg_item_sensitive_cornor_bg)
 
-        val lpTvL = LinearLayout.LayoutParams((resources.displayMetrics.widthPixels*0.5).toInt(), LayoutParams.WRAP_CONTENT)
+
+//        val lpTvL = LinearLayout.LayoutParams((resources.displayMetrics.widthPixels*0.8).toInt(), LayoutParams.WRAP_CONTENT)
+        val lpTvL = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         lpTvL.gravity = Gravity.CENTER
 
         contentLayout.addView(tvContent,lpTvL)
@@ -55,7 +59,7 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
         if (childCount == 0){
             addView(contentLayout)
         }
-        if (data.getMsgIsRecalled() == true) {
+        if (data.getMsgIsSensitive() == true) {
             tvContent.text = "涉及交易风险，请谨慎对待，该信息可能有潜在风险，请注意甄别"
         }
     }
