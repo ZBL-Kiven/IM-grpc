@@ -28,7 +28,7 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
     private val rwl = ReentrantReadWriteLock()
     private val r = rwl.readLock()
     private val w = rwl.writeLock()
-    private var tempRecordInfo: NetWorkRecordInfo? = null
+    private var tempRecordInfo = mutableMapOf<String, NetWorkRecordInfo>()
     private var netWorkRecordInfo: NetWorkRecordInfo? = null
         get() {
             if (!accessAble) return null
@@ -42,14 +42,24 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
         accessAble = true
     }
 
-    fun beginTempRecord() {
-        tempRecordInfo = NetWorkRecordInfo()
+    fun beginTempRecord(key: String) {
+        tempRecordInfo[key] = NetWorkRecordInfo()
     }
 
-    fun endTempRecord(): NetWorkRecordInfo? {
-        val temp = tempRecordInfo?.copy()
-        tempRecordInfo = null
-        return temp
+    fun endTempRecord(key: String): NetWorkRecordInfo? {
+        return tempRecordInfo.remove(key)?.let {
+            NetWorkRecordInfo(it.startedTs).apply {
+                lastModifySendData = it.lastModifySendData
+                lastModifyReceiveData = it.lastModifyReceiveData
+                disconnectCount = it.disconnectCount
+                sentSize = it.sentSize
+                receivedSize = it.receivedSize
+                sentCount = it.sentCount
+                receivedCount = it.receivedCount
+                total = it.total
+                this.modify()
+            }
+        }
     }
 
     fun addRecordListener(onRecord: ((NetWorkRecordInfo) -> Unit)) {
@@ -61,7 +71,7 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
         if (accessAble) {
             val disconnectCount = (netWorkRecordInfo?.disconnectCount ?: 0) + 1
             netWorkRecordInfo?.disconnectCount = disconnectCount
-            tempRecordInfo?.disconnectCount = disconnectCount
+            refTemp { it.disconnectCount = disconnectCount }
             record(netWorkRecordInfo)
         }
     }
@@ -76,11 +86,11 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
                 this.total = sentSize + receivedSize
                 record(this)
             }
-            tempRecordInfo?.apply {
-                this.lastModifySendData = lastModifySendData
-                this.receivedSize += lastModifySendData
-                this.sentCount += 1
-                this.total = sentSize + receivedSize
+            refTemp {
+                it.lastModifySendData = lastModifySendData
+                it.receivedSize += lastModifySendData
+                it.sentCount += 1
+                it.total = it.sentSize + it.receivedSize
             }
         }
     }
@@ -95,11 +105,11 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
                 this.total = sentSize + receivedSize
                 record(this)
             }
-            tempRecordInfo?.apply {
-                this.lastModifyReceiveData = lastModifyReceiveData
-                this.sentSize += lastModifyReceiveData
-                this.receivedCount += 1
-                this.total = sentSize + receivedSize
+            refTemp {
+                it.lastModifyReceiveData = lastModifyReceiveData
+                it.sentSize += lastModifyReceiveData
+                it.receivedCount += 1
+                it.total = it.sentSize + it.receivedSize
             }
         }
     }
@@ -109,10 +119,17 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
         return if (!accessAble) null else netWorkRecordInfo
     }
 
+    private fun refTemp(r: (NetWorkRecordInfo) -> Unit) {
+        tempRecordInfo.values.forEach {
+            r(it)
+            it.modify()
+        }
+    }
+
     private fun record(info: NetWorkRecordInfo?) {
         if (info == null) return
+        info.modify()
         if (info != netWorkRecordInfo) netWorkRecordInfo = info
-        info.lastModifyTs = System.currentTimeMillis()
         val recordString = DataUtils.toString(info)
         write(recordString)
         onRecord?.invoke(info)

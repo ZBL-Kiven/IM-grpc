@@ -38,6 +38,7 @@ import com.zj.ccIm.live.impl.LiveServerHubImpl
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.exceptions.IMException
 import com.zj.im.sender.OnSendBefore
+import com.zj.im.utils.log.NetWorkRecordInfo
 import java.lang.StringBuilder
 
 
@@ -130,16 +131,21 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     fun registerChatRoom(groupId: Long, ownerId: Int, targetUserId: Int? = null, vararg channel: FetchMsgChannel) {
+        if (!channel.isNullOrEmpty()) beginMessageTempRecord(channel[0].serializeName)
         this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
         if (this.lastMsgRegister?.checkValid() != true) return
         pause(Constance.FETCH_OFFLINE_MSG_CODE)
         send(lastMsgRegister?.getCopyData(), Constance.CALL_ID_REGISTER_CHAT, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
     }
 
-    fun leaveChatRoom() {
+    fun leaveChatRoom(): NetWorkRecordInfo? {
+        val last = lastMsgRegister?.getCopyData()
         val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
-        send(lastMsgRegister?.getCopyData(), callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+        send(last, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
         this.lastMsgRegister = null
+        return last?.channels?.let {
+            if (it.isNotEmpty()) endMessageTempRecord(it[0].serializeName) else null
+        }
     }
 
     fun deleteSession(@DeleteSessionType type: Int, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {

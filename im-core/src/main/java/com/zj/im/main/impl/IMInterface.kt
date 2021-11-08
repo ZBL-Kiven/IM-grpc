@@ -22,6 +22,8 @@ import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.cast
+import com.zj.im.utils.log.NetWorkRecordInfo
+import com.zj.im.utils.log.logger.NetRecordUtils
 import com.zj.im.utils.log.logger.d
 import com.zj.im.utils.log.logger.printErrorInFile
 import com.zj.im.utils.log.logger.printInFile
@@ -243,6 +245,14 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     fun recordError(where: String, log: String?, b: Boolean) {
         printErrorInFile(where, log, b)
+    }
+
+    fun beginMessageTempRecord(key: String) {
+        NetRecordUtils.beginTempRecord(key)
+    }
+
+    fun endMessageTempRecord(key: String): NetWorkRecordInfo? {
+        return NetRecordUtils.endTempRecord(key)
     }
 
     fun postError(e: Throwable?) {

@@ -5,12 +5,12 @@ import com.zj.im.utils.full
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 data class NetWorkRecordInfo(val startedTs: Long = System.currentTimeMillis()) {
     var lastModifyTs: Long = 0L
-        internal set(value) {
+        private set(value) {
             field = value
             lastModifyTime = full()
         }
-    var startedTime: String = full(startedTs)
-    var lastModifyTime: String = startedTime
+    val startedTime: String = full(startedTs)
+    var lastModifyTime: String = startedTime; private set
     var lastModifySendData: Long = 0L
     var lastModifyReceiveData: Long = 0L
     var disconnectCount: Long = 0L
@@ -19,6 +19,10 @@ data class NetWorkRecordInfo(val startedTs: Long = System.currentTimeMillis()) {
     var sentCount: Long = 0L
     var receivedCount: Long = 0L
     var total: Long = 0L
+
+    fun modify() {
+        lastModifyTs = System.currentTimeMillis()
+    }
 
     @Suppress("unused")
     fun getTcpDataSize(): Long {

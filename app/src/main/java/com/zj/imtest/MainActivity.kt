@@ -28,9 +28,7 @@ import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.live.LiveInfoEn
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
-import com.zj.database.entity.SessionInfoEntity
 import com.zj.imUi.base.BaseImItem
-import com.zj.imtest.api.CCApi
 import com.zj.imtest.ui.MsgAdapter
 
 
@@ -83,9 +81,8 @@ class MainActivity : AppCompatActivity() {
          * 离开聊天页面，调用此接口后，即时聊天消息接收停止工作
          * */
 
-        // IMHelper.leaveChatRoom()
-
-        CCApi.getTestApi().call({ it.setUserRelationshipFollow(IMConfig.getUserId(), IMConfig.getToken(), ownerId, 0) })
+        val endInfo = IMHelper.leaveChatRoom()
+        Log.e("------- ", "$endInfo")
     }
 
     fun sendText(view: View) {
@@ -126,10 +123,6 @@ class MainActivity : AppCompatActivity() {
         //        Sender.sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
 
         //        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
-
-        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1128, this).listen { r, l, pl ->
-            Log.e("----- ", "on session got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
-        }
     }
 
     /**====================================================== READ ME ⬆️ ===========================================================*/
