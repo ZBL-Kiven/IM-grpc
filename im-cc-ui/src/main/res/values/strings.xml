@@ -7,6 +7,7 @@
     <string name="im_ui_public">Public</string>
 
     <string name="im_ui_replied">Responded</string>
+    <string name="im_ui_rejected">已被拒绝</string>
 
     <string name="im_ui_msg_type_text">Text</string>
     <string name="im_ui_msg_type_image">Image</string>

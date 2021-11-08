@@ -1,6 +1,7 @@
 package com.zj.imUi.ui
 
 import android.content.Context
+
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -15,10 +16,18 @@ import com.zj.views.ut.DPUtils
 class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
-        return LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT).apply {
-            if (d.getSenderId() == d.getSelfUserId()) {
+        return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
+            if (d.getMsgIsRecalled() == true||d.getMsgIsSensitive() == true){
                 ivAvatar?.visibility = View.GONE
-                addRule(ALIGN_PARENT_END)
+                addRule(CENTER_IN_PARENT)
+            }else if (d.getSenderId() == d.getSelfUserId()) {
+                if (type == 3 && d.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                    ivAvatar?.visibility = View.GONE
+                    addRule(CENTER_IN_PARENT)
+                } else {
+                    ivAvatar?.visibility = View.GONE
+                    addRule(ALIGN_PARENT_END)
+                }
             } else {
                 ivAvatar?.visibility = View.VISIBLE
                 val avatar: ImageView? = ivAvatar
@@ -61,12 +70,12 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
+        if (data.getMsgIsRecalled() == true||data.getMsgIsSensitive() == true) return null
         if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
         type?.let {
-            if (it == 2){
-                if (data.getSelfUserId() ==data.getSenderId()&&(data.getType() == UiMsgType.MSG_TYPE_IMG||data.getType() == UiMsgType.MSG_TYPE_AUDIO))
-                    return null
+            if (it == 2) {
+                if (data.getSelfUserId() == data.getSenderId() && (data.getType() == UiMsgType.MSG_TYPE_IMG || data.getType() == UiMsgType.MSG_TYPE_AUDIO)) return null
             }
         }
         return BubbleRenderer

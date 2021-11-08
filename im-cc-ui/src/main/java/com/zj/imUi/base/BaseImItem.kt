@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
+import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
@@ -76,7 +78,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
-        if (data.getSelfUserId() == data.getSenderId()) {
+        if (data.getSelfUserId() == data.getSenderId()||data.getMsgIsRecalled()==true||data.getMsgIsSensitive()==true) {
             removeIfNotContains(ivAvatar, true)
             return
         }
@@ -114,7 +116,9 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.setOnLongClickListener {
             val isNotSelf = data.getSelfUserId() != data.getSenderId()
             if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
-                MsgPop(context, data).show(it)
+                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                popFlowWindow.show(data,it){_,_,content->
+                }
             }
             true
         }

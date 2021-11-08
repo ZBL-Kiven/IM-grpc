@@ -87,6 +87,18 @@ interface ImMsgIn {
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
 
+    //消息是否被撤回
+    fun getMsgIsRecalled(): Boolean?
+
+    //消息是否包含敏感词
+    fun getMsgIsSensitive(): Boolean?
+
+    //打赏是否被拒绝
+    fun getMsgIsReject(): Boolean?
+
+    //是否是管理员
+    fun getIsAdmin(): Boolean?
+
 
     /** ========================================= app interface ======================================== */
 
@@ -123,9 +135,19 @@ interface ImMsgIn {
     //删除发送失败的信息
     fun deleteSendLossMsg()
 
+    //群主撤回用户消息
     fun ownerRecallGroupMsg()
 
     fun isMsgReplying(): Boolean
 
     fun setMsgReplyState(isReplying: Boolean)
+
+    //群主拒绝回答
+    fun rejectRewardMsg(id: String)
+
+    //跳直播间
+    fun jumpToLiveRoom()
+
+    fun reportGroupUserMsg(id: String)
+
 }

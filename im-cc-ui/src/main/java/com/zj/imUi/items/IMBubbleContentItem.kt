@@ -17,6 +17,7 @@ import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
+import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
 import com.zj.imUi.widget.MsgPop
 import com.zj.views.ut.DPUtils
@@ -286,8 +287,11 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 bubbleContent.setOnLongClickListener {
                     val isNotSelf = data.getSelfUserId() != data.getSenderId()
                     if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
-                        MsgPop(context, data).show(it)
-                    }
+                        if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
+                            val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                            popFlowWindow.show(data,it){_,_,content->
+                            }
+                        }                    }
                     true
                 }
             }

@@ -110,30 +110,13 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
     private fun setColor(context: Context, data: ImMsgIn, chatType: Any): Int {
-        return if (chatType == UiMsgType.GROUP_CHAT) {
+        return if (chatType == UiMsgType.GROUP_CHAT || chatType == 3) {
             if (isSelfMessage) { //自己发送的消息
-                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                    if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) {
-                        ContextCompat.getColor(context, R.color.im_msg_replied_bg)
-                    } else {
-                        if (!data.getPublished()) { //打赏消息状态
-                            ContextCompat.getColor(context, R.color.im_msg_message_item_private)
-                        } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
-                    }
-                } else if (data.getReplyMsgQuestionIsPublished() == false) {
-                    ContextCompat.getColor(context, R.color.im_msg_bg_purple)
-                } else if (data.getReplyMsgQuestionIsPublished() == true) {
-                    ContextCompat.getColor(context, R.color.im_msg_bg_origin)
-                } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+                setSelfMsgBg(context,data,chatType)
             } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                if (data.getQuestionStatus() == 1 || data.getQuestionStatus() == 2) ContextCompat.getColor(
-                    context,
-                    R.color.im_msg_replied_bg)
-                else if (data.getQuestionStatus() == 0 && !data.getPublished()) {
-                    ContextCompat.getColor(context, R.color.im_msg_message_item_private)
-                } else {
-                    ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
-                }
+                if (data.getQuestionStatus() == 1 || data.getMsgIsReject()==true) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
+                else if (data.getQuestionStatus() == 0 && !data.getPublished()) { ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                } else { ContextCompat.getColor(context, R.color.im_msg_bg_color_white) }
             } else if (data.getReplyMsgQuestionIsPublished() == false) ContextCompat.getColor(
                 context,
                 R.color.im_msg_message_item_private)
@@ -147,7 +130,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息
                 if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                    if (data.getQuestionStatus() == 1) {
+                    if (data.getQuestionStatus() == 1||data.getMsgIsReject() == true) {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
                         if (!data.getPublished()) { //打赏消息状态
@@ -159,5 +142,21 @@ object BubbleRenderer : BaseBubbleRenderer {
                 }
             }
         }
+    }
+
+    private fun setSelfMsgBg(context: Context, data: ImMsgIn, chatType: Any) :Int{
+        return  if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+            if (data.getQuestionStatus() == 1 || data.getMsgIsReject() == true) {
+                ContextCompat.getColor(context, R.color.im_msg_replied_bg)
+            } else {
+                if (!data.getPublished()) { //打赏消息状态
+                    ContextCompat.getColor(context, R.color.im_msg_message_item_private)
+                } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+            }
+        } else if (data.getReplyMsgQuestionIsPublished() == false) {
+            ContextCompat.getColor(context, R.color.im_msg_bg_purple)
+        } else if (data.getReplyMsgQuestionIsPublished() == true) {
+            ContextCompat.getColor(context, R.color.im_msg_bg_origin)
+        } else ContextCompat.getColor(context, R.color.im_msg_bg_origin)
     }
 }
