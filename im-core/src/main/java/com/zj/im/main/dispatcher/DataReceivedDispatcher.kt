@@ -29,8 +29,8 @@ internal object DataReceivedDispatcher {
         chatBase?.sendTo(data)
     }
 
-    fun postError(throwable: Throwable, deadly: Boolean) {
-        chatBase?.postError(throwable, deadly)
+    fun postError(throwable: Throwable) {
+        chatBase?.postError(throwable)
     }
 
     fun onLayerChanged(isHidden: Boolean) {

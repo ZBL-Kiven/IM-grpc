@@ -25,10 +25,7 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.IMHelper.Sender
 import com.zj.ccIm.core.MsgType
-import com.zj.ccIm.core.fecher.FetchResultRunner
-import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.LiveInfoEn
-import com.zj.ccIm.live.LiveReqInfo
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -115,18 +112,18 @@ class MainActivity : AppCompatActivity() {
     fun sendUrlImg(view: View) {
 
         //        val url = "https://img1.baidu.com/it/u=744731442,3904757666&fm=26&fmt=auto&gp=0.jpg"
-        //        Sender.sendUrlImg(url, 640, 426, groupId)
-//        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
-//            override fun result(result: FetchResult) {
-//                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
-//            }
-//        })
+        //                Sender.sendUrlImg(url, 640, 426, groupId)
+        //        IMHelper.refreshPrivateOwnerSessions(object : FetchResultRunner() {
+        //            override fun result(result: FetchResult) {
+        //                Log.e("------ ", "thread in : ${Thread.currentThread().name}   refreshPrivateOwnerSessions ====> ${result.success}")
+        //            }
+        //        })
 
         //        IMHelper.deleteSession(Comment.DELETE_OWNER_SESSION, groupId, ownerId, IMConfig.getUserId())
 
-        //        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+        IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).build().sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
 
-//        Sender.sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
+        //        Sender.sendRewardTextMsg("小费", groupId, 50, MsgType.TEXT, true)
 
         //        LiveIMHelper.joinToLiveRoom(LiveReqInfo(4, 31, false, IMConfig.getUserId()))
 
@@ -203,8 +200,6 @@ class MainActivity : AppCompatActivity() {
         IMHelper.addReceiveObserver<GetMoreMessagesInfo>(0x1131, this).listen { r, _, _ ->
             Log.e("----- ", "on more msg got, ${r?.data}")
         }
-
-
 
         IMHelper.addReceiveObserver<PrivateFansEn>(0x1129, this).listen { r, l, pl ->
             Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")

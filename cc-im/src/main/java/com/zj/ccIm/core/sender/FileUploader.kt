@@ -1,6 +1,5 @@
 package com.zj.ccIm.core.sender
 
-import android.content.Context
 import com.zj.api.base.BaseRetrofit
 import com.zj.api.interceptor.HeaderProvider
 import com.zj.api.okhttp3.ProgressListener
@@ -9,7 +8,9 @@ import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.UploadRespEn
 import com.zj.compress.videos.FileUtils
 import io.reactivex.schedulers.Schedulers
-import okhttp3.*
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 import java.net.URL
 import java.util.*
@@ -18,8 +19,8 @@ import java.util.*
 @Suppress("unused")
 internal object FileUploader {
 
-    fun with(context: Context?, url: URL): Builder {
-        return Builder(context, url)
+    fun with(url: URL): Builder {
+        return Builder(url)
     }
 
     @Suppress("SpellCheckingInspection")
@@ -79,7 +80,7 @@ internal object FileUploader {
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    internal class Builder(private var context: Context?, val url: URL) {
+    internal class Builder(val url: URL) {
 
         var deleteCompressFile: Boolean = false
         var callId: String = UUID.randomUUID().toString()

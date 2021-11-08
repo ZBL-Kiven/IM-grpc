@@ -6,4 +6,4 @@ package com.zj.im.chat.exceptions
  * it called when the sending params path not exists
  * */
 
-class ParamPathNotFoundException(case: String) : ChatException(case)
+class ParamPathNotFoundException(case: String) : IMException(case)

@@ -12,4 +12,6 @@ data class GetMoreMessagesInfo(val callId: String, val isOK: Boolean, val data: 
 
 data class MessageTotalDots(val dots: Int)
 
+data class KickOut(val reason: String)
+
 class FetchResult(val success: Boolean, val isFirstFetch: Boolean, val isNullData: Boolean, val errorMsg: String? = null) : Serializable

@@ -24,7 +24,7 @@ internal object MessageDbOperator {
                 val localMsg = if (callId.isNullOrEmpty()) null else msgDb.findMsgByClientId(callId)
                 if (localMsg == null && sendingState == SendMsgState.SENDING) {
                     msgDb.insertOrChangeMessage(msg)
-                    if (msg.msgType == MsgType.QUESTION.type && msg.ownerId != IMHelper.imConfig.getUserId()) {
+                    if (msg.msgType == MsgType.QUESTION.type && msg.ownerId != IMHelper.imConfig?.getUserId() ?: "--") {
 
                         //private chat is not exists , then create an object to db
                         PrivateOwnerDbOperator.createPrivateChatInfoIfNotExits(it, msg)
@@ -61,5 +61,4 @@ internal object MessageDbOperator {
             it.messageDao().deleteMsgByClientId(clientId)
         }
     }
-
 }

@@ -1,19 +1,16 @@
 package com.zj.ccIm.core.sender
 
-import android.content.Context
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.UploadRespEn
 import com.zj.ccIm.core.toMd5
+import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.sender.OnStatus
-import com.zj.database.entity.SendMessageReqEn
 import java.io.File
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
 import java.net.URL
 
-internal open class BaseFileSender(protected val context: Context?, private val d: SendMessageReqEn, private val callId: String) : OnSendBefore<Any?> {
+internal open class BaseFileSender(private val d: SendMessageReqEn, private val callId: String) : OnSendBefore<Any?> {
 
     protected var onStatus: OnStatus<Any?>? = null
     private var sendingToken: FileUploader.UploadTask? = null
@@ -63,12 +60,12 @@ internal open class BaseFileSender(protected val context: Context?, private val 
         if (d.msgType == MsgType.TEXT.type) {
             observer.onError(callId, IllegalArgumentException("the send msg type is not supported from text !!"), null);return
         }
-        val serverUploadUrl = URL("${IMHelper.imConfig.getIMHost()}/im/upload/file")
-        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig.getUserId()}", "token" to IMHelper.imConfig.getToken(), "timeStamp" to "$timeStamp")
-        val sign = "$timeStamp;${IMHelper.imConfig.getUserId()};${d.msgType}".toMd5()
+        val serverUploadUrl = URL("${IMHelper.imConfig?.getIMHost()}/im/upload/file")
+        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig?.getUserId() ?: ""}", "token" to (IMHelper.imConfig?.getToken() ?: ""), "timeStamp" to "$timeStamp")
+        val sign = "$timeStamp;${IMHelper.imConfig?.getUserId()};${d.msgType}".toMd5()
         val fileInfo = FileUploader.FileInfo(f.name, "file", path = path)
         val params = mapOf("sign" to sign, "type" to d.msgType)
-        sendingToken = FileUploader.with(context?.applicationContext, serverUploadUrl).callId(callId).addHeader(headers).addParams(params).setFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)
+        sendingToken = FileUploader.with(serverUploadUrl).callId(callId).addHeader(headers).addParams(params).setFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)
     }
 
     open fun cancel() {

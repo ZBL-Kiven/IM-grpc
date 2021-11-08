@@ -1,11 +1,11 @@
 package com.zj.im.main
 
 import android.app.Application
-import com.zj.im.BuildConfig
 import com.zj.im.chat.core.DataStore
 import com.zj.im.chat.enums.RuntimeEfficiency
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.enums.ConnectionState
+import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.exceptions.LooperInterruptedException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
@@ -14,6 +14,7 @@ import com.zj.im.chat.modle.SendingUp
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.main.dispatcher.EventHub
 import com.zj.im.main.impl.IMInterface
+import com.zj.im.main.impl.RunnerClientStub
 import com.zj.im.main.impl.RunningObserver
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.sender.OnStatus
@@ -23,14 +24,12 @@ import com.zj.im.utils.*
 import com.zj.im.utils.Constance
 import com.zj.im.utils.EfficiencyUtils
 import com.zj.im.utils.TimeOutUtils
-import com.zj.im.utils.log.NetRecordUtils
 import com.zj.im.utils.log.logger.*
-import com.zj.im.utils.log.logger.errorCollector
 import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutors.SendExecutorsInterface<T> {
+internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClientStub<T>, SendExecutors.SendExecutorsInterface<T> {
 
     private var dataStore: DataStore<T>? = null
     private var msgLooper: MsgLooper? = null
@@ -82,8 +81,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutor
             val logsCollectionAble = it.option?.logsCollectionAble ?: { false }
             val logsMaxRetain = it.option?.logsMaxRetain ?: Constance.MAX_RETAIN_TCP_LOG
             diskPathName = it.option?.logsFileName ?: ""
-            getLogUtils().init(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
-            NetRecordUtils.init(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
+            initLogCollectors(context, diskPathName, debugEnable, logsCollectionAble, logsMaxRetain)
         }
     }
 
@@ -116,7 +114,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutor
         }
     }
 
-    fun <R> enqueue(data: BaseMsgInfo<R>) {
+    override fun <R> enqueue(data: BaseMsgInfo<R>) {
         cast<BaseMsgInfo<R>, BaseMsgInfo<T>>(data)?.let {
             msgLooper?.checkRunning(true)
             setLooperEfficiency(dataStore?.put(it) ?: 0)
@@ -126,7 +124,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutor
     /**
      * send a msg
      * */
-    fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
+    override fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
         enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
         enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, false))
     }
@@ -207,14 +205,10 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, SendExecutor
         enqueue(BaseMsgInfo.connectStateChange<T>(state, case))
     }
 
-    fun postError(e: Throwable, deadly: Boolean = true) {
-        errorCollector.printInFile("postError", e.message, true)
-        when (e) {
-            is LooperInterruptedException -> {
-                if (!isFinishing(curRunningKey)) initHandler()
-                else printInFile("ChatBase.IM.LooperInterrupted", " the MsgLooper was stopped by SDK shutDown")
-            }
-            else -> if (deadly && BuildConfig.DEBUG) throw e
+    fun postError(e: Throwable?) {
+        if (e is LooperInterruptedException) {
+            if (!isFinishing(curRunningKey)) initHandler()
+            else printInFile("ChatBase.IM.LooperInterrupted", " the MsgLooper was stopped by SDK shutDown")
         }
         imi?.postError(e)
     }

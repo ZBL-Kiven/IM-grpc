@@ -2,7 +2,6 @@ package com.zj.imUi.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import com.zj.imUi.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,8 +20,9 @@ object TimeLineInflateModel {
     @SuppressLint("StringFormatMatches")
     private fun getTimeString(ctx: Context, timestamp: Long): String {
         val result: String
-        val weekNames = arrayOf(ctx.getString(R.string.im_ui_sunday), ctx.getString(R.string.im_ui_monday), ctx.getString(R.string.im_ui_tuesday), ctx.getString(R.string.im_ui_wednesday), ctx.getString(R.string.im_ui_thursday), ctx.getString(R.string.im_ui_friday), ctx.getString(R.string.im_ui_saturday))
-        val hourTimeFormat = ctx.getString(R.string.im_ui_hour_time_format)
+
+        // val weekNames = arrayOf(ctx.getString(R.string.im_ui_sunday), ctx.getString(R.string.im_ui_monday), ctx.getString(R.string.im_ui_tuesday), ctx.getString(R.string.im_ui_wednesday), ctx.getString(R.string.im_ui_thursday), ctx.getString(R.string.im_ui_friday), ctx.getString(R.string.im_ui_saturday))
+        // val hourTimeFormat = ctx.getString(R.string.im_ui_hour_time_format)
         val monthTimeFormat = ctx.getString(R.string.im_ui_month_time_format)
         val yearTimeFormat = ctx.getString(R.string.im_ui_year_time_format)
         try {

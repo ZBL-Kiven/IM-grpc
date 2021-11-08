@@ -16,9 +16,9 @@ internal object Converter {
         msg.sendingState = sendingState.type
         msg.sendTime = System.currentTimeMillis()
         msg.sender = SenderInfo().apply {
-            this.senderId = IMHelper.imConfig.getUserId()
-            this.senderAvatar = IMHelper.imConfig.getUserAvatar()
-            this.senderName = IMHelper.imConfig.getUserName()
+            this.senderId = IMHelper.imConfig?.getUserId() ?: 0
+            this.senderAvatar = IMHelper.imConfig?.getUserAvatar()
+            this.senderName = IMHelper.imConfig?.getUserName()
         }
         when (sen.msgType) {
             MsgType.TEXT.type -> {

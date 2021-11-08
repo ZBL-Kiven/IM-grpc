@@ -6,4 +6,4 @@ package com.zj.im.chat.exceptions
  * chat exception logger
  * */
 
-internal class LooperInterruptedException(case: String) : ChatException(case)
+internal class LooperInterruptedException(case: String) : IMException(case)

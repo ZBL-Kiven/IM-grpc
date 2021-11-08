@@ -6,4 +6,4 @@ package com.zj.im.chat.exceptions
  * it called when the necessary params not exists
  * */
 
-class NecessaryAttributeEmptyException(case: String) : ChatException(case)
+internal class NecessaryAttributeEmptyException(case: String) : IMException(case, null, ERROR_LEVEL_DEADLY)

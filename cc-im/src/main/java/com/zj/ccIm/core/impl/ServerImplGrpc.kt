@@ -33,16 +33,16 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         try {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
-                val url = IMHelper.imConfig.getGrpcAddress()
-                val keepAliveTimeOut = IMHelper.imConfig.getHeatBeatsTimeOut()
-                val idleTimeOut = IMHelper.imConfig.getIdleTimeOut()
+                val url = IMHelper.imConfig?.getGrpcAddress() ?: Pair("-", 0)
+                val keepAliveTimeOut = IMHelper.imConfig?.getHeatBeatsTimeOut() ?: 5000L
+                val idleTimeOut = IMHelper.imConfig?.getIdleTimeOut() ?: 68400000L
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                val header = mapOf("token" to IMHelper.imConfig.getToken(), "userid" to "${IMHelper.imConfig.getUserId()}")
+                val header = mapOf("token" to IMHelper.imConfig?.getToken(), "userid" to "${IMHelper.imConfig?.getUserId()}")
                 channel = Grpc.get(config).defaultHeader(header)
             }
             onConnection()
         } catch (e: Exception) {
-            onParseError(e, false)
+            onParseError(e)
         }
     }
 
@@ -76,8 +76,8 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * Resolve all exceptions, including [StatusRuntimeException] and other [Exception].
      * And trigger reconnection in the appropriate scene, or choose whether to clear the buffering queue
      * */
-    protected open fun onParseError(t: Throwable?, deadly: Boolean) {
-        postError(t, deadly)
+    protected open fun onParseError(t: Throwable?) {
+        postError(t)
     }
 
     protected open class CusObserver<T> : StreamObserver<T> {

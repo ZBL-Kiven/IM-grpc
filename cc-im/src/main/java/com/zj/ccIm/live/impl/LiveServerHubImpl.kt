@@ -51,7 +51,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
                             }
                             else -> postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_NEW_MESSAGE, respInfo, false, data.serializedSize.toLong())
                         }
-                    } else onParseError(t, false)
+                    } else onParseError(t)
                 }
             })
         }

@@ -89,7 +89,7 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             val exists = sessionInfo != null
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
             val fromV = info.newMsg?.sender?.senderId == info.ownerId
-            val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig.getUserId()
+            val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig?.getUserId() ?: "--"
             val isQuestion = info.newMsg?.msgType == MsgType.QUESTION.type
             if (sessionInfo == null && (fromV || (fromSend && isQuestion))) {
                 if (fromV) {

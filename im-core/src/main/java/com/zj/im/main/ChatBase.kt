@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
-import com.zj.im.utils.log.NetRecordUtils
+import com.zj.im.utils.log.logger.NetRecordUtils
 import com.zj.im.utils.log.logger.printInFile
 
 /**

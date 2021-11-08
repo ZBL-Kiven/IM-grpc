@@ -10,7 +10,9 @@ import android.os.IBinder
 import androidx.lifecycle.LifecycleOwner
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.enums.ConnectionState
+import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.exceptions.NecessaryAttributeEmptyException
+import com.zj.im.chat.exceptions.NoServiceException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.interfaces.MessageInterface
@@ -21,6 +23,8 @@ import com.zj.im.main.ChatBase
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
+import com.zj.im.utils.log.logger.printErrorInFile
+import com.zj.im.utils.log.logger.printInFile
 import java.lang.IllegalArgumentException
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -47,7 +51,7 @@ import java.util.concurrent.LinkedBlockingDeque
  * @property onAppLayerChanged it called when SDK was changed form foreground / background
  *
  */
-@Suppress("unused")
+@Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class IMInterface<T> : MessageInterface<T>() {
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
@@ -73,6 +77,8 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     }
 
     private var cachedListenClasses = LinkedBlockingDeque<Class<*>>()
+
+    private var cachedServiceOperations = LinkedBlockingDeque<RunnerClientStub<T>.() -> Unit>()
 
     private var baseConnectionService: ChatBase<T>? = null
 
@@ -108,7 +114,13 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                         onNewListenerRegistered(it)
                     }
                 }
+                if (cachedServiceOperations.isNotEmpty()) {
+                    cachedServiceOperations.forEach {
+                        baseConnectionService?.let { s -> it.invoke(s) }
+                    }
+                }
                 cachedListenClasses.clear()
+                cachedServiceOperations.clear()
             }
         }
         serviceConn?.let {
@@ -118,11 +130,24 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         }
     }
 
+    /**
+     * If the detection fails, it means the service is unavailable, and [NoServiceException] will be triggered
+     * */
     private fun getService(tag: String, ignoreNull: Boolean = false): ChatBase<T>? {
-        if (!ignoreNull && baseConnectionService == null) {
-            onError(NecessaryAttributeEmptyException("at $tag \n connectionService == null ,you must restart the sdk and recreate the service"))
+        if (!ignoreNull && (baseConnectionService == null || !isServiceConnected)) {
+            postIMError(NoServiceException("at $tag \n connectionService == null ,you must restart the sdk and recreate the service"))
+            return null
         }
         return baseConnectionService
+    }
+
+    /**
+     * A method in [RunnerClientStub] will be detected and executed. Refer to [getService] for detection
+     * */
+    private fun getServiceOrCache(tag: String, d: RunnerClientStub<T>.() -> Unit) {
+        getService(tag, false)?.let {
+            d.invoke(it)
+        } ?: cachedServiceOperations.add(d)
     }
 
     internal fun getClient(case: String = ""): ClientHub<T>? {
@@ -132,7 +157,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             d("IMI.getClient", "create client with $case")
         }
         if (client == null) {
-            postError(NecessaryAttributeEmptyException("can't create a client by null!"))
+            postIMError(NecessaryAttributeEmptyException("can't create a client by null!"))
         }
         return client
     }
@@ -143,7 +168,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             d("IMI.getServer", "create server with $case")
         }
         if (server == null) {
-            postError(NecessaryAttributeEmptyException("can't create a server by null!"))
+            postIMError(NecessaryAttributeEmptyException("can't create a server by null!"))
         }
         return server
     }
@@ -156,11 +181,13 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return option?.sessionId ?: -1
     }
 
-    protected abstract fun getClient(): ClientHub<T>
+    abstract fun getClient(): ClientHub<T>
 
-    protected abstract fun getServer(): ServerHub<T>
+    abstract fun getServer(): ServerHub<T>
 
-    protected abstract fun onError(e: Throwable)
+    abstract fun onError(e: IMException)
+
+    abstract fun onSdkDeadlyError(e: IMException)
 
     open fun prepare() {}
 
@@ -172,27 +199,23 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     open fun onNewListenerRegistered(cls: Class<*>) {}
 
-    fun postError(e: Throwable) {
-        onError(e)
-    }
-
     /**
-     * send a msg
+     * send a msg ，see [RunnerClientStub.send]
      * */
     fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        getService("IMInterface.send", false)?.send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore)
+        getServiceOrCache("IMInterface.send") { send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore) }
     }
 
     fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        getService("IMInterface.resend", false)?.send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore)
+        getServiceOrCache("IMInterface.resend") { send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore) }
     }
 
     fun routeToClient(data: T, callId: String) {
-        getService("IMInterface.routeClient", false)?.enqueue(BaseMsgInfo.route(true, callId, data))
+        getServiceOrCache("IMInterface.routeClient") { enqueue(BaseMsgInfo.route(true, callId, data)) }
     }
 
     fun routeToServer(data: T, callId: String) {
-        getService("IMInterface.routeServer", false)?.enqueue(BaseMsgInfo.route(false, callId, data))
+        getServiceOrCache("IMInterface.routeServer") { enqueue(BaseMsgInfo.route(false, callId, data)) }
     }
 
     fun pause(code: String): Boolean {
@@ -203,6 +226,9 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return getClient("IMInterface.resume")?.resume(code) ?: false
     }
 
+    /**
+     * ServerHub will receive a request to reconnect
+     * */
     fun reconnect(case: String) {
         getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.RECONNECT, case)
     }
@@ -211,11 +237,36 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return option?.context
     }
 
+    fun recordLogs(where: String, log: String?, b: Boolean) {
+        printInFile(where, log, b)
+    }
+
+    fun recordError(where: String, log: String?, b: Boolean) {
+        printErrorInFile(where, log, b)
+    }
+
+    fun postError(e: Throwable?) {
+        if (e is IMException) {
+            postIMError(e)
+        } else {
+            postIMError(IMException(e?.message, e))
+        }
+    }
+
+    fun postIMError(e: IMException) {
+        recordError("postError", e::class.java.name + e.message, true)
+        if (e.errorLevel != IMException.ERROR_LEVEL_ALERT || e is NoServiceException) {
+            onSdkDeadlyError(e);return
+        } else onError(e)
+    }
+
     protected open fun <A> postToUi(cls: Class<*>?, data: A?, payload: String? = null, onFinish: () -> Unit) {
         postToUIObservers(cls, data, payload, onFinish)
     }
 
     open fun shutdown(case: String) {
+        cachedListenClasses.clear()
+        cachedServiceOperations.clear()
         getService("shutDown by $case", true)?.shutDown()
         serviceConn?.let {
             option?.context?.unbindService(it)

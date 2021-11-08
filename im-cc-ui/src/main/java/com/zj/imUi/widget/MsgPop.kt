@@ -57,7 +57,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
 
 
         val delete = view.findViewById<TextView>(R.id.im_msg_pop_delete).apply {
-            visibility = if (data.getSendState() <0 ) {
+            visibility = if (data.getSendState() < 0) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -69,7 +69,7 @@ class MsgPop(context: Context, data: ImMsgIn) {
         }
 
         val recall = view.findViewById<TextView>(R.id.im_msg_pop_recall).apply {
-            visibility = if (isOwner&&!isSelfMessage&&data.getType() ==UiMsgType.MSG_TYPE_TEXT) {
+            visibility = if (isOwner && data.getType() == UiMsgType.MSG_TYPE_TEXT) {
                 View.VISIBLE
             } else {
                 View.GONE

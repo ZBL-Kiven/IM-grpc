@@ -30,10 +30,13 @@ import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
 import com.zj.ccIm.error.ConnectionError
+import com.zj.ccIm.error.DBFileException
+import com.zj.ccIm.error.InitializedException
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.impl.LiveClientHubImpl
 import com.zj.ccIm.live.impl.LiveServerHubImpl
 import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.chat.exceptions.IMException
 import com.zj.im.sender.OnSendBefore
 import java.lang.StringBuilder
 
@@ -42,7 +45,12 @@ import java.lang.StringBuilder
 object IMHelper : IMInterface<Any?>() {
 
     private var lastMsgRegister: GetMsgReqBean? = null
-    internal lateinit var imConfig: ImConfigIn
+    internal var imConfig: ImConfigIn? = null
+        get() {
+            return if (field == null) {
+                postIMError(InitializedException("get IM Config"));null
+            } else field
+        }
 
     fun init(app: Application, imConfig: ImConfigIn) {
         this.imConfig = imConfig
@@ -57,16 +65,19 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     override fun getClient(): ClientHub<Any?> {
-        return if (imConfig.useLive()) LiveClientHubImpl() else ClientHubImpl()
+        return if (imConfig?.useLive() == true) LiveClientHubImpl() else ClientHubImpl()
     }
 
     override fun getServer(): ServerHub<Any?> {
-        return if (imConfig.useLive()) LiveServerHubImpl() else ServerHubImpl()
+        return if (imConfig?.useLive() == true) LiveServerHubImpl() else ServerHubImpl()
     }
 
-    override fun onError(e: Throwable) {
-        ImLogs.requireToPrintInFile("IM Error case:", "\n${e.message}")
+    override fun onError(e: IMException) {
         if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
+    }
+
+    override fun onSdkDeadlyError(e: IMException) {
+        ImLogs.recordErrorInFile("IM Error case:", "\n level = ${e.errorLevel} \n message = ${e.message}")
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {
@@ -189,10 +200,11 @@ object IMHelper : IMInterface<Any?>() {
     /**
      * must call when login out
      * */
-    fun loginOut(app: Application) {
+    fun loginOut() {
         Thread {
+            close()
             SPHelper.clear()
-            withDb(app) { it.clearAllTables() }
+            withDb { it.clearAllTables() }
             shutdown("on logout called !")
         }.start()
     }
@@ -203,21 +215,28 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    internal fun <R> withDb(app: Application? = null, imDb: IMDb? = null, run: (IMDb) -> R?): R? {
-
+    internal fun getDb(): IMDb? {
+        val ctx = Constance.app ?: getAppContext() ?: return null
         return try {
-            val ctx = app ?: getAppContext() ?: throw NullPointerException()
-            (imDb ?: DbHelper.get(ctx)?.db)?.let {
+            DbHelper.get(ctx)?.db
+        } catch (e: Exception) {
+            postIMError(DBFileException());null
+        }
+    }
+
+    internal fun <R> withDb(imDb: IMDb? = null, run: (IMDb) -> R?): R? {
+        return try {
+            (imDb ?: getDb())?.let {
                 run(it)
             }
         } catch (e: Exception) {
-            ImLogs.requireToPrintInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
+            ImLogs.recordErrorInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
         }
     }
 
     fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<Any?>?) {
         sen.key = getCurrentChannelSendingKey(sen.groupId)
-        ImLogs.d("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
+        ImLogs.recordLogsInFile("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
         super.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
     }
 

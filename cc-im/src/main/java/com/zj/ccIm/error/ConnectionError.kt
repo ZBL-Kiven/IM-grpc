@@ -1,3 +1,5 @@
 package com.zj.ccIm.error
 
-class ConnectionError(errorMsg: String) : IMError(errorMsg)
+import com.zj.im.chat.exceptions.IMException
+
+class ConnectionError(errorMsg: String) : IMException(errorMsg)

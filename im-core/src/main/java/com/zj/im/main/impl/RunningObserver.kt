@@ -10,10 +10,6 @@ internal abstract class RunningObserver : Service() {
 
     protected abstract fun run(runningKey: String)
 
-    open fun getTotal(): Int {
-        return 0
-    }
-
     private var lock: Boolean = false
     private var isRunning = false
 

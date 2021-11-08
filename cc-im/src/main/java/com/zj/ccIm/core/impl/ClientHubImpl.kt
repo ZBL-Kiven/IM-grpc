@@ -63,6 +63,10 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     payload = deal?.first
                     d = if (deal?.second == null) d else deal.second
                 }
+                Constance.TOPIC_KICK_OUT -> {
+                    IMHelper.loginOut()
+                    d = KickOut("from rtm calling")
+                }
                 Constance.TOPIC_GROUP_INFO -> {
                     val deal = SessionDbOperator.onDealSessionInfo(d?.toString())
                     payload = deal?.first ?: callId
@@ -97,7 +101,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
             }
             super.onMsgPatch(d, payload, isSpecialData, sendingState, isResent, onFinish)
         } catch (e: Exception) {
-            ImLogs.requireToPrintInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
+            ImLogs.recordLogsInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
             onFinish()
             return
         }

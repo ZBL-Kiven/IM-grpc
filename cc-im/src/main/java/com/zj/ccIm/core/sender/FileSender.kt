@@ -1,13 +1,12 @@
 package com.zj.ccIm.core.sender
 
-import android.app.Application
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.logger.ImLogs
 import com.zj.compress.CompressUtils
 import com.zj.database.entity.SendMessageReqEn
 
-internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(Constance.app, d, d.clientMsgId) {
+internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d.clientMsgId) {
 
     companion object {
 
@@ -23,11 +22,10 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(Cons
 
     private val mVideoOutputPath = "/compress/im/${d.clientMsgId}.mp4"
     private val mImageOutputPath = "/compress/im/${d.clientMsgId}"
-
     private val onImgCompressListener = object : com.zj.compress.images.CompressListener {
 
         override fun onFileTransform(p0: String?) {
-            ImLogs.d("MsgFileUploader", "image path transformed")
+            ImLogs.d("MsgFileUploader", "image path transformed to $p0")
         }
 
         override fun onStart() {
@@ -75,7 +73,7 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(Cons
     }
 
     override fun startUpload(isDeleteFileAfterUpload: Boolean) {
-        val c = (context?.applicationContext as? Application) ?: throw NullPointerException("context should not be null !!")
+        val c = (Constance.app) ?: return
         val cu = CompressUtils.with(c).load(d.localFilePath)
         when (d.msgType) {
             MsgType.IMG.type -> {

@@ -4,18 +4,18 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
-import com.zj.im.chat.exceptions.ChatException
+import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.im.main.StatusHub
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
-import com.zj.im.utils.log.NetRecordUtils
+import com.zj.im.utils.log.logger.NetRecordUtils
 import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
 
-@Suppress("unused", "SameParameterValue")
+@Suppress("unused", "SameParameterValue", "MemberVisibilityCanBePrivate")
 abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean = false) {
 
     companion object {
@@ -83,13 +83,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         curConnectionState = ConnectionState.CONNECTED_ERROR.case(case)
     }
 
-    protected fun postError(case: String, deadly: Boolean) {
-        postError(ChatException(case), deadly)
+    protected fun postError(case: String) {
+        postError(IMException(case))
     }
 
-    protected fun postError(throws: Throwable?, deadly: Boolean) {
+    protected fun postError(throws: Throwable?) {
         postToClose(throws?.message ?: "UN_KNOW_ERROR")
-        throws?.let { DataReceivedDispatcher.postError(it, deadly) }
+        throws?.let { DataReceivedDispatcher.postError(it) }
     }
 
     protected fun isConnected(): Boolean {

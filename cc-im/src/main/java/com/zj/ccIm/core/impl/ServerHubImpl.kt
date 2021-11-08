@@ -108,16 +108,16 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         data.ownerId = d.ownerId.toLong()
         data.targetUserid = d.targetUserid?.toLong() ?: 0
         d.channels.forEach { data.addChannel(it.serializeName) }
-        ImLogs.requireToPrintInFile("server hub event ", "call on register msg receiver with ${d.groupId}")
+        ImLogs.recordLogsInFile("server hub event ", "call on register msg receiver with ${d.groupId}")
         withChannel {
             it.getImMessage(data.build(), object : CusObserver<ImMessage>() {
                 override fun onResult(isOk: Boolean, data: ImMessage?, t: Throwable?) {
-                    ImLogs.i("server hub event ", "new Msg in group ${data?.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
+                    ImLogs.d("server hub event ", "new Msg in group ${data?.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
                     if (isOk && data != null) {
-                        ImLogs.requireToPrintInFile("server hub event ", "new Msg [${data.clientMsgId}] received")
+                        ImLogs.recordLogsInFile("server hub event ", "new Msg [${data.clientMsgId}] received")
                         val size = data.serializedSize.toLong()
                         postReceivedMessage(data.clientMsgId, data, false, size)
-                    } else onParseError(t, false)
+                    } else onParseError(t)
                 }
             })
         }
@@ -136,11 +136,11 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         d.channels.forEach { rq.addChannel(it.serializeName) }
         getMsgRequestCompo?.cancel()
         getMsgRequestCompo = null
-        ImLogs.requireToPrintInFile("server hub event ", "leave from receiver with ${d.groupId}")
+        ImLogs.recordLogsInFile("server hub event ", "leave from receiver with ${d.groupId}")
         withChannel(false) {
             it.leaveImGroup(rq.build(), object : CusObserver<LeaveImGroupReply>() {
                 override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
-                    if (!isOk) t?.let { onParseError(t, false) }
+                    if (!isOk) t?.let { onParseError(t) }
                 }
             })
         }
@@ -150,7 +150,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * Use Grpc to create a session for monitoring Topic information for the connection，@see [ListenTopicReply]
      * */
     private fun receiveTopic() {
-        ImLogs.requireToPrintInFile("on connecting", "trying to receive topic")
+        ImLogs.recordLogsInFile("on connecting", "trying to receive topic")
         requestStreamObserver = withChannel(true) {
             it.listenTopicData(object : CusObserver<ListenTopicReply>() {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
@@ -161,7 +161,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     private fun onDealTopicReceived(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-        ImLogs.requireToPrintInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
+        ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
         if (isOk && data != null) {
             when (data.topic) {
                 Constance.TOPIC_CONN_SUCCESS -> {
@@ -178,7 +178,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     postReceivedMessage(data.topic, data.data, false, size)
                 }
             }
-        } else onParseError(t, false)
+        } else onParseError(t)
     }
 
     /**
@@ -196,7 +196,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 if (isOk && data != null) {
                     postReceivedMessage(callId, data, true, 0)
                     postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, rq, true, 0)
-                } else onParseError(t, false)
+                } else onParseError(t)
             }
         }
     }
@@ -238,18 +238,18 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         return resp
     }
 
-    override fun onParseError(t: Throwable?, deadly: Boolean) {
-        ImLogs.requireToPrintInFile("server.onParseError", "${t?.message}")
+    override fun onParseError(t: Throwable?) {
+        ImLogs.recordLogsInFile("server.onParseError", "${t?.message}")
         (t as? StatusRuntimeException)?.let {
             when (it.status.code) {
                 Status.Code.CANCELLED -> {
-                    ImLogs.requireToPrintInFile("------ ", "onCanceled with message : ${t.message}")
+                    ImLogs.recordLogsInFile("------ ", "onCanceled with message : ${t.message}")
                 }
                 else -> {
-                    super.onParseError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "), deadly)
+                    super.onParseError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "))
                 }
             }
-        } ?: super.onParseError(t, deadly)
+        } ?: super.onParseError(t)
     }
 
     /**

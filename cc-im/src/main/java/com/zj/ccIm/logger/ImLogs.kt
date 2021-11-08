@@ -1,22 +1,21 @@
 package com.zj.ccIm.logger
 
-import com.zj.im.utils.log.logger.getLogUtils
+import android.util.Log
+import com.zj.ccIm.core.IMHelper
 
 object ImLogs {
 
-    fun requireToPrintInFile(where: String, log: String) {
-        getLogUtils().printInFile(where, log, true)
+    fun recordLogsInFile(where: String, log: String, append: Boolean = true) {
+        IMHelper.recordLogs(where, log, append)
     }
 
-    fun i(where: String, log: String) {
-        getLogUtils().i(where, log)
+    fun recordErrorInFile(where: String, log: String, append: Boolean = true) {
+        IMHelper.recordError(where, log, append)
     }
 
     fun d(where: String, log: String) {
-        getLogUtils().d(where, log)
-    }
-
-    fun e(where: String, log: String) {
-        getLogUtils().e(where, log)
+        if (IMHelper.imConfig?.logAble() == true) {
+            Log.d("com.zj.im-cc:", "\n from : $where:\n case:$log\n")
+        }
     }
 }

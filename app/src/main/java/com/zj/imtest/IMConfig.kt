@@ -53,11 +53,11 @@ object IMConfig : ImConfigIn {
     }
 
     override fun getHeatBeatsTimeOut(): Long {
-        return 5
+        return 3000
     }
 
     override fun getIdleTimeOut(): Long {
-        return 5 * 1000
+        return 24 * 60 * 60 * 1000
     }
 
 }

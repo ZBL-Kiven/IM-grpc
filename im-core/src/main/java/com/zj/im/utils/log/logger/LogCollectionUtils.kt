@@ -41,7 +41,7 @@ sealed class LogCollectionUtils {
 
     fun i(where: String, s: String?) {
         if (debugEnable) {
-            Log.i(getTag(ErrorType.i.errorName), getLogText(where, s))
+            Log.i(getTag(ErrorType.I.errorName), getLogText(where, s))
         }
     }
 
@@ -63,9 +63,19 @@ sealed class LogCollectionUtils {
         }
     }
 
-    @Suppress("unused")
     fun printInFile(where: String, s: String?, append: Boolean) {
         val type = ErrorType.D
+        val txt = getLogText(where, s)
+        if (debugEnable) {
+            Log.d(getTag(type.errorName), txt)
+        }
+        if (collectionAble()) {
+            onLogCollection(type, txt, append)
+        }
+    }
+
+    fun printErrorInFile(where: String, s: String?, append: Boolean) {
+        val type = ErrorType.E
         val txt = getLogText(where, s)
         if (debugEnable) {
             Log.d(getTag(type.errorName), txt)
@@ -95,8 +105,8 @@ sealed class LogCollectionUtils {
         fileUtils?.save(subPath(), fileName(), " \n type:${type.errorName} : on  ${nio()}:$log ", append)
     }
 
-    protected fun write(what: String?, append: Boolean = true) {
-        fileUtils?.save(subPath(), fileName(), what ?: "", append)
+    protected fun write(what: String?) {
+        fileUtils?.save(subPath(), fileName(), what ?: "", false)
     }
 
     open fun removeAble(): Boolean {
@@ -121,7 +131,7 @@ sealed class LogCollectionUtils {
     }
 
     private enum class ErrorType(var errorName: String?) {
-        E("ERROR"), D("DEBUG"), W("WARMING"), i("INFO")
+        E("ERROR"), D("DEBUG"), W("WARMING"), I("INFO")
     }
 
     abstract class Config : LogCollectionUtils() {

@@ -1,6 +1,7 @@
 package com.zj.ccIm.core
 
 import android.app.Application
+import com.zj.ccIm.error.InitializedException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 
@@ -11,8 +12,12 @@ object Comment {
 }
 
 internal object Constance {
-
-    lateinit var app: Application
+    var app: Application? = null
+        get() {
+            return if (field == null) {
+                IMHelper.postIMError(InitializedException("getApplication"));null
+            } else field
+        }
 
     /**-------------------------- EVENT CODE -------------------------------------------*/
     const val FETCH_SESSION_CODE = "fetch_session"
@@ -54,6 +59,8 @@ internal object Constance {
     const val TOPIC_MSG_REGISTRATION = "cc://im-rpc-req/GetImMessage"
 
     const val TOPIC_IM_MSG = "cc://im-msg-topic/"
+
+    const val TOPIC_KICK_OUT = "cc://kick-out"
 
     const val TOPIC_GROUP_INFO = "cc://group-info-topic"
 

@@ -1,8 +1,7 @@
-package com.zj.im.utils.log
+package com.zj.im.utils.log.logger
 
-import com.zj.im.utils.full
-import com.zj.im.utils.log.logger.DataUtils
-import com.zj.im.utils.log.logger.LogCollectionUtils
+import com.zj.im.utils.log.NetRecordChangedListener
+import com.zj.im.utils.log.NetWorkRecordInfo
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
 /**
@@ -29,6 +28,7 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
     private val rwl = ReentrantReadWriteLock()
     private val r = rwl.readLock()
     private val w = rwl.writeLock()
+    private var tempRecordInfo: NetWorkRecordInfo? = null
     private var netWorkRecordInfo: NetWorkRecordInfo? = null
         get() {
             if (!accessAble) return null
@@ -42,8 +42,18 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
         accessAble = true
     }
 
+    fun beginTempRecord() {
+        tempRecordInfo = NetWorkRecordInfo()
+    }
+
+    fun endTempRecord(): NetWorkRecordInfo? {
+        val temp = tempRecordInfo?.copy()
+        tempRecordInfo = null
+        return temp
+    }
+
     fun addRecordListener(onRecord: ((NetWorkRecordInfo) -> Unit)) {
-        this.onRecord = onRecord
+        NetRecordUtils.onRecord = onRecord
     }
 
     @JvmStatic
@@ -51,6 +61,7 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
         if (accessAble) {
             val disconnectCount = (netWorkRecordInfo?.disconnectCount ?: 0) + 1
             netWorkRecordInfo?.disconnectCount = disconnectCount
+            tempRecordInfo?.disconnectCount = disconnectCount
             record(netWorkRecordInfo)
         }
     }
@@ -65,6 +76,12 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
                 this.total = sentSize + receivedSize
                 record(this)
             }
+            tempRecordInfo?.apply {
+                this.lastModifySendData = lastModifySendData
+                this.receivedSize += lastModifySendData
+                this.sentCount += 1
+                this.total = sentSize + receivedSize
+            }
         }
     }
 
@@ -78,6 +95,12 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
                 this.total = sentSize + receivedSize
                 record(this)
             }
+            tempRecordInfo?.apply {
+                this.lastModifyReceiveData = lastModifyReceiveData
+                this.sentSize += lastModifyReceiveData
+                this.receivedCount += 1
+                this.total = sentSize + receivedSize
+            }
         }
     }
 
@@ -89,9 +112,9 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
     private fun record(info: NetWorkRecordInfo?) {
         if (info == null) return
         if (info != netWorkRecordInfo) netWorkRecordInfo = info
-        info.lastModifyTime = full()
+        info.lastModifyTs = System.currentTimeMillis()
         val recordString = DataUtils.toString(info)
-        write(recordString, false)
+        write(recordString)
         onRecord?.invoke(info)
     }
 
@@ -106,6 +129,6 @@ internal object NetRecordUtils : LogCollectionUtils.Config() {
     }
 
     fun removeRecordListener() {
-        this.onRecord = null
+        onRecord = null
     }
 }

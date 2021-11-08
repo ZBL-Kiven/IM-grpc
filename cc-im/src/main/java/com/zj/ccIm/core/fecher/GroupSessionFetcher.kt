@@ -1,14 +1,12 @@
 package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
-import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
-import com.zj.database.DbHelper
 import com.zj.database.entity.SessionInfoEntity
 import io.reactivex.schedulers.Schedulers
 
@@ -34,7 +32,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
                     if (sessions.isNullOrEmpty()) {
                         if (isFirstFetch) {
                             ImLogs.d("GroupSessionFetcher", "fetch sessions is null result for first time !")
-                            DbHelper.get(Constance.app)?.db?.sessionDao()?.deleteAll()
+                            IMHelper.getDb()?.sessionDao()?.deleteAll()
                             finishAFetch(prop, FetchResult(true, isFirstFetch, true))
                         } else {
                             ImLogs.d("GroupSessionFetcher", "fetch sessions is null ,trying to fetch last msg by localed !")
@@ -43,7 +41,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
                     } else {
                         ImLogs.d("GroupSessionFetcher", "fetch sessions success , new ts is ${d.timeStamp}, changed group is [${sessions.joinToString { "${it.groupName} , " }}]")
                         SPHelper.put(Fetcher.SP_FETCH_SESSIONS_TS, d.timeStamp)
-                        val sessionDao = DbHelper.get(Constance.app)?.db?.sessionDao()
+                        val sessionDao = IMHelper.getDb()?.sessionDao()
                         sessions.forEach { s ->
                             if (s.groupStatus == 0 || s.groupStatus == 1) {
                                 sessionDao?.insertOrChangeSession(s)
@@ -64,13 +62,13 @@ internal object GroupSessionFetcher : BaseFetcher() {
     }
 
     private fun fetchLastMsg(prop: FetchType, isFirstFetch: Boolean) {
-        val sessions = DbHelper.get(Constance.app)?.db?.sessionDao()?.allSessions
+        val sessions = IMHelper.getDb()?.sessionDao()?.allSessions
         if (!sessions.isNullOrEmpty()) {
             val gIds = sessions.map { ms -> ms.groupId }
             ImLogs.d("GroupSessionFetcher", "start fetch session last message info by  ${prop.flags} , groups = $gIds")
             prop.compo = ImApi.getFunctionApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.newThread()) { _, d, _ ->
                 try {
-                    val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
+                    val fmDao = IMHelper.getDb()?.sessionMsgDao()
                     d?.forEach { fi ->
                         fi.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = fi.groupId)
                         fmDao?.insertOrUpdateSessionMsgInfo(fi)
@@ -86,8 +84,8 @@ internal object GroupSessionFetcher : BaseFetcher() {
     }
 
     private fun mergeSessionAndPushToUi(prop: FetchType, isFirstFetch: Boolean) {
-        val sessions = DbHelper.get(Constance.app)?.db?.sessionDao()?.allSessions
-        val fmDao = DbHelper.get(Constance.app)?.db?.sessionMsgDao()
+        val sessions = IMHelper.getDb()?.sessionDao()?.allSessions
+        val fmDao = IMHelper.getDb()?.sessionMsgDao()
         sessions?.forEach { s ->
             val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = s.groupId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)

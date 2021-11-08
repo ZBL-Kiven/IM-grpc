@@ -18,12 +18,12 @@ object ImApi {
 
     private val baseUrl = object : UrlProvider() {
         override fun url(): String {
-            return IMHelper.imConfig.getIMHost()
+            return IMHelper.imConfig?.getIMHost() ?: ""
         }
     }
     private val header = object : HeaderProvider {
         override fun headers(): Map<out String, String> {
-            return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig.getUserId()}", "token" to IMHelper.imConfig.getToken())
+            return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig?.getUserId()}", "token" to (IMHelper.imConfig?.getToken() ?: ""))
         }
     }
 

@@ -16,7 +16,7 @@ internal object SessionDbOperator {
         val info = try {
             Gson().fromJson(d, SessionInfoEntity::class.java)
         } catch (e: Exception) {
-            ImLogs.requireToPrintInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d")
+            ImLogs.recordLogsInFile("onDealSessionInfo", "parse session error with : ${e.message} \n data = $d")
             return null
         }
         return IMHelper.withDb {
