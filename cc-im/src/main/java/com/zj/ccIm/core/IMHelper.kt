@@ -192,7 +192,7 @@ object IMHelper : IMInterface<Any?>() {
         routeToServer(lrb, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
     }
 
-    fun close() {
+    private fun close() {
         lastMsgRegister = null
         Fetcher.cancelAll()
         LiveIMHelper.close()

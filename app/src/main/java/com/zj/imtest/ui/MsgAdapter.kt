@@ -82,7 +82,6 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
         notifyItemRangeChanged(0, itemCount, BaseImItem.NOTIFY_CHANGE_BTN_ENABLED)
     }
 
-
     fun isMsgReplying(f: MessageInfoEntity): Boolean {
         return replyingMsgInfo.contains(f.clientMsgId)
     }
