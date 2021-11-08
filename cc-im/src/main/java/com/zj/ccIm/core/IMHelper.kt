@@ -78,7 +78,7 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     override fun onSdkDeadlyError(e: IMException) {
-        ImLogs.recordErrorInFile("IM Error case:", "\n level = ${e.errorLevel} \n message = ${e.message}")
+        imConfig?.onSdkDeadlyError(e)
     }
 
     override fun onNewListenerRegistered(cls: Class<*>) {

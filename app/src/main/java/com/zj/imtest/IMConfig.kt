@@ -2,6 +2,7 @@ package com.zj.imtest
 
 import android.widget.Toast
 import com.zj.ccIm.core.ImConfigIn
+import com.zj.im.chat.exceptions.IMException
 
 object IMConfig : ImConfigIn {
 
@@ -58,6 +59,10 @@ object IMConfig : ImConfigIn {
 
     override fun getIdleTimeOut(): Long {
         return 24 * 60 * 60 * 1000
+    }
+
+    override fun onSdkDeadlyError(e: IMException) {
+        BaseApp.initChat()
     }
 
 }

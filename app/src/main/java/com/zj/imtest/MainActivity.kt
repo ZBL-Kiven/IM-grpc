@@ -133,6 +133,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun clearText(view: View) {
+        IMHelper.shutdown("the app finished")
         adapter?.clear()
     }
 
@@ -157,9 +158,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initIm() {
-
-        //初始化 IM 聊天 模块，（异步完成）
-        IMHelper.init(this.application, IMConfig)
 
         IMHelper.registerConnectionStateChangeListener(this::class.java.simpleName) {
             tv.text = it.name
@@ -213,5 +211,10 @@ class MainActivity : AppCompatActivity() {
         IMHelper.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, _, pl ->
             Log.e("----- ", "on Live msg ${r?.content} , payload = $pl")
         }
+    }
+
+    override fun finish() {
+
+        super.finish()
     }
 }

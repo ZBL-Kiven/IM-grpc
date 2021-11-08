@@ -107,22 +107,24 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             }
 
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-                baseConnectionService = cast<IBinder?, ChatBase.ConnectionBinder<T>?>(binder)?.service
-                baseConnectionService?.init(this@IMInterface)
-                isServiceConnected = true
-                this@IMInterface.onServiceConnected()
-                if (cachedListenClasses.isNotEmpty()) {
-                    cachedListenClasses.forEach {
-                        onNewListenerRegistered(it)
+                cast<Any?, ChatBase.ConnectionBinder<T>?>(binder)?.service?.let {
+                    baseConnectionService = it
+                    baseConnectionService?.init(this@IMInterface)
+                    isServiceConnected = true
+                    this@IMInterface.onServiceConnected()
+                    if (cachedListenClasses.isNotEmpty()) {
+                        cachedListenClasses.forEach { cls ->
+                            onNewListenerRegistered(cls)
+                        }
                     }
-                }
-                if (cachedServiceOperations.isNotEmpty()) {
-                    cachedServiceOperations.forEach {
-                        baseConnectionService?.let { s -> it.invoke(s) }
+                    if (cachedServiceOperations.isNotEmpty()) {
+                        cachedServiceOperations.forEach {
+                            baseConnectionService?.let { s -> it.invoke(s) }
+                        }
                     }
+                    cachedListenClasses.clear()
+                    cachedServiceOperations.clear()
                 }
-                cachedListenClasses.clear()
-                cachedServiceOperations.clear()
             }
         }
         serviceConn?.let {

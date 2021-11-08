@@ -62,8 +62,7 @@ class MsgLooper extends Thread {
                 if (isInterrupted()) return;
                 observer.runningInBlock(runningKey);
                 TimeUnit.NANOSECONDS.sleep(sleepTime);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
     }

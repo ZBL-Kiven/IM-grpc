@@ -261,6 +261,22 @@ abstract class ImEntityConverter(val info: MessageInfoEntity?) : ImMsgIn {
         return null
     }
 
+    override fun getMsgIsRecalled(): Boolean? {
+        return false
+    }
+
+    override fun getMsgIsSensitive(): Boolean? {
+        return false
+    }
+
+    override fun getMsgIsReject(): Boolean? {
+        return false
+    }
+
+    override fun getIsAdmin(): Boolean? {
+        return false
+    }
+
     override fun getSelfUserId(): Int {
         return IMConfig.getUserId()
     }
@@ -323,4 +339,15 @@ abstract class ImEntityConverter(val info: MessageInfoEntity?) : ImMsgIn {
 
     }
 
+    override fun rejectRewardMsg(id: String) {
+
+    }
+
+    override fun jumpToLiveRoom() {
+
+    }
+
+    override fun reportGroupUserMsg(id: String) {
+
+    }
 }

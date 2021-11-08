@@ -1,5 +1,7 @@
 package com.zj.ccIm.core
 
+import com.zj.im.chat.exceptions.IMException
+
 interface ImConfigIn {
 
     fun useLive(): Boolean = false
@@ -25,4 +27,6 @@ interface ImConfigIn {
     fun getHeatBeatsTimeOut(): Long
 
     fun getIdleTimeOut(): Long
+
+    fun onSdkDeadlyError(e: IMException)
 }
