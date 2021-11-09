@@ -93,6 +93,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         if (childCount == 0) {
             addView(contentLayout)
         }
+        val isOwner = data.getSelfUserId() == data.getOwnerId()
         if (chatType == 3 && data.getSelfUserId() == data.getSenderId()) {
             contentLayout.layoutParams =
                 LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
@@ -116,6 +117,12 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             setChatRewardItem(data)
         } else setPrivateChatItem(data)
 
+        setOnLongClickListener {
+            if(isOwner){
+
+            }
+            true
+        }
     }
 
     private fun setPrivateChatItem(data: ImMsgIn) {
