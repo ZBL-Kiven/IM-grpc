@@ -22,6 +22,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.MessageReplySendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
+import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import com.zj.views.ut.DPUtils
 import java.util.*
@@ -58,11 +59,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     private var curContentIn: ImContentIn? = null
 
 
-    enum class RewardMsgState(val type: Int){
-        WAIT_REPLY(0),
-        ALREADY_REPLIED(1),
-        REJECTED(2)
+    enum class RewardMsgState(val type: Int) {
+        WAIT_REPLY(0), ALREADY_REPLIED(1), REJECTED(2)
     }
+
     private var contentLayout: View = LayoutInflater.from(context)
         .inflate(R.layout.im_msg_item_owner_reward_question, this, false)
 
@@ -118,8 +118,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         } else setPrivateChatItem(data)
 
         setOnLongClickListener {
-            if(isOwner){
-
+            if (isOwner && data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
+                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                popFlowWindow.show(data, it) { _, _, _ ->
+                }
             }
             true
         }
@@ -165,16 +167,15 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         val messageNormal = data.getSendState() == 0 || data.getSendState() == 3
-        if(data.getMsgIsReject() == true){
-            //调整Flag位置
-            val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
+        if (data.getMsgIsReject() == true) { //调整Flag位置
+            val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             lp.gravity = Gravity.END
-            lp.setMargins(0,DPUtils.dp2px(-60f),DPUtils.dp2px(10f),10)
+            lp.setMargins(0, DPUtils.dp2px(-60f), DPUtils.dp2px(10f), 10)
             tvReliedFLag.layoutParams = lp
             tvReliedFLag.setBackgroundResource(R.drawable.im_msg_item_rejected_flag_cornor_bg)
             tvReliedFLag.setTextColor(Color.parseColor("#FFFF3B30"))
             tvReliedFLag.visibility = View.VISIBLE
-        }else if (data.getQuestionStatus() == 0 && messageNormal) {
+        } else if (data.getQuestionStatus() == 0 && messageNormal) {
             when {
                 data.getSelfUserId() == data.getOwnerId() -> {
                     textReplyType.visibility = View.VISIBLE
@@ -235,7 +236,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
 
 
         when {
-            data.getMsgIsReject() == true ->{
+            data.getMsgIsReject() == true -> {
                 setAlreadyReplyBg(RewardMsgState.REJECTED.type)
             }
             data.getQuestionStatus() == 0 -> {
@@ -358,7 +359,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
     }
 
 
-    private fun setAlreadyReplyBg(type:Int) { //回答方式背景
+    private fun setAlreadyReplyBg(type: Int) { //回答方式背景
         textQuestion.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
         questionIcon.visibility = View.VISIBLE
         questionIcon.setImageResource(R.drawable.im_msg_item_widget_reward_icon_question_normal)
@@ -368,9 +369,9 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
         textIsPublic.setBackgroundResource(R.drawable.im_msg_item_reward_gray2_frame_bg)
         textIsPublic.setTextColor(ContextCompat.getColor(context,
             R.color.im_msg_frame_textview_private))
-        if(type == RewardMsgState.ALREADY_REPLIED.type){
+        if (type == RewardMsgState.ALREADY_REPLIED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_replied)
-        }else if (type == RewardMsgState.REJECTED.type){
+        } else if (type == RewardMsgState.REJECTED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_rejected)
         }
         tvReliedFLag.visibility = View.VISIBLE
