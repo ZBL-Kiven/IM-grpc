@@ -101,11 +101,14 @@ class BasePopFlowWindow<T> :
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add( reportItems[6])
+                            else {
+                                if (isOwner) filterList.add(reportItems[2])
+                            }
                         }
                     }
-                } else {
-                    if (data?.getType()!=UiMsgType.MSG_TYPE_QUESTION)filterList.add(reportItems[0])
+                } else { //不是自己的消息
                     if (data?.getType() ==UiMsgType.MSG_TYPE_TEXT) filterList.add( reportItems[1])
+                    if (data?.getType()!=UiMsgType.MSG_TYPE_QUESTION)filterList.add(reportItems[0])
                     if (isOwner) {
                         filterList.add(reportItems[2])
                         filterList.add(reportItems[3])

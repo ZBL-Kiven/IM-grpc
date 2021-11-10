@@ -22,6 +22,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.MessageReplySendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
+import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import com.zj.views.ut.DPUtils
 import java.util.*
@@ -88,6 +89,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         if (childCount == 0) {
             addView(contentLayout)
         }
+        val isOwner = data.getSelfUserId() == data.getOwnerId()
         if (chatType == 3 && data.getSelfUserId() == data.getSenderId()) {
             contentLayout.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
             val lp = textReplyType.layoutParams as LinearLayout.LayoutParams
@@ -110,6 +112,14 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
             setChatRewardItem(data)
         } else setPrivateChatItem(data)
 
+        setOnLongClickListener {
+            if (isOwner && data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
+                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                popFlowWindow.show(data, it) { _, _, _ ->
+                }
+            }
+            true
+        }
     }
 
     private fun setPrivateChatItem(data: ImMsgIn) {
