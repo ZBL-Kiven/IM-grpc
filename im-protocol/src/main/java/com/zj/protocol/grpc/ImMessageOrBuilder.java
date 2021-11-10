@@ -201,4 +201,38 @@ public interface ImMessageOrBuilder extends
    * <code>.app.LiveContent liveContent = 17;</code>
    */
   LiveContentOrBuilder getLiveContentOrBuilder();
+
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  int getExtContentCount();
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  boolean containsExtContent(
+      java.lang.String key);
+  /**
+   * Use {@link #getExtContentMap()} instead.
+   */
+  @java.lang.Deprecated
+  java.util.Map<java.lang.String, java.lang.String>
+  getExtContent();
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  java.util.Map<java.lang.String, java.lang.String>
+  getExtContentMap();
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+
+  java.lang.String getExtContentOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue);
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+
+  java.lang.String getExtContentOrThrow(
+      java.lang.String key);
 }

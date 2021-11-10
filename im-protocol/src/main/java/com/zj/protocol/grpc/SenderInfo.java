@@ -19,6 +19,7 @@ private static final long serialVersionUID = 0L;
     senderName_ = "";
     senderAvatar_ = "";
     senderPlatform_ = "";
+    senderGender_ = "";
   }
 
   @java.lang.Override
@@ -72,6 +73,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             senderPlatform_ = s;
+            break;
+          }
+          case 42: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            senderGender_ = s;
             break;
           }
           default: {
@@ -231,6 +238,52 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SENDERGENDER_FIELD_NUMBER = 5;
+  private volatile java.lang.Object senderGender_;
+  /**
+   * <pre>
+   *男女
+   * </pre>
+   *
+   * <code>string senderGender = 5;</code>
+   * @return The senderGender.
+   */
+  @java.lang.Override
+  public java.lang.String getSenderGender() {
+    java.lang.Object ref = senderGender_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      senderGender_ = s;
+      return s;
+    }
+  }
+  /**
+   * <pre>
+   *男女
+   * </pre>
+   *
+   * <code>string senderGender = 5;</code>
+   * @return The bytes for senderGender.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getSenderGenderBytes() {
+    java.lang.Object ref = senderGender_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      senderGender_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -257,6 +310,9 @@ private static final long serialVersionUID = 0L;
     if (!getSenderPlatformBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 4, senderPlatform_);
     }
+    if (!getSenderGenderBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 5, senderGender_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -278,6 +334,9 @@ private static final long serialVersionUID = 0L;
     }
     if (!getSenderPlatformBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, senderPlatform_);
+    }
+    if (!getSenderGenderBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, senderGender_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -302,6 +361,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getSenderAvatar())) return false;
     if (!getSenderPlatform()
         .equals(other.getSenderPlatform())) return false;
+    if (!getSenderGender()
+        .equals(other.getSenderGender())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -322,6 +383,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getSenderAvatar().hashCode();
     hash = (37 * hash) + SENDERPLATFORM_FIELD_NUMBER;
     hash = (53 * hash) + getSenderPlatform().hashCode();
+    hash = (37 * hash) + SENDERGENDER_FIELD_NUMBER;
+    hash = (53 * hash) + getSenderGender().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -463,6 +526,8 @@ private static final long serialVersionUID = 0L;
 
       senderPlatform_ = "";
 
+      senderGender_ = "";
+
       return this;
     }
 
@@ -493,6 +558,7 @@ private static final long serialVersionUID = 0L;
       result.senderName_ = senderName_;
       result.senderAvatar_ = senderAvatar_;
       result.senderPlatform_ = senderPlatform_;
+      result.senderGender_ = senderGender_;
       onBuilt();
       return result;
     }
@@ -554,6 +620,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getSenderPlatform().isEmpty()) {
         senderPlatform_ = other.senderPlatform_;
+        onChanged();
+      }
+      if (!other.getSenderGender().isEmpty()) {
+        senderGender_ = other.senderGender_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -840,6 +910,102 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       senderPlatform_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object senderGender_ = "";
+    /**
+     * <pre>
+     *男女
+     * </pre>
+     *
+     * <code>string senderGender = 5;</code>
+     * @return The senderGender.
+     */
+    public java.lang.String getSenderGender() {
+      java.lang.Object ref = senderGender_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        senderGender_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <pre>
+     *男女
+     * </pre>
+     *
+     * <code>string senderGender = 5;</code>
+     * @return The bytes for senderGender.
+     */
+    public com.google.protobuf.ByteString
+        getSenderGenderBytes() {
+      java.lang.Object ref = senderGender_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        senderGender_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <pre>
+     *男女
+     * </pre>
+     *
+     * <code>string senderGender = 5;</code>
+     * @param value The senderGender to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSenderGender(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      senderGender_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *男女
+     * </pre>
+     *
+     * <code>string senderGender = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSenderGender() {
+      
+      senderGender_ = getDefaultInstance().getSenderGender();
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     *男女
+     * </pre>
+     *
+     * <code>string senderGender = 5;</code>
+     * @param value The bytes for senderGender to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSenderGenderBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      senderGender_ = value;
       onChanged();
       return this;
     }

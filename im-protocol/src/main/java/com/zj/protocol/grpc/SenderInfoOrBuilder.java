@@ -48,4 +48,24 @@ public interface SenderInfoOrBuilder extends
    */
   com.google.protobuf.ByteString
       getSenderPlatformBytes();
+
+  /**
+   * <pre>
+   *男女
+   * </pre>
+   *
+   * <code>string senderGender = 5;</code>
+   * @return The senderGender.
+   */
+  java.lang.String getSenderGender();
+  /**
+   * <pre>
+   *男女
+   * </pre>
+   *
+   * <code>string senderGender = 5;</code>
+   * @return The bytes for senderGender.
+   */
+  com.google.protobuf.ByteString
+      getSenderGenderBytes();
 }

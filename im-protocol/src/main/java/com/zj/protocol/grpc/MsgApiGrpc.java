@@ -159,6 +159,35 @@ public final class MsgApiGrpc {
     return getPingMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<ImMessageReq, ImMessageReply> getOnlineImMessageMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "OnlineImMessage",
+      requestType = ImMessageReq.class,
+      responseType = ImMessageReply.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+  public static io.grpc.MethodDescriptor<ImMessageReq, ImMessageReply> getOnlineImMessageMethod() {
+    io.grpc.MethodDescriptor<ImMessageReq, ImMessageReply> getOnlineImMessageMethod;
+    if ((getOnlineImMessageMethod = MsgApiGrpc.getOnlineImMessageMethod) == null) {
+      synchronized (MsgApiGrpc.class) {
+        if ((getOnlineImMessageMethod = MsgApiGrpc.getOnlineImMessageMethod) == null) {
+          MsgApiGrpc.getOnlineImMessageMethod = getOnlineImMessageMethod =
+              io.grpc.MethodDescriptor.<ImMessageReq, ImMessageReply>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.BIDI_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "OnlineImMessage"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  ImMessageReq.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  ImMessageReply.getDefaultInstance()))
+              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("OnlineImMessage"))
+              .build();
+        }
+      }
+    }
+    return getOnlineImMessageMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -242,6 +271,13 @@ public final class MsgApiGrpc {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getPingMethod(), responseObserver);
     }
 
+    /**
+     */
+    public io.grpc.stub.StreamObserver<ImMessageReq> onlineImMessage(
+        io.grpc.stub.StreamObserver<ImMessageReply> responseObserver) {
+      return io.grpc.stub.ServerCalls.asyncUnimplementedStreamingCall(getOnlineImMessageMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -269,6 +305,11 @@ public final class MsgApiGrpc {
             io.grpc.stub.ServerCalls.asyncUnaryCall(
               new MethodHandlers<PingReq, Pong>(
                   this, METHODID_PING)))
+          .addMethod(
+            getOnlineImMessageMethod(),
+            io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
+              new MethodHandlers<ImMessageReq, ImMessageReply>(
+                  this, METHODID_ONLINE_IM_MESSAGE)))
           .build();
     }
   }
@@ -325,6 +366,14 @@ public final class MsgApiGrpc {
                      io.grpc.stub.StreamObserver<Pong> responseObserver) {
       io.grpc.stub.ClientCalls.asyncUnaryCall(
           getChannel().newCall(getPingMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public io.grpc.stub.StreamObserver<ImMessageReq> onlineImMessage(
+        io.grpc.stub.StreamObserver<ImMessageReply> responseObserver) {
+      return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
+          getChannel().newCall(getOnlineImMessageMethod(), getCallOptions()), responseObserver);
     }
   }
 
@@ -401,6 +450,7 @@ public final class MsgApiGrpc {
   private static final int METHODID_PING = 2;
   private static final int METHODID_LISTEN_TOPIC_DATA = 3;
   private static final int METHODID_LIVE_ROOM_MESSAGE = 4;
+  private static final int METHODID_ONLINE_IM_MESSAGE = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -447,6 +497,9 @@ public final class MsgApiGrpc {
         case METHODID_LIVE_ROOM_MESSAGE:
           return (io.grpc.stub.StreamObserver<Req>) serviceImpl.liveRoomMessage(
               (io.grpc.stub.StreamObserver<LiveRoomMessageReply>) responseObserver);
+        case METHODID_ONLINE_IM_MESSAGE:
+          return (io.grpc.stub.StreamObserver<Req>) serviceImpl.onlineImMessage(
+              (io.grpc.stub.StreamObserver<ImMessageReply>) responseObserver);
         default:
           throw new AssertionError();
       }
@@ -503,6 +556,7 @@ public final class MsgApiGrpc {
               .addMethod(getLeaveImGroupMethod())
               .addMethod(getLiveRoomMessageMethod())
               .addMethod(getPingMethod())
+              .addMethod(getOnlineImMessageMethod())
               .build();
         }
       }

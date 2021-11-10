@@ -40,6 +40,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -209,6 +210,19 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 146: {
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              extContent_ = com.google.protobuf.MapField.newMapField(
+                  ExtContentDefaultEntryHolder.defaultEntry);
+              mutable_bitField0_ |= 0x00000001;
+            }
+            com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+            extContent__ = input.readMessage(
+                ExtContentDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+            extContent_.getMutableMap().put(
+                extContent__.getKey(), extContent__.getValue());
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -233,6 +247,18 @@ private static final long serialVersionUID = 0L;
     return IMProtoc.internal_static_app_ImMessage_descriptor;
   }
 
+  @SuppressWarnings({"rawtypes"})
+  @java.lang.Override
+  protected com.google.protobuf.MapField internalGetMapField(
+      int number) {
+    switch (number) {
+      case 18:
+        return internalGetExtContent();
+      default:
+        throw new RuntimeException(
+            "Invalid map field number: " + number);
+    }
+  }
   @java.lang.Override
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
@@ -617,6 +643,87 @@ private static final long serialVersionUID = 0L;
     return getLiveContent();
   }
 
+  public static final int EXTCONTENT_FIELD_NUMBER = 18;
+  private static final class ExtContentDefaultEntryHolder {
+    static final com.google.protobuf.MapEntry<
+        java.lang.String, java.lang.String> defaultEntry =
+            com.google.protobuf.MapEntry
+            .<java.lang.String, java.lang.String>newDefaultInstance(
+                IMProtoc.internal_static_app_ImMessage_ExtContentEntry_descriptor,
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "",
+                com.google.protobuf.WireFormat.FieldType.STRING,
+                "");
+  }
+  private com.google.protobuf.MapField<
+      java.lang.String, java.lang.String> extContent_;
+  private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+  internalGetExtContent() {
+    if (extContent_ == null) {
+      return com.google.protobuf.MapField.emptyMapField(
+          ExtContentDefaultEntryHolder.defaultEntry);
+    }
+    return extContent_;
+  }
+
+  public int getExtContentCount() {
+    return internalGetExtContent().getMap().size();
+  }
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+
+  @java.lang.Override
+  public boolean containsExtContent(
+      java.lang.String key) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    return internalGetExtContent().getMap().containsKey(key);
+  }
+  /**
+   * Use {@link #getExtContentMap()} instead.
+   */
+  @java.lang.Override
+  @java.lang.Deprecated
+  public java.util.Map<java.lang.String, java.lang.String> getExtContent() {
+    return getExtContentMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  @java.lang.Override
+
+  public java.util.Map<java.lang.String, java.lang.String> getExtContentMap() {
+    return internalGetExtContent().getMap();
+  }
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getExtContentOrDefault(
+      java.lang.String key,
+      java.lang.String defaultValue) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetExtContent().getMap();
+    return map.containsKey(key) ? map.get(key) : defaultValue;
+  }
+  /**
+   * <code>map&lt;string, string&gt; extContent = 18;</code>
+   */
+  @java.lang.Override
+
+  public java.lang.String getExtContentOrThrow(
+      java.lang.String key) {
+    if (key == null) { throw new java.lang.NullPointerException(); }
+    java.util.Map<java.lang.String, java.lang.String> map =
+        internalGetExtContent().getMap();
+    if (!map.containsKey(key)) {
+      throw new java.lang.IllegalArgumentException();
+    }
+    return map.get(key);
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -682,6 +789,12 @@ private static final long serialVersionUID = 0L;
     if (liveContent_ != null) {
       output.writeMessage(17, getLiveContent());
     }
+    com.google.protobuf.GeneratedMessageV3
+      .serializeStringMapTo(
+        output,
+        internalGetExtContent(),
+        ExtContentDefaultEntryHolder.defaultEntry,
+        18);
     unknownFields.writeTo(output);
   }
 
@@ -756,6 +869,16 @@ private static final long serialVersionUID = 0L;
     if (liveContent_ != null) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(17, getLiveContent());
+    }
+    for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+         : internalGetExtContent().getMap().entrySet()) {
+      com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+      extContent__ = ExtContentDefaultEntryHolder.defaultEntry.newBuilderForType()
+          .setKey(entry.getKey())
+          .setValue(entry.getValue())
+          .build();
+      size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(18, extContent__);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -833,6 +956,8 @@ private static final long serialVersionUID = 0L;
       if (!getLiveContent()
           .equals(other.getLiveContent())) return false;
     }
+    if (!internalGetExtContent().equals(
+        other.internalGetExtContent())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -900,6 +1025,10 @@ private static final long serialVersionUID = 0L;
     if (hasLiveContent()) {
       hash = (37 * hash) + LIVECONTENT_FIELD_NUMBER;
       hash = (53 * hash) + getLiveContent().hashCode();
+    }
+    if (!internalGetExtContent().getMap().isEmpty()) {
+      hash = (37 * hash) + EXTCONTENT_FIELD_NUMBER;
+      hash = (53 * hash) + internalGetExtContent().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1008,6 +1137,28 @@ private static final long serialVersionUID = 0L;
       return IMProtoc.internal_static_app_ImMessage_descriptor;
     }
 
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMapField(
+        int number) {
+      switch (number) {
+        case 18:
+          return internalGetExtContent();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
+    @SuppressWarnings({"rawtypes"})
+    protected com.google.protobuf.MapField internalGetMutableMapField(
+        int number) {
+      switch (number) {
+        case 18:
+          return internalGetMutableExtContent();
+        default:
+          throw new RuntimeException(
+              "Invalid map field number: " + number);
+      }
+    }
     @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
@@ -1104,6 +1255,7 @@ private static final long serialVersionUID = 0L;
         liveContent_ = null;
         liveContentBuilder_ = null;
       }
+      internalGetMutableExtContent().clear();
       return this;
     }
 
@@ -1130,6 +1282,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public ImMessage buildPartial() {
       ImMessage result = new ImMessage(this);
+      int from_bitField0_ = bitField0_;
       result.groupId_ = groupId_;
       result.ownerId_ = ownerId_;
       result.sendTime_ = sendTime_;
@@ -1183,6 +1336,8 @@ private static final long serialVersionUID = 0L;
       } else {
         result.liveContent_ = liveContentBuilder_.build();
       }
+      result.extContent_ = internalGetExtContent();
+      result.extContent_.makeImmutable();
       onBuilt();
       return result;
     }
@@ -1284,6 +1439,8 @@ private static final long serialVersionUID = 0L;
       if (other.hasLiveContent()) {
         mergeLiveContent(other.getLiveContent());
       }
+      internalGetMutableExtContent().mergeFrom(
+          other.internalGetExtContent());
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -1312,6 +1469,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private long groupId_ ;
     /**
@@ -2693,6 +2851,134 @@ private static final long serialVersionUID = 0L;
         liveContent_ = null;
       }
       return liveContentBuilder_;
+    }
+
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> extContent_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetExtContent() {
+      if (extContent_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            ExtContentDefaultEntryHolder.defaultEntry);
+      }
+      return extContent_;
+    }
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetMutableExtContent() {
+      onChanged();;
+      if (extContent_ == null) {
+        extContent_ = com.google.protobuf.MapField.newMapField(
+            ExtContentDefaultEntryHolder.defaultEntry);
+      }
+      if (!extContent_.isMutable()) {
+        extContent_ = extContent_.copy();
+      }
+      return extContent_;
+    }
+
+    public int getExtContentCount() {
+      return internalGetExtContent().getMap().size();
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsExtContent(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      return internalGetExtContent().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getExtContentMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getExtContent() {
+      return getExtContentMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getExtContentMap() {
+      return internalGetExtContent().getMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getExtContentOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetExtContent().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getExtContentOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetExtContent().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public Builder clearExtContent() {
+      internalGetMutableExtContent().getMutableMap()
+          .clear();
+      return this;
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+
+    public Builder removeExtContent(
+        java.lang.String key) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      internalGetMutableExtContent().getMutableMap()
+          .remove(key);
+      return this;
+    }
+    /**
+     * Use alternate mutation accessors instead.
+     */
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String>
+    getMutableExtContent() {
+      return internalGetMutableExtContent().getMutableMap();
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+    public Builder putExtContent(
+        java.lang.String key,
+        java.lang.String value) {
+      if (key == null) { throw new java.lang.NullPointerException(); }
+      if (value == null) { throw new java.lang.NullPointerException(); }
+      internalGetMutableExtContent().getMutableMap()
+          .put(key, value);
+      return this;
+    }
+    /**
+     * <code>map&lt;string, string&gt; extContent = 18;</code>
+     */
+
+    public Builder putAllExtContent(
+        java.util.Map<java.lang.String, java.lang.String> values) {
+      internalGetMutableExtContent().getMutableMap()
+          .putAll(values);
+      return this;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

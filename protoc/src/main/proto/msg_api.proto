@@ -33,23 +33,24 @@ message GetImMessageReq {
 }
 
 message ImMessage{
-  uint64          groupId         = 1;
-  uint64          ownerId         = 2;
-  uint64          sendTime        = 3;
-  uint64          msgId           = 4;
-  string          clientMsgId     = 5;
-  string          msgType         = 6;
-  ImgContent      imgContent      = 7;
-  VideoContent    videoContent    = 8;
-  TextContent     textContent     = 9;
-  AudioContent    audioContent    = 10;
-  CCVideoContent  ccVideoContent  = 11;
-  QuestionContent questionContent = 12;
-  SenderInfo      sender          = 13;
-  uint64          replyMsgId      = 14;
-  ImMessage       replyMsg        = 15;
-  int32           status          = 16;
-  LiveContent     liveContent     = 17;
+  uint64              groupId         = 1;
+  uint64              ownerId         = 2;
+  uint64              sendTime        = 3;
+  uint64              msgId           = 4;
+  string              clientMsgId     = 5;
+  string              msgType         = 6;
+  ImgContent          imgContent      = 7;
+  VideoContent        videoContent    = 8;
+  TextContent         textContent     = 9;
+  AudioContent        audioContent    = 10;
+  CCVideoContent      ccVideoContent  = 11;
+  QuestionContent     questionContent = 12;
+  SenderInfo          sender          = 13;
+  uint64              replyMsgId      = 14;
+  ImMessage           replyMsg        = 15;
+  int32               status          = 16;
+  LiveContent         liveContent     = 17;
+  map<string, string> extContent      = 18;
 }
 
 message ImgContent{
@@ -57,19 +58,23 @@ message ImgContent{
   uint32 height = 2;
   uint32 width  = 3;
 }
+
 message VideoContent{
   string url      = 1;
   string height   = 2;
   string width    = 3;
   uint64 duration = 4;
 }
+
 message TextContent{
   string text = 1;
 }
+
 message AudioContent{
   string url      = 1;
   uint64 duration = 2;
 }
+
 message CCVideoContent{
   string videoId                    = 1;
   string videoTitle                 = 2;
@@ -79,6 +84,7 @@ message CCVideoContent{
   uint32 height                     = 6;
   string imgPreviewRemoteStorageUrl = 7;
 }
+
 message QuestionContent{
   TextContent textContent    = 1;
   uint32      questionStatus = 2;
@@ -109,6 +115,7 @@ message SenderInfo{
   string senderName     = 2;
   string senderAvatar   = 3;
   string senderPlatform = 4;
+  string senderGender   = 5; //男女
 }
 
 message LeaveImGroupReq {
@@ -128,6 +135,39 @@ message PingReq{
 }
 
 message Pong{
+}
+
+message ImMessageReq {
+  enum Op{
+    JOIN  = 0;
+    LEAVE = 1;
+  }
+  Op     op           = 1;
+
+  uint64 groupId      = 2;
+
+  uint64 ownerId      = 3;
+
+  uint64 targetUserId = 4;
+
+  string channel      = 5;
+}
+
+message ImMessageReply{
+
+  ImMessage  imMessage  = 1;
+  ReqContext reqContext = 2;
+
+  message ReqContext{
+
+    uint64 groupId      = 2;
+
+    uint64 ownerId      = 3;
+
+    uint64 targetUserId = 4;
+
+    string channel      = 5;
+  }
 }
 
 message LiveRoomMessageReq {
@@ -161,4 +201,5 @@ service MsgApi{
 
   rpc Ping(PingReq) returns (Pong){}
 
+  rpc OnlineImMessage(stream ImMessageReq) returns (stream ImMessageReply){}
 }
