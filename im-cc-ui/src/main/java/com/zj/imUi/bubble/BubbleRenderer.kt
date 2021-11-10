@@ -125,7 +125,7 @@ object BubbleRenderer : BaseBubbleRenderer {
             else {
                 ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
             }
-        } else {
+        } else {//私聊
             if (isSelfMessage) {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息

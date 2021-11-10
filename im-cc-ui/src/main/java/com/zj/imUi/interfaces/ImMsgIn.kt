@@ -76,6 +76,15 @@ interface ImMsgIn {
     fun getReplyMsgQuestionSpark(): Int?
     fun getReplyMsgQuestionIsPublished(): Boolean?
 
+    fun getLiveMsgId():Int?
+    fun getLiveMsgStatus():Boolean?
+    fun getLiveMsgCover():String?
+    fun getLiveMsgRoomId():Int?
+    fun getLiveMsgIntroduce():String?
+    fun getLiveMsgChannel():String?
+    fun getLiveMsgViewNum():Int?
+
+
     fun getAnswerContentMsgType(): String?
     fun getAnswerContentSendTime(): Long?
     fun getAnswerContentSenderName(): String?

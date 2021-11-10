@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="280dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
@@ -32,7 +32,7 @@
             android:id="@+id/im_msg_item_normal_cc_live_img_owner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="3dp"
             android:visibility="gone"
             tools:visibility="visible"
@@ -41,10 +41,12 @@
 
 
     <FrameLayout
+        android:id="@+id/im_msg_item_normal_cc_live_fl"
         android:layout_width="256dp"
         android:layout_height="226dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         >
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -63,7 +65,7 @@
             android:layout_gravity="end"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="6dp"
-            tools:src = "@drawable/im_msg_item_live_icon"
+            android:src = "@drawable/im_msg_item_live_icon"
             />
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -79,7 +81,7 @@
             android:maxLines="3"
             android:ellipsize="end"
             android:text="dedagwecywegawie7dgedewgdaiewdgaewdgdaewudaed"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/im_msg_bg_color_white"
             android:id="@+id/im_msg_item_normal_cc_live_tv_title"
             android:textStyle="bold"

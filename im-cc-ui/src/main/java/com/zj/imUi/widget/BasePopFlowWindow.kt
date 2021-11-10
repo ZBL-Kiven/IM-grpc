@@ -102,7 +102,7 @@ class BasePopFlowWindow<T> :
                         if (it != null) {
                             if (it < 0) filterList.add( reportItems[6])
                             else {
-                                if (isOwner) filterList.add(reportItems[2])
+                                if (isOwner && data?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[2])
                             }
                         }
                     }

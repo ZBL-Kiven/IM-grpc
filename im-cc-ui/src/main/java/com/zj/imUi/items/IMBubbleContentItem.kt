@@ -29,7 +29,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
 
     private val tvName: AppCompatTextView
     private val iconIsOwner: AppCompatImageView
-    private val iconV :AppCompatImageView
+    private val iconV: AppCompatImageView
     private val llQuestionContent: LinearLayout
     private val llName: LinearLayout
     private val bubbleContent: FrameLayout
@@ -64,7 +64,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         llContent = findViewById(R.id.im_msg_bubble_img_ll_content)
     }
 
-    override fun init(data: ImMsgIn,chatType:Any) {
+    override fun init(data: ImMsgIn, chatType: Any) {
         tvName.text = data.getSenderName()
         imgQuestion.visibility = View.GONE
         imgReply.visibility = View.GONE
@@ -72,23 +72,21 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             llName.visibility = View.GONE
         } else {
             llName.visibility = View.VISIBLE
-            if (data.getSenderId() == data.getOwnerId()){
+            if (data.getSenderId() == data.getOwnerId()) {
                 iconIsOwner.visibility = View.VISIBLE
                 iconV.visibility = View.VISIBLE
-            }
-            else{
+            } else {
                 iconIsOwner.visibility = View.GONE
                 iconV.visibility = View.GONE
             }
         }
         performRegisterTimer()
         setViewStub(data)
-        if(chatType == 1) {
+        if (chatType == 1) {
             setReplyContent(data)
             setIconVisibility(data)
         }
-        setContentColor(data)
-        //        setTime(data)
+        setContentColor(data) //        setTime(data)
     }
 
     private fun setTime(data: ImMsgIn) {
@@ -106,17 +104,20 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             if (data.getSenderId() == data.getSelfUserId()) {
                 tvQuestionName.setTextColor(ContextCompat.getColor(context,
                     R.color.im_msg_text_color_white))
-                tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_white))
+                tvFlag.setTextColor(ContextCompat.getColor(context,
+                    R.color.im_msg_text_color_white))
                 tvQuestionContent.setTextColor(ContextCompat.getColor(context,
                     R.color.im_msg_text_color_white))
             } else {
                 if (data.getReplyMsgQuestionIsPublished() == false) {
-                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context,
+                        R.color.im_msg_bg_purple))
                     tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_purple))
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
                         R.color.im_msg_bg_purple))
                 } else if (data.getReplySenderId() == data.getSelfUserId() && data.getReplyMsgQuestionIsPublished() == true) {
-                    tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
+                    tvQuestionName.setTextColor(ContextCompat.getColor(context,
+                        R.color.im_msg_bg_origin))
                     tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
                         R.color.im_msg_bg_origin))
@@ -131,7 +132,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             }
         } else {
             if (data.getReplySenderId() == data.getSelfUserId()) { //被回复人是自己
-                tvQuestionName.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
+                tvQuestionName.setTextColor(ContextCompat.getColor(context,
+                    R.color.im_msg_bg_origin))
                 tvFlag.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_origin))
                 if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_TEXT) {
                     tvQuestionContent.setTextColor(ContextCompat.getColor(context,
@@ -182,23 +184,28 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
     }
 
     private fun setReplyContent(data: ImMsgIn) {
-        if (data.getReplyMsgClientMsgId() != null) data.getReplyMsgType()?.let { data.getReplySenderName()?.let {
-            llQuestionContent.visibility = View.VISIBLE
-            tvQuestionName.text = it
-            tvQuestionContent.visibility = View.VISIBLE
-            when (data.getReplyMsgType()) {
-                    UiMsgType.MSG_TYPE_TEXT -> tvQuestionContent.text = data.getReplyMsgTextContent()
+        if (data.getReplyMsgClientMsgId() != null) data.getReplyMsgType()?.let {
+            data.getReplySenderName()?.let {
+                llQuestionContent.visibility = View.VISIBLE
+                tvQuestionName.text = it
+                tvQuestionContent.visibility = View.VISIBLE
+                when (data.getReplyMsgType()) {
+                    UiMsgType.MSG_TYPE_TEXT -> tvQuestionContent.text =
+                        data.getReplyMsgTextContent()
                     UiMsgType.MSG_TYPE_IMG -> {
                         tvQuestionContent.visibility = View.GONE
                         bubbleRepliedContent.visibility = View.VISIBLE
                         setViewStub2(data)
                     }
-                    UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text = context.getString(R.string.im_ui_msg_reply_type_audio)
-                    UiMsgType.MSG_TYPE_QUESTION -> tvQuestionContent.text = data.getReplyMsgQuestionContent()
+                    UiMsgType.MSG_TYPE_AUDIO -> tvQuestionContent.text =
+                        context.getString(R.string.im_ui_msg_reply_type_audio)
+                    UiMsgType.MSG_TYPE_QUESTION -> tvQuestionContent.text =
+                        data.getReplyMsgQuestionContent()
                     UiMsgType.MSG_TYPE_CC_VIDEO -> {
                         tvQuestionContent.visibility = View.GONE
                         bubbleRepliedContent.visibility = View.VISIBLE
-                        setViewStub2(data)                    }
+                        setViewStub2(data)
+                    }
                 }
                 return@setReplyContent
             }
@@ -224,7 +231,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             if (!isSameTypeReply) {
                 bubbleRepliedContent.removeAllViews()
                 curContentInReply = v as? ImContentIn
-                bubbleRepliedContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                bubbleRepliedContent.addView(v,
+                    LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG) {
                     bubbleRepliedContent.setOnClickListener {
                         data.onViewLargePic()
@@ -232,7 +240,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 }
             }
         } finally {
-            bubbleRepliedContent.setPadding(12,12,0,0)
+            bubbleRepliedContent.setPadding(12, 12, 0, 0)
             curContentInReply?.onSetData(data)
         }
     }
@@ -259,39 +267,58 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             } ?: return
 
             if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) {
-                if (data.getReplyMsgClientMsgId() == null||chatType == 2) llContent.setPadding(0, 0, 0, 0)
-                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
+                if (data.getReplyMsgClientMsgId() == null || chatType == 2) llContent.setPadding(0,
+                    0,
+                    0,
+                    0)
+                else llContent.setPadding(baseContentMargins,
+                    baseContentMargins,
+                    baseContentMargins,
+                    DPUtils.dp2px(8f))
             } else if (v is IMContentAudioView && data.getSelfUserId() == data.getSenderId()) {
                 if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(0, 0, 0, 0)
-                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
+                else llContent.setPadding(baseContentMargins,
+                    baseContentMargins,
+                    baseContentMargins,
+                    DPUtils.dp2px(8f))
             } else if (data.getSenderId() != data.getSelfUserId()) {
-                if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, baseContentMargins)
-                else llContent.setPadding(baseContentMargins, DPUtils.dp2px(6f), baseContentMargins, DPUtils.dp2px(8f))
+                if (data.getReplyMsgClientMsgId() == null) llContent.setPadding(baseContentMargins,
+                    DPUtils.dp2px(6f),
+                    baseContentMargins,
+                    baseContentMargins)
+                else llContent.setPadding(baseContentMargins,
+                    DPUtils.dp2px(6f),
+                    baseContentMargins,
+                    DPUtils.dp2px(8f))
             } else {
-                if (data.getReplyMsgClientMsgId() != null) { llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f)) }
-                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, baseContentMargins)
+                if (data.getReplyMsgClientMsgId() != null) {
+                    llContent.setPadding(baseContentMargins,
+                        baseContentMargins,
+                        baseContentMargins,
+                        DPUtils.dp2px(8f))
+                } else llContent.setPadding(baseContentMargins,
+                    baseContentMargins,
+                    baseContentMargins,
+                    baseContentMargins)
             }
 
 
             if (!isSameType) {
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
-                bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                bubbleContent.addView(v,
+                    LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
                     bubbleContent.setOnClickListener {
                         data.onViewLargePic()
                     }
-                }else if(data.getType() == UiMsgType.MSG_TYPE_AUDIO){
+                } else if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
                     chatType?.let { curContentIn?.chatType(it) }
                 }
                 bubbleContent.setOnLongClickListener {
-                    val isNotSelf = data.getSelfUserId() != data.getSenderId()
-                    if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
-                        if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
-                            val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                            popFlowWindow.show(data,it){_,_,content->
-                            }
-                        }                    }
+                    val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                    popFlowWindow.show(data, it) { _, _, content ->
+                    }
                     true
                 }
             }
