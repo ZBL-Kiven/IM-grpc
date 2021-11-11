@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -117,7 +118,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context,
             setChatRewardItem(data)
         } else setPrivateChatItem(data)
 
-        setOnLongClickListener {
+        //之前是直接setOnLongClickListener，没有加contentLayout，导致长按点击事件无法触发
+        contentLayout.setOnLongClickListener {
             if (isOwner && data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->

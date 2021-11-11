@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.FrameLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -18,6 +19,7 @@ import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.AutomationImageCalculateUtils
+import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.views.ut.DPUtils
 
 
@@ -42,6 +44,16 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
         } else{
             loadImg2(data)
         }
+
+        this.setOnLongClickListener {
+            if (data.getSelfUserId() ==data.getOwnerId() && data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG) {
+                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                popFlowWindow.show(data, it) { _, _, _ ->
+                }
+            }
+            true
+        }
+
     }
 
     override fun chatType(chatType:Any) {

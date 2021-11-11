@@ -113,11 +113,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData({ curData }, chatType as Int?)
         bubbleView?.setOnLongClickListener {
-            val isNotSelf = data.getSelfUserId() != data.getSenderId()
-            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data,it){_,_,content->
-                }
+                popFlowWindow.show(data,it){_,_,_->
             }
             true
         }

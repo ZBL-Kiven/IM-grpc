@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -302,12 +303,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                     baseContentMargins)
             }
 
-
             if (!isSameType) {
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
-                bubbleContent.addView(v,
-                    LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
+                bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
                 if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
                     bubbleContent.setOnClickListener {
                         data.onViewLargePic()
@@ -315,14 +314,15 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 } else if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
                     chatType?.let { curContentIn?.chatType(it) }
                 }
-                bubbleContent.setOnLongClickListener {
-                    val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                    popFlowWindow.show(data, it) { _, _, content ->
-                    }
-                    true
-                }
+
             }
         } finally {
+            bubbleContent.setOnLongClickListener {
+                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                popFlowWindow.show(data, it) { _, _, _ ->
+                }
+                true
+            }
             curContentIn?.onSetData(data)
         }
     }

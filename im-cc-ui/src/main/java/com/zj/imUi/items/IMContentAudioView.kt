@@ -17,6 +17,7 @@ class IMContentAudioView @JvmOverloads constructor(context: Context, attrs: Attr
         this.chatType = chatType
     }
 
+
     override fun onResume(data: ImMsgIn?) {
         if (data?.isAudioPlaying() == true) {
             startAnim()
