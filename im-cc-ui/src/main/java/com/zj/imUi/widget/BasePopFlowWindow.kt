@@ -108,6 +108,11 @@ class BasePopFlowWindow<T> :
                             filterList.add(reportItems[2])
                             filterList.add(reportItems[3])
                         }
+                    }else if(data?.getIsAdmin() == true){
+                        if (data?.getSenderId()!=data?.getOwnerId()){
+                            filterList.add(reportItems[2])
+                            filterList.add(reportItems[3])
+                        }
                     }
 //                    else filterList.add(reportItems[5])
                 }

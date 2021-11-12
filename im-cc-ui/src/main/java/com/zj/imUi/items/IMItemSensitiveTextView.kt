@@ -45,8 +45,6 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
         tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
         tvContent.setBackgroundResource(R.drawable.im_msg_item_sensitive_cornor_bg)
 
-
-//        val lpTvL = LinearLayout.LayoutParams((resources.displayMetrics.widthPixels*0.8).toInt(), LayoutParams.WRAP_CONTENT)
         val lpTvL = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
         lpTvL.gravity = Gravity.CENTER
 
@@ -60,7 +58,7 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
             addView(contentLayout)
         }
         if (data.getMsgIsSensitive() == true) {
-            tvContent.text = "涉及交易风险，请谨慎对待，该信息可能有潜在风险，请注意甄别"
+            tvContent.text = data.getExtSensitiveMsgContent()
         }
     }
 

@@ -97,6 +97,9 @@ interface ImMsgIn {
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
 
+    //获取民告消息内容
+    fun getExtSensitiveMsgContent():String?
+    //撤回消息角色
     fun getMsgRecallRole():Int?
     //消息是否被撤回
     fun getMsgIsRecalled():Boolean?
@@ -147,7 +150,7 @@ interface ImMsgIn {
     fun rejectRewardMsg(id:String)
     //跳直播间
     fun jumpToLiveRoom()
-
+    //举报
     fun reportGroupUserMsg(id:String)
 
 }
