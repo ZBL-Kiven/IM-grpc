@@ -96,6 +96,8 @@ interface ImMsgIn {
     fun getAnswerContentImgContentHeight(): Int?
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
+
+    fun getMsgRecallRole():Int?
     //消息是否被撤回
     fun getMsgIsRecalled():Boolean?
     //消息是否包含敏感词

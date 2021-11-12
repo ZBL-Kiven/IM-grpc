@@ -80,11 +80,9 @@ class BasePopFlowWindow<T> :
         val reply = ctx.get()?.getString(R.string.im_ui_msg_reply)
         val copy = ctx.get()?.getString(R.string.im_ui_msg_copy)
         val block = ctx.get()?.getString(R.string.im_ui_msg_block)
-
         val recall = ctx.get()?.getString(R.string.im_ui_msg_button_recall)
         val refuse = "Refuse"
         val report = "Report"
-
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
         val reportItems = mutableListOf(reply, copy, recall, block, refuse, report, delete)
         val filterList: MutableList<String?> = mutableListOf()
@@ -96,8 +94,7 @@ class BasePopFlowWindow<T> :
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
                             else {
-                                if (isOwner && data?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(
-                                    reportItems[2])
+                                if (isOwner && data?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[2])
                             }
                         }
                     }
@@ -111,7 +108,8 @@ class BasePopFlowWindow<T> :
                             filterList.add(reportItems[2])
                             filterList.add(reportItems[3])
                         }
-                    }else filterList.add(reportItems[5])
+                    }
+//                    else filterList.add(reportItems[5])
                 }
             }
         }
