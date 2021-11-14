@@ -1,5 +1,6 @@
 package com.zj.ccIm.core.db
 
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.fecher.Fetcher
@@ -16,7 +17,7 @@ import com.zj.database.ut.Constance.generateKey
 internal object PrivateOwnerDbOperator {
 
     fun createPrivateChatInfoIfNotExits(db: IMDb? = null, msg: MessageInfoEntity) {
-        IMHelper.withDb(imDb = db) {
+       IMHelper.withDb(imDb = db) {
             val chatDao = it.privateChatOwnerDao()
             val session = it.sessionDao().findSessionById(msg.groupId)
             val localChat = chatDao.findByGroupId(msg.groupId)
@@ -36,13 +37,13 @@ internal object PrivateOwnerDbOperator {
                 it.sessionMsgDao().insertOrUpdateSessionMsgInfo(lastSessionMsg)
                 newChat.sessionMsgInfo = lastSessionMsg
                 chatDao.insertOrUpdate(newChat)
-                IMHelper.postToUiObservers(newChat, ClientHubImpl.PAYLOAD_ADD)
+                CcIM.postToUiObservers(newChat, ClientHubImpl.PAYLOAD_ADD)
             }
         }
     }
 
     fun notifyAllSession(callId: String) {
-        IMHelper.withDb {
+       IMHelper.withDb {
             val sessions = it.privateChatOwnerDao().findAll()
             val lstMsgDao = it.sessionMsgDao()
             for (s in sessions) {
@@ -50,25 +51,25 @@ internal object PrivateOwnerDbOperator {
                 s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoByKey(key)
             }
             val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
-            IMHelper.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
-            IMHelper.postToUiObservers(PrivateOwnerEntity::class.java, sessions, callId)
+            CcIM.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
+            CcIM.postToUiObservers(PrivateOwnerEntity::class.java, sessions, callId)
         }
     }
 
     fun deleteSession(groupId: Long) {
-        IMHelper.withDb {
+       IMHelper.withDb {
             val session = it.privateChatOwnerDao().findByGroupId(groupId)
             if (session != null) {
                 it.privateChatOwnerDao().delete(session)
             }
             val key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = session.ownerId)
             it.sessionMsgDao().deleteByKey(key)
-            IMHelper.postToUiObservers(session, ClientHubImpl.PAYLOAD_DELETE)
+            CcIM.postToUiObservers(session, ClientHubImpl.PAYLOAD_DELETE)
         }
     }
 
     fun updateSessionInfo(sessionInfoEntity: SessionInfoEntity) {
-        IMHelper.withDb {
+       IMHelper.withDb {
             val privateOwnerDb = it.privateChatOwnerDao()
             val lastMsgDao = it.sessionMsgDao()
             val en = privateOwnerDb.findByGroupId(sessionInfoEntity.groupId)
@@ -76,7 +77,7 @@ internal object PrivateOwnerDbOperator {
             en?.ownerName = sessionInfoEntity.ownerName
             en?.avatar = sessionInfoEntity.logo
             en?.sessionMsgInfo = lastMsgDao.findSessionMsgInfoByKey(lastMsgId)
-            IMHelper.postToUiObservers(en, ClientHubImpl.PAYLOAD_CHANGED)
+            CcIM.postToUiObservers(en, ClientHubImpl.PAYLOAD_CHANGED)
         }
     }
 }

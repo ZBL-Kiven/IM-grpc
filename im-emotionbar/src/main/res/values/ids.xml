@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="im_chat_avatar"/>
+    <item type="id" name="im_chat_nickname"/>
+    <item type="id" name="im_chat_time_line"/>
+    <item type="id" name="im_chat_info_line"/>
+    <item type="id" name="im_chat_bubble"/>
+
+    <item type="id" name="im_emotion_auto_layout" />
+    <item type="id" name="im_emotion_tag_page_set" />
+    <item type="id" name="im_emotion_toolbar_left" />
+    <item type="id" name="im_emotion_toolbar_right" />
+</resources>

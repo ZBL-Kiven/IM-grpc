@@ -1,6 +1,6 @@
 package com.zj.ccIm.core.fecher
 
-enum class FetchMsgChannel(val serializeName: String, val classification: Int) {
+internal enum class FetchMsgChannel(val serializeName: String, val classification: Int){
 
     /**
      * @property serializeName Subscription type agreed with the server
@@ -13,5 +13,7 @@ enum class FetchMsgChannel(val serializeName: String, val classification: Int) {
     FANS_MESSAGE("fans_message", 0),
     FANS_PRIVATE("fans_private", 1),
     OWNER_PRIVATE("owner_private", 2);
+
+
 
 }

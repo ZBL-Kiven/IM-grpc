@@ -40,7 +40,6 @@ class QuestionContent {
     var contentType: String? = null
 }
 
-
 class SenderInfo {
     var senderId: Int = -1
     var senderName: String? = null

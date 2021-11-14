@@ -23,15 +23,6 @@ message ListenTopicReply{
   string data  = 2;
 }
 
-message GetImMessageReq {
-  uint64          groupId      = 1;
-  uint64          ownerId      = 2;
-  /*owner_clap_house,owner_message,owner_private,fans_clap_house,fans_message,fans_private*/
-  repeated string channel      = 3;
-  /* fans user id*/
-  uint64          targetUserid = 4;
-}
-
 message ImMessage{
   uint64              groupId         = 1;
   uint64              ownerId         = 2;
@@ -61,9 +52,9 @@ message ImgContent{
 
 message VideoContent{
   string url      = 1;
-  string height   = 2;
-  string width    = 3;
   uint64 duration = 4;
+  uint32 height   = 5;
+  uint32 width    = 6;
 }
 
 message TextContent{
@@ -143,30 +134,28 @@ message ImMessageReq {
     LEAVE = 1;
   }
   Op     op           = 1;
-
   uint64 groupId      = 2;
-
   uint64 ownerId      = 3;
-
   uint64 targetUserId = 4;
-
   string channel      = 5;
+  string seq          = 6;
 }
 
 message ImMessageReply{
 
+  /**
+   * 0 代表是消息 1 代表是服务器收到请求的回执
+   */
+  int32      type       = 3;
   ImMessage  imMessage  = 1;
   ReqContext reqContext = 2;
 
   message ReqContext{
-
     uint64 groupId      = 2;
-
     uint64 ownerId      = 3;
-
     uint64 targetUserId = 4;
-
     string channel      = 5;
+    string seq          = 6;
   }
 }
 
@@ -192,8 +181,6 @@ message LiveRoomMessageReply{
 service MsgApi{
 
   rpc ListenTopicData(stream ListenTopicReq) returns (stream ListenTopicReply){}
-
-  rpc GetImMessage(GetImMessageReq) returns (stream ImMessage){}
 
   rpc LeaveImGroup(LeaveImGroupReq) returns (LeaveImGroupReply){}
 

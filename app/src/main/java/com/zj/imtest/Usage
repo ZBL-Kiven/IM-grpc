@@ -1,0 +1,55 @@
+
+
+    //    private fun initIm() {
+    //
+    //
+    //        CcIM.registerConnectionStateChangeListener(this::class.java.simpleName) {
+    //            tv.text = it.name
+    //        }
+    //
+    //        CcIM.addReceiveObserver<MessageInfoEntity>(0x1124).listen { d, list, pl ->
+    //            Log.e("------- ", "onMessage received : $pl")
+    //            if (d != null) {
+    //                d.replyMsg?.let {
+    //                    if (adapter?.isMsgReplying(it) == true) adapter?.setRewardViewState(it, false)
+    //                }
+    //                when (pl) {
+    //                    ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
+    //                    ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
+    //                    ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
+    //                    else -> adapter?.removeIfEquals(d)
+    //                }
+    //            }
+    //            if (!list.isNullOrEmpty()) adapter?.change(list)
+    //        }
+    //
+    //        CcIM.addReceiveObserver<AssetsChanged>(0x1132, this).listen { r, _, _ ->
+    //            r?.diamondNum?.let {
+    //                curDiamond += it
+    //            }
+    //            r?.spark?.let {
+    //                curSpark += it
+    //            }
+    //            Log.e("----- ", "on assets changed, diamond = $curDiamond    spark = $curSpark")
+    //        }
+    //
+    //        CcIM.addReceiveObserver<PrivateFansEn>(0x1129, this).listen { r, l, pl ->
+    //            Log.e("----- ", "on private fans chat got ,with last msg : ${r?.lastMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.lastMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
+    //        }
+    //
+    //        CcIM.addReceiveObserver<PrivateOwnerEntity>(0x1130, this).listen { r, l, pl ->
+    //            Log.e("----- ", "on  private owner chat got ,with last msg : ${r?.sessionMsgInfo?.newMsg?.textContent?.text ?: l?.firstOrNull()?.sessionMsgInfo?.newMsg?.textContent?.text} , payload = $pl")
+    //        }
+    //
+    //        CcIM.addReceiveObserver<MessageTotalDots>(0x1125, this).listen { r, _, pl ->
+    //            Log.e("----- ", "on all unread count changed , cur is ${r?.dots} , payload = $pl")
+    //        }
+    //
+    //        CcIM.addReceiveObserver<FetchResult>(0x1127, this).listen { r, _, pl ->
+    //            Log.e("----- ", "=============> success = ${r?.success}  isFirst =  ${r?.isFirstFetch}   nullData = ${r?.isNullData} , payload = $pl")
+    //        }
+    //
+    //        CcIM.addReceiveObserver<LiveInfoEn>(0x1132).listen { r, _, pl ->
+    //            Log.e("----- ", "on Live msg ${r?.content} , payload = $pl")
+    //        }
+    //    }

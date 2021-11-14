@@ -1,6 +1,7 @@
 package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.FetchResult
@@ -20,7 +21,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
         val lastTs = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L
         ImLogs.d("PrivateOwnerSessionFetcher", "start fetch owner group by ${prop.flags} ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
-        return ImApi.getFunctionApi().call({ it.fetchPrivateOwnerSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
+        return ImApi.getFunctionApi().call({ it.fetchPrivateOwnerSessions(lastTs) }, Schedulers.io(), Schedulers.io()) { b, d, e ->
             try {
                 val sessions = d?.ownerList
                 if (b) {
@@ -46,8 +47,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                     finishAFetch(prop, FetchResult(false, isFirstFetch, true, "PrivateOwnerSessionFetcher: fetch owner group failed with:${e?.message} !!"))
                 }
             } catch (e: Exception) {
-                cancel(prop)
-                IMHelper.postError(e)
+                cancel(prop, e)
             }
         }
     }
@@ -57,7 +57,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
         if (!sessions.isNullOrEmpty()) {
             val oIds = sessions.map { ms -> ms.ownerId }
             ImLogs.d("GroupSessionFetcher", "start fetch private owner sessions last message info by  ${prop.flags} , owners = $oIds")
-            prop.compo = ImApi.getFunctionApi().call({ it.fetchPrivateOwnerLastMessage(oIds) }, Schedulers.io(), Schedulers.newThread()) { _, d, _ ->
+            prop.compo = ImApi.getFunctionApi().call({ it.fetchPrivateOwnerLastMessage(oIds) }, Schedulers.io(), Schedulers.io()) { _, d, _ ->
                 try {
                     val fmDao = IMHelper.getDb()?.sessionMsgDao()
                     d?.forEach { fi ->
@@ -81,7 +81,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
             val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
-        IMHelper.postToUiObservers(PrivateOwnerEntity::class.java, sessions, null) {
+        CcIM.postToUiObservers(PrivateOwnerEntity::class.java, sessions, null) {
             finishAFetch(prop, FetchResult(true, isFirstFetch, false))
         }
     }

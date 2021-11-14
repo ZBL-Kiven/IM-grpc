@@ -5,9 +5,7 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
-import java.lang.NullPointerException
 import com.zj.api.BaseApi
-import com.zj.api.base.BaseRetrofit
 import com.zj.api.utils.LoggerInterface
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
@@ -17,16 +15,17 @@ import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
-import com.zj.ccIm.core.bean.GetMoreMessagesInfo
-import com.zj.ccIm.core.bean.GetMsgReqBean
+import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.ccIm.core.fecher.MessageFetcher
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.logger.ImLogs
+import io.reactivex.schedulers.Schedulers
 
 internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
 
     private var subscribeTopics = mutableListOf<String>()
-    private var getMsgRequestCompo: BaseRetrofit.RequestCompo? = null
-    private var requestStreamObserver: StreamObserver<ListenTopicReq>? = null
+    private var topicStreamObserver: StreamObserver<ListenTopicReq>? = null
+    private var messageStreamObserver: StreamObserver<ImMessageReq>? = null
 
     override fun init(context: Application?) {
         super.init(context)
@@ -38,17 +37,20 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             Constance.CALL_ID_SUBSCRIBE_REMOVE_TOPIC, Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC -> {
                 params?.toString()?.let {
                     if (callId == Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC) subscribeTopics.add(it) else subscribeTopics.remove(it)
-                    requestStreamObserver?.let {
+                    topicStreamObserver?.let {
                         registerTopicListener()
                     } ?: receiveTopic()
                 }
             }
-            Constance.CALL_ID_LEAVE_CHAT_ROOM -> {
-                leaveChatRoom((params as? GetMsgReqBean) ?: return 0)
-            }
-
             Constance.CALL_ID_REGISTER_CHAT -> {
-                registerMsgReceiver((params as? GetMsgReqBean) ?: return 0)
+                (params as? ChannelRegisterInfo)?.let { d ->
+                    updateMsgReceiver(d, true)
+                }
+            }
+            Constance.CALL_ID_LEAVE_CHAT_ROOM -> {
+                (params as? ChannelRegisterInfo)?.let { d ->
+                    updateMsgReceiver(d, false)
+                }
             }
             else -> null
         }
@@ -63,10 +65,12 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     override fun onRouteCall(callId: String?, data: Any?) {
         when (callId) {
             Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
-                if (isConnected()) getOfflineMessage(callId, data)
-            }
-            Constance.CALL_ID_GET_MORE_MESSAGES -> {
-                getOfflineMessage(callId, data, true)
+                if (isConnected()) MessageFetcher.getOfflineMessage(callId, data as ChannelRegisterInfo) {
+                    if (it.isOK && it.data != null) {
+                        postReceivedMessage(callId, it.data, true, 0)
+                        postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, it.rq, true, 0)
+                    } else onParseError(it.e)
+                }
             }
             Constance.CALL_ID_DELETE_SESSION -> {
                 deleteSession(data as DeleteSessionInfo)
@@ -75,6 +79,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     override fun onConnection() {
+        receiveMessage()
         receiveTopic()
     }
 
@@ -87,7 +92,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             return
         }
         if (d.clientMsgId != callId) d.clientMsgId = callId
-        ImApi.getRecordApi().request({ it.sendMsg(d) }) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
+        ImApi.getRecordApi().request({ it.sendMsg(d) }, Schedulers.io(), Schedulers.io()) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
             var resp = data
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
@@ -100,49 +105,24 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     /**
      * Register the receiving channel of the corresponding message channel.
      * @param d ProtocolBuf request serialization object
-     * @see [GetImMessageReq]
+     * @see [ChannelRegisterInfo]
      * */
-    private fun registerMsgReceiver(d: GetMsgReqBean) {
-        val data = GetImMessageReq.newBuilder()
-        data.groupId = d.groupId
-        data.ownerId = d.ownerId.toLong()
-        data.targetUserid = d.targetUserid?.toLong() ?: 0
-        d.channels.forEach { data.addChannel(it.serializeName) }
-        ImLogs.recordLogsInFile("server hub event ", "call on register msg receiver with ${d.groupId}")
-        withChannel {
-            it.getImMessage(data.build(), object : CusObserver<ImMessage>() {
-                override fun onResult(isOk: Boolean, data: ImMessage?, t: Throwable?) {
-                    ImLogs.d("server hub event ", "new Msg in group ${data?.groupId} , isOk = $isOk ,msgClientId = ${data?.clientMsgId} , msgTextInfo ==> ${data?.textContent?.text}")
-                    if (isOk && data != null) {
-                        ImLogs.recordLogsInFile("server hub event ", "new Msg [${data.clientMsgId}] received")
-                        val size = data.serializedSize.toLong()
-                        postReceivedMessage(data.clientMsgId, data, false, size)
-                    } else onParseError(t)
-                }
-            })
-        }
-    }
-
-    /**
-     * When you no longer want to receive a message from a chat room,
-     * trigger this message through CallId and exit this type of channel monitoring.
-     * @param d The ID protocolBuf builder of the group to leave
-     * */
-    private fun leaveChatRoom(d: GetMsgReqBean) {
-        val rq = LeaveImGroupReq.newBuilder()
-        rq.groupId = d.groupId
-        rq.ownerId = d.ownerId.toLong()
-        rq.targetUserid = d.targetUserid?.toLong() ?: 0L
-        d.channels.forEach { rq.addChannel(it.serializeName) }
-        getMsgRequestCompo?.cancel()
-        getMsgRequestCompo = null
-        ImLogs.recordLogsInFile("server hub event ", "leave from receiver with ${d.groupId}")
-        withChannel(false) {
-            it.leaveImGroup(rq.build(), object : CusObserver<LeaveImGroupReply>() {
-                override fun onResult(isOk: Boolean, data: LeaveImGroupReply?, t: Throwable?) {
-                    if (!isOk) t?.let { onParseError(t) }
-                }
-            })
+    private fun updateMsgReceiver(d: ChannelRegisterInfo, join: Boolean) {
+        if (!join) MessageFetcher.cancelFetchOfflineMessage(d.key)
+        messageStreamObserver?.let {
+            try {
+                val data = ImMessageReq.newBuilder()
+                data.groupId = d.groupId
+                data.ownerId = d.ownerId.toLong()
+                data.targetUserId = d.targetUserid?.toLong() ?: 0
+                data.channel = d.mChannel.serializeName
+                data.seq = d.key
+                data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE
+                it.onNext(data.build())
+                ImLogs.recordLogsInFile("server hub event ", "call ${if (join) "add" else "remove"} msg receiver with ${d.key}")
+            } catch (e: Exception) {
+                it.onError(e)
+            }
         }
     }
 
@@ -150,54 +130,55 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * Use Grpc to create a session for monitoring Topic information for the connection，@see [ListenTopicReply]
      * */
     private fun receiveTopic() {
+        runCatching {
+            topicStreamObserver?.onCompleted()
+        }
         ImLogs.recordLogsInFile("on connecting", "trying to receive topic")
-        requestStreamObserver = withChannel(true) {
+        topicStreamObserver = withChannel {
             it.listenTopicData(object : CusObserver<ListenTopicReply>() {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-                    onDealTopicReceived(isOk, data, t)
+                    ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
+                    if (isOk && data != null) {
+                        when (data.topic) {
+                            Constance.TOPIC_CONN_SUCCESS -> {
+                                postOnConnected()
+                                if (subscribeTopics.isNotEmpty()) {
+                                    registerTopicListener()
+                                }
+                            }
+                            else -> {
+                                val size = data.serializedSize.toLong()
+                                postReceivedMessage(data.topic, data.data, false, size)
+                            }
+                        }
+                    } else onParseError(t)
                 }
             })
         }
     }
 
-    private fun onDealTopicReceived(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-        ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
-        if (isOk && data != null) {
-            when (data.topic) {
-                Constance.TOPIC_CONN_SUCCESS -> {
-                    postOnConnected()
-                    if (subscribeTopics.isNotEmpty()) {
-                        registerTopicListener()
+    private fun receiveMessage() {
+        runCatching {
+            messageStreamObserver?.onCompleted()
+        }
+        ImLogs.recordLogsInFile("on connecting", "trying to receive messages")
+        messageStreamObserver = withChannel {
+            it.onlineImMessage(object : CusObserver<ImMessageReply>() {
+                override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
+                    when (data?.type) {
+                        1 -> {
+                            postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, data.reqContext, true, data.reqContext.serializedSize.toLong())
+                        }
+                        0 -> {
+                            val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
+                            val seq = if (data.reqContext.seq.isNotEmpty()) data.reqContext.seq else key
+                            MessageFetcher.dealMessageExtContent(data.imMessage, seq).forEach { d ->
+                                postReceivedMessage(seq, d, true, data.serializedSize.toLong())
+                            }
+                        }
                     }
                 }
-                Constance.TOPIC_MSG_REGISTRATION -> {
-                    postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, data.data, true, 0)
-                }
-                else -> {
-                    val size = data.serializedSize.toLong()
-                    postReceivedMessage(data.topic, data.data, false, size)
-                }
-            }
-        } else onParseError(t)
-    }
-
-    /**
-     * Get the latest news of the conversation during the offline period, here is a distinction between group and single chat
-     * */
-    private fun getOfflineMessage(callId: String, d: Any?, fromType: Boolean = false) {
-        val rq = (d as? GetMsgReqBean) ?: return
-        if (fromType && d.type == null) throw NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
-        getMsgRequestCompo = ImApi.getMsgList(rq) { isOk, data, t, a ->
-            if (fromType) {
-                val rsp = GetMoreMessagesInfo(rq.callIdPrivate, isOk, data, d, a, t)
-                postReceivedMessage(callId, rsp, true, 0)
-            } else {
-                ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${d.groupId} ${if (!isOk) ", error case: ${t?.message}" else ""}")
-                if (isOk && data != null) {
-                    postReceivedMessage(callId, data, true, 0)
-                    postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, rq, true, 0)
-                } else onParseError(t)
-            }
+            })
         }
     }
 
@@ -206,7 +187,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * [subscribeTopics] all types that need to be subscribed
      * */
     private fun registerTopicListener() {
-        requestStreamObserver?.let {
+        topicStreamObserver?.let {
             val topics = subscribeTopics
             try {
                 val topic = ListenTopicReq.newBuilder()

@@ -7,12 +7,12 @@ class BaseApp : Application() {
 
     companion object {
 
-        private lateinit var context: Application
+        lateinit var context: Application
 
         fun initChat() {
 
             //初始化 IM 聊天 模块，（异步完成）
-            IMHelper.init(context, IMConfig)
+           IMHelper.init(context, IMConfig)
         }
     }
 

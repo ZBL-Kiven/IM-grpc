@@ -68,70 +68,58 @@ abstract class MessageInterface<T> {
         }
     }
 
-    private var connectionStateObserver: MutableMap<String, ((ConnectionState) -> Unit)?>? = null
-        get() {
-            if (field == null) field = mutableMapOf()
-            return field
-        }
+    private val connectionStateObserver = ConcurrentHashMap<String, ((ConnectionState) -> Unit)>()
 
     fun registerConnectionStateChangeListener(name: String, observer: (ConnectionState) -> Unit) {
-        this.connectionStateObserver?.put(name, observer)
+        this.connectionStateObserver[name] = observer
         MainLooper.post {
             observer(StatusHub.curConnectionState)
         }
     }
 
     fun removeConnectionStateChangeListener(name: String) {
-        this.connectionStateObserver?.remove(name)
+        this.connectionStateObserver.remove(name)
     }
 
     internal fun onConnectionStatusChanged(state: ConnectionState) {
         MainLooper.post {
-            connectionStateObserver?.forEach { (_, p) ->
-                p?.invoke(state)
+            connectionStateObserver.forEach { (_, p) ->
+                p(state)
             }
         }
     }
 
-    private var netWorkStateObserver: MutableMap<String, ((NetWorkInfo) -> Unit)?>? = null
-        get() {
-            if (field == null) field = mutableMapOf()
-            return field
-        }
+    private val netWorkStateObserver = ConcurrentHashMap<String, ((NetWorkInfo) -> Unit)>()
 
     fun registerNetWorkStateChangeListener(name: String, observer: (NetWorkInfo) -> Unit) {
-        this.netWorkStateObserver?.put(name, observer)
+        this.netWorkStateObserver[name] = observer
 
     }
 
     fun removeNetWorkStateChangeListener(name: String) {
-        this.netWorkStateObserver?.remove(name)
+        this.netWorkStateObserver.remove(name)
     }
 
     internal fun onNetWorkStatusChanged(state: NetWorkInfo) {
         MainLooper.post {
-            netWorkStateObserver?.forEach { (_, p) ->
-                p?.invoke(state)
+            netWorkStateObserver.forEach { (_, p) ->
+                p(state)
             }
         }
     }
 
-    private var lifecycleListeners: HashMap<String, (IMLifecycle) -> Unit>? = null
-        get() {
-            if (field == null) field = hashMapOf()
-            return field
-        }
+    private var lifecycleListeners = ConcurrentHashMap<String, ((IMLifecycle) -> Unit)>()
 
     fun registerLifecycleListener(name: String, l: (IMLifecycle) -> Unit) {
-        lifecycleListeners?.put(name, l)
+        lifecycleListeners[name] = l
     }
 
     fun unRegisterLifecycleListener(name: String) {
-        lifecycleListeners?.remove(name)
+        lifecycleListeners.remove(name)
     }
 
     internal fun onLifecycle(state: IMLifecycle) {
-        lifecycleListeners?.forEach { (_, v) ->
+        lifecycleListeners.forEach { (_, v) ->
             MainLooper.post {
                 try {
                     v(state)
@@ -142,22 +130,18 @@ abstract class MessageInterface<T> {
         }
     }
 
-    private var changedListeners: HashMap<String, NetRecordChangedListener>? = null
-        get() {
-            if (field == null) field = hashMapOf()
-            return field
-        }
+    private var changedListeners = ConcurrentHashMap<String, NetRecordChangedListener>()
 
     fun addRecordListener(name: String, tc: NetRecordChangedListener) {
-        changedListeners?.put(name, tc)
+        changedListeners[name] = tc
     }
 
     fun removeRecordListener(name: String) {
-        changedListeners?.remove(name)
+        changedListeners.remove(name)
     }
 
     internal open fun onRecordChange(info: NetWorkRecordInfo) {
-        changedListeners?.forEach { (_, v) ->
+        changedListeners.forEach { (_, v) ->
             MainLooper.post {
                 v.onChanged(info)
             }

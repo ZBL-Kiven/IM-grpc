@@ -56,6 +56,16 @@ import java.util.concurrent.LinkedBlockingDeque
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class IMInterface<T> : MessageInterface<T>() {
 
+    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        setNewListener(classR, "UT2F-E17T-33I-9112")
+        return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR)
+    }
+
+    fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        setNewListener(classT, "UT2Q-99BR-E88-2271")
+        return UIHelperCreator(uniqueCode, lifecycleOwner, classT, classT, null)
+    }
+
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         setNewListener(R::class.java, "UT2F-E17T-33I-9112")
         return UIHandlerCreator(uniqueCode, lifecycleOwner, T::class.java, R::class.java)
@@ -74,7 +84,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                 cachedListenClasses.add(cls)
             }
         } else {
-            throw IllegalArgumentException()
+            throw IllegalArgumentException("the function setNewListener can not call!")
         }
     }
 
@@ -185,9 +195,9 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return option?.sessionId ?: -1
     }
 
-    abstract fun getClient(): ClientHub<T>
+    protected abstract fun getClient(): ClientHub<T>
 
-    abstract fun getServer(): ServerHub<T>
+    protected abstract fun getServer(): ServerHub<T>
 
     abstract fun onError(e: IMException)
 
@@ -201,7 +211,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     open fun onServiceDisConnected() {}
 
-    open fun onNewListenerRegistered(cls: Class<*>) {}
+    protected open fun onNewListenerRegistered(cls: Class<*>) {}
 
     /**
      * send a msg ，see [RunnerClientStub.send]

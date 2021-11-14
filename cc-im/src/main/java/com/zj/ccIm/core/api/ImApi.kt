@@ -5,12 +5,13 @@ import com.zj.api.BaseApi
 import com.zj.api.interceptor.HeaderProvider
 import com.zj.api.interceptor.UrlProvider
 import com.zj.api.interfaces.ErrorHandler
-import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.CcIM
 import retrofit2.HttpException
 import com.google.gson.Gson
 import com.zj.api.base.BaseRetrofit
-import com.zj.ccIm.core.bean.GetMsgReqBean
+import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.database.entity.MessageInfoEntity
+import io.reactivex.schedulers.Schedulers
 import java.net.UnknownHostException
 
 
@@ -18,12 +19,12 @@ object ImApi {
 
     private val baseUrl = object : UrlProvider() {
         override fun url(): String {
-            return IMHelper.imConfig?.getIMHost() ?: ""
+            return CcIM.imConfig?.getIMHost() ?: ""
         }
     }
     private val header = object : HeaderProvider {
         override fun headers(): Map<out String, String> {
-            return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig?.getUserId()}", "token" to (IMHelper.imConfig?.getToken() ?: ""))
+            return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${CcIM.imConfig?.getUserId()}", "token" to (CcIM.imConfig?.getToken() ?: ""))
         }
     }
 
@@ -35,9 +36,9 @@ object ImApi {
         return BaseApi.create<FunctionApi>(EH).baseUrl(baseUrl).header(header).build()
     }
 
-    fun getMsgList(param: GetMsgReqBean, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
-        val channelString = param.channels.map { it.serializeName }.toTypedArray()
-        return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, param.type, channels = channelString) }, result)
+    fun getMsgList(param: ChannelRegisterInfo, result: (isSuccess: Boolean, data: Map<String, List<MessageInfoEntity?>?>?, throwable: HttpException?, a: Any?) -> Unit): BaseRetrofit.RequestCompo? {
+        val channelString = param.mChannel.serializeName
+        return getRecordApi().call({ it.getOfflineMsgList(param.msgId, param.groupId, param.ownerId, param.targetUserid, param.type, channels = arrayOf(channelString)) }, Schedulers.io(), Schedulers.io(), result)
     }
 
     object EH : ErrorHandler {

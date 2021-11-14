@@ -1,21 +1,26 @@
 package com.zj.ccIm.core
 
 import android.app.Application
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.error.InitializedException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-
 
 object Comment {
     const val DELETE_OWNER_SESSION = 1
     const val DELETE_FANS_SESSION = 2
 }
 
+object ExtMsgType {
+    const val EXTENDS_TYPE_RECALL = ""
+    const val EXTENDS_TYPE_SENSITIVE_HIT = ""
+}
+
 internal object Constance {
     var app: Application? = null
         get() {
             return if (field == null) {
-                IMHelper.postIMError(InitializedException("getApplication"));null
+                CcIM.postIMError(InitializedException("getApplication"));null
             } else field
         }
 
@@ -50,13 +55,10 @@ internal object Constance {
     const val CALL_ID_GET_MESSAGES = INTERNAL_CALL_ID_PREFIX + "_get_message"
     const val CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS = CALL_ID_GET_MESSAGES + "_offline_done"
     const val CALL_ID_GET_OFFLINE_CHAT_MESSAGES = CALL_ID_GET_MESSAGES + "_offline"
-    const val CALL_ID_GET_MORE_MESSAGES = CALL_ID_GET_MESSAGES + "_more"
 
     /**-------------------------- TOPIC CHANNEL ------------------------------*/
 
     const val TOPIC_CONN_SUCCESS = "cc://im-rpc-req/ListenTopicData"
-
-    const val TOPIC_MSG_REGISTRATION = "cc://im-rpc-req/GetImMessage"
 
     const val TOPIC_IM_MSG = "cc://im-msg-topic/"
 
@@ -67,6 +69,8 @@ internal object Constance {
     const val TOPIC_CHAT_FANS_INFO = "cc://chat-fans-info-topic"
 
     const val TOPIC_CHAT_OWNER_INFO = "cc://chat-owner-info-topic"
+
+    const val TOPIC_ROLE = "cc://group-role-topic"
 
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
 
@@ -97,9 +101,9 @@ internal fun <R> catching(run: () -> R?): R? {
     return try {
         run()
     } catch (e: Exception) {
-        IMHelper.postError(e);null
+        CcIM.postError(e);null
     } catch (e: java.lang.Exception) {
-        IMHelper.postError(e);null
+        CcIM.postError(e);null
     }
 }
 
@@ -107,15 +111,23 @@ internal fun <R> catching(run: () -> R?, deal: (() -> R?)? = null): R? {
     return try {
         run()
     } catch (e: Exception) {
-        IMHelper.postError(e);deal?.invoke()
+        CcIM.postError(e);deal?.invoke()
     } catch (e: java.lang.Exception) {
-        IMHelper.postError(e);deal?.invoke()
+        CcIM.postError(e);deal?.invoke()
     }
 }
 
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
+    /**
+     * Local build type
+     * */
+    RECALLED("recall"), SENSITIVE("sensitive"),
+
+    /**
+     * Server message type
+     * */
     TEXT("text"), IMG("img"), AUDIO("audio"), CC_VIDEO("cc_video"), VIDEO("video"), QUESTION("question"), LIVE("live");
 
     companion object {

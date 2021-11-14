@@ -8,6 +8,11 @@ class SendMessageRespEn {
     var black = false
 
     /**
+     * 大V id
+     * */
+    var ownerId: Int = -1
+
+    /**
      * 群组id
      */
     var groupId: Long = -1

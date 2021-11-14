@@ -6,15 +6,17 @@ import com.zj.ccIm.core.Comment
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.hub.ClientHub
 import com.zj.ccIm.core.Constance
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.*
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.ccIm.core.db.*
 import com.zj.ccIm.core.sender.Converter
+import com.zj.ccIm.error.AuthenticationError
 import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
-import com.zj.protocol.grpc.ImMessage
+import com.zj.protocol.grpc.ImMessageReply
 
 open class ClientHubImpl : ClientHub<Any?>() {
 
@@ -64,8 +66,12 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     d = if (deal?.second == null) d else deal.second
                 }
                 Constance.TOPIC_KICK_OUT -> {
-                    IMHelper.loginOut()
-                    d = KickOut("from rtm calling")
+                    CcIM.postError(AuthenticationError(d.toString()));return
+                }
+                Constance.TOPIC_ROLE -> {
+                    val deal = SessionDbOperator.onDealSessionRoleInfo(d?.toString())
+                    payload = deal?.first ?: callId
+                    d = if (deal?.second == null) d else deal.second
                 }
                 Constance.TOPIC_GROUP_INFO -> {
                     val deal = SessionDbOperator.onDealSessionInfo(d?.toString())
@@ -81,7 +87,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                         }
                         payload = k
                         d = trans
-                        IMHelper.postToUiObservers(MessageInfoEntity::class.java, d, payload)
+                        CcIM.postToUiObservers(MessageInfoEntity::class.java, d, payload)
                     }
                     onFinish();return
                 }
@@ -101,7 +107,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
             }
             super.onMsgPatch(d, payload, isSpecialData, sendingState, isResent, onFinish)
         } catch (e: Exception) {
-            ImLogs.recordLogsInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
+            ImLogs.recordErrorInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
             onFinish()
             return
         }
@@ -114,18 +120,18 @@ open class ClientHubImpl : ClientHub<Any?>() {
     private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
-            val channel = Gson().fromJson(d?.toString(), GetMsgReqBean::class.java)
-            channel.setChannels()
-            IMHelper.onMsgRegistered(channel)
+            val req = d as ImMessageReply.ReqContext
+            val bean = ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
+            if (bean.key == req.seq) IMHelper.onMsgRegistered(bean)
             return true
         }
         if (callId == Constance.CALL_ID_REGISTER_CHAT || callId == Constance.CALL_ID_LEAVE_CHAT_ROOM) {
-            BadgeDbOperator.clearGroupBadge(d as GetMsgReqBean)
+            BadgeDbOperator.clearGroupBadge(d as ChannelRegisterInfo)
             return true
         }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {
-            IMHelper.resume(Constance.FETCH_OFFLINE_MSG_CODE)
-            onDispatchSentErrorMsg(d as GetMsgReqBean)
+            CcIM.resume(Constance.FETCH_OFFLINE_MSG_CODE)
+            onDispatchSentErrorMsg(d as ChannelRegisterInfo)
             return true
         }
         if (sendingState == SendMsgState.NONE && callId?.startsWith(Constance.CALL_ID_GET_MESSAGES) == true) {
@@ -169,15 +175,15 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     pl = r?.second
                 }
             }
-            ImMessage::class.java, MessageInfoEntity::class.java -> {
+            MessageInfoEntity::class.java -> {
                 if (!dc.isNullOrEmpty()) {
                     dc.forEach {
-                        val r = MessageDbOperator.onDealMessages(it, callId, sendingState)
+                        val r = MessageDbOperator.onDealMessages(it as? MessageInfoEntity, callId, sendingState)
                         second.add(r?.first)
                     }
                 }
                 if (d != null) {
-                    val r = MessageDbOperator.onDealMessages(d, callId, sendingState)
+                    val r = MessageDbOperator.onDealMessages(d as? MessageInfoEntity, callId, sendingState)
                     first = r?.first
                     pl = r?.second
                 }
@@ -206,22 +212,21 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     Comment.DELETE_FANS_SESSION -> {
                         val en = PrivateFansEn().apply { this.userId = d.targetUserId }
                         BadgeDbOperator.notifyOwnerSessionBadgeWithFansSessionChanged(d.targetUserId, d.groupId)
-                        IMHelper.postToUiObservers(en, PAYLOAD_DELETE)
+                        CcIM.postToUiObservers(en, PAYLOAD_DELETE)
                     }
                 }
             }
         }
     }
 
-    private fun onDispatchSentErrorMsg(bean: GetMsgReqBean) {
+    private fun onDispatchSentErrorMsg(bean: ChannelRegisterInfo) {
         IMHelper.withDb {
-            val key = IMHelper.getCurrentChannelSendingKey(bean.groupId)
-            val resendMsg = it.sendMsgDao().findAllByKey(key)
+            val resendMsg = it.sendMsgDao().findAllByKey(bean.key)
             resendMsg?.forEach { msg ->
                 if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
                 else {
                     val fm = dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
-                    IMHelper.postToUiObservers(null, fm.first, fm.third)
+                    CcIM.postToUiObservers(null, fm.first, fm.third)
                 }
             }
         }

@@ -1,125 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.zj.emotionbar.adapt2cc.CCEmojiLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_input_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ddd"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".ui.MainActivity">
 
-    <TextView
-        android:id="@+id/main_tv_conn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="10dp"
-        android:gravity="center"
-        tools:text="CONNECTING..." />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="10dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#acc"
             android:gravity="center"
-            android:onClick="registerMsg"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="registerMsg" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#cac"
-            android:gravity="center"
-            android:onClick="leaveChatRoom"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="leaveRoom" />
+            <TextView
+                android:id="@+id/main_tv_conn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#cac"
+                android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                tools:text="CONNECTING..." />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#cca"
-            android:gravity="center"
-            android:onClick="queryCurrent"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="queryDB" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#cca"
+                android:gravity="center"
+                android:onClick="queryCurrent"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="queryDB" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="#baf"
-            android:gravity="center"
-            android:onClick="sendText"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="sendText" />
+        </LinearLayout>
 
-    </LinearLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/main_fg_message_tab"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="#ccc" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="10dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#dda"
-            android:gravity="center"
-            android:onClick="sendUrlImg"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="send url img" />
-
-        <TextView
-            android:id="@+id/main_edit"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/main_fg_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#ccc"
-            android:gravity="center"
-            android:onClick="startAlbum"
-            android:text="input your path" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="#9ac"
-            android:gravity="center"
-            android:onClick="sendImg"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:text="SEND IMG" />
-
+            android:background="#dee" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_erv"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:onClick="clearText"
-        android:text="clear" />
-
-</LinearLayout>
+</com.zj.emotionbar.adapt2cc.CCEmojiLayout>

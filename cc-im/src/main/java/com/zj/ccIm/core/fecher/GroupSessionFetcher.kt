@@ -1,6 +1,7 @@
 package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.FetchResult
@@ -25,7 +26,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
         val lastTs = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L
         ImLogs.d("GroupSessionFetcher", "start fetch sessions  by ${prop.flags} ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
-        return ImApi.getFunctionApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.newThread()) { b, d, e ->
+        return ImApi.getFunctionApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.io()) { b, d, e ->
             try {
                 val sessions = d?.groupList
                 if (b) {
@@ -55,8 +56,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
                     finishAFetch(prop, FetchResult(false, isFirstFetch, true, "fetch sessions group failed with:${e?.message} !!"))
                 }
             } catch (e: Exception) {
-                cancel(prop)
-                IMHelper.postError(e)
+                cancel(prop, e)
             }
         }
     }
@@ -66,7 +66,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
         if (!sessions.isNullOrEmpty()) {
             val gIds = sessions.map { ms -> ms.groupId }
             ImLogs.d("GroupSessionFetcher", "start fetch session last message info by  ${prop.flags} , groups = $gIds")
-            prop.compo = ImApi.getFunctionApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.newThread()) { _, d, _ ->
+            prop.compo = ImApi.getFunctionApi().call({ it.fetchSessionLastMessage(gIds) }, Schedulers.io(), Schedulers.io()) { _, d, _ ->
                 try {
                     val fmDao = IMHelper.getDb()?.sessionMsgDao()
                     d?.forEach { fi ->
@@ -90,7 +90,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
             val key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = s.groupId)
             s?.sessionMsgInfo = fmDao?.findSessionMsgInfoByKey(key)
         }
-        IMHelper.postToUiObservers(SessionInfoEntity::class.java, sessions, getPayload()) {
+        CcIM.postToUiObservers(SessionInfoEntity::class.java, sessions, getPayload()) {
             finishAFetch(prop, FetchResult(true, isFirstFetch, false))
         }
     }

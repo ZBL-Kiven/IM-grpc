@@ -4,7 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.ccIm.core.Constance
-import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.CcIM
+import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
@@ -22,10 +23,10 @@ internal object Fetcher {
     private val handler = Handler(Looper.getMainLooper())
 
     fun init() {
-        IMHelper.registerConnectionStateChangeListener("main_fetcher_observer") {
+        CcIM.registerConnectionStateChangeListener("main_fetcher_observer") {
             when (it) {
                 ConnectionState.CONNECTED -> {
-                    IMHelper.pause(Constance.FETCH_SESSION_CODE)
+                    CcIM.pause(Constance.FETCH_SESSION_CODE)
                     BaseFetcher.startFetch(GroupSessionFetcher, PrivateOwnerSessionFetcher)
                 }
                 ConnectionState.CONNECTED_ERROR, ConnectionState.NETWORK_STATE_CHANGE -> {
@@ -63,8 +64,8 @@ internal object Fetcher {
     fun endOfFetch(prop: FetchType, result: FetchResult?) {
         ImLogs.d("Fetcher", " Fetch finished with last : ${prop.dealCls?.getPayload()}!!")
         if (result != null) endOfRefresh(prop, result, false)
-        if (!IMHelper.tryToRegisterAfterConnected()) {
-            IMHelper.resume(Constance.FETCH_SESSION_CODE)
+        if (!IMChannelManager.tryToRegisterAfterConnected()) {
+            CcIM.resume(Constance.FETCH_SESSION_CODE)
         }
     }
 
@@ -75,7 +76,7 @@ internal object Fetcher {
             handler.post(r)
         }
         if (formRefresh) ImLogs.d("Fetcher", "on refresh result : ${result.success}")
-        IMHelper.postToUiObservers(result, prop.dealCls?.getPayload())
+        CcIM.postToUiObservers(result, prop.dealCls?.getPayload())
     }
 
     fun cancelAll() {

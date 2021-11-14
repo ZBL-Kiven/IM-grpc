@@ -52,7 +52,7 @@ internal object FileUploader {
                     }
                 }
             }
-            reqCompo = ImApi.getRecordApi(header).call({ it.upload(map, part) }, Schedulers.io(), Schedulers.newThread()) { isSuccess, data, throwable, a ->
+            reqCompo = ImApi.getRecordApi(header).call({ it.upload(map, part) }, Schedulers.io(), Schedulers.io()) { isSuccess, data, throwable, a ->
                 if (isSuccess && data?.success == true) {
                     if (builder.deleteCompressFile) FileUtils.delete(builder.fileInfo?.path)
                     observer.onSuccess(builder.callId, data, totalBytes)

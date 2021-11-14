@@ -1,6 +1,6 @@
 package com.zj.ccIm.core.sender
 
-import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.UploadRespEn
 import com.zj.ccIm.core.toMd5
@@ -60,9 +60,9 @@ internal open class BaseFileSender(private val d: SendMessageReqEn, private val 
         if (d.msgType == MsgType.TEXT.type) {
             observer.onError(callId, IllegalArgumentException("the send msg type is not supported from text !!"), null);return
         }
-        val serverUploadUrl = URL("${IMHelper.imConfig?.getIMHost()}/im/upload/file")
-        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${IMHelper.imConfig?.getUserId() ?: ""}", "token" to (IMHelper.imConfig?.getToken() ?: ""), "timeStamp" to "$timeStamp")
-        val sign = "$timeStamp;${IMHelper.imConfig?.getUserId()};${d.msgType}".toMd5()
+        val serverUploadUrl = URL("${CcIM.imConfig?.getIMHost()}/im/upload/file")
+        val headers = mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${CcIM.imConfig?.getUserId() ?: ""}", "token" to (CcIM.imConfig?.getToken() ?: ""), "timeStamp" to "$timeStamp")
+        val sign = "$timeStamp;${CcIM.imConfig?.getUserId()};${d.msgType}".toMd5()
         val fileInfo = FileUploader.FileInfo(f.name, "file", path = path)
         val params = mapOf("sign" to sign, "type" to d.msgType)
         sendingToken = FileUploader.with(serverUploadUrl).callId(callId).addHeader(headers).addParams(params).setFileInfo(fileInfo).deleteFileAfterUpload(isDeleteFileAfterUpload).start(observer)

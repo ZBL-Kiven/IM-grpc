@@ -3,6 +3,7 @@ package com.zj.imtest
 import android.widget.Toast
 import com.zj.ccIm.core.ImConfigIn
 import com.zj.im.chat.exceptions.IMException
+import com.zj.imtest.ui.MainActivity
 
 object IMConfig : ImConfigIn {
 
@@ -34,7 +35,7 @@ object IMConfig : ImConfigIn {
     }
 
     override fun onAuthenticationError() {
-        MainActivity.app?.let {
+        BaseApp.context.let {
             Toast.makeText(it, "TOKEN IS INVALID", Toast.LENGTH_SHORT).show()
         }
     }

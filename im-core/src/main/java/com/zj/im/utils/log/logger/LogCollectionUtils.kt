@@ -78,7 +78,7 @@ sealed class LogCollectionUtils {
         val type = ErrorType.E
         val txt = getLogText(where, s)
         if (debugEnable) {
-            Log.d(getTag(type.errorName), txt)
+            Log.e(getTag(type.errorName), txt)
         }
         if (collectionAble()) {
             onLogCollection(type, txt, append)

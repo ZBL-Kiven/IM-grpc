@@ -10,8 +10,6 @@ interface ImMsgIn {
 
     fun getMsgId(): String
 
-    fun getReplyMsgId(): Long?
-
     fun getType(): String?
 
     fun getSendState(): Int

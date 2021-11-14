@@ -20,32 +20,20 @@ public interface VideoContentOrBuilder extends
       getUrlBytes();
 
   /**
-   * <code>string height = 2;</code>
-   * @return The height.
-   */
-  java.lang.String getHeight();
-  /**
-   * <code>string height = 2;</code>
-   * @return The bytes for height.
-   */
-  com.google.protobuf.ByteString
-      getHeightBytes();
-
-  /**
-   * <code>string width = 3;</code>
-   * @return The width.
-   */
-  java.lang.String getWidth();
-  /**
-   * <code>string width = 3;</code>
-   * @return The bytes for width.
-   */
-  com.google.protobuf.ByteString
-      getWidthBytes();
-
-  /**
    * <code>uint64 duration = 4;</code>
    * @return The duration.
    */
   long getDuration();
+
+  /**
+   * <code>uint32 height = 5;</code>
+   * @return The height.
+   */
+  int getHeight();
+
+  /**
+   * <code>uint32 width = 6;</code>
+   * @return The width.
+   */
+  int getWidth();
 }

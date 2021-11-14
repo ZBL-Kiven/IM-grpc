@@ -19,9 +19,10 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = state
             this.data = data
-            var sendState = this.sendingState
+            val sendState: SendMsgState
             if (state != SendingUp.CANCEL) {
                 this.onSendBefore = null
+                sendState = SendMsgState.ON_SEND_BEFORE_END
             } else {
                 sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
             }

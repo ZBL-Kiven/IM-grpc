@@ -36,7 +36,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
     }
 
     private fun listenLiveData() {
-        liveStreamObserver = withChannel(true) {
+        liveStreamObserver = withChannel {
             it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>() {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {

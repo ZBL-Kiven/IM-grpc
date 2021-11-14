@@ -1,6 +1,7 @@
 package com.zj.ccIm.core.db
 
 import com.zj.ccIm.core.Constance
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.MessageTotalDots
@@ -89,7 +90,7 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             val exists = sessionInfo != null
             lastMsgDb.insertOrUpdateSessionMsgInfo(info)
             val fromV = info.newMsg?.sender?.senderId == info.ownerId
-            val fromSend = info.newMsg?.sender?.senderId == IMHelper.imConfig?.getUserId() ?: "--"
+            val fromSend = info.newMsg?.sender?.senderId == CcIM.imConfig?.getUserId() ?: "--"
             val isQuestion = info.newMsg?.msgType == MsgType.QUESTION.type
             if (sessionInfo == null && (fromV || (fromSend && isQuestion))) {
                 if (fromV) {
@@ -118,10 +119,10 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
     }
 
     fun notifyAllSessionDots(callId: String? = "") {
-        IMHelper.withDb {
+       IMHelper.withDb {
             val lastMsgDb = it.sessionMsgDao()
             val allDots = lastMsgDb.findAll()?.sumOf { c -> c.msgNum } ?: 0
-            IMHelper.postToUiObservers(MessageTotalDots(allDots), callId)
+            CcIM.postToUiObservers(MessageTotalDots(allDots), callId)
         }
     }
 }

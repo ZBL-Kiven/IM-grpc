@@ -3,7 +3,7 @@ package com.zj.ccIm.core.impl
 import android.app.Application
 import com.zj.im.chat.hub.ServerHub
 import com.zj.ccIm.core.Constance
-import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.CcIM
 import com.zj.protocol.Grpc
 import com.zj.protocol.GrpcConfig
 import com.zj.protocol.grpc.*
@@ -33,11 +33,11 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         try {
             if (channel?.isTerminated != false) {
                 channel?.shutdownNow()
-                val url = IMHelper.imConfig?.getGrpcAddress() ?: Pair("-", 0)
-                val keepAliveTimeOut = IMHelper.imConfig?.getHeatBeatsTimeOut() ?: 5000L
-                val idleTimeOut = IMHelper.imConfig?.getIdleTimeOut() ?: 68400000L
+                val url = CcIM.imConfig?.getGrpcAddress() ?: Pair("-", 0)
+                val keepAliveTimeOut = CcIM.imConfig?.getHeatBeatsTimeOut() ?: 5000L
+                val idleTimeOut = CcIM.imConfig?.getIdleTimeOut() ?: 68400000L
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                val header = mapOf("token" to IMHelper.imConfig?.getToken(), "userid" to "${IMHelper.imConfig?.getUserId()}")
+                val header = mapOf("token" to CcIM.imConfig?.getToken(), "userid" to "${CcIM.imConfig?.getUserId()}")
                 channel = Grpc.get(config).defaultHeader(header)
             }
             onConnection()
@@ -53,7 +53,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * the network environment continues to be unstable, and the message sending fails, etc.
      * */
     override fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
-        withChannel(true) {
+        withChannel {
             it.ping(null, object : CusObserver<Pong>() {
                 override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
                     onChecked(isOk)
@@ -90,6 +90,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
 
         final override fun onCompleted() {}
+
         open fun onResult(isOk: Boolean, data: T?, t: Throwable?) {}
     }
 }

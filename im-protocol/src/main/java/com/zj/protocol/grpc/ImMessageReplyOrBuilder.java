@@ -8,6 +8,17 @@ public interface ImMessageReplyOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
+   * <pre>
+   **
+   * 0 代表是消息 1 代表是服务器收到请求的回执
+   * </pre>
+   *
+   * <code>int32 type = 3;</code>
+   * @return The type.
+   */
+  int getType();
+
+  /**
    * <code>.app.ImMessage imMessage = 1;</code>
    * @return Whether the imMessage field is set.
    */

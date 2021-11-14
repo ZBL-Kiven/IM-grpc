@@ -1,7 +1,8 @@
 package com.zj.ccIm.core.fecher
 
+
 import com.zj.api.base.BaseRetrofit
-import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.catching
 import java.util.concurrent.LinkedBlockingDeque
@@ -65,8 +66,15 @@ internal abstract class BaseFetcher {
         }
     }
 
-    protected fun cancel(prop: FetchType) {
+    protected fun cancel(prop: FetchType, e: Throwable? = null) {
         prop.compo?.cancel()
+        if (e != null) {
+            fetching = false
+            selfInFetching = false
+            cachedFetchers.clear()
+            CcIM.postError(e)
+            CcIM.reconnect("fetch failed , case : Fetcher was canceled by error ${e.message}!!")
+        }
     }
 
     protected fun finishAFetch(prop: FetchType, result: FetchResult) {
@@ -84,7 +92,7 @@ internal abstract class BaseFetcher {
             } else {
                 fetching = false
                 Fetcher.resetIncrementTsForProp(prop)
-                IMHelper.reconnect("fetch failed , case :${result.errorMsg} !!")
+                CcIM.reconnect("fetch failed , case :${result.errorMsg} !!")
             }
         }
         if (prop.flags.and(FetchType.FETCH_FLAG_REFRESH) != 0) {

@@ -1,5 +1,6 @@
 package com.zj.ccIm.core.sender
 
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.*
@@ -9,6 +10,7 @@ internal object Converter {
 
     fun exchangeMsgInfoBySendingInfo(sen: SendMessageReqEn, sendingState: SendMsgState = SendMsgState.NONE): MessageInfoEntity {
         val msg = MessageInfoEntity()
+        msg.channelKey = sen.key
         msg.groupId = sen.groupId
         msg.msgType = sen.msgType
         msg.replyMsg = sen.replyMsg
@@ -16,9 +18,9 @@ internal object Converter {
         msg.sendingState = sendingState.type
         msg.sendTime = System.currentTimeMillis()
         msg.sender = SenderInfo().apply {
-            this.senderId = IMHelper.imConfig?.getUserId() ?: 0
-            this.senderAvatar = IMHelper.imConfig?.getUserAvatar()
-            this.senderName = IMHelper.imConfig?.getUserName()
+            this.senderId = CcIM.imConfig?.getUserId() ?: 0
+            this.senderAvatar = CcIM.imConfig?.getUserAvatar()
+            this.senderName = CcIM.imConfig?.getUserName()
         }
         when (sen.msgType) {
             MsgType.TEXT.type -> {

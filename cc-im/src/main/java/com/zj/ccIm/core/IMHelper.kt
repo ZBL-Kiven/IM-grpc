@@ -2,59 +2,76 @@ package com.zj.ccIm.core
 
 import android.app.Application
 import android.app.Notification
-import com.zj.ccIm.core.api.ImApi
-import com.zj.database.DbHelper
-import com.zj.im.chat.core.BaseOption
-import com.zj.im.chat.hub.ClientHub
-import com.zj.im.chat.hub.ServerHub
-import com.zj.im.main.impl.IMInterface
-import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.sp.SPHelper
-import com.zj.database.IMDb
-import com.zj.database.entity.SessionInfoEntity
-import com.zj.ccIm.annos.DeleteSessionType
-import com.zj.ccIm.logger.ImLogs
-import com.zj.database.entity.PrivateOwnerEntity
-import io.reactivex.schedulers.Schedulers
-import okhttp3.MediaType
-import okhttp3.RequestBody
+import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
-import com.zj.ccIm.BuildConfig
-import com.zj.ccIm.core.bean.*
+import com.zj.ccIm.CcIM
+import com.zj.ccIm.annos.DeleteSessionType
+import com.zj.ccIm.core.api.ImApi
+import com.zj.ccIm.core.bean.DeleteSessionInfo
+import com.zj.ccIm.core.bean.GetMoreMessagesResult
+import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.ccIm.core.bean.SessionConfigReqEn
 import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.*
 import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.fecher.GroupSessionFetcher
+import com.zj.ccIm.core.fecher.MessageFetcher
 import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
-import com.zj.ccIm.core.impl.ServerHubImpl
+import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
-import com.zj.ccIm.error.ConnectionError
+import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.DBFileException
-import com.zj.ccIm.error.InitializedException
 import com.zj.ccIm.live.LiveIMHelper
-import com.zj.ccIm.live.impl.LiveClientHubImpl
-import com.zj.ccIm.live.impl.LiveServerHubImpl
-import com.zj.database.entity.SendMessageReqEn
-import com.zj.im.chat.exceptions.IMException
-import com.zj.im.sender.OnSendBefore
+import com.zj.ccIm.logger.ImLogs
+import com.zj.database.DbHelper
+import com.zj.database.IMDb
+import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.SessionInfoEntity
+import com.zj.im.chat.core.BaseOption
+import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.chat.poster.UIHandlerCreator
+import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.utils.log.NetWorkRecordInfo
+import io.reactivex.schedulers.Schedulers
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import java.lang.StringBuilder
 
-
 @Suppress("MemberVisibilityCanBePrivate", "unused")
-object IMHelper : IMInterface<Any?>() {
+object IMHelper {
 
-    private var lastMsgRegister: GetMsgReqBean? = null
-    internal var imConfig: ImConfigIn? = null
-        get() {
-            return if (field == null) {
-                postIMError(InitializedException("get IM Config"));null
-            } else field
+    val Sender: MsgSender; get() = MsgSender().withConfig(SendMsgConfig())
+
+    val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
+
+    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        return addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
+    }
+
+    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        return addObserver(T::class.java, uniqueCode, lifecycleOwner)
+    }
+
+    fun <T : Any> addObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        if (classT == MessageInfoEntity::class.java) {
+            throw IllegalStateException("please use [ChannelRegisterInfo] to register message observer!")
         }
+        return CcIM.addReceiveObserver(classT, uniqueCode, lifecycleOwner)
+    }
+
+    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        if (classT == MessageInfoEntity::class.java) {
+            throw IllegalStateException("please use [ChannelRegisterInfo] to register message observer!")
+        }
+        return CcIM.addTransferObserver(classT, classR, uniqueCode, lifecycleOwner)
+    }
+
+    fun getIMInterface(): MessageInterface<*> {
+        return CcIM.getImInterface()
+    }
 
     fun init(app: Application, imConfig: ImConfigIn) {
-        this.imConfig = imConfig
         Constance.app = app
         Fetcher.init()
         SPHelper.init("im_sp_main", app)
@@ -62,37 +79,7 @@ object IMHelper : IMInterface<Any?>() {
         if (imConfig.debugAble()) option.debug()
         if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
         option.setNotify(Notification())
-        initChat(option.build())
-    }
-
-    override fun getClient(): ClientHub<Any?> {
-        return if (imConfig?.useLive() == true) LiveClientHubImpl() else ClientHubImpl()
-    }
-
-    override fun getServer(): ServerHub<Any?> {
-        return if (imConfig?.useLive() == true) LiveServerHubImpl() else ServerHubImpl()
-    }
-
-    override fun onError(e: IMException) {
-        if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
-    }
-
-    override fun onSdkDeadlyError(e: IMException) {
-        imConfig?.onSdkDeadlyError(e)
-    }
-
-    override fun onNewListenerRegistered(cls: Class<*>) {
-        when (cls) {
-            SessionInfoEntity::class.java -> {
-                routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)
-            }
-            MessageTotalDots::class.java -> {
-                routeToClient(null, Constance.CALL_ID_START_LISTEN_TOTAL_DOTS)
-            }
-            PrivateOwnerEntity::class.java -> {
-                routeToClient(null, Constance.CALL_ID_START_LISTEN_PRIVATE_OWNER_CHAT)
-            }
-        }
+        CcIM.init(imConfig, option.build())
     }
 
     fun refreshSessions(result: FetchResultRunner) {
@@ -103,17 +90,22 @@ object IMHelper : IMInterface<Any?>() {
         Fetcher.refresh(PrivateOwnerSessionFetcher, result)
     }
 
-    fun getChatMsg(bean: GetMsgReqBean, callId: String) {
-        bean.callIdPrivate = callId
-        routeToServer(bean, Constance.CALL_ID_GET_MORE_MESSAGES)
+    fun getChatMsg(req: ChannelRegisterInfo, onCalled: (GetMoreMessagesResult) -> Unit) {
+        if (!req.checkValid()) {
+            val result = GetMoreMessagesResult(req.key, false, null, req, null, IllegalArgumentException("request check valid failed ,check your params and try again!"))
+            onCalled.invoke(result)
+            return
+        }
+        if (req.type == null) throw java.lang.NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
+        MessageFetcher.getOfflineMessage(req.key, req, onCalled)
     }
 
     fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {
         val conf = SessionConfigReqEn(groupId, disturbType, top, des, groupName)
         val requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), Gson().toJson(conf))
-        ImApi.getRecordApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.newThread()) { i, d, _ ->
+        ImApi.getRecordApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.io()) { i, d, _ ->
             if (i && d != null) {
-                getAppContext()?.let {
+                CcIM.getAppContext()?.let {
                     val sd = DbHelper.get(it)?.db?.sessionDao()
                     val smd = DbHelper.get(it)?.db?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
@@ -123,29 +115,28 @@ object IMHelper : IMInterface<Any?>() {
                     local?.sessionMsgInfo = localMsg
                     if (local != null) {
                         sd.insertOrChangeSession(local)
-                        postToUiObservers(SessionInfoEntity::class.java, local, ClientHubImpl.PAYLOAD_CHANGED)
+                        CcIM.postToUiObservers(SessionInfoEntity::class.java, local, ClientHubImpl.PAYLOAD_CHANGED)
                     }
                 }
             }
         }
     }
 
-    fun registerChatRoom(groupId: Long, ownerId: Int, targetUserId: Int? = null, vararg channel: FetchMsgChannel) {
-        if (!channel.isNullOrEmpty()) beginMessageTempRecord(channel[0].serializeName)
-        this.lastMsgRegister = GetMsgReqBean(groupId, ownerId.coerceAtLeast(0), targetUserId?.coerceAtLeast(0), null, null, channel)
-        if (this.lastMsgRegister?.checkValid() != true) return
-        pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        send(lastMsgRegister?.getCopyData(), Constance.CALL_ID_REGISTER_CHAT, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
+    fun registerChatRoom(req: ChannelRegisterInfo): String? {
+        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
+        if (!req.checkValid()) return null
+        IMChannelManager.offerLast(req)
+        CcIM.beginMessageTempRecord(req.key)
+        CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        return req.key
     }
 
-    fun leaveChatRoom(): NetWorkRecordInfo? {
-        val last = lastMsgRegister?.getCopyData()
-        val callId = Constance.CALL_ID_LEAVE_CHAT_ROOM
-        send(last, callId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = true, ignoreConnecting = false, sendBefore = null)
-        this.lastMsgRegister = null
-        return last?.channels?.let {
-            if (it.isNotEmpty()) endMessageTempRecord(it[0].serializeName) else null
-        }
+    fun leaveChatRoom(key: String): NetWorkRecordInfo? {
+        return if (key.isNotEmpty()) {
+            val last = IMChannelManager.destroy(key) ?: return null
+            CcIM.send(last, Constance.CALL_ID_LEAVE_CHAT_ROOM, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+            return CcIM.endMessageTempRecord(key)
+        } else null
     }
 
     fun deleteSession(@DeleteSessionType type: Int, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {
@@ -157,8 +148,8 @@ object IMHelper : IMInterface<Any?>() {
                 else -> throw IllegalArgumentException("the type never been registered!")
             }
             val data = DeleteSessionInfo(groupId, targetId, type)
-            routeToServer(data, Constance.CALL_ID_DELETE_SESSION)
-            routeToClient(data, Constance.CALL_ID_DELETE_SESSION)
+            CcIM.routeToServer(data, Constance.CALL_ID_DELETE_SESSION)
+            CcIM.routeToClient(data, Constance.CALL_ID_DELETE_SESSION)
         }
     }
 
@@ -166,53 +157,9 @@ object IMHelper : IMInterface<Any?>() {
         MessageDbOperator.deleteMsg(clientId)
     }
 
-    internal fun tryToRegisterAfterConnected(): Boolean {
-        lastMsgRegister?.let {
-            registerChatRoom(it.groupId, it.ownerId, it.targetUserid, *it.channels)
-            return true
-        }
-        return false
-    }
-
-    internal fun <T : Any> postToUiObservers(data: T, payload: String? = null, onFinish: (() -> Unit)? = null) {
-        val cls = if (data is Collection<*>) {
-            throw NullPointerException("To send an array, you need to specify the Class type, and call [postToUiObservers(cls: Class<>?,...)] to handle this problem.")
-        } else {
-            data::class.java
-        }
-        postToUiObservers(cls, data, payload, onFinish)
-    }
-
-    internal fun <T : Any> postToUiObservers(cls: Class<*>?, data: T?, payload: String? = null, onFinish: (() -> Unit)? = null) {
-        super.postToUi(cls, data, payload, onFinish ?: {})
-    }
-
-    internal fun onMsgRegistered(lrb: GetMsgReqBean) {
-        pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        routeToServer(lrb, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
-    }
-
-    private fun close() {
-        lastMsgRegister = null
-        Fetcher.cancelAll()
-        LiveIMHelper.close()
-    }
-
-    override fun shutdown(case: String) {
-        close()
-        super.shutdown(case)
-    }
-
-    /**
-     * must call when login out
-     * */
-    fun loginOut() {
-        Thread {
-            close()
-            SPHelper.clear()
-            withDb { it.clearAllTables() }
-            shutdown("on logout called !")
-        }.start()
+    internal fun onMsgRegistered(lrb: ChannelRegisterInfo) {
+        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
+        CcIM.routeToServer(lrb, Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES)
     }
 
     fun deleteSendingMsgByClientId(clientId: String) {
@@ -222,11 +169,11 @@ object IMHelper : IMInterface<Any?>() {
     }
 
     internal fun getDb(): IMDb? {
-        val ctx = Constance.app ?: getAppContext() ?: return null
+        val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
         return try {
             DbHelper.get(ctx)?.db
         } catch (e: Exception) {
-            postIMError(DBFileException());null
+            CcIM.postIMError(DBFileException());null
         }
     }
 
@@ -240,16 +187,6 @@ object IMHelper : IMInterface<Any?>() {
         }
     }
 
-    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<Any?>?) {
-        sen.key = getCurrentChannelSendingKey(sen.groupId)
-        ImLogs.recordLogsInFile("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
-        super.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
-    }
-
-    val Sender: MsgSender; get() = MsgSender().createConfig(SendMsgConfig())
-
-    val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
-
     fun queryAllDBColumnsCount(): StringBuilder {
         val sb = StringBuilder()
         withDb {
@@ -262,11 +199,20 @@ object IMHelper : IMInterface<Any?>() {
         return sb
     }
 
-    internal fun getCurrentChannelSendingKey(groupId: Long): String {
-        return if (lastMsgRegister != null) {
-            val channelGroups = lastMsgRegister?.channels?.groupBy { it.classification }
-            val groupPrefix = channelGroups?.keys?.joinToString { "$it:" }
-            if (!groupPrefix.isNullOrEmpty()) "$groupPrefix$groupId" else ""
-        } else ""
+    fun shutdown() {
+        CcIM.shutdown("called from app!")
+    }
+
+    fun close() {
+        IMChannelManager.clear()
+        Fetcher.cancelAll()
+        LiveIMHelper.close()
+    }
+
+    /**
+     * must call when login out
+     * */
+    fun loginOut() {
+        CcIM.loginOut()
     }
 }

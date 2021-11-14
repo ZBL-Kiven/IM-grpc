@@ -43,35 +43,6 @@ public final class MsgApiGrpc {
     return getListenTopicDataMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<GetImMessageReq, ImMessage> getGetImMessageMethod;
-
-  @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "GetImMessage",
-      requestType = GetImMessageReq.class,
-      responseType = ImMessage.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-  public static io.grpc.MethodDescriptor<GetImMessageReq, ImMessage> getGetImMessageMethod() {
-    io.grpc.MethodDescriptor<GetImMessageReq, ImMessage> getGetImMessageMethod;
-    if ((getGetImMessageMethod = MsgApiGrpc.getGetImMessageMethod) == null) {
-      synchronized (MsgApiGrpc.class) {
-        if ((getGetImMessageMethod = MsgApiGrpc.getGetImMessageMethod) == null) {
-          MsgApiGrpc.getGetImMessageMethod = getGetImMessageMethod =
-              io.grpc.MethodDescriptor.<GetImMessageReq, ImMessage>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "GetImMessage"))
-              .setSampledToLocalTracing(true)
-              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  GetImMessageReq.getDefaultInstance()))
-              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  ImMessage.getDefaultInstance()))
-              .setSchemaDescriptor(new MsgApiMethodDescriptorSupplier("GetImMessage"))
-              .build();
-        }
-      }
-    }
-    return getGetImMessageMethod;
-  }
-
   private static volatile io.grpc.MethodDescriptor<LeaveImGroupReq, LeaveImGroupReply> getLeaveImGroupMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
@@ -245,13 +216,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public void getImMessage(GetImMessageReq request,
-                             io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetImMessageMethod(), responseObserver);
-    }
-
-    /**
-     */
     public void leaveImGroup(LeaveImGroupReq request,
                              io.grpc.stub.StreamObserver<LeaveImGroupReply> responseObserver) {
       io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getLeaveImGroupMethod(), responseObserver);
@@ -285,11 +249,6 @@ public final class MsgApiGrpc {
             io.grpc.stub.ServerCalls.asyncBidiStreamingCall(
               new MethodHandlers<ListenTopicReq, ListenTopicReply>(
                   this, METHODID_LISTEN_TOPIC_DATA)))
-          .addMethod(
-            getGetImMessageMethod(),
-            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
-              new MethodHandlers<GetImMessageReq, ImMessage>(
-                  this, METHODID_GET_IM_MESSAGE)))
           .addMethod(
             getLeaveImGroupMethod(),
             io.grpc.stub.ServerCalls.asyncUnaryCall(
@@ -334,14 +293,6 @@ public final class MsgApiGrpc {
         io.grpc.stub.StreamObserver<ListenTopicReply> responseObserver) {
       return io.grpc.stub.ClientCalls.asyncBidiStreamingCall(
           getChannel().newCall(getListenTopicDataMethod(), getCallOptions()), responseObserver);
-    }
-
-    /**
-     */
-    public void getImMessage(GetImMessageReq request,
-                             io.grpc.stub.StreamObserver<ImMessage> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
-          getChannel().newCall(getGetImMessageMethod(), getCallOptions()), request, responseObserver);
     }
 
     /**
@@ -393,14 +344,6 @@ public final class MsgApiGrpc {
 
     /**
      */
-    public java.util.Iterator<ImMessage> getImMessage(
-        GetImMessageReq request) {
-      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
-          getChannel(), getGetImMessageMethod(), getCallOptions(), request);
-    }
-
-    /**
-     */
     public LeaveImGroupReply leaveImGroup(LeaveImGroupReq request) {
       return io.grpc.stub.ClientCalls.blockingUnaryCall(
           getChannel(), getLeaveImGroupMethod(), getCallOptions(), request);
@@ -445,12 +388,11 @@ public final class MsgApiGrpc {
     }
   }
 
-  private static final int METHODID_GET_IM_MESSAGE = 0;
-  private static final int METHODID_LEAVE_IM_GROUP = 1;
-  private static final int METHODID_PING = 2;
-  private static final int METHODID_LISTEN_TOPIC_DATA = 3;
-  private static final int METHODID_LIVE_ROOM_MESSAGE = 4;
-  private static final int METHODID_ONLINE_IM_MESSAGE = 5;
+  private static final int METHODID_LEAVE_IM_GROUP = 0;
+  private static final int METHODID_PING = 1;
+  private static final int METHODID_LISTEN_TOPIC_DATA = 2;
+  private static final int METHODID_LIVE_ROOM_MESSAGE = 3;
+  private static final int METHODID_ONLINE_IM_MESSAGE = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -469,10 +411,6 @@ public final class MsgApiGrpc {
     @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
-        case METHODID_GET_IM_MESSAGE:
-          serviceImpl.getImMessage((GetImMessageReq) request,
-              (io.grpc.stub.StreamObserver<ImMessage>) responseObserver);
-          break;
         case METHODID_LEAVE_IM_GROUP:
           serviceImpl.leaveImGroup((LeaveImGroupReq) request,
               (io.grpc.stub.StreamObserver<LeaveImGroupReply>) responseObserver);
@@ -552,7 +490,6 @@ public final class MsgApiGrpc {
           serviceDescriptor = result = io.grpc.ServiceDescriptor.newBuilder(SERVICE_NAME)
               .setSchemaDescriptor(new MsgApiFileDescriptorSupplier())
               .addMethod(getListenTopicDataMethod())
-              .addMethod(getGetImMessageMethod())
               .addMethod(getLeaveImGroupMethod())
               .addMethod(getLiveRoomMessageMethod())
               .addMethod(getPingMethod())

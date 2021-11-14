@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_primary">#111a10</color>
+    <color name="color_primary_dark">#111a10</color>
+    <color name="color_accent">#212a20</color>
+    <color name="color_primary_grey">#262c27</color>
+    <color name="color_primary_disable">#717c71</color>
+    <color name="color_primary_light_grey">#dbdbdb</color>
+    <color name="color_primary_light_grey_dark">#d3d3d3</color>
+    <color name="color_primary_light_dark">#c1c7c3</color>
+    <color name="color_primary_background">#a1a3a1</color>
+    <color name="color_primary_text_color">#e7f3e9</color>
+    <color name="color_primary_color_high_light">#f7fff9</color>
+    <color name="color_primary_color_mediu_light">#eff0e9</color>
+
+</resources>

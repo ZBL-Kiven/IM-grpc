@@ -79,7 +79,7 @@ internal object DataReceivedDispatcher {
 
     fun onConnectionStateChange(connState: ConnectionState) {
         if (connState.canConnect()) {
-            getServer("server may need to reconnect")?.tryToReConnect(connState.name)
+            getServer("server may need to reconnect ${if (connState.case.isNotEmpty()) connState.case else ""}")?.tryToReConnect(connState.name)
         }
         StatusHub.curConnectionState = connState
         chatBase?.notify("on connection state changed to ${connState.name}")?.onConnectionStatusChanged(connState)

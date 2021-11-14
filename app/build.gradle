@@ -33,9 +33,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'com.zj.repo:album:2.1.3'
+    implementation 'com.zj.repo:loading:1.2.9'
+    implementation 'com.zj.repo:constrain-fragment:2.1.9'
     implementation 'com.cc.android:views:2.0.5'
-
-//    implementation 'com.cc.android:cc-im:1.0.7'
     implementation project(':im-cc-ui')
     implementation project(':cc-im')
+    implementation project(':im-emotionbar')
 }

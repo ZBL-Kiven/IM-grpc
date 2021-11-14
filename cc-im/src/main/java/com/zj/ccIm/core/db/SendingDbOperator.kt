@@ -19,13 +19,14 @@ internal object SendingDbOperator {
 
         var msgDb: MessageDao? = null
         var sendDb: SendMsgDao? = null
-        IMHelper.withDb {
+       IMHelper.withDb {
             msgDb = it.messageDao()
             sendDb = it.sendMsgDao()
         }
         val localMsg = msgDb?.findMsgByClientId(callId)
         localMsg?.sendingState = sendingState.type
         localMsg?.msgId = d.msgId
+        localMsg?.ownerId = d.ownerId
         localMsg?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
         localMsg?.questionContent?.published = d.published
         localMsg?.questionContent?.expireTime = d.expireTime

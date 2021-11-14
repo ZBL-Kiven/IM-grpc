@@ -7,8 +7,11 @@ import androidx.room.TypeConverters
 import com.zj.database.converter.*
 import java.util.*
 
+
 @Entity(tableName = "messages")
 class MessageInfoEntity {
+
+    var channelKey: String = ""
 
     /**
      * 客户端消息id
@@ -37,8 +40,20 @@ class MessageInfoEntity {
 
     /**
      * 消息类型 text/img/audio/video/question/cc_video
+     *
+     * 本地构建类型： recall/sensitive
      */
     var msgType: String? = null
+
+    /**
+     * 原始消息类型
+     * */
+    var originalMessageType: String? = null
+
+    /**
+     * countryCode
+     */
+    var countryCode: String = ""
 
     /**
      * 文本消息内容
@@ -71,6 +86,16 @@ class MessageInfoEntity {
     @TypeConverters(QuestionContentConverter::class) var questionContent: QuestionContent? = null
 
     /**
+     * 消息扩展字段
+     * */
+    @TypeConverters(ExtContentConverter::class) var extContent: Map<String, String>? = null
+
+    /**
+     * 直播消息类型
+     * */
+    @TypeConverters(LiveMessageContentConverter::class) var liveMessage: LiveMessageEntity? = null
+
+    /**
      * 回答消息
      * */
     @TypeConverters(MessageConverter::class) var answerMsg: MessageInfoEntity? = null
@@ -86,21 +111,11 @@ class MessageInfoEntity {
     @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
 
     /**
-     * 回复消息id
-     */
-    var replyMsgId: Long? = null
-
-    /**
      * 0 正常， 1 撤回
      * */
-    var status: Int = 0
+    @Deprecated("not recommend use it anymore", replaceWith = ReplaceWith("replace with", "com.zj.database.entity.MessageInfoEntity.extContent")) var status: Int = 0
 
     //----------------------------------------------------------------- 本地辅助字段 ⬇️--------------------------------------------------------------
-
-    /**
-     * 标记存储类型的 id
-     * */
-    var saveInfoId: String? = ""
 
     /**
      * 本地状态，是否发送成功 , 0 无状态，比如收到新消息

@@ -74,6 +74,11 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 24: {
+
+            type_ = input.readInt32();
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -139,6 +144,18 @@ private static final long serialVersionUID = 0L;
      */
     com.google.protobuf.ByteString
         getChannelBytes();
+
+    /**
+     * <code>string seq = 6;</code>
+     * @return The seq.
+     */
+    java.lang.String getSeq();
+    /**
+     * <code>string seq = 6;</code>
+     * @return The bytes for seq.
+     */
+    com.google.protobuf.ByteString
+        getSeqBytes();
   }
   /**
    * Protobuf type {@code app.ImMessageReply.ReqContext}
@@ -154,6 +171,7 @@ private static final long serialVersionUID = 0L;
     }
     private ReqContext() {
       channel_ = "";
+      seq_ = "";
     }
 
     @java.lang.Override
@@ -205,6 +223,12 @@ private static final long serialVersionUID = 0L;
               java.lang.String s = input.readStringRequireUtf8();
 
               channel_ = s;
+              break;
+            }
+            case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              seq_ = s;
               break;
             }
             default: {
@@ -310,6 +334,44 @@ private static final long serialVersionUID = 0L;
       }
     }
 
+    public static final int SEQ_FIELD_NUMBER = 6;
+    private volatile java.lang.Object seq_;
+    /**
+     * <code>string seq = 6;</code>
+     * @return The seq.
+     */
+    @java.lang.Override
+    public java.lang.String getSeq() {
+      java.lang.Object ref = seq_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        seq_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string seq = 6;</code>
+     * @return The bytes for seq.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getSeqBytes() {
+      java.lang.Object ref = seq_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        seq_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -336,6 +398,9 @@ private static final long serialVersionUID = 0L;
       if (!getChannelBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, channel_);
       }
+      if (!getSeqBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, seq_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -360,6 +425,9 @@ private static final long serialVersionUID = 0L;
       if (!getChannelBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, channel_);
       }
+      if (!getSeqBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, seq_);
+      }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
       return size;
@@ -383,6 +451,8 @@ private static final long serialVersionUID = 0L;
           != other.getTargetUserId()) return false;
       if (!getChannel()
           .equals(other.getChannel())) return false;
+      if (!getSeq()
+          .equals(other.getSeq())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -405,6 +475,8 @@ private static final long serialVersionUID = 0L;
           getTargetUserId());
       hash = (37 * hash) + CHANNEL_FIELD_NUMBER;
       hash = (53 * hash) + getChannel().hashCode();
+      hash = (37 * hash) + SEQ_FIELD_NUMBER;
+      hash = (53 * hash) + getSeq().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -546,6 +618,8 @@ private static final long serialVersionUID = 0L;
 
         channel_ = "";
 
+        seq_ = "";
+
         return this;
       }
 
@@ -576,6 +650,7 @@ private static final long serialVersionUID = 0L;
         result.ownerId_ = ownerId_;
         result.targetUserId_ = targetUserId_;
         result.channel_ = channel_;
+        result.seq_ = seq_;
         onBuilt();
         return result;
       }
@@ -635,6 +710,10 @@ private static final long serialVersionUID = 0L;
         }
         if (!other.getChannel().isEmpty()) {
           channel_ = other.channel_;
+          onChanged();
+        }
+        if (!other.getSeq().isEmpty()) {
+          seq_ = other.seq_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -834,6 +913,82 @@ private static final long serialVersionUID = 0L;
         onChanged();
         return this;
       }
+
+      private java.lang.Object seq_ = "";
+      /**
+       * <code>string seq = 6;</code>
+       * @return The seq.
+       */
+      public java.lang.String getSeq() {
+        java.lang.Object ref = seq_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          seq_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string seq = 6;</code>
+       * @return The bytes for seq.
+       */
+      public com.google.protobuf.ByteString
+          getSeqBytes() {
+        java.lang.Object ref = seq_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          seq_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string seq = 6;</code>
+       * @param value The seq to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSeq(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        seq_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string seq = 6;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSeq() {
+        
+        seq_ = getDefaultInstance().getSeq();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string seq = 6;</code>
+       * @param value The bytes for seq to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSeqBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        seq_ = value;
+        onChanged();
+        return this;
+      }
       @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -885,6 +1040,22 @@ private static final long serialVersionUID = 0L;
       return DEFAULT_INSTANCE;
     }
 
+  }
+
+  public static final int TYPE_FIELD_NUMBER = 3;
+  private int type_;
+  /**
+   * <pre>
+   **
+   * 0 代表是消息 1 代表是服务器收到请求的回执
+   * </pre>
+   *
+   * <code>int32 type = 3;</code>
+   * @return The type.
+   */
+  @java.lang.Override
+  public int getType() {
+    return type_;
   }
 
   public static final int IMMESSAGE_FIELD_NUMBER = 1;
@@ -959,6 +1130,9 @@ private static final long serialVersionUID = 0L;
     if (reqContext_ != null) {
       output.writeMessage(2, getReqContext());
     }
+    if (type_ != 0) {
+      output.writeInt32(3, type_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -976,6 +1150,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, getReqContext());
     }
+    if (type_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, type_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -991,6 +1169,8 @@ private static final long serialVersionUID = 0L;
     }
     ImMessageReply other = (ImMessageReply) obj;
 
+    if (getType()
+        != other.getType()) return false;
     if (hasImMessage() != other.hasImMessage()) return false;
     if (hasImMessage()) {
       if (!getImMessage()
@@ -1012,6 +1192,8 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + TYPE_FIELD_NUMBER;
+    hash = (53 * hash) + getType();
     if (hasImMessage()) {
       hash = (37 * hash) + IMMESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getImMessage().hashCode();
@@ -1153,6 +1335,8 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      type_ = 0;
+
       if (imMessageBuilder_ == null) {
         imMessage_ = null;
       } else {
@@ -1191,6 +1375,7 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public ImMessageReply buildPartial() {
       ImMessageReply result = new ImMessageReply(this);
+      result.type_ = type_;
       if (imMessageBuilder_ == null) {
         result.imMessage_ = imMessage_;
       } else {
@@ -1249,6 +1434,9 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(ImMessageReply other) {
       if (other == ImMessageReply.getDefaultInstance()) return this;
+      if (other.getType() != 0) {
+        setType(other.getType());
+      }
       if (other.hasImMessage()) {
         mergeImMessage(other.getImMessage());
       }
@@ -1281,6 +1469,52 @@ private static final long serialVersionUID = 0L;
           mergeFrom(parsedMessage);
         }
       }
+      return this;
+    }
+
+    private int type_ ;
+    /**
+     * <pre>
+     **
+     * 0 代表是消息 1 代表是服务器收到请求的回执
+     * </pre>
+     *
+     * <code>int32 type = 3;</code>
+     * @return The type.
+     */
+    @java.lang.Override
+    public int getType() {
+      return type_;
+    }
+    /**
+     * <pre>
+     **
+     * 0 代表是消息 1 代表是服务器收到请求的回执
+     * </pre>
+     *
+     * <code>int32 type = 3;</code>
+     * @param value The type to set.
+     * @return This builder for chaining.
+     */
+    public Builder setType(int value) {
+      
+      type_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <pre>
+     **
+     * 0 代表是消息 1 代表是服务器收到请求的回执
+     * </pre>
+     *
+     * <code>int32 type = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearType() {
+      
+      type_ = 0;
+      onChanged();
       return this;
     }
 

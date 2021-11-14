@@ -69,6 +69,11 @@ class SessionInfoEntity {
     var questionNum: Int = 0
 
     /**
+     * 当前在群里的角色 0 普通人， 2 管理员
+     * */
+    var role: Int = 0
+
+    /**
      * 忽略数据库字段，由推送时拼装
      * */
     @Ignore var sessionMsgInfo: SessionLastMsgInfo? = null

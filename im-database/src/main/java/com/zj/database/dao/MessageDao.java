@@ -26,10 +26,6 @@ public interface MessageDao {
     @Query("SELECT * FROM messages WHERE clientMsgId = :clientMsgId")
     MessageInfoEntity findMsgByClientId(String clientMsgId);
 
-    @WorkerThread
-    @Query("SELECT * FROM messages WHERE saveInfoId = :sid")
-    MessageInfoEntity findMsgBySaveInfoId(String sid);
-
     /**
      * 查询本地最后一条普通消息
      */
@@ -51,8 +47,6 @@ public interface MessageDao {
     @Query("DELETE FROM messages WHERE clientMsgId = :clientMsgId")
     void deleteMsgByClientId(String clientMsgId);
 
-    @Query("DELETE FROM messages WHERE saveInfoId = :sid")
-    void deleteMsgBySaveInfoId(String sid);
 
     @Query("DELETE FROM messages WHERE groupId = :sessionId")
     void deleteAllBySessionId(long sessionId);

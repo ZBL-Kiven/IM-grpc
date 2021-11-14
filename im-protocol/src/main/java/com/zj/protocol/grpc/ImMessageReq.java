@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private ImMessageReq() {
     op_ = 0;
     channel_ = "";
+    seq_ = "";
   }
 
   @java.lang.Override
@@ -75,6 +76,12 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             channel_ = s;
+            break;
+          }
+          case 50: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            seq_ = s;
             break;
           }
           default: {
@@ -307,6 +314,44 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int SEQ_FIELD_NUMBER = 6;
+  private volatile java.lang.Object seq_;
+  /**
+   * <code>string seq = 6;</code>
+   * @return The seq.
+   */
+  @java.lang.Override
+  public java.lang.String getSeq() {
+    java.lang.Object ref = seq_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      seq_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string seq = 6;</code>
+   * @return The bytes for seq.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getSeqBytes() {
+    java.lang.Object ref = seq_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      seq_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -336,6 +381,9 @@ private static final long serialVersionUID = 0L;
     if (!getChannelBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, channel_);
     }
+    if (!getSeqBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, seq_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -364,6 +412,9 @@ private static final long serialVersionUID = 0L;
     if (!getChannelBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, channel_);
     }
+    if (!getSeqBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, seq_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -388,6 +439,8 @@ private static final long serialVersionUID = 0L;
         != other.getTargetUserId()) return false;
     if (!getChannel()
         .equals(other.getChannel())) return false;
+    if (!getSeq()
+        .equals(other.getSeq())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -412,6 +465,8 @@ private static final long serialVersionUID = 0L;
         getTargetUserId());
     hash = (37 * hash) + CHANNEL_FIELD_NUMBER;
     hash = (53 * hash) + getChannel().hashCode();
+    hash = (37 * hash) + SEQ_FIELD_NUMBER;
+    hash = (53 * hash) + getSeq().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -555,6 +610,8 @@ private static final long serialVersionUID = 0L;
 
       channel_ = "";
 
+      seq_ = "";
+
       return this;
     }
 
@@ -586,6 +643,7 @@ private static final long serialVersionUID = 0L;
       result.ownerId_ = ownerId_;
       result.targetUserId_ = targetUserId_;
       result.channel_ = channel_;
+      result.seq_ = seq_;
       onBuilt();
       return result;
     }
@@ -648,6 +706,10 @@ private static final long serialVersionUID = 0L;
       }
       if (!other.getChannel().isEmpty()) {
         channel_ = other.channel_;
+        onChanged();
+      }
+      if (!other.getSeq().isEmpty()) {
+        seq_ = other.seq_;
         onChanged();
       }
       this.mergeUnknownFields(other.unknownFields);
@@ -898,6 +960,82 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       channel_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object seq_ = "";
+    /**
+     * <code>string seq = 6;</code>
+     * @return The seq.
+     */
+    public java.lang.String getSeq() {
+      java.lang.Object ref = seq_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        seq_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string seq = 6;</code>
+     * @return The bytes for seq.
+     */
+    public com.google.protobuf.ByteString
+        getSeqBytes() {
+      java.lang.Object ref = seq_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        seq_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string seq = 6;</code>
+     * @param value The seq to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSeq(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      seq_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string seq = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSeq() {
+      
+      seq_ = getDefaultInstance().getSeq();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string seq = 6;</code>
+     * @param value The bytes for seq to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSeqBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      seq_ = value;
       onChanged();
       return this;
     }

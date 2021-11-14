@@ -47,4 +47,16 @@ public interface ImMessageReqOrBuilder extends
    */
   com.google.protobuf.ByteString
       getChannelBytes();
+
+  /**
+   * <code>string seq = 6;</code>
+   * @return The seq.
+   */
+  java.lang.String getSeq();
+  /**
+   * <code>string seq = 6;</code>
+   * @return The bytes for seq.
+   */
+  com.google.protobuf.ByteString
+      getSeqBytes();
 }

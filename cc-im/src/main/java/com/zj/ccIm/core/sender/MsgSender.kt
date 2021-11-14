@@ -4,7 +4,9 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
@@ -16,7 +18,7 @@ open class MsgSender internal constructor() {
 
     private lateinit var config: SendMsgConfig
 
-    internal fun createConfig(config: SendMsgConfig): MsgSender {
+    internal fun withConfig(config: SendMsgConfig): MsgSender {
         this.config = config
         return this
     }
@@ -142,7 +144,7 @@ open class MsgSender internal constructor() {
         val sendBefore = if (MsgType.hasUploadType(info.msgType)) {
             if (!info.url.isNullOrEmpty()) null else FileSender(info)
         } else null
-        send(info, sendBefore)
+        send(info, true, sendBefore)
     }
 
     private fun setRetryProp(sen: SendMessageReqEn) {
@@ -152,17 +154,17 @@ open class MsgSender internal constructor() {
         sen.autoResendWhenBootStart = !config.fromCustom && MsgType.canRetryWhenBootStartType(sen.msgType)
     }
 
-    private fun send(sen: SendMessageReqEn, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
+    private fun send(sen: SendMessageReqEn, isRecent: Boolean = false, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
         val p = if (sendBefore != null) checkPermission() else null
         if (sendBefore == null || p?.first == true) {
-            IMHelper.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, sendBefore = sendBefore)
+            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore)
         } else {
-            IMHelper.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
+            CcIM.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
         }
     }
 
     private fun checkPermission(): Pair<Boolean, String>? {
-        return IMHelper.getAppContext()?.let {
+        return CcIM.getAppContext()?.let {
             val i = ContextCompat.checkSelfPermission(it, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             val i1 = ContextCompat.checkSelfPermission(it, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             val s = when {
