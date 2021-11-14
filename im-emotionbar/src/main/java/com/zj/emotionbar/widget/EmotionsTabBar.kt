@@ -1,13 +1,13 @@
 package com.zj.emotionbar.widget
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -134,6 +134,8 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
 open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emoticon>>) : RecyclerView.Adapter<EmotionPackTabAdapter.ViewHolder>() {
 
     var itemClickListeners: OnToolBarItemClickListener? = null
+    private val tabIconSize = (Resources.getSystem().displayMetrics.density * 24f + 0.5f).toInt()
+    private val tabIconMargin = (Resources.getSystem().displayMetrics.density * 13f + 0.5f).toInt()
 
     init {
         packs.forEach {
@@ -143,7 +145,8 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = ImageView(parent.context)
-        val lp = ViewGroup.LayoutParams(WRAP_CONTENT, MATCH_PARENT)
+        val lp = ViewGroup.MarginLayoutParams(tabIconSize, tabIconSize)
+        lp.setMargins(tabIconMargin, 0, tabIconMargin, 0)
         view.layoutParams = lp
         return ViewHolder(view)
     }
@@ -154,7 +157,7 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.itemView.context
         val fus = packs[position].iconUri ?: ""
-        ImageLoader.displayImage(fus, holder.itemView as ImageView)
+        (holder.itemView as? ImageView)?.let { ImageLoader.displayImage(fus, it) }
         if (packs[position].tag == null) {
             packs[position].tag = false
         }

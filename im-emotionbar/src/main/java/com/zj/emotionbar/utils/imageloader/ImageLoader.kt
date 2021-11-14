@@ -13,7 +13,7 @@ import java.net.MalformedURLException
 import java.net.URL
 import java.util.concurrent.Executors
 
-object ImageLoader: IImageLoader {
+object ImageLoader : IImageLoader {
     override fun displayImage(uri: String, imageView: ImageView) {
         loader.displayImage(uri, imageView)
     }
@@ -21,13 +21,14 @@ object ImageLoader: IImageLoader {
     private var loader: IImageLoader = DefaultImageLoader()
 }
 
-class DefaultImageLoader: IImageLoader {
+class DefaultImageLoader : IImageLoader {
 
-    private val tag = "DefaultImageLoader"
+    private val tag = "EmotionPopDefaultImageLoader"
+
     private val pool = Executors.newFixedThreadPool(5)
 
     override fun displayImage(uri: String, imageView: ImageView) {
-        when(UriUtils.getUriType(uri)) {
+        when (UriUtils.getUriType(uri)) {
             UriType.DRAWABLE -> displayFromDrawable(imageView, uri)
             UriType.FILE -> displayFromFile(uri, imageView)
             UriType.ASSETS -> displayFromAssets(uri, imageView)
@@ -37,7 +38,6 @@ class DefaultImageLoader: IImageLoader {
 
     private fun displayFromDrawable(imageView: ImageView, uri: String) {
         val drawableIdString = UriUtils.getResourceID(imageView.context, uri)
-
         var resID = imageView.context.resources.getIdentifier(drawableIdString, "mipmap", imageView.context.packageName)
         if (resID <= 0) {
             resID = imageView.context.resources.getIdentifier(drawableIdString, "drawable", imageView.context.packageName)
@@ -92,20 +92,16 @@ class DefaultImageLoader: IImageLoader {
         } catch (e: MalformedURLException) {
             Log.e(tag, e.message, e)
         }
-
         try {
-            val conn = myFileUrl!!
-                    .openConnection() as HttpURLConnection
-            conn.doInput = true
-            conn.connect()
-            val inputStream = conn.inputStream
+            val conn = myFileUrl?.openConnection() as? HttpURLConnection
+            conn?.doInput = true
+            conn?.connect()
+            val inputStream = conn?.inputStream
             bitmap = BitmapFactory.decodeStream(inputStream)
-            inputStream.close()
-
+            inputStream?.close()
         } catch (e: IOException) {
             Log.e(tag, e.message, e)
         }
-
         return bitmap
     }
 }

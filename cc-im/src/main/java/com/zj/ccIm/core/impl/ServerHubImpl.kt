@@ -116,7 +116,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 data.ownerId = d.ownerId.toLong()
                 data.targetUserId = d.targetUserid?.toLong() ?: 0
                 data.channel = d.mChannel.serializeName
-                data.seq = d.key
+                data.seq = Constance.CALL_ID_REGISTERED_CHAT
                 data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE
                 it.onNext(data.build())
                 ImLogs.recordLogsInFile("server hub event ", "call ${if (join) "add" else "remove"} msg receiver with ${d.key}")
@@ -167,7 +167,9 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
                     when (data?.type) {
                         1 -> {
-                            postReceivedMessage(Constance.CALL_ID_REGISTERED_CHAT, data.reqContext, true, data.reqContext.serializedSize.toLong())
+                            val d = data.reqContext
+                            val callId = d.seq
+                            postReceivedMessage(callId, d, true, data.reqContext.serializedSize.toLong())
                         }
                         0 -> {
                             val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)

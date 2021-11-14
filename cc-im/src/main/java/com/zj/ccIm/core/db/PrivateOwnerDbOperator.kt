@@ -2,10 +2,7 @@ package com.zj.ccIm.core.db
 
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.bean.FetchResult
-import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.database.IMDb
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.PrivateOwnerEntity
@@ -38,6 +35,7 @@ internal object PrivateOwnerDbOperator {
                 newChat.sessionMsgInfo = lastSessionMsg
                 chatDao.insertOrUpdate(newChat)
                 CcIM.postToUiObservers(newChat, ClientHubImpl.PAYLOAD_ADD)
+
             }
         }
     }
@@ -50,8 +48,6 @@ internal object PrivateOwnerDbOperator {
                 val key = generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = s.ownerId)
                 s.sessionMsgInfo = lstMsgDao.findSessionMsgInfoByKey(key)
             }
-            val isFirst = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L <= 0
-            CcIM.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
             CcIM.postToUiObservers(PrivateOwnerEntity::class.java, sessions, callId)
         }
     }

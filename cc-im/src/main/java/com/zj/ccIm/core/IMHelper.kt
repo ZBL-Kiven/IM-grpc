@@ -148,7 +148,6 @@ object IMHelper {
                 else -> throw IllegalArgumentException("the type never been registered!")
             }
             val data = DeleteSessionInfo(groupId, targetId, type)
-            CcIM.routeToServer(data, Constance.CALL_ID_DELETE_SESSION)
             CcIM.routeToClient(data, Constance.CALL_ID_DELETE_SESSION)
         }
     }

@@ -52,7 +52,6 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected FrameLayout extContainer;
     protected FuncLayout funcLayout;
     private ExtInflater<T> extInflater;
-    private RecyclerView withScrollingView;
     protected T extData;
 
     protected EmoticonsFuncView emoticonsFuncView;
@@ -178,7 +177,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     public void setScrollerView(RecyclerView view) {
-        this.withScrollingView = view;
+        funcLayout.setScrollerView(view);
     }
 
     protected void showVoice() {
@@ -234,7 +233,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         funcLayout.resetKey();
         onFuncChange(funcLayout.NONE_KEY);
         int h = getChildAt(0).getHeight();
-        changePaddingViewHeight(height);
+        funcLayout.changePaddingViewHeight();
     }
 
     @Override
@@ -244,16 +243,6 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
             reset();
         } else {
             onFuncChange(funcLayout.getCurrentFuncKey());
-        }
-        changePaddingViewHeight(0);
-    }
-
-    private void changePaddingViewHeight(int height) {
-        if (withScrollingView != null) {
-            RecyclerView.Adapter<?> adapter = withScrollingView.getAdapter();
-            if (adapter != null) {
-                withScrollingView.scrollToPosition(adapter.getItemCount() - 1);
-            }
         }
     }
 

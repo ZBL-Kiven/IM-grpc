@@ -44,6 +44,15 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/main_tv_dots_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#777"
+            android:textSize="12sp"
+            tools:text="msg total dots:" />
+
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_fg_message_tab"
             android:layout_width="match_parent"

@@ -122,7 +122,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
             val req = d as ImMessageReply.ReqContext
             val bean = ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
-            if (bean.key == req.seq) IMHelper.onMsgRegistered(bean)
+            IMHelper.onMsgRegistered(bean)
             return true
         }
         if (callId == Constance.CALL_ID_REGISTER_CHAT || callId == Constance.CALL_ID_LEAVE_CHAT_ROOM) {
@@ -210,9 +210,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                         PrivateOwnerDbOperator.deleteSession(d.groupId)
                     }
                     Comment.DELETE_FANS_SESSION -> {
-                        val en = PrivateFansEn().apply { this.userId = d.targetUserId }
-                        BadgeDbOperator.notifyOwnerSessionBadgeWithFansSessionChanged(d.targetUserId, d.groupId)
-                        CcIM.postToUiObservers(en, PAYLOAD_DELETE)
+                        PrivateFansDbOperator.deleteSession(callId, d.targetUserId, d.groupId)
                     }
                 }
             }

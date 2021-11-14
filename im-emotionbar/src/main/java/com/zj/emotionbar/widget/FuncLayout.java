@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,16 +18,32 @@ import com.zj.emotionbar.utils.EmoticonsKeyboardUtils;
 public class FuncLayout extends LinearLayout {
 
     public final int NONE_KEY = Integer.MIN_VALUE;
-
     private final SparseArray<View> mFuncViewArrayMap = new SparseArray<>();
-
     private int mCurrentFuncKey = NONE_KEY;
-
+    private List<FuncKeyBoardListener> mListenerList;
     protected int mHeight = 0;
+    private OnFuncChangeListener onFuncChangeListener;
+    private RecyclerView withScrollingView;
 
     public FuncLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         setOrientation(VERTICAL);
+    }
+
+    public int getCurrentFuncKey() {
+        return mCurrentFuncKey;
+    }
+
+    public void resetKey() {
+        mCurrentFuncKey = NONE_KEY;
+    }
+
+    public void updateHeight(int height) {
+        this.mHeight = height;
+    }
+
+    public void setOnFuncChangeListener(OnFuncChangeListener listener) {
+        onFuncChangeListener = listener;
     }
 
     public void addFuncView(int key, View view) {
@@ -36,6 +54,10 @@ public class FuncLayout extends LinearLayout {
         LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         addView(view, params);
         view.setVisibility(GONE);
+    }
+
+    public void setScrollerView(RecyclerView view) {
+        this.withScrollingView = view;
     }
 
     public void hideAllFuncView() {
@@ -49,25 +71,15 @@ public class FuncLayout extends LinearLayout {
     }
 
     public void toggleFuncView(int key, boolean isSoftKeyboardPopped, EditText editText) {
-
         if (isSoftKeyboardPopped) {
             closeSoftKeyboard(editText);
         }
-
         if (getCurrentFuncKey() == key) {
             if (!isSoftKeyboardPopped) {
                 EmoticonsKeyboardUtils.openSoftKeyboard(editText);
             }
         } else {
             showFuncView(key);
-        }
-    }
-
-    private void closeSoftKeyboard(EditText editText) {
-        if (EmoticonsKeyboardUtils.isFullScreen((Activity) getContext())) {
-            EmoticonsKeyboardUtils.closeSoftKeyboard(editText);
-        } else {
-            EmoticonsKeyboardUtils.closeSoftKeyboard(getContext());
         }
     }
 
@@ -87,23 +99,11 @@ public class FuncLayout extends LinearLayout {
         if (onFuncChangeListener != null) {
             onFuncChangeListener.onFuncChange(mCurrentFuncKey);
         }
-    }
-
-    public int getCurrentFuncKey() {
-        return mCurrentFuncKey;
-    }
-
-    public void resetKey() {
-        mCurrentFuncKey = NONE_KEY;
-    }
-
-    public void updateHeight(int height) {
-        this.mHeight = height;
+        post(this::changePaddingViewHeight);
     }
 
     public void setVisibility(boolean isVisible) {
         LayoutParams params = (LayoutParams) getLayoutParams();
-
         if (isVisible) {
             setVisibility(VISIBLE);
             params.height = mHeight;
@@ -121,7 +121,6 @@ public class FuncLayout extends LinearLayout {
                 }
             }
         }
-
         setLayoutParams(params);
     }
 
@@ -129,13 +128,28 @@ public class FuncLayout extends LinearLayout {
         return mCurrentFuncKey == NONE_KEY;
     }
 
-    private List<FuncKeyBoardListener> mListenerList;
-
     public void addOnKeyBoardListener(FuncKeyBoardListener l) {
         if (mListenerList == null) {
             mListenerList = new ArrayList<>();
         }
         mListenerList.add(l);
+    }
+
+    private void closeSoftKeyboard(EditText editText) {
+        if (EmoticonsKeyboardUtils.isFullScreen((Activity) getContext())) {
+            EmoticonsKeyboardUtils.closeSoftKeyboard(editText);
+        } else {
+            EmoticonsKeyboardUtils.closeSoftKeyboard(getContext());
+        }
+    }
+
+    public void changePaddingViewHeight() {
+        if (withScrollingView != null) {
+            RecyclerView.Adapter<?> adapter = withScrollingView.getAdapter();
+            if (adapter != null) {
+                withScrollingView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        }
     }
 
     public interface FuncKeyBoardListener {
@@ -145,13 +159,7 @@ public class FuncLayout extends LinearLayout {
         void onFuncClose();
     }
 
-    private OnFuncChangeListener onFuncChangeListener;
-
     public interface OnFuncChangeListener {
         void onFuncChange(int key);
-    }
-
-    public void setOnFuncChangeListener(OnFuncChangeListener listener) {
-        onFuncChangeListener = listener;
     }
 }

@@ -36,7 +36,7 @@ internal object BadgeDbOperator {
     fun notifyOwnerSessionBadgeWithFansSessionChanged(targetUserId: Int?, groupId: Long): SessionLastMsgInfo? {
         val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_FANS, userId = targetUserId ?: 0)
         val sessionBadgeInfo = changeBadge(key) ?: return null
-       IMHelper.withDb { db ->
+        IMHelper.withDb { db ->
             val ownerKey = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = groupId)
             val ownerLastMsgDao = db.sessionMsgDao()
             val ownerLastMsg = ownerLastMsgDao.findSessionMsgInfoByKey(ownerKey)

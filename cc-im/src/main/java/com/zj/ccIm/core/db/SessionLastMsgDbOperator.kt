@@ -4,12 +4,14 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.bean.DotsInfo
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.bean.PrivateFansEn
 import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SessionLastMsgInfo
+import com.zj.database.ut.Constance.generateKey
 import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 
@@ -21,20 +23,20 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
                 Constance.TOPIC_CHAT_OWNER_INFO -> {
                     val owner = info.ownerId
                     if (owner < 0) throw IllegalArgumentException("error case: the session last msg info ,owner id is invalid!")
-                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = owner)
+                    info.key = generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = owner)
                     onDealPrivateOwnerSessionLastMsgInfo(info)
                 }
                 Constance.TOPIC_CHAT_FANS_INFO -> {
                     val target = info.targetUserId
                     if (target < 0) throw IllegalArgumentException("error case: the session last msg info ,target user id is invalid!")
-                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = target)
+                    info.key = generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = target)
                     onDealPrivateFansSessionLastMsgInfo(info)
                 }
                 Constance.TOPIC_IM_MSG -> {
                     var groupId = info.groupId
                     if (groupId <= 0) groupId = info.newMsg?.groupId ?: -1L
                     if (groupId <= 0) throw IllegalArgumentException("error case: the session last msg info ,group id is invalid!")
-                    info.key = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = groupId)
+                    info.key = generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = groupId)
                     onDealSessionLastMsgInfo(info)
                 }
                 else -> throw IllegalArgumentException("the callId $callId can not to parsed to a Key of lase session message")
@@ -119,10 +121,42 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
     }
 
     fun notifyAllSessionDots(callId: String? = "") {
-       IMHelper.withDb {
+        IMHelper.withDb {
             val lastMsgDb = it.sessionMsgDao()
-            val allDots = lastMsgDb.findAll()?.sumOf { c -> c.msgNum } ?: 0
-            CcIM.postToUiObservers(MessageTotalDots(allDots), callId)
+            val all = lastMsgDb.findAll()
+            val sessions = it.sessionDao().allSessions
+            val ownerSessions = it.privateChatOwnerDao().findAll()
+            fun patchDotsInfo(key: String, info: DotsInfo) {
+                val allContains = all.firstOrNull { a -> a.key == key }
+                if (allContains != null) all.remove(allContains)
+                lastMsgDb.findSessionMsgInfoByKey(key)?.let { i ->
+                    info.questionNum += i.questionNum
+                    info.unreadQuestions += i.unreadQuesNum ?: 0
+                    info.unreadMessages += i.msgNum
+                }
+            }
+
+            val sessionDots = DotsInfo()
+            sessions.forEach { d ->
+                val key = generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, groupId = d.groupId)
+                patchDotsInfo(key, sessionDots)
+            }
+            val ownerDots = DotsInfo()
+            ownerSessions.forEach { d ->
+                val key = generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_OWNER, ownerId = d.ownerId)
+                patchDotsInfo(key, ownerDots)
+            }
+            val fansDots = DotsInfo()
+            all.forEach { d ->
+                val key = generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = d.targetUserId)
+                patchDotsInfo(key, fansDots)
+            }
+            val totalUnreadMessages = sessionDots.unreadMessages + ownerDots.unreadMessages + fansDots.unreadMessages
+            val totalQuestions = sessionDots.questionNum + ownerDots.questionNum + fansDots.questionNum
+            val totalUnreadQuestions = sessionDots.unreadQuestions + ownerDots.unreadQuestions + fansDots.unreadQuestions
+            val allDots = DotsInfo(totalUnreadMessages, totalUnreadQuestions, totalQuestions)
+            val dots = MessageTotalDots(allDots, sessionDots, ownerDots, fansDots)
+            CcIM.postToUiObservers(dots, callId)
         }
     }
 }
