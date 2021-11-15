@@ -1,18 +1,13 @@
 package com.zj.imtest.ui.data
 
-
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.list.BaseImMsgAdapter
 import com.zj.imUi.ui.ImMsgView
 
-class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(recyclerView, ViewBuilder { _, _, _ ->
-    ImMsgView(recyclerView.context).apply {
-        ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
-}) {
+
+class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(recyclerView, ViewBuilder { _, _, _ -> ImMsgView(recyclerView.context) }) {
 
     override fun add(data: MutableList<MessageInfoEntity>?) {
         super.add(data)
@@ -36,16 +31,7 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
 
 
     override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
-        val m = object : ImEntityConverter(module) {
-            override fun isMsgReplying(): Boolean {
-                return this@MsgAdapter.isMsgReplying(info ?: return false)
-            }
-
-            override fun setMsgReplyState(isReplying: Boolean) {
-                info?.let { setRewardViewState(it, isReplying) }
-            }
-
-        }
+        val m = ImEntityConverter(module)
         (holder?.itemView as? ImMsgView)?.let {
             if (payloads.isNullOrEmpty()) it.setData(m, 1)
             else it.notifyChange(m, payloads.firstOrNull())
@@ -62,7 +48,6 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
 
     override fun setTimeLine(ts: String?, d: MessageInfoEntity) {
         d.diffInCreateTime = ts
-
     }
 
     override fun equalsOf(f: MessageInfoEntity, s: MessageInfoEntity): Boolean {

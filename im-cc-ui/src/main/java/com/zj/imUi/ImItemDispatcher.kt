@@ -25,7 +25,7 @@ object ImItemDispatcher {
             imIn.getMsgIsRecalled() == true -> {
                 IMItemRecallTextView(context)
             }
-            imIn.getMsgIsSensitive() == true -> {
+            imIn.getMsgIsSensitive() -> {
                 IMItemSensitiveTextView(context)
             }
             else -> when (imIn.getType()) {

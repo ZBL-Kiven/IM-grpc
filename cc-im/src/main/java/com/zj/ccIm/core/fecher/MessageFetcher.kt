@@ -97,12 +97,12 @@ internal object MessageFetcher {
                         this.clientMsgId = UUID.randomUUID().toString()
                         this.groupId = msg.groupId
                         this.replyMsg = msg
-                        this.extContent = msg.extContent
                         this.msgId = msg.msgId
                         this.ownerId = msg.ownerId
                         this.sendingState = SendMsgState.NONE.type
                         this.sender = msg.sender
                         this.countryCode = msg.countryCode
+                        this.extContent = it
                     })
                 }
             }

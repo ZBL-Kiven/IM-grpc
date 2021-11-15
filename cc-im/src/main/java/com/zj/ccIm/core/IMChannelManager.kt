@@ -1,6 +1,5 @@
 package com.zj.ccIm.core
 
-import android.util.Log
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
@@ -28,7 +27,6 @@ internal object IMChannelManager {
         val info = lastMsgRegister.first { it.key == key }
         info.onDestroy()
         lastMsgRegister.remove(info)
-        Log.e("------- ", "destroy  " + lastMsgRegister.joinToString { "${it.key}  " })
         return info
     }
 
@@ -37,7 +35,6 @@ internal object IMChannelManager {
             lastMsgRegister.remove(req)
             offerLast(req)
         }
-        Log.e("------- ", "resumeRegisterInfo  " + lastMsgRegister.joinToString { "${it.key}  " })
     }
 
     fun pauseRegisterInfo(req: ChannelRegisterInfo) {

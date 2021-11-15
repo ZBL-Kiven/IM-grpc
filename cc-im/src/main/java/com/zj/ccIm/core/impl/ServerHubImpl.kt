@@ -173,9 +173,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                         }
                         0 -> {
                             val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
-                            val seq = if (data.reqContext.seq.isNotEmpty()) data.reqContext.seq else key
-                            MessageFetcher.dealMessageExtContent(data.imMessage, seq).forEach { d ->
-                                postReceivedMessage(seq, d, true, data.serializedSize.toLong())
+                            MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
+                                postReceivedMessage(key, d, true, data.serializedSize.toLong())
                             }
                         }
                     }

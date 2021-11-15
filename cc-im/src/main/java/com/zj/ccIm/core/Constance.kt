@@ -12,8 +12,8 @@ object Comment {
 }
 
 object ExtMsgType {
-    const val EXTENDS_TYPE_RECALL = ""
-    const val EXTENDS_TYPE_SENSITIVE_HIT = ""
+    const val EXTENDS_TYPE_RECALL = "revokeMsg"
+    const val EXTENDS_TYPE_SENSITIVE_HIT = "riskMsg"
 }
 
 internal object Constance {

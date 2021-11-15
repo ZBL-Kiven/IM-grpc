@@ -186,6 +186,14 @@ object IMHelper {
         }
     }
 
+    fun queryAdminState(groupId: Long?): Int {
+        if (groupId == null) return 0
+        withDb {
+            return@withDb it.sessionDao().findSessionById(groupId).role
+        }
+        return 0
+    }
+
     fun queryAllDBColumnsCount(): StringBuilder {
         val sb = StringBuilder()
         withDb {
