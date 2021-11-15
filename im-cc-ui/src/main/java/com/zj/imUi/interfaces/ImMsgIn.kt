@@ -10,8 +10,6 @@ interface ImMsgIn {
 
     fun getMsgId(): String
 
-    fun getReplyMsgId(): Long?
-
     fun getType(): String?
 
     fun getSendState(): Int
@@ -76,7 +74,7 @@ interface ImMsgIn {
     fun getReplyMsgQuestionSpark(): Int?
     fun getReplyMsgQuestionIsPublished(): Boolean?
 
-    fun getLiveMsgId():Int?
+    fun getLiveMsgId():Long?
     fun getLiveMsgStatus():Boolean?
     fun getLiveMsgCover():String?
     fun getLiveMsgRoomId():Int?
@@ -97,7 +95,7 @@ interface ImMsgIn {
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
 
-    //获取民告消息内容
+    //获取敏感消息内容
     fun getExtSensitiveMsgContent():String?
     //撤回消息角色
     fun getMsgRecallRole():Int?

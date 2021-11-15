@@ -2,7 +2,6 @@ package com.zj.imtest.ui
 
 import android.util.Log
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.sender.MsgSender
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
@@ -23,10 +22,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.clientMsgId ?: ""
     }
 
-    override fun getReplyMsgId(): Long? {
-        return info?.replyMsgId
-    }
-
 
     override fun getSendState(): Int {
         return info?.sendingState ?: SendMsgState.NONE.type
@@ -45,11 +40,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getTextContent(): String? {
-        return info?.textContent?.text //        return "this is a normal message ???so what should i expression,emmm,dadada biubiubiubh h hg jj"
+        return info?.textContent?.text
     }
 
-    override fun getType(): String? { //        return "cc_video"
-        //        return "audio"
+    override fun getType(): String? {
         return info?.msgType
     }
 
@@ -84,16 +78,17 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getCCVideoContentVideoId(): String? {
-        return null
+        return info?.ccVideoContent?.videoId
     }
 
     override fun getCCVideoContentVideoDescribe(): String? {
-        return null
+        return info?.ccVideoContent?.videoDescribe
     }
 
     override fun getCCVideoContentVideoTitle(): String? {
-        return null
+        return info?.ccVideoContent?.videoTitle
     }
+
 
     //打赏相关
 
@@ -110,20 +105,18 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.questionContent?.diamond ?: 0
     }
 
-    override fun getExpireTime(): Long { //        return 3600000
-        return info?.questionContent?.expireTime ?: 0 //        return  0
-        //        return  if (a == 0) 60000
-        //        else 36600000
+    override fun getExpireTime(): Long {
+        return info?.questionContent?.expireTime ?: 0
     }
 
 
     override fun getSpark(): Int {
-        return info?.questionContent?.spark ?: 0 //        return 10000
+        return info?.questionContent?.spark ?: 0
     }
 
 
     override fun getPublished(): Boolean {
-        return info?.questionContent?.published ?: true //            return  false
+        return info?.questionContent?.published ?: true
     }
 
     override fun getQuestionId(): Int {
@@ -131,7 +124,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getQuestionStatus(): Int {
-        return 0 //        return info?.questionContent?.questionStatus ?: -2
+        return info?.questionContent?.questionStatus ?: 0
     }
 
     override fun getQuestionTextContent(): String? {
@@ -147,7 +140,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.textContent?.text
     }
 
-    override fun getReplyMsgCCVideoCoverContent(): String? { //                return "https://img1.baidu.com/it/u=2057590437,3282076992&fm=26&fmt=auto"
+    override fun getReplyMsgCCVideoCoverContent(): String? {
         return info?.replyMsg?.ccVideoContent?.imgPreviewRemoteStorageUrl
     }
 
@@ -167,12 +160,12 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.imgContent?.height
     }
 
-    override fun getReplyMsgType(): String? { //        return "cc_video"
+    override fun getReplyMsgType(): String? {
         return info?.replyMsg?.msgType
     }
 
 
-    override fun getReplyMsgClientMsgId(): String? { //        return "asfaewdw"
+    override fun getReplyMsgClientMsgId(): String? {
         return info?.replyMsg?.clientMsgId
     }
 
@@ -180,8 +173,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.sender?.senderId ?: 0
     }
 
-    override fun getReplySenderName(): String? { //        return  "123"
-        return info?.replyMsg?.sender?.senderName
+    override fun getReplySenderName(): String? {
+      return  info?.replyMsg?.sender?.senderName
     }
 
     override fun getReplyMsgCreateTs(): Long? {
@@ -217,53 +210,109 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.questionContent?.published
     }
 
-    override fun getAnswerContentMsgType(): String? {
-        return "text"
+    override fun getLiveMsgId(): Long? {
+        return info?.liveMessage?.id
     }
 
-    override fun getAnswerContentSendTime(): Long? {
-        return 170000000
+    override fun getLiveMsgStatus(): Boolean? {
+        return info?.liveMessage?.status
     }
 
-    override fun getAnswerContentSenderName(): String? {
-        return "亚尔总"
+    override fun getLiveMsgCover(): String? {
+        return info?.liveMessage?.cover
     }
 
-    override fun getAnswerContentSenderId(): Int? {
-        return 2222
+    override fun getLiveMsgRoomId(): Int? {
+        return info?.liveMessage?.roomId
     }
 
-    override fun getAnswerContentSenderAvatar(): String? {
-        return null
+    override fun getLiveMsgIntroduce(): String? {
+        return info?.liveMessage?.introduce
     }
 
-    override fun getAnswerContentTextContent(): String? {
-        return "回答文本"
+    override fun getLiveMsgChannel(): String? {
+        return info?.liveMessage?.channelId
     }
 
-    override fun getAnswerContentImgContentUrl(): String? {
-        return null
-    }
-
-    override fun getAnswerContentImgContentWidth(): Int? {
-        return 400
-    }
-
-    override fun getAnswerContentImgContentHeight(): Int? {
-        return 400
-    }
-
-    override fun getAnswerContentAudioContentUrl(): String? {
-        return null
+    override fun getLiveMsgViewNum(): Int? {
+        return info?.liveMessage?.viewNum
     }
 
     override fun getAnswerContentAudioContentDuration(): Long? {
-        return null
+        return info?.answerMsg?.audioContent?.duration
+    }
+
+    override fun getAnswerContentAudioContentUrl(): String? {
+        return info?.answerMsg?.audioContent?.url
+    }
+
+    override fun getAnswerContentImgContentHeight(): Int? {
+        return info?.answerMsg?.imgContent?.height
+    }
+
+    override fun getAnswerContentImgContentUrl(): String? {
+        return info?.answerMsg?.imgContent?.url
+    }
+
+    override fun getAnswerContentImgContentWidth(): Int? {
+        return info?.answerMsg?.imgContent?.width
+    }
+
+    override fun getAnswerContentMsgType(): String? {
+        return info?.answerMsg?.msgType
+    }
+
+    override fun getAnswerContentSendTime(): Long? {
+        return info?.answerMsg?.sendTime
+    }
+
+    override fun getAnswerContentSenderAvatar(): String? {
+        return info?.answerMsg?.sender?.senderAvatar
+    }
+
+    override fun getAnswerContentSenderId(): Int? {
+        return info?.answerMsg?.sender?.senderId
+    }
+
+    override fun getAnswerContentSenderName(): String? {
+        return info?.answerMsg?.sender?.senderName
+    }
+
+    override fun getAnswerContentTextContent(): String? {
+        return info?.answerMsg?.textContent?.text
     }
 
     override fun getSelfUserId(): Int {
         return IMConfig.getUserId()
     }
+
+
+    override fun getMsgIsReject(): Boolean {
+        return info?.questionContent?.questionStatus == 3
+    }
+
+
+    //未完成
+    override fun getMsgIsRecalled(): Boolean? {
+        return false
+    }
+
+    override fun getMsgRecallRole(): Int? {
+        return 1
+    }
+
+    override fun getMsgIsSensitive(): Boolean? {
+        return false
+    }
+
+    override fun getExtSensitiveMsgContent(): String? {
+        return "敏感消息内容"
+    }
+
+    override fun getIsAdmin(): Boolean? {
+        return false
+    }
+
 
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/
 
@@ -319,4 +368,18 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     override fun deleteSendLossMsg() {
     }
 
+
+    override fun ownerRecallGroupMsg() {
+    }
+
+    override fun rejectRewardMsg(id: String) {
+    }
+
+
+
+    override fun jumpToLiveRoom() {
+    }
+
+    override fun reportGroupUserMsg(id: String) {
+    }
 }
