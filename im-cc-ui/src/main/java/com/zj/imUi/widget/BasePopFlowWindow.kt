@@ -53,8 +53,8 @@ class BasePopFlowWindow<T> :
             if (isShowing) dismiss()
             contentView =
                 LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
-            showPop(v)
             initReportData(v)
+            showPop(v)
         }
     }
 
@@ -79,8 +79,8 @@ class BasePopFlowWindow<T> :
         rv.layoutManager = flowLayoutManager
         val reply = ctx.get()?.getString(R.string.im_ui_msg_reply)
         val copy = ctx.get()?.getString(R.string.im_ui_msg_copy)
-        val block = ctx.get()?.getString(R.string.im_ui_msg_block)
         val recall = ctx.get()?.getString(R.string.im_ui_msg_button_recall)
+        val block = ctx.get()?.getString(R.string.im_ui_msg_block)
         val refuse = "Refuse"
         val report = "Report"
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
@@ -114,7 +114,7 @@ class BasePopFlowWindow<T> :
                             filterList.add(reportItems[3])
                         }
                     }
-//                    else filterList.add(reportItems[5])
+                    //                    else filterList.add(reportItems[5])
                 }
             }
         }
