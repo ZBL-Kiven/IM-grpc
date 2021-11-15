@@ -17,6 +17,8 @@ data class MessageTotalDots(val dotsOfAll: DotsInfo, val clapHouseDots: DotsInfo
  * */
 data class RoleInfo(val groupId: Long, val role: Int)
 
+data class LiveStateInfo(val userId: String, val livingStatus: Boolean)
+
 
 /**
  * ============================================================ unobservable classes =============================================================================================================================

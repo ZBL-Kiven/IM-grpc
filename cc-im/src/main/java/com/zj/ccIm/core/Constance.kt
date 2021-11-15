@@ -72,6 +72,8 @@ internal object Constance {
 
     const val TOPIC_ROLE = "cc://group-role-topic"
 
+    const val TOPIC_LIVE_STATE = "cc://live-status-change/all"
+
     /**-------------------------- SERVER EVENT CONSTANCE ------------------------------*/
 
     const val SEND_MSG_DEFAULT_TIMEOUT = 15000L
