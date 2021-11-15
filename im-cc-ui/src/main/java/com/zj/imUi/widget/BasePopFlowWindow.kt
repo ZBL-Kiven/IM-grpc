@@ -89,7 +89,7 @@ class BasePopFlowWindow<T> :
         data?.apply {
             if (isNormalMsg) {
                 if (isSelfMessage) {
-                    filterList.add(reportItems[1])
+                    if(data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
@@ -102,7 +102,7 @@ class BasePopFlowWindow<T> :
                     if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     if (data?.getType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
                     if (isOwner) {
-                        if (data?.getQuestionStatus() == 0) {
+                        if (data?.getQuestionStatus() == 0&&data?.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                             filterList.add(reportItems[4])
                         }else{
                             filterList.add(reportItems[2])

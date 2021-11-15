@@ -38,15 +38,15 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
 
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
-        val arrayInt: Array<Int>? = setImgLp(data)
-        if (arrayInt != null) {
-            loadImg(data, arrayInt)
-        } else{
-            loadImg2(data)
-        }
+        val arrayInt: Array<Int> = setImgLp(data)
+        loadImg(data, arrayInt)
 
+        this.setOnClickListener {
+//            Toast.makeText(context, "IMContentImageView图片点击", Toast.LENGTH_SHORT).show()
+            data.onViewLargePic()
+        }
         this.setOnLongClickListener {
-            if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+            if (data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->
                 }
@@ -56,26 +56,28 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
 
     }
 
-    override fun chatType(chatType:Any) {
+    override fun chatType(chatType: Any) {
     }
 
     private fun loadImg(data: ImMsgIn, arrayInt: Array<Int>) {
-        val corners = if (data.getImgContentUrl() != null)
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
-        else
-            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
+        val corners =
+            if (data.getImgContentUrl() != null) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                8f,
+                context.resources.displayMetrics).toInt()
+            else TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                1f,
+                context.resources.displayMetrics).toInt()
 
         val lp = FrameLayout.LayoutParams(arrayInt[0], arrayInt[1])
         layoutParams = lp
         val imgUrl: String? =
-            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgImgContent() != null) { data.getReplyMsgImgContent() }
-            else if (data.getAnswerContentImgContentUrl()!=null) data.getAnswerContentImgContentUrl()
+            if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgImgContent() != null) {
+                data.getReplyMsgImgContent()
+            } else if (data.getAnswerContentImgContentUrl() != null) data.getAnswerContentImgContentUrl()
             else data.getImgContentUrl()
 
         imgUrl?.let {
-            Glide.with(this).load(it)
-                .override(arrayInt[0],arrayInt[1])
-                .centerInside()
+            Glide.with(this).load(it).override(arrayInt[0], arrayInt[1]).centerInside()
                 .placeholder(R.drawable.im_msg_item_img_loading)
                 .error(R.drawable.im_msg_item_img_loading)
                 .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
@@ -98,58 +100,23 @@ class IMContentImageView @JvmOverloads constructor(context: Context,
                 }).into(this)
         }
     }
-    private fun loadImg2(data: ImMsgIn) {
-        val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
-        val imgW = DPUtils.dp2px(44f)
-        val imgH = DPUtils.dp2px(44f)
-        val lp = FrameLayout.LayoutParams(imgW,imgH)
-        layoutParams = lp
-        val imgUrl: String? = data.getReplyMsgImgContent()
-        imgUrl?.let {
-            Glide.with(this).load(it)
-                .override(imgW,imgH)
-                .placeholder(R.drawable.im_msg_item_img_loading)
-                .error(R.drawable.im_msg_item_img_loading)
-                //                .thumbnail(0.1f)
-                .apply(RequestOptions.bitmapTransform(RoundedCorners(corners)))
-                .centerCrop()
-                .addListener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean): Boolean {
-                        return false
-                    }
 
-                    override fun onResourceReady(resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean): Boolean {
-                        anim.cancel()
-                        return false
-                    }
-                }).into(this)
-        }
-    }
-
-
-    private fun setImgLp(data: ImMsgIn): Array<Int>? {
+    private fun setImgLp(data: ImMsgIn): Array<Int> {
         var maxW = DPUtils.dp2px(201f)
         var maxH = DPUtils.dp2px(132f)
 
         val imgWidth =
             if (data.getImgContentWidth() != null && data.getImgContentHeight() != null) {
                 data.getImgContentWidth()
-            } else
-                data.getReplyMsgImgWidth()
+            } else data.getReplyMsgImgWidth()
 
         val imgHeight: Int?
         if (data.getImgContentHeight() != null) {
             imgHeight = data.getImgContentHeight()
-        } else  {
-            imgHeight = if (data.getAnswerContentImgContentUrl()!=null) data.getAnswerContentImgContentHeight()
-            else data.getReplyMsgImgHeight()
+        } else {
+            imgHeight =
+                if (data.getAnswerContentImgContentUrl() != null) data.getAnswerContentImgContentHeight()
+                else data.getReplyMsgImgHeight()
             maxW = DPUtils.dp2px(44f)
             maxH = DPUtils.dp2px(44f)
         }

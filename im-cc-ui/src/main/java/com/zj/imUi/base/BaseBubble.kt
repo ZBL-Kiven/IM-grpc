@@ -49,7 +49,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context,
         val size = MeasureSpec.getSize(widthMeasureSpec)
         val isFull = (chatType == 3 && curData?.invoke()?.getSelfUserId() ==curData?.invoke()?.getSenderId())||curData?.invoke()?.getMsgIsRecalled() == true||curData?.invoke()?.getMsgIsSensitive() == true
         val maxWidth = if (isFull) {
-            (resources.displayMetrics.widthPixels * 1).toInt()
+            (resources.displayMetrics.widthPixels * 1)
         } else (resources.displayMetrics.widthPixels * 0.8).toInt()
         val min = min(size, maxWidth)
         val measureSpec = MeasureSpec.makeMeasureSpec(min, MeasureSpec.AT_MOST)

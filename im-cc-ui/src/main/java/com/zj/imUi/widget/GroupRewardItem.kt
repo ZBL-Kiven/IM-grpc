@@ -30,17 +30,7 @@ class GroupRewardItem @JvmOverloads constructor(context: Context, attributeSet: 
         textPaint.isFakeBoldText = true
     }
 
-    private fun setSpark(status: Int) {
-        when (status) {
-            2 -> {
-                sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_spark_white)
-            }
-            0, 1 -> sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_spark_normal)
-        }
-    }
-
     /**
-     * statu 状态
      * number 金额数量
      */
     @SuppressLint("ResourceAsColor")

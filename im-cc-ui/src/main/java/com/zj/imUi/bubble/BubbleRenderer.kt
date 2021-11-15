@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
-import com.zj.imUi.MsgType
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubbleRenderer
@@ -112,9 +111,9 @@ object BubbleRenderer : BaseBubbleRenderer {
     private fun setColor(context: Context, data: ImMsgIn, chatType: Any): Int {
         return if (chatType == UiMsgType.GROUP_CHAT || chatType == 3) {
             if (isSelfMessage) { //自己发送的消息
-                setSelfMsgBg(context,data,chatType)
+                setSelfMsgBg(context,data)
             } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                if (data.getQuestionStatus() == 1 || data.getMsgIsReject()==true) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
+                if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
                 else if (data.getQuestionStatus() == 0 && !data.getPublished()) { ContextCompat.getColor(context, R.color.im_msg_message_item_private)
                 } else { ContextCompat.getColor(context, R.color.im_msg_bg_color_white) }
             } else if (data.getReplyMsgQuestionIsPublished() == false) ContextCompat.getColor(
@@ -130,7 +129,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息
                 if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-                    if (data.getQuestionStatus() == 1||data.getMsgIsReject() == true) {
+                    if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
                         if (!data.getPublished()) { //打赏消息状态
@@ -144,9 +143,9 @@ object BubbleRenderer : BaseBubbleRenderer {
         }
     }
 
-    private fun setSelfMsgBg(context: Context, data: ImMsgIn, chatType: Any) :Int{
+    private fun setSelfMsgBg(context: Context, data: ImMsgIn) :Int{
         return  if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getQuestionStatus() == 1 || data.getMsgIsReject() == true) {
+            if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
                 ContextCompat.getColor(context, R.color.im_msg_replied_bg)
             } else {
                 if (!data.getPublished()) { //打赏消息状态

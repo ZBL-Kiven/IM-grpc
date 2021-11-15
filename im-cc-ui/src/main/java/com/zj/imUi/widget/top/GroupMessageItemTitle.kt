@@ -4,16 +4,12 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import com.zj.imUi.UiMsgType
-
 import com.zj.imUi.R
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
 import com.zj.imUi.widget.GroupRewardItem
 import com.zj.views.ut.DPUtils

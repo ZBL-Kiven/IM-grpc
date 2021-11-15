@@ -10,7 +10,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.zj.imUi.R
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imUi.utils.MessageSendTimeUtils
 
 /**
  * author: 李 祥

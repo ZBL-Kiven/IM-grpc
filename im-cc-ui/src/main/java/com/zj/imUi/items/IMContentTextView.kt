@@ -18,7 +18,7 @@ class IMContentTextView @JvmOverloads constructor(context: Context,
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-        typeface = Typeface.defaultFromStyle(Typeface.BOLD);
+        typeface = Typeface.defaultFromStyle(Typeface.BOLD)
         setTextColor(if (data.getSelfUserId() == data.getSenderId()) {
             Color.WHITE
         } else {

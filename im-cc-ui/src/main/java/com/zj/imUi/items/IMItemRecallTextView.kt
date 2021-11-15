@@ -2,18 +2,12 @@ package com.zj.imUi.items
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
-import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.TypedValue
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.zj.imUi.R
-import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseBubble
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.views.ut.DPUtils
@@ -53,7 +47,7 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context,
         if (childCount == 0){
             addView(contentLayout)
         }
-        if (data.getMsgIsRecalled() == true) {
+        if (data.getMsgIsRecalled()) {
             if (data.getMsgRecallRole() == 1) {
                 tvContent.text = "群主撤回了一条消息"
             }else

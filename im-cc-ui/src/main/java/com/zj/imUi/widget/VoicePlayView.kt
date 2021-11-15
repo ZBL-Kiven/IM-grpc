@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
 
 class VoicePlayView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : View(context, attributeSet, defStyle) {
 
@@ -80,23 +79,14 @@ class VoicePlayView @JvmOverloads constructor(context: Context, attributeSet: At
 
     fun play() {
 
-        //        VoicePlayer.play(file) {
-        //            isAnim = false
-        //            completion?.invoke()
-        //        }
-
         isAnim = true
     }
 
     fun pause() {
-
-        //        VoicePlayer.pause()
         isAnim = false
     }
 
     fun stop() {
-
-        //        VoicePlayer.stop()
         isAnim = false
     }
 
