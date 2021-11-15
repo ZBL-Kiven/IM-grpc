@@ -85,12 +85,14 @@ internal object MessageFetcher {
             }
             val result = arrayListOf<Any?>(msg)
             msg?.channelKey = key
+            msg?.originalMessageType = msg?.msgType
             msg?.extContent?.let {
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
                     msg.msgType = MsgType.RECALLED.type
                 }
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HIT)) {
                     result.add(MessageInfoEntity().apply {
+                        this.msgType = MsgType.SENSITIVE.type
                         this.channelKey = key
                         this.clientMsgId = UUID.randomUUID().toString()
                         this.groupId = msg.groupId
