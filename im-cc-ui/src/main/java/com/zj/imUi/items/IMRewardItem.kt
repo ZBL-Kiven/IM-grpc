@@ -331,6 +331,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_frame_textview_private))
         if (type == RewardMsgState.ALREADY_REPLIED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_replied)
+            tvReliedFLag.setBackgroundResource(R.drawable.im_msg_item_replied_flag_cornors_bg)
+            tvReliedFLag.setTextColor(Color.parseColor("#FF3EC093"))
         } else if (type == RewardMsgState.REJECTED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_rejected)
         }
