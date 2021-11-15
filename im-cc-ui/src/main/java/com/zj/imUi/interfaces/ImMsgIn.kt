@@ -82,7 +82,6 @@ interface ImMsgIn {
     fun getLiveMsgChannel(): String?
     fun getLiveMsgViewNum(): Int?
 
-
     fun getAnswerContentMsgType(): String?
     fun getAnswerContentSendTime(): Long?
     fun getAnswerContentSenderName(): String?
