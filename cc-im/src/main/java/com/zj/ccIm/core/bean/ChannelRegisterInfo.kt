@@ -24,6 +24,8 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
 
     val curChannelName: String; get() = mChannel.serializeName
 
+    val classification: Int; get() = mChannel.classification
+
     init {
         lo?.lifecycle?.addObserver(this)
         key = createKey(mChannel.serializeName, groupId, ownerId.toLong(), targetUserid?.toLong())

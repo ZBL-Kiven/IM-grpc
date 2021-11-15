@@ -19,7 +19,7 @@ internal object SendingDbOperator {
 
         var msgDb: MessageDao? = null
         var sendDb: SendMsgDao? = null
-       IMHelper.withDb {
+        IMHelper.withDb {
             msgDb = it.messageDao()
             sendDb = it.sendMsgDao()
         }
@@ -43,7 +43,7 @@ internal object SendingDbOperator {
                 if (d.black) sendDb?.deleteAllBySessionId(d.groupId)
                 if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
-                    d.black -> ClientHubImpl.PAYLOAD_DELETE
+                    d.black -> ClientHubImpl.PAYLOAD_DELETE_FROM_BLOCKED
                     d.msgStatus == ImApi.EH.SENSITIVE_WORD -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
                     d.msgStatus == ImApi.EH.NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
                     d.msgStatus == ImApi.EH.NOT_OWNER -> ClientHubImpl.PAYLOAD_DELETE_NOT_OWNER
