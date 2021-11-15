@@ -7,14 +7,12 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.bean.FetchResult
-import com.zj.ccIm.core.sp.SPHelper
+import com.zj.database.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 
 
 internal object Fetcher {
 
-    const val SP_FETCH_SESSIONS_TS = "fetch_last_modify_ts"
-    const val SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS = "fetch_last_modify_owner_ts"
     private var FETCH_CODE_INCREMENT: Int = 0
         get() {
             return field++

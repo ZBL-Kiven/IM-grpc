@@ -6,7 +6,6 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SessionInfoEntity
 import io.reactivex.schedulers.Schedulers
@@ -23,7 +22,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
     }
 
     override fun startFetch(prop: FetchType): BaseRetrofit.RequestCompo? {
-        val lastTs = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L
+        val lastTs = IMHelper.getDbHelper()?.getFetchSessionTs() ?: 0
         ImLogs.d("GroupSessionFetcher", "start fetch sessions  by ${prop.flags} ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
         return ImApi.getFunctionApi().call({ it.fetchSessions(lastTs) }, Schedulers.io(), Schedulers.io()) { b, d, e ->
@@ -41,7 +40,7 @@ internal object GroupSessionFetcher : BaseFetcher() {
                         }
                     } else {
                         ImLogs.d("GroupSessionFetcher", "fetch sessions success , new ts is ${d.timeStamp}, changed group is [${sessions.joinToString { "${it.groupName} , " }}]")
-                        SPHelper.put(Fetcher.SP_FETCH_SESSIONS_TS, d.timeStamp)
+                        IMHelper.getDbHelper()?.putFetchSessionTs(d.timeStamp)
                         val sessionDao = IMHelper.getDb()?.sessionDao()
                         sessions.forEach { s ->
                             if (s.groupStatus == 0 || s.groupStatus == 1) {

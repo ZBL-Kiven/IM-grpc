@@ -6,7 +6,7 @@ import com.zj.ccIm.core.ImConfigIn
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
-import com.zj.ccIm.core.sp.SPHelper
+import com.zj.database.sp.SPHelper
 import com.zj.ccIm.error.AuthenticationError
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException

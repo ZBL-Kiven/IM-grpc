@@ -20,7 +20,6 @@ import com.zj.ccIm.core.fecher.PrivateOwnerSessionFetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.MsgSender
 import com.zj.ccIm.core.sender.SendMsgConfig
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.error.DBFileException
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.logger.ImLogs
@@ -74,7 +73,7 @@ object IMHelper {
     fun init(app: Application, imConfig: ImConfigIn) {
         Constance.app = app
         Fetcher.init()
-        SPHelper.init("im_sp_main", app)
+        getDbHelper()?.checkDbVersion(app)
         val option = BaseOption.create(app)
         if (imConfig.debugAble()) option.debug()
         if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
@@ -190,6 +189,11 @@ object IMHelper {
         } catch (e: Exception) {
             ImLogs.recordErrorInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
         }
+    }
+
+    internal fun getDbHelper(): DbHelper? {
+        val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
+        return DbHelper.get(ctx)
     }
 
     fun queryAdminState(groupId: Long?): Int {

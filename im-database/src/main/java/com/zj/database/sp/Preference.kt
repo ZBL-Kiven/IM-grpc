@@ -1,4 +1,4 @@
-package com.zj.base.utils.storage.sp
+package com.zj.database.sp
 
 import android.content.Context
 import android.content.SharedPreferences

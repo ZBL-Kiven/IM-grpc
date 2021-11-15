@@ -1,7 +1,6 @@
-package com.zj.ccIm.core.sp
+package com.zj.database.sp
 
 import android.content.Context
-import com.zj.base.utils.storage.sp.Preference
 
 internal object SPHelper {
 

@@ -6,7 +6,6 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.ccIm.core.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.PrivateOwnerEntity
 import io.reactivex.schedulers.Schedulers
@@ -18,7 +17,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
     }
 
     override fun startFetch(prop: FetchType): BaseRetrofit.RequestCompo? {
-        val lastTs = SPHelper[Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0L] ?: 0L
+        val lastTs = IMHelper.getDbHelper()?.getFetchPrivateOwnerSessionTs() ?: 0
         ImLogs.d("PrivateOwnerSessionFetcher", "start fetch owner group by ${prop.flags} ,with last ts : $lastTs")
         val isFirstFetch = lastTs <= 0
         return ImApi.getFunctionApi().call({ it.fetchPrivateOwnerSessions(lastTs) }, Schedulers.io(), Schedulers.io()) { b, d, e ->
@@ -36,7 +35,7 @@ internal object PrivateOwnerSessionFetcher : BaseFetcher() {
                         }
                     } else {
                         ImLogs.d("PrivateOwnerSessionFetcher", "fetch owner group success, new ts is ${d.timeStamp}, changed group is [${sessions.joinToString { "${it.ownerName} , " }}]")
-                        SPHelper.put(Fetcher.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, d.timeStamp)
+                        IMHelper.getDbHelper()?.putFetchPrivateOwnerSessionTs(d.timeStamp)
                         val sessionDao = IMHelper.getDb()?.privateChatOwnerDao()
                         sessions.forEach { s ->
                             sessionDao?.insertOrUpdate(s)
