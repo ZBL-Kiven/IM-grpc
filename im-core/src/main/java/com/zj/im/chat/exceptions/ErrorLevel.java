@@ -8,7 +8,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Retention(RetentionPolicy.CLASS)
+@Retention(RetentionPolicy.SOURCE)
 @StringDef(value = {IMException.ERROR_LEVEL_ALERT, IMException.ERROR_LEVEL_DEADLY, IMException.ERROR_LEVEL_REINSTALL})
 @Target(value = ElementType.PARAMETER)
 @Inherited

@@ -98,7 +98,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     }
 
     private fun postData(cls: Class<*>?, data: T?, lst: Collection<T>?, payload: String?) {
-        if ((!creator.ignoreNullData) && data == null && lst.isNullOrEmpty()) {
+        if (creator.ignoreNullData && data == null && lst.isNullOrEmpty()) {
             log("the null data with type [${cls?.name}] are ignored by filter ,you can receive it by set ignoreNullData(false) in your Observer.")
             return
         }
