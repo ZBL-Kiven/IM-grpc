@@ -123,13 +123,13 @@ open class ClientHubImpl : ClientHub<Any?>() {
      * */
     private fun isInterruptData(callId: String?, d: Any?, sendingState: SendMsgState?): Boolean {
         val interruptDefault = callId?.startsWith(Constance.INTERNAL_CALL_ID_PREFIX) == true
-        if (callId == Constance.CALL_ID_REGISTERED_CHAT) {
+        if (callId?.startsWith(Constance.CALL_ID_REGISTERED_CHAT) == true) {
             val req = d as ImMessageReply.ReqContext
             val bean = ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
             IMHelper.onMsgRegistered(bean)
             return true
         }
-        if (callId == Constance.CALL_ID_REGISTER_CHAT || callId == Constance.CALL_ID_LEAVE_CHAT_ROOM) {
+        if (!callId.isNullOrEmpty() && (callId.startsWith(Constance.CALL_ID_REGISTER_CHAT) || callId.startsWith(Constance.CALL_ID_LEAVE_CHAT_ROOM))) {
             BadgeDbOperator.clearGroupBadge(d as ChannelRegisterInfo)
             return true
         }

@@ -19,13 +19,11 @@ internal object IMChannelManager {
                 lastMsgRegister.remove(req)
                 lastMsgRegister.offerLast(req)
             }
-            req.onResumed()
         }
     }
 
     fun destroy(key: String): ChannelRegisterInfo? {
-        val info = lastMsgRegister.first { it.key == key }
-        info.onDestroy()
+        val info = lastMsgRegister.firstOrNull { it.key == key } ?: return null
         lastMsgRegister.remove(info)
         return info
     }
@@ -35,10 +33,6 @@ internal object IMChannelManager {
             lastMsgRegister.remove(req)
             offerLast(req)
         }
-    }
-
-    fun pauseRegisterInfo(req: ChannelRegisterInfo) {
-        req.onPaused()
     }
 
     fun tryToRegisterAfterConnected(): Boolean {

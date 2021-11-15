@@ -32,8 +32,6 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         key = createKey(mChannel.serializeName, groupId, ownerId.toLong(), targetUserid?.toLong())
     }
 
-    private var lifecycleState: Lifecycle.Event = Lifecycle.Event.ON_RESUME
-
     fun setMessageReceiveObserver(): UIHelperCreator<MessageInfoEntity, MessageInfoEntity, *> {
         return CcIM.addReceiveObserver(MessageInfoEntity::class.java, key, lo)
     }
@@ -57,26 +55,9 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         IMChannelManager.resumeRegisterInfo(this)
     }
 
-    @OnLifecycleEvent(value = Lifecycle.Event.ON_PAUSE)
-    private fun pause() {
-        IMChannelManager.pauseRegisterInfo(this)
-    }
-
     @OnLifecycleEvent(value = Lifecycle.Event.ON_DESTROY)
     private fun destroyed() {
-        IMHelper.leaveChatRoom(key)
-    }
-
-    internal fun onResumed() {
-        lifecycleState = Lifecycle.Event.ON_RESUME
-    }
-
-    internal fun onPaused() {
-        lifecycleState = Lifecycle.Event.ON_PAUSE
-    }
-
-    internal fun onDestroy() {
-        lifecycleState = Lifecycle.Event.ON_DESTROY
+        IMHelper.leaveChatRoom(this)
     }
 
     companion object {

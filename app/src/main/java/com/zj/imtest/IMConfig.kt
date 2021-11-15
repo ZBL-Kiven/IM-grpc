@@ -3,7 +3,7 @@ package com.zj.imtest
 import android.widget.Toast
 import com.zj.ccIm.core.ImConfigIn
 import com.zj.im.chat.exceptions.IMException
-import com.zj.imtest.ui.MainActivity
+import kotlin.system.exitProcess
 
 object IMConfig : ImConfigIn {
 
@@ -17,7 +17,7 @@ object IMConfig : ImConfigIn {
 
     override fun getUserId(): Int {
 
-        return 151120
+        return 151118
 
         //         return 151473 //v
     }
@@ -38,6 +38,7 @@ object IMConfig : ImConfigIn {
         BaseApp.context.let {
             Toast.makeText(it, "TOKEN IS INVALID", Toast.LENGTH_SHORT).show()
         }
+        exitProcess(0)
     }
 
     override fun getGrpcAddress(): Pair<String, Int> {

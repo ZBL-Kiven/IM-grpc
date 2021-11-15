@@ -1,5 +1,6 @@
 package com.zj.imtest.ui.base
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,11 +24,12 @@ abstract class BaseMessageFragment : BaseTabFragment() {
     private var adapter: MsgAdapter? = null
     private lateinit var msgReqInfo: ChannelRegisterInfo
 
-    abstract fun initMessageObservers(sessionKey: String)
     abstract fun createData(groupId: Long, ownerId: Int, targetUserId: Int): ChannelRegisterInfo
 
-    open fun getMessageFilter(d: MessageInfoEntity?, payload: String?): Boolean {
-        return d?.channelKey == sessionKey
+    open fun initMessageObservers(sessionKey: String){}
+
+    open fun getMessageFilter(data: MessageInfoEntity?, payload: String?): Boolean {
+        return data?.channelKey == sessionKey
     }
 
     open fun getKeyboardScrollerView(): RecyclerView? {
@@ -97,5 +99,10 @@ abstract class BaseMessageFragment : BaseTabFragment() {
             }
             blv?.setMode(DisplayMode.NORMAL)
         }
+    }
+
+    override fun onDestroyed() {
+        super.onDestroyed()
+        Log.e("------ ","onDestroyed" )
     }
 }

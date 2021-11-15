@@ -33,23 +33,23 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     override fun send(params: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
-        val called = when (callId) {
-            Constance.CALL_ID_SUBSCRIBE_REMOVE_TOPIC, Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC -> {
+        val called = when {
+            callId.startsWith(Constance.CALL_ID_REGISTER_CHAT) -> {
+                (params as? ChannelRegisterInfo)?.let { d ->
+                    updateMsgReceiver(d, true)
+                }
+            }
+            callId.startsWith(Constance.CALL_ID_LEAVE_CHAT_ROOM) -> {
+                (params as? ChannelRegisterInfo)?.let { d ->
+                    updateMsgReceiver(d, false)
+                }
+            }
+            callId == Constance.CALL_ID_SUBSCRIBE_REMOVE_TOPIC || callId == Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC -> {
                 params?.toString()?.let {
                     if (callId == Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC) subscribeTopics.add(it) else subscribeTopics.remove(it)
                     topicStreamObserver?.let {
                         registerTopicListener()
                     } ?: receiveTopic()
-                }
-            }
-            Constance.CALL_ID_REGISTER_CHAT -> {
-                (params as? ChannelRegisterInfo)?.let { d ->
-                    updateMsgReceiver(d, true)
-                }
-            }
-            Constance.CALL_ID_LEAVE_CHAT_ROOM -> {
-                (params as? ChannelRegisterInfo)?.let { d ->
-                    updateMsgReceiver(d, false)
                 }
             }
             else -> null
@@ -116,7 +116,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 data.ownerId = d.ownerId.toLong()
                 data.targetUserId = d.targetUserid?.toLong() ?: 0
                 data.channel = d.mChannel.serializeName
-                data.seq = Constance.CALL_ID_REGISTERED_CHAT
+                data.seq = if (join) Constance.CALL_ID_REGISTERED_CHAT + d.key else Constance.CALL_ID_LEAVE_CHAT_ROOM + d.key
                 data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE
                 it.onNext(data.build())
                 ImLogs.recordLogsInFile("server hub event ", "call ${if (join) "add" else "remove"} msg receiver with ${d.key}")
@@ -165,6 +165,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         messageStreamObserver = withChannel {
             it.onlineImMessage(object : CusObserver<ImMessageReply>() {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
+                    ImLogs.recordLogsInFile("server hub event ", "on server message arrived : type = ${data?.type} seq = ${data?.reqContext?.seq}")
                     when (data?.type) {
                         1 -> {
                             val d = data.reqContext
