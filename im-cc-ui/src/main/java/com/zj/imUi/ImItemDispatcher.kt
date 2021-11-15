@@ -21,21 +21,17 @@ enum class MsgType(val type: String) {
 
 object ImItemDispatcher {
     fun getItemWithData(imIn: ImMsgIn, context: Context): BaseBubble {
-        return when {
-            imIn.getMsgIsRecalled() -> {
-                IMItemRecallTextView(context)
-            }
-            imIn.getMsgIsSensitive() -> {
-                IMItemSensitiveTextView(context)
-            }
-            else -> when (imIn.getType()) {
+        return when (imIn.getType()) {
                 UiMsgType.MSG_TYPE_CC_LIVE -> IMContentCCLiveView(context)
                 UiMsgType.MSG_TYPE_QUESTION -> IMRewardItem(context)
                 UiMsgType.MSG_TYPE_CC_VIDEO -> IMContentCCVideoView(context)
                 UiMsgType.MSG_TYPE_IMG, UiMsgType.MSG_TYPE_TEXT, UiMsgType.MSG_TYPE_AUDIO -> IMBubbleContentItem(
                     context)
+                UiMsgType.MSG_TYPE_RECALLED-> IMItemRecallTextView(context)
+                UiMsgType.MSG_TYPE_SENSITIVE-> IMItemSensitiveTextView(context)
+
                 else -> IMBubbleNotAllowedTypeItem(context)
-            }
+
         }
     }
 }
