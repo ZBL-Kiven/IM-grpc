@@ -28,9 +28,9 @@ class BasePopFlowWindow<T> :
     private var onReportOK: ((v: View?, data: T?, toString: String) -> Unit)? = null
     private var anchorView: SoftReference<View?>? = null
     private var data: ImMsgIn? = null
-    private var isOwner:Boolean =false
-    private var isSelfMessage:Boolean =false
-    private var isNormalMsg:Boolean =false
+    private var isOwner: Boolean = false
+    private var isSelfMessage: Boolean = false
+    private var isNormalMsg: Boolean = false
 
     init {
         isFocusable = true
@@ -51,7 +51,8 @@ class BasePopFlowWindow<T> :
     private fun initData(v: View) {
         v.post {
             if (isShowing) dismiss()
-            contentView = LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
+            contentView =
+                LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
             showPop(v)
             initReportData(v)
         }
@@ -68,7 +69,8 @@ class BasePopFlowWindow<T> :
     private fun initReportData(v: View) {
         isSelfMessage = data?.getSenderId() == data?.getSelfUserId()
         isOwner = data?.getSelfUserId() == data?.getOwnerId()
-        isNormalMsg = (data?.getMsgIsReject() == false&&data?.getMsgIsSensitive()==false&&data?.getMsgIsRecalled()==false)
+        isNormalMsg =
+            (data?.getMsgIsReject() == false && data?.getMsgIsSensitive() == false && data?.getMsgIsRecalled() == false)
 
         val ctx = WeakReference(v.context)
         val rv = contentView.findViewById<EmptyRecyclerView<String>>(R.id.im_pop_rv_content)
@@ -78,45 +80,41 @@ class BasePopFlowWindow<T> :
         val reply = ctx.get()?.getString(R.string.im_ui_msg_reply)
         val copy = ctx.get()?.getString(R.string.im_ui_msg_copy)
         val block = ctx.get()?.getString(R.string.im_ui_msg_block)
-
         val recall = ctx.get()?.getString(R.string.im_ui_msg_button_recall)
         val refuse = "Refuse"
         val report = "Report"
-
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
-        val reportItems = mutableListOf(
-            reply,
-            copy,
-            recall,
-            block,
-            refuse,
-            report ,
-            delete
-            )
-         val filterList: MutableList<String?> = mutableListOf()
+        val reportItems = mutableListOf(reply, copy, recall, block, refuse, report, delete)
+        val filterList: MutableList<String?> = mutableListOf()
         data?.apply {
             if (isNormalMsg) {
                 if (isSelfMessage) {
                     filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
-                            if (it < 0) filterList.add( reportItems[6])
+                            if (it < 0) filterList.add(reportItems[6])
                             else {
-                                if (isOwner) filterList.add(reportItems[2])
+                                if (isOwner && data?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[2])
                             }
                         }
                     }
                 } else { //不是自己的消息
-                    if (data?.getType() ==UiMsgType.MSG_TYPE_TEXT) filterList.add( reportItems[1])
-                    if (data?.getType()!=UiMsgType.MSG_TYPE_QUESTION)filterList.add(reportItems[0])
+                    if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
+                    if (data?.getType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
                     if (isOwner) {
-                        filterList.add(reportItems[2])
-                        filterList.add(reportItems[3])
                         if (data?.getQuestionStatus() == 0) {
-                            filterList.add( reportItems[4])
+                            filterList.add(reportItems[4])
+                        }else{
+                            filterList.add(reportItems[2])
+                            filterList.add(reportItems[3])
+                        }
+                    }else if(data?.getIsAdmin() == true){
+                        if (data?.getSenderId()!=data?.getOwnerId()){
+                            filterList.add(reportItems[2])
+                            filterList.add(reportItems[3])
                         }
                     }
-                    filterList.add(reportItems[5])
+//                    else filterList.add(reportItems[5])
                 }
             }
         }
@@ -127,7 +125,8 @@ class BasePopFlowWindow<T> :
                 override fun initData(p0: BaseViewHolder<String?>?, p1: Int, reportItem: String?) {
                     val flowText = p0?.getView<TextView>(R.id.im_pop_item_tv)
                     flowText?.text = reportItem
-                    flowText?.setTextColor(ContextCompat.getColor(contentView.context, R.color.im_msg_text_color_white))
+                    flowText?.setTextColor(ContextCompat.getColor(contentView.context,
+                        R.color.im_msg_text_color_white))
 
                 }
 

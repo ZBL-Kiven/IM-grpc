@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.zj.imUi.bubble.BubbleRenderer
 import com.zj.imUi.interfaces.ImMsgIn
@@ -16,10 +15,11 @@ import com.zj.imUi.ImItemDispatcher
 import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.widget.BasePopFlowWindow
-import com.zj.imUi.widget.MsgPop
 
 @Suppress("unused")
-abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
+abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context,
+    attrs: AttributeSet? = null,
+    def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
 
     companion object {
         const val NOTIFY_CHANGE_AUDIO = "notify_change_audio"
@@ -66,7 +66,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
         addViewToSelf(tvNickname, getTvNickNameLayoutParams(data))
         tvNickname?.text = data.getSenderName()
-        tvNickname?.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray_nickname))
+        tvNickname?.setTextColor(ContextCompat.getColor(context,
+            R.color.im_msg_text_color_gray_nickname))
     }
 
     fun notifyChange(d: T?, pl: Any?) {
@@ -78,7 +79,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
-        if (data.getSelfUserId() == data.getSenderId()||data.getMsgIsRecalled()==true||data.getMsgIsSensitive()==true) {
+        if (data.getSelfUserId() == data.getSenderId() || data.getMsgIsRecalled() == true || data.getMsgIsSensitive() == true) {
             removeIfNotContains(ivAvatar, true)
             return
         }
@@ -113,14 +114,15 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData({ curData }, chatType as Int?)
-        bubbleView?.setOnLongClickListener {
-            val isNotSelf = data.getSelfUserId() != data.getSenderId()
-            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf || chatType == 2) {
+        val isNormalMsg =
+            data.getMsgIsRecalled() == false && data.getMsgIsReject() == false && data.getMsgIsSensitive() == false && data.getType() != UiMsgType.MSG_TYPE_CC_LIVE && data.getType() != UiMsgType.MSG_TYPE_CC_VIDEO
+        if (isNormalMsg) {
+            bubbleView?.setOnLongClickListener {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data,it){_,_,content->
+                popFlowWindow.show(data, it) { _, _, _ ->
                 }
+                true
             }
-            true
         }
     }
 

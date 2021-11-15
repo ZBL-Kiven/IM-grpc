@@ -54,7 +54,10 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context,
             addView(contentLayout)
         }
         if (data.getMsgIsRecalled() == true) {
-            tvContent.text = "群主撤回了一条消息"
+            if (data.getMsgRecallRole() == 1) {
+                tvContent.text = "群主撤回了一条消息"
+            }else
+                tvContent.text = "管理员撤回了一条消息"
         }
     }
 

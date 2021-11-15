@@ -73,6 +73,14 @@ interface ImMsgIn {
     fun getReplyMsgQuestionSpark(): Int?
     fun getReplyMsgQuestionIsPublished(): Boolean?
 
+    fun getLiveMsgId(): Int?
+    fun getLiveMsgStatus(): Boolean?
+    fun getLiveMsgCover(): String?
+    fun getLiveMsgRoomId(): Int?
+    fun getLiveMsgIntroduce(): String?
+    fun getLiveMsgChannel(): String?
+    fun getLiveMsgViewNum(): Int?
+
     fun getAnswerContentMsgType(): String?
     fun getAnswerContentSendTime(): Long?
     fun getAnswerContentSenderName(): String?
@@ -84,6 +92,12 @@ interface ImMsgIn {
     fun getAnswerContentImgContentHeight(): Int?
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
+
+    //获取敏感消息内容
+    fun getExtSensitiveMsgContent(): String?
+
+    //撤回消息角色
+    fun getMsgRecallRole(): Int?
 
     //消息是否被撤回
     fun getMsgIsRecalled(): Boolean?
@@ -146,6 +160,6 @@ interface ImMsgIn {
     //跳直播间
     fun jumpToLiveRoom()
 
+    //举报
     fun reportGroupUserMsg(id: String)
-
 }

@@ -30,6 +30,8 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context,
         audioTime = findViewById(R.id.im_msg_item_audio_time)
         audioPlayView = findViewById(R.id.im_msg_item_audio_play_view)
         audioLinearLayout = findViewById(R.id.im_msg_item_widget_record_ll)
+
+
     }
 
 
@@ -118,11 +120,10 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context,
             }
         }
 
-        setOnLongClickListener {
-            val isNotSelf = data.getSelfUserId() != data.getSenderId()
-            if (data.getType() == UiMsgType.MSG_TYPE_TEXT || isNotSelf) {
+        this.setOnLongClickListener {
+            if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data, it) { _, _, content ->
+                popFlowWindow.show(data, it) { _, _, _ ->
                 }
             }
             true

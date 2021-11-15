@@ -1,5 +1,6 @@
 package com.zj.imUi.items
 
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -7,6 +8,9 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageView
@@ -36,12 +40,15 @@ class IMContentCCLiveView @JvmOverloads constructor(context: Context,
     private var llTitle: LinearLayout
     private var imgCCLiveCover: AppCompatImageView
     private var tvCCLiveTitle: AppCompatTextView
-    private var ccVideoProgressBar: ProgressBar
+    private var frame :FrameLayout
+    private var baseMargin = DPUtils.dp2px(12f)
 
-    @SuppressLint("ObjectAnimatorBinding")
 
     private var contentLayout: View =
         LayoutInflater.from(context).inflate(R.layout.im_msg_item_normal_cc_live, this, false)
+
+    @SuppressLint("ObjectAnimatorBinding")
+    private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
 
     init {
         with(contentLayout) {
@@ -50,8 +57,13 @@ class IMContentCCLiveView @JvmOverloads constructor(context: Context,
             llTitle = findViewById(R.id.im_msg_item_normal_cc_live_ll_title)
             imgCCLiveCover = findViewById(R.id.im_msg_item_normal_cc_live_img_cover)
             tvCCLiveTitle = findViewById(R.id.im_msg_item_normal_cc_live_tv_title)
-            ccVideoProgressBar = findViewById(R.id.im_msg_item_cc_video_img_progressbar)
+            frame = findViewById(R.id.im_msg_item_normal_cc_live_fl)
+
         }
+
+        anim.duration = 800
+        anim.repeatCount = ObjectAnimator.INFINITE
+        anim.start()
     }
 
     override fun init(data: ImMsgIn, chatType: Any) {
@@ -63,27 +75,41 @@ class IMContentCCLiveView @JvmOverloads constructor(context: Context,
         imgCCLiveCover.setOnClickListener {
             data.jumpToLiveRoom() //跳转大V直播
         }
+
     }
 
     @SuppressLint("CheckResult")
     private fun onSetData(data: ImMsgIn?) {
         if (data == null) return
-
-
         if (data.getSelfUserId() != data.getSenderId()) {
+            if(data.getSenderId() == data.getOwnerId()){
+                imgOwnerFlag.visibility = View.VISIBLE
+            }else
+                imgOwnerFlag.visibility = View.GONE
+
             llTitle.visibility = View.VISIBLE
             tvName.text = data.getSenderName()
-        } else llTitle.visibility = View.GONE
-
+            val lp = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
+            lp.setMargins(baseMargin,0,baseMargin,baseMargin)
+            frame.layoutParams = lp
+        } else {
+            llTitle.visibility = View.GONE
+            val lp = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT)
+            lp.setMargins(0,0,0,0)
+            frame.layoutParams = lp
+        }
         val corners = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
             8f,
             context.resources.displayMetrics).toInt()
         val roundOptions = RequestOptions().transform(RoundedCorners(corners))
         roundOptions.transform(CenterCrop(), RoundedCorners(corners)) //处理CenterCrop的情况,保证圆角不失效
 
-        data.getCCVideoContentImgPreviewRemoteStorageUrl()?.let {
-            Glide.with(this).load(it).override(DPUtils.dp2px(256f), DPUtils.dp2px(160f))
-                .apply(roundOptions).addListener(object : RequestListener<Drawable> {
+        data.getLiveMsgCover()?.let {
+            Glide.with(this).load(it).override(DPUtils.dp2px(256f), DPUtils.dp2px(226f))
+                .apply(roundOptions)
+                .placeholder(R.drawable.im_msg_item_img_loading)
+                .error(R.drawable.im_msg_item_img_loading)
+                .addListener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: GlideException?,
                         model: Any?,
                         target: Target<Drawable>?,
@@ -96,15 +122,15 @@ class IMContentCCLiveView @JvmOverloads constructor(context: Context,
                         target: Target<Drawable>?,
                         dataSource: DataSource?,
                         isFirstResource: Boolean): Boolean {
-                        ccVideoProgressBar.visibility = View.GONE
+                        anim.cancel()
                         return false
                     }
                 }).into(imgCCLiveCover)
         }
 
-        data.getCCVideoContentVideoTitle()?.let {
+        data.getLiveMsgIntroduce()?.let {
             tvCCLiveTitle.visibility = View.VISIBLE
-            tvCCLiveTitle.text = data.getCCVideoContentVideoTitle()
+            tvCCLiveTitle.text = data.getLiveMsgIntroduce()
         }
 
     }
