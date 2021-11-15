@@ -3,11 +3,8 @@ package com.zj.ccIm.core.db
 import com.google.gson.Gson
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.bean.FetchResult
 import com.zj.ccIm.core.bean.RoleInfo
-import com.zj.ccIm.core.fecher.Fetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
-import com.zj.database.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.database.ut.Constance
@@ -72,8 +69,6 @@ internal object SessionDbOperator {
                 val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = i.groupId)
                 i.sessionMsgInfo = lastMsgDb.findSessionMsgInfoByKey(key)
             }
-            val isFirst = SPHelper[Fetcher.SP_FETCH_SESSIONS_TS, 0L] ?: 0L <= 0
-            CcIM.postToUiObservers(FetchResult(true, isFirst, sessions.isNullOrEmpty()))
             CcIM.postToUiObservers(SessionInfoEntity::class.java, sessions, callId)
         }
     }

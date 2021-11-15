@@ -6,7 +6,6 @@ import com.zj.ccIm.core.ImConfigIn
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
-import com.zj.database.sp.SPHelper
 import com.zj.ccIm.error.AuthenticationError
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException
@@ -90,16 +89,5 @@ internal object CcIM : IMInterface<Any?>() {
     override fun shutdown(case: String) {
         IMHelper.close()
         super.shutdown(case)
-    }
-
-    /**
-     * must call when login out
-     * */
-    fun loginOut() {
-        Thread {
-            SPHelper.clear()
-            IMHelper.withDb { it.clearAllTables() }
-            shutdown("on logout called !")
-        }.start()
     }
 }

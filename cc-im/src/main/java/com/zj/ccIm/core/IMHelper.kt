@@ -73,7 +73,7 @@ object IMHelper {
     fun init(app: Application, imConfig: ImConfigIn) {
         Constance.app = app
         Fetcher.init()
-        getDbHelper()?.checkDbVersion(app)
+        getDbHelper()?.checkDbVersion()
         val option = BaseOption.create(app)
         if (imConfig.debugAble()) option.debug()
         if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
@@ -105,8 +105,8 @@ object IMHelper {
         ImApi.getRecordApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.io()) { i, d, _ ->
             if (i && d != null) {
                 CcIM.getAppContext()?.let {
-                    val sd = DbHelper.get(it)?.db?.sessionDao()
-                    val smd = DbHelper.get(it)?.db?.sessionMsgDao()
+                    val sd = DbHelper.get(it)?.getDb()?.sessionDao()
+                    val smd = DbHelper.get(it)?.getDb()?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
                     val mk = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, d.groupId)
                     val localMsg = smd?.findSessionMsgInfoByKey(mk)
@@ -175,7 +175,7 @@ object IMHelper {
     internal fun getDb(): IMDb? {
         val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
         return try {
-            DbHelper.get(ctx)?.db
+            DbHelper.get(ctx)?.getDb()
         } catch (e: Exception) {
             CcIM.postIMError(DBFileException());null
         }
@@ -220,16 +220,17 @@ object IMHelper {
         CcIM.shutdown("called from app!")
     }
 
-    fun close() {
-        IMChannelManager.clear()
-        Fetcher.cancelAll()
-        LiveIMHelper.close()
-    }
-
     /**
      * must call when login out
      * */
     fun loginOut() {
-        CcIM.loginOut()
+        CcIM.shutdown("login out")
+        getDbHelper()?.clearAll()
+    }
+
+    internal fun close() {
+        IMChannelManager.clear()
+        Fetcher.cancelAll()
+        LiveIMHelper.close()
     }
 }

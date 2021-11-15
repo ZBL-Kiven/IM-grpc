@@ -8,9 +8,10 @@ import androidx.room.migration.Migration
 import com.zj.database.sp.SPHelper
 import com.zj.database.ut.Constance
 
+@Suppress("unused")
 class DbHelper private constructor(context: Context) {
 
-    var db: IMDb
+    private var db: IMDb
     private var dbName = "clipClaps-im"
 
     private val migrations = arrayOf<Migration>()
@@ -28,7 +29,11 @@ class DbHelper private constructor(context: Context) {
         db = builder.build()
     }
 
-    fun checkDbVersion(context: Context) {
+    fun getDb(): IMDb {
+        return db
+    }
+
+    fun checkDbVersion() {
         val last = SPHelper[Constance.SP_LAST_DB_VERSION, 0] ?: 0
         if (last != curDbVersion) {
             SPHelper.clear()
@@ -40,7 +45,6 @@ class DbHelper private constructor(context: Context) {
         return SPHelper[Constance.SP_FETCH_SESSIONS_TS, 0L] ?: 0L
     }
 
-
     fun putFetchSessionTs(newTs: Long) {
         SPHelper.put(Constance.SP_FETCH_SESSIONS_TS, newTs)
     }
@@ -51,6 +55,19 @@ class DbHelper private constructor(context: Context) {
 
     fun putFetchPrivateOwnerSessionTs(newTs: Long) {
         SPHelper.put(Constance.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, newTs)
+    }
+
+    fun clearSessionFetchingTs() {
+        SPHelper.put(Constance.SP_FETCH_SESSIONS_TS, 0)
+    }
+
+    fun clearPrivateOwnerSessionFetchingTs() {
+        SPHelper.put(Constance.SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0)
+    }
+
+    fun clearAll() {
+        SPHelper.clear()
+        db.clearAllTables()
     }
 
     companion object {

@@ -6,8 +6,8 @@ import com.zj.im.chat.enums.ConnectionState
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMChannelManager
+import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.FetchResult
-import com.zj.database.sp.SPHelper
 import com.zj.ccIm.logger.ImLogs
 
 
@@ -84,10 +84,10 @@ internal object Fetcher {
     fun resetIncrementTsForProp(prop: FetchType) {
         when (prop.dealCls) {
             GroupSessionFetcher::class.java -> {
-                SPHelper.put(SP_FETCH_SESSIONS_TS, 0)
+                IMHelper.getDbHelper()?.clearSessionFetchingTs()
             }
             PrivateOwnerSessionFetcher::class.java -> {
-                SPHelper.put(SP_FETCH_PRIVATE_OWNER_CHAT_SESSIONS_TS, 0)
+                IMHelper.getDbHelper()?.clearPrivateOwnerSessionFetchingTs()
             }
         }
     }
