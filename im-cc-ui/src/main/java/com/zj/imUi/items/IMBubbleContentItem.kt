@@ -2,12 +2,10 @@ package com.zj.imUi.items
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -18,9 +16,7 @@ import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
-import com.zj.imUi.widget.BasePopFlowWindow
 import com.zj.imUi.widget.GroupRewardOwnerMeItem
-import com.zj.imUi.widget.MsgPop
 import com.zj.views.ut.DPUtils
 
 
@@ -87,18 +83,18 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             setReplyContent(data)
             setIconVisibility(data)
         }
-        setContentColor(data) //        setTime(data)
+        setContentColor(data)
+    //        setTime(data)
     }
 
-    private fun setTime(data: ImMsgIn) {
-        if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getSelfUserId() == data.getSenderId()) {
-                timeBottom.visibility = View.VISIBLE
-                timeBottom.setData(data)
-            }
-        } else timeBottom.visibility = View.GONE
-
-    }
+//    private fun setTime(data: ImMsgIn) {
+//        if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
+//            if (data.getSelfUserId() == data.getSenderId()) {
+//                timeBottom.visibility = View.VISIBLE
+//                timeBottom.setData(data)
+//            }
+//        } else timeBottom.visibility = View.GONE
+//    }
 
     private fun setContentColor(data: ImMsgIn) {
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
@@ -307,22 +303,24 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 bubbleContent.removeAllViews()
                 curContentIn = v as? ImContentIn
                 bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
-                if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
-                    bubbleContent.setOnClickListener {
-                        data.onViewLargePic()
-                    }
-                } else if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
-                    chatType?.let { curContentIn?.chatType(it) }
-                }
-
             }
         } finally {
-            bubbleContent.setOnLongClickListener {
-                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data, it) { _, _, _ ->
-                }
-                true
+//            if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
+//                bubbleContent.setOnClickListener {
+//                    Toast.makeText(context,"图片点击",Toast.LENGTH_SHORT).show()
+//                    data.onViewLargePic()
+//                }
+//            } else
+                if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
+                chatType?.let { curContentIn?.chatType(it) }
             }
+
+//            bubbleContent.setOnLongClickListener {
+//                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+//                popFlowWindow.show(data, it) { _, _, _ ->
+//                }
+//                true
+//            }
             curContentIn?.onSetData(data)
         }
     }

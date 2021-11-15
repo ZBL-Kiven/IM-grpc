@@ -22,7 +22,7 @@ enum class MsgType(val type: String) {
 object ImItemDispatcher {
     fun getItemWithData(imIn: ImMsgIn, context: Context): BaseBubble {
         return when {
-            imIn.getMsgIsRecalled() == true -> {
+            imIn.getMsgIsRecalled() -> {
                 IMItemRecallTextView(context)
             }
             imIn.getMsgIsSensitive() -> {

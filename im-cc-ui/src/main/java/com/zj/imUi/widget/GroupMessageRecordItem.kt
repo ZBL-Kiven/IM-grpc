@@ -3,9 +3,9 @@ package com.zj.imUi.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.zj.imUi.R
@@ -30,8 +30,6 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context,
         audioTime = findViewById(R.id.im_msg_item_audio_time)
         audioPlayView = findViewById(R.id.im_msg_item_audio_play_view)
         audioLinearLayout = findViewById(R.id.im_msg_item_widget_record_ll)
-
-
     }
 
 
@@ -112,7 +110,8 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context,
             }
         } //        audioTime.text = "${data.getAudioContentDuration() ?: 0}\""
         audioPlayView.isAnim = data.isAudioPlaying() == true
-        setOnClickListener {
+        this.setOnClickListener {
+//            Toast.makeText(context,"GroupMessageRecordItem录音点击", Toast.LENGTH_SHORT).show()
             if (!audioPlayView.isAnim) {
                 data.playAudio()
             } else {
@@ -121,7 +120,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context,
         }
 
         this.setOnLongClickListener {
-            if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
+            if (data.getType() == UiMsgType.MSG_TYPE_AUDIO&&data.getReplyMsgType()!=UiMsgType.MSG_TYPE_QUESTION) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->
                 }

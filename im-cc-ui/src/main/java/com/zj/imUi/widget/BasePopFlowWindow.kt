@@ -53,8 +53,8 @@ class BasePopFlowWindow<T> :
             if (isShowing) dismiss()
             contentView =
                 LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
-            showPop(v)
             initReportData(v)
+            showPop(v)
         }
     }
 
@@ -79,8 +79,8 @@ class BasePopFlowWindow<T> :
         rv.layoutManager = flowLayoutManager
         val reply = ctx.get()?.getString(R.string.im_ui_msg_reply)
         val copy = ctx.get()?.getString(R.string.im_ui_msg_copy)
-        val block = ctx.get()?.getString(R.string.im_ui_msg_block)
         val recall = ctx.get()?.getString(R.string.im_ui_msg_button_recall)
+        val block = ctx.get()?.getString(R.string.im_ui_msg_block)
         val refuse = "Refuse"
         val report = "Report"
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
@@ -89,7 +89,7 @@ class BasePopFlowWindow<T> :
         data?.apply {
             if (isNormalMsg) {
                 if (isSelfMessage) {
-                    filterList.add(reportItems[1])
+                    if(data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
@@ -102,7 +102,7 @@ class BasePopFlowWindow<T> :
                     if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     if (data?.getType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
                     if (isOwner) {
-                        if (data?.getQuestionStatus() == 0) {
+                        if (data?.getQuestionStatus() == 0&&data?.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                             filterList.add(reportItems[4])
                         }else{
                             filterList.add(reportItems[2])
@@ -114,7 +114,7 @@ class BasePopFlowWindow<T> :
                             filterList.add(reportItems[3])
                         }
                     }
-//                    else filterList.add(reportItems[5])
+                    //                    else filterList.add(reportItems[5])
                 }
             }
         }

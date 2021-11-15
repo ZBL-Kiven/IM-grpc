@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
@@ -150,7 +149,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         val messageNormal = data.getSendState() == 0 || data.getSendState() == 3
-        if (data.getMsgIsReject() == true) { //调整Flag位置
+        if (data.getMsgIsReject()) { //调整Flag位置
             val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             lp.gravity = Gravity.END
             lp.setMargins(0, DPUtils.dp2px(-60f), DPUtils.dp2px(10f), 10)
@@ -214,10 +213,10 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
 
         when {
-            data.getMsgIsReject() == true -> {
+            data.getMsgIsReject() -> {
                 setAlreadyReplyBg(RewardMsgState.REJECTED.type)
             }
-            data.getQuestionStatus() == 0 -> {
+            data.getQuestionStatus() == RewardMsgState.WAIT_REPLY.type -> {
                 setWaitReply(data)
             }
             data.getQuestionStatus() == 1 -> { //已回复
@@ -332,6 +331,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         textIsPublic.setTextColor(ContextCompat.getColor(context, R.color.im_msg_frame_textview_private))
         if (type == RewardMsgState.ALREADY_REPLIED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_replied)
+            tvReliedFLag.setBackgroundResource(R.drawable.im_msg_item_replied_flag_cornors_bg)
+            tvReliedFLag.setTextColor(Color.parseColor("#FF3EC093"))
         } else if (type == RewardMsgState.REJECTED.type) {
             tvReliedFLag.text = context.getString(R.string.im_ui_rejected)
         }
@@ -365,8 +366,8 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
                     MessageSendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
                 }
                 it.getAnswerContentSendTime()?.let { it1 ->
-                    TimeDiffUtils.timeDifference(it1)?.let { it1 ->
-                        MessageReplySendTimeUtils.registerSendTimeObserver(it.getMsgId(), it1, this)
+                    TimeDiffUtils.timeDifference(it1)?.let { it2 ->
+                        MessageReplySendTimeUtils.registerSendTimeObserver(it.getMsgId(), it2, this)
                     }
                 }
             } else {
