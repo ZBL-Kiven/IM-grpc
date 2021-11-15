@@ -14,7 +14,7 @@ import com.zj.im.utils.log.logger.printInFile
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleObserver {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, inObserver: (Class<R>) -> Unit, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleObserver {
 
     init {
         lifecycleOwner?.let {
@@ -32,6 +32,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
             }
         }
         MessageInterface.putAnObserver(this)
+        inObserver(creator.outerCls)
     }
 
     private val pal = "payload"
@@ -97,7 +98,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     }
 
     private fun postData(cls: Class<*>?, data: T?, lst: Collection<T>?, payload: String?) {
-        if (creator.ignoreNullData && data == null && lst.isNullOrEmpty()) {
+        if ((!creator.ignoreNullData) && data == null && lst.isNullOrEmpty()) {
             log("the null data with type [${cls?.name}] are ignored by filter ,you can receive it by set ignoreNullData(false) in your Observer.")
             return
         }

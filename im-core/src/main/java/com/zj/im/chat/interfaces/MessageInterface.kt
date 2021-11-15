@@ -26,6 +26,7 @@ abstract class MessageInterface<T> {
         internal fun putAnObserver(option: UIOptions<*, *, *>?) {
             if (option == null) return
             msgObservers?.put(option.getUnique(), option)
+
         }
 
         internal fun hasObserver(unique: Any): Boolean {

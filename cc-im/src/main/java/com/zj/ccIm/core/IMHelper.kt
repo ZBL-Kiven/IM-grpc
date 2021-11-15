@@ -126,17 +126,23 @@ object IMHelper {
         CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
         if (!req.checkValid()) return null
         IMChannelManager.offerLast(req)
-        CcIM.beginMessageTempRecord(req.key)
         CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
         return req.key
     }
 
-    fun leaveChatRoom(key: String): NetWorkRecordInfo? {
-        return if (key.isNotEmpty()) {
-            val last = IMChannelManager.destroy(key) ?: return null
+    fun leaveChatRoom(key: String) {
+        if (key.isNotEmpty()) {
+            val last = IMChannelManager.destroy(key) ?: return
             CcIM.send(last, Constance.CALL_ID_LEAVE_CHAT_ROOM, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
-            return CcIM.endMessageTempRecord(key)
-        } else null
+        }
+    }
+
+    fun startImTempRecord(key: String) {
+        CcIM.beginMessageTempRecord(key)
+    }
+
+    fun endImTempRecord(key: String): NetWorkRecordInfo? {
+        return CcIM.endMessageTempRecord(key)
     }
 
     fun deleteSession(@DeleteSessionType type: Int, groupId: Long, ownerIdIfOwner: Int? = null, uidIfFans: Int? = null) {

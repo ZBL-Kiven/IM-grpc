@@ -317,7 +317,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/
 
     override fun isAudioPlaying(): Boolean {
-        return true
+        return false
     }
 
     override fun playAudio() {

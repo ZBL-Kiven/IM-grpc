@@ -57,23 +57,23 @@ import java.util.concurrent.LinkedBlockingDeque
 abstract class IMInterface<T> : MessageInterface<T>() {
 
     fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        setNewListener(classR, "UT2F-E17T-33I-9112")
-        return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR)
+        return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR) { cls ->
+            setNewListener(cls, "UT2F-E17T-33I-9112")
+        }
     }
 
     fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        setNewListener(classT, "UT2Q-99BR-E88-2271")
-        return UIHelperCreator(uniqueCode, lifecycleOwner, classT, classT, null)
+        return UIHelperCreator(uniqueCode, lifecycleOwner, classT, classT, null) { cls ->
+            setNewListener(cls, "UT2Q-99BR-E88-2271")
+        }
     }
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        setNewListener(R::class.java, "UT2F-E17T-33I-9112")
-        return UIHandlerCreator(uniqueCode, lifecycleOwner, T::class.java, R::class.java)
+        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
     }
 
     inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        setNewListener(T::class.java, "UT2Q-99BR-E88-2271")
-        return UIHelperCreator(uniqueCode, lifecycleOwner, T::class.java, T::class.java, null)
+        return this.addReceiveObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
     fun <X> setNewListener(cls: Class<*>, imm: X) {

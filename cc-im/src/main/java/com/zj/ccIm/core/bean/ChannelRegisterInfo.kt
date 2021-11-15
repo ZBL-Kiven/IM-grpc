@@ -7,6 +7,7 @@ import androidx.lifecycle.OnLifecycleEvent
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.annos.MsgFetchType
 import com.zj.ccIm.core.IMChannelManager
+import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.database.entity.MessageInfoEntity
@@ -37,6 +38,10 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         return CcIM.addReceiveObserver(MessageInfoEntity::class.java, key, lo)
     }
 
+    fun toReqBody(msgId: Long?, @MsgFetchType type: Int? = null): ChannelRegisterInfo {
+        return ChannelRegisterInfo(null, groupId, ownerId, targetUserid, msgId, type, mChannel)
+    }
+
     internal fun checkValid(): Boolean {
         val errorMsg = "your call register with channel ${mChannel.serializeName} , but %s is invalid"
         return catching({
@@ -55,6 +60,11 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
     @OnLifecycleEvent(value = Lifecycle.Event.ON_PAUSE)
     private fun pause() {
         IMChannelManager.pauseRegisterInfo(this)
+    }
+
+    @OnLifecycleEvent(value = Lifecycle.Event.ON_DESTROY)
+    private fun destroyed() {
+        IMHelper.leaveChatRoom(key)
     }
 
     internal fun onResumed() {
