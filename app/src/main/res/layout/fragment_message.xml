@@ -8,28 +8,29 @@
         android:id="@+id/im_frag_msg_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-<!--    <com.zj.loading.BaseLoadingView-->
-<!--        android:id="@+id/im_reward_setting_loading"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:backgroundFill="#f7f7f7"-->
-<!--        app:drawerHeight="179dp"-->
-<!--        app:drawerWidth="179dp"-->
-<!--        app:hintColor="#333"-->
-<!--        app:hintTextSize="17sp"-->
-<!--        app:loadingText="@string/loading_progress"-->
-<!--        app:modeDefault="LOADING"-->
-<!--        app:networkErrorText="@string/loading_no_data"-->
-<!--        app:noDataRes="@mipmap/icon_face_thumb"-->
-<!--        app:noDataText="@string/loading_no_data"-->
-<!--        app:noNetworkRes="@mipmap/icon_face_thumb"-->
-<!--        app:refreshEnable="true"-->
-<!--        app:refreshNetworkText="@string/loading_refresh"-->
-<!--        app:refreshNoDataText="@string/loading_refresh"-->
-<!--        app:refreshTextColor="#999"-->
-<!--        app:refreshTextSize="13sp"-->
-<!--        app:shownMode="overlap" />-->
+    <!--    <com.zj.loading.BaseLoadingView-->
+    <!--        android:id="@+id/im_reward_setting_loading"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        app:backgroundFill="#f7f7f7"-->
+    <!--        app:drawerHeight="179dp"-->
+    <!--        app:drawerWidth="179dp"-->
+    <!--        app:hintColor="#333"-->
+    <!--        app:hintTextSize="17sp"-->
+    <!--        app:loadingText="@string/loading_progress"-->
+    <!--        app:modeDefault="LOADING"-->
+    <!--        app:networkErrorText="@string/loading_no_data"-->
+    <!--        app:noDataRes="@mipmap/icon_face_thumb"-->
+    <!--        app:noDataText="@string/loading_no_data"-->
+    <!--        app:noNetworkRes="@mipmap/icon_face_thumb"-->
+    <!--        app:refreshEnable="true"-->
+    <!--        app:refreshNetworkText="@string/loading_refresh"-->
+    <!--        app:refreshNoDataText="@string/loading_refresh"-->
+    <!--        app:refreshTextColor="#999"-->
+    <!--        app:refreshTextSize="13sp"-->
+    <!--        app:shownMode="overlap" />-->
 
 </FrameLayout>
