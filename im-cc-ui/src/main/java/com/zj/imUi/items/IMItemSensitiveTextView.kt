@@ -63,6 +63,7 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
     }
 
     override fun onDestroy() {
+        removeAllViews()
     }
 
 

@@ -7,7 +7,8 @@ internal object UiMsgType {
     const val MSG_TYPE_AUDIO = "audio"
     const val MSG_TYPE_CC_VIDEO= "cc_video"
     const val MSG_TYPE_CC_LIVE= "live"
-
+    const val MSG_TYPE_RECALLED= "recall"
+    const val MSG_TYPE_SENSITIVE= "sensitive"
 
     const val GROUP_CHAT = 1
     const val PRIVATE_CHAT = 2
