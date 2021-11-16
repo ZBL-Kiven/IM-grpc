@@ -47,7 +47,9 @@ class IMBubbleNotAllowedTypeItem @JvmOverloads constructor(context: Context, att
 
     override fun onStop() {}
 
-    override fun onDestroy() {}
+    override fun onDestroy() {
+        removeAllViews()
+    }
 
 
 }
