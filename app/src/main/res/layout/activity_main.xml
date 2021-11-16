@@ -64,7 +64,8 @@
             android:id="@+id/main_fg_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#dee" />
+            android:background="#dee"
+            android:overScrollMode="never" />
     </LinearLayout>
 
 </com.zj.emotionbar.adapt2cc.CCEmojiLayout>

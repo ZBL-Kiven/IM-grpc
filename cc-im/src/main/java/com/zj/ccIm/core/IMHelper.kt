@@ -2,6 +2,7 @@ package com.zj.ccIm.core
 
 import android.app.Application
 import android.app.Notification
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.zj.ccIm.CcIM
@@ -122,22 +123,14 @@ object IMHelper {
     }
 
     fun registerChatRoom(req: ChannelRegisterInfo): String? {
-        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        if (!req.checkValid()) return null
-        IMChannelManager.offerLast(req)
-        CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
-        return req.key
+        return resumedChatRoomIfConnection(req, true)
     }
 
     fun leaveChatRoom(key: String) {
-        val info = IMChannelManager.destroy(key)
-        leaveChatRoom(info, true)
-    }
-
-    internal fun leaveChatRoom(req: ChannelRegisterInfo?, fromRemoved: Boolean = false) {
-        if (req != null) {
-            if (!fromRemoved) IMChannelManager.destroy(req.key)
-            CcIM.send(req, Constance.CALL_ID_LEAVE_CHAT_ROOM + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        val r = IMChannelManager.destroy(key)
+        if (r != null) {
+            CcIM.send(r, Constance.CALL_ID_LEAVE_CHAT_ROOM + r.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+            Log.e("------", "leaveChatRoom ${r?.key}")
         }
     }
 
@@ -164,6 +157,15 @@ object IMHelper {
 
     fun deleteMsgByClientId(clientId: String) {
         MessageDbOperator.deleteMsg(clientId)
+    }
+
+    internal fun resumedChatRoomIfConnection(req: ChannelRegisterInfo, fromReg: Boolean = false): String? {
+        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
+        if (!req.checkValid()) return null
+        if (fromReg) IMChannelManager.offerLast(req)
+        CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        Log.e("------", "registerChatRoom ${req.key}")
+        return req.key
     }
 
     internal fun onMsgRegistered(lrb: ChannelRegisterInfo) {

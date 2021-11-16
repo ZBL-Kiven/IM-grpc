@@ -4,6 +4,7 @@ import android.app.Application
 import com.zj.im.chat.hub.ServerHub
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
+import com.zj.ccIm.error.InitializedException
 import com.zj.protocol.Grpc
 import com.zj.protocol.GrpcConfig
 import com.zj.protocol.grpc.*
@@ -37,7 +38,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
                 val keepAliveTimeOut = CcIM.imConfig?.getHeatBeatsTimeOut() ?: 5000L
                 val idleTimeOut = CcIM.imConfig?.getIdleTimeOut() ?: 68400000L
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                val header = mapOf("token" to CcIM.imConfig?.getToken(), "userid" to "${CcIM.imConfig?.getUserId()}")
+                val header = CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
                 channel = Grpc.get(config).defaultHeader(header)
             }
             onConnection()

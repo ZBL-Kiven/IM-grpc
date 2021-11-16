@@ -1,7 +1,6 @@
 package com.zj.imtest.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -24,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentManager: TabFragmentManager<Long, BaseMessageFragment>
 
     private val groupId = 32L
-    private val ownerId = 151473
+    private val ownerId = 151120
     private val targetUserId = 151473
     private var tvConn: TextView? = null
     private var tvDotsInfo: TextView? = null
@@ -69,7 +68,6 @@ class MainActivity : AppCompatActivity() {
             tvConn?.text = it.name
         }
         IMHelper.addReceiveObserver<MessageTotalDots>(this::class.java.simpleName, this).listen { d, _, p ->
-            Log.e("------- ", "msg total dots changed by : $p")
             if (d != null) {
                 val s = "msg total dots: total = ${d.dotsOfAll.unreadMessages} clapHouse = ${d.clapHouseDots.unreadMessages}  owner = ${d.privateOwnerDots.unreadMessages}  fans = ${d.privateFansDots.unreadMessages}"
                 tvDotsInfo?.text = s
@@ -81,4 +79,5 @@ class MainActivity : AppCompatActivity() {
         val sb = IMHelper.queryAllDBColumnsCount()
         Toast.makeText(this, sb.toString(), Toast.LENGTH_SHORT).show()
     }
+
 }

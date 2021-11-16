@@ -26,7 +26,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
 
     abstract fun createData(groupId: Long, ownerId: Int, targetUserId: Int): ChannelRegisterInfo
 
-    open fun initMessageObservers(sessionKey: String){}
+    open fun initMessageObservers(sessionKey: String) {}
 
     open fun getMessageFilter(data: MessageInfoEntity?, payload: String?): Boolean {
         return data?.channelKey == sessionKey
@@ -53,7 +53,6 @@ abstract class BaseMessageFragment : BaseTabFragment() {
         super.onCreate()
 
         //        blv = rootView?.findViewById(R.id.im_reward_setting_loading)
-
         rootView?.findViewById<RecyclerView>(R.id.im_frag_msg_rv)?.let {
             adapter = MsgAdapter(it)
             it.adapter = adapter
@@ -103,6 +102,6 @@ abstract class BaseMessageFragment : BaseTabFragment() {
 
     override fun onDestroyed() {
         super.onDestroyed()
-        Log.e("------ ","onDestroyed" )
+        Log.e("------ ", "onFragment destroy ${System.currentTimeMillis()}")
     }
 }

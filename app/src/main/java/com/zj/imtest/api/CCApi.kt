@@ -17,7 +17,7 @@ object CCApi {
     /**
      * the URL with the publishing address [https://api.cc.lerjin.com], refer to the constant [ClipClapsConstant#api_url]
      **/
-    val ccUrl = object : UrlProvider() {
+    private val ccUrl = object : UrlProvider() {
         override fun url(): String {
             return api_url
         }
@@ -26,7 +26,7 @@ object CCApi {
     /**
      * Corresponding to the Header used by lerjin newer server
      * */
-    val baseHeader = object : HeaderProvider {
+    private val baseHeader = object : HeaderProvider {
         override fun headers(): Map<String, String> {
             val token = IMConfig.getToken()
             val userId = IMConfig.getUserId()

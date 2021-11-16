@@ -1,5 +1,6 @@
 package com.zj.ccIm.core
 
+
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
@@ -12,11 +13,13 @@ internal object IMChannelManager {
     private var lastMsgRegister = LinkedBlockingDeque<ChannelRegisterInfo>()
 
     fun offerLast(req: ChannelRegisterInfo) {
-        synchronized(lastMsgRegister) {
-            if (lastMsgRegister.isNullOrEmpty()) {
-                lastMsgRegister.offerLast(req)
+        if (lastMsgRegister.isNullOrEmpty()) {
+            lastMsgRegister.offerLast(req)
+        } else {
+            val last = lastMsgRegister.firstOrNull { it.key == req.key }
+            if (last != null) {
+                last.hasPendingCount++
             } else {
-                lastMsgRegister.remove(req)
                 lastMsgRegister.offerLast(req)
             }
         }
@@ -24,8 +27,11 @@ internal object IMChannelManager {
 
     fun destroy(key: String): ChannelRegisterInfo? {
         val info = lastMsgRegister.firstOrNull { it.key == key } ?: return null
-        lastMsgRegister.remove(info)
-        return info
+        return if (info.hasPendingCount > 0) {
+            info.hasPendingCount--;null
+        } else {
+            lastMsgRegister.remove(info); info
+        }
     }
 
     fun resumeRegisterInfo(req: ChannelRegisterInfo) {
@@ -37,7 +43,7 @@ internal object IMChannelManager {
 
     fun tryToRegisterAfterConnected(): Boolean {
         lastMsgRegister.forEach { b ->
-            IMHelper.registerChatRoom(b)
+            IMHelper.resumedChatRoomIfConnection(b)
             return true
         }
         return false

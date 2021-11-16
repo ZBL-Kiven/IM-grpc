@@ -6,6 +6,25 @@ import com.zj.im.chat.exceptions.IMException
 import kotlin.system.exitProcess
 
 object IMConfig : ImConfigIn {
+    override fun getUserId(): Int {
+        return 151120
+    }
+
+    override fun getToken(): String {
+        return "sanhe12345"
+    }
+
+    override fun getIMHost(): String {
+        return "https://im.ccdev.lerjin.com"
+    }
+
+    override fun getGrpcAddress(): Pair<String, Int> {
+        return Pair("grpc.ccdev.lerjin.com", 50003)
+    }
+
+    override fun getApiHeader(): Map<String, String> {
+        return BaseApp.getHeader()
+    }
 
     override fun logAble(): Boolean {
         return true
@@ -13,13 +32,6 @@ object IMConfig : ImConfigIn {
 
     override fun debugAble(): Boolean {
         return true
-    }
-
-    override fun getUserId(): Int {
-
-        return 151118
-
-        //         return 151473 //v
     }
 
     override fun getUserName(): String {
@@ -30,29 +42,11 @@ object IMConfig : ImConfigIn {
         return "https://img1.baidu.com/it/u=2693627099,4115094120&fm=26&fmt=auto&gp=0.jpg"
     }
 
-    override fun getToken(): String {
-        return "sanhe12345"
-    }
-
     override fun onAuthenticationError() {
         BaseApp.context.let {
             Toast.makeText(it, "TOKEN IS INVALID", Toast.LENGTH_SHORT).show()
         }
         exitProcess(0)
-    }
-
-    override fun getGrpcAddress(): Pair<String, Int> {
-
-        return Pair("grpc.ccdev.lerjin.com", 50003)
-
-        //        return Pair("192.168.50.213", 50003)
-    }
-
-    override fun getIMHost(): String {
-
-        return "https://im.ccdev.lerjin.com"
-
-        //                return "http://172.16.1.75:8086"
     }
 
     override fun getHeatBeatsTimeOut(): Long {
@@ -66,5 +60,4 @@ object IMConfig : ImConfigIn {
     override fun onSdkDeadlyError(e: IMException) {
         BaseApp.initChat()
     }
-
 }

@@ -10,6 +10,7 @@ import retrofit2.HttpException
 import com.google.gson.Gson
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.ccIm.error.InitializedException
 import com.zj.database.entity.MessageInfoEntity
 import io.reactivex.schedulers.Schedulers
 import java.net.UnknownHostException
@@ -24,7 +25,7 @@ object ImApi {
     }
     private val header = object : HeaderProvider {
         override fun headers(): Map<out String, String> {
-            return mutableMapOf("Content-Type" to "multipart/form-data", "userId" to "${CcIM.imConfig?.getUserId()}", "token" to (CcIM.imConfig?.getToken() ?: ""))
+            return CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
         }
     }
 

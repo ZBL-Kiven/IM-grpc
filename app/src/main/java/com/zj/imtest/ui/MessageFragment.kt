@@ -14,7 +14,10 @@ class MessageFragment : BaseMessageFragment() {
     }
 
     override fun createData(groupId: Long, ownerId: Int, targetUserId: Int): ChannelRegisterInfo {
-        return ChannelRegisterInfo.buildWithOwnerMessage(this, groupId)
+        return if (ownerId == IMConfig.getUserId()) {
+            ChannelRegisterInfo.buildWithOwnerMessage(this, groupId, ownerId)
+        } else {
+            ChannelRegisterInfo.buildWithFansMessage(this, groupId, ownerId)
+        }
     }
-
 }
