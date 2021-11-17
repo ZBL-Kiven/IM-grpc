@@ -2,7 +2,6 @@ package com.zj.ccIm.core
 
 import android.app.Application
 import android.app.Notification
-import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import com.google.gson.Gson
 import com.zj.ccIm.CcIM
@@ -130,7 +129,6 @@ object IMHelper {
         val r = IMChannelManager.destroy(key)
         if (r != null) {
             CcIM.send(r, Constance.CALL_ID_LEAVE_CHAT_ROOM + r.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
-            Log.e("------", "leaveChatRoom ${r?.key}")
         }
     }
 
@@ -160,11 +158,10 @@ object IMHelper {
     }
 
     internal fun resumedChatRoomIfConnection(req: ChannelRegisterInfo, fromReg: Boolean = false): String? {
-        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
         if (!req.checkValid()) return null
+        CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
         if (fromReg) IMChannelManager.offerLast(req)
         CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
-        Log.e("------", "registerChatRoom ${req.key}")
         return req.key
     }
 

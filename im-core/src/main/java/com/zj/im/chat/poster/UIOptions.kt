@@ -39,6 +39,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     private val cag = "category"
     private val handleWhat = 0x1101
     private var dataHandler: DataHandler<T, R>? = null
+    internal var hasPendingCount = 0
 
     private val handler = Handler(Looper.getMainLooper()) {
         if (it.what == handleWhat) {

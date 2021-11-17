@@ -129,8 +129,14 @@ open class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.onMsgRegistered(bean)
             return true
         }
-        if (!callId.isNullOrEmpty() && (callId.startsWith(Constance.CALL_ID_REGISTER_CHAT) || callId.startsWith(Constance.CALL_ID_LEAVE_CHAT_ROOM))) {
+        if (callId?.startsWith(Constance.CALL_ID_REGISTER_CHAT) == true) {
             BadgeDbOperator.clearGroupBadge(d as ChannelRegisterInfo)
+            return true
+        }
+        if (callId?.startsWith(Constance.CALL_ID_LEAVE_CHAT_ROOM) == true) {
+            val req = d as ImMessageReply.ReqContext
+            val bean = ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
+            BadgeDbOperator.clearGroupBadge(bean)
             return true
         }
         if (callId == Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS) {

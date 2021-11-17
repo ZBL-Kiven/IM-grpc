@@ -57,6 +57,7 @@ internal object MessageFetcher {
                         v.invoke(rsp)
                     }
                     callIdObservers.clear()
+                    fetchingRunners.remove(rq.key)
                 }
             }
         }

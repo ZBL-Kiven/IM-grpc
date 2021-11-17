@@ -17,24 +17,29 @@ abstract class MessageInterface<T> {
     @Suppress("unused")
     companion object {
 
-        private var msgObservers: ConcurrentHashMap<Any, UIOptions<*, *, *>>? = null
-            get() {
-                if (field == null) field = ConcurrentHashMap()
-                return field
+        private var msgObservers = ConcurrentHashMap<Any, UIOptions<*, *, *>>()
+
+        internal fun putAnObserver(option: UIOptions<*, *, *>) {
+            if (!msgObservers.isNullOrEmpty()) {
+                val last = msgObservers[option.getUnique()]
+                if (last != null) {
+                    option.hasPendingCount++
+                }
             }
-
-        internal fun putAnObserver(option: UIOptions<*, *, *>?) {
-            if (option == null) return
-            msgObservers?.put(option.getUnique(), option)
-
-        }
-
-        internal fun hasObserver(unique: Any): Boolean {
-            return msgObservers?.contains(unique) ?: false
+            msgObservers[option.getUnique()] = option
         }
 
         internal fun removeAnObserver(unique: Any): UIOptions<*, *, *>? {
-            return msgObservers?.remove(unique)
+            val info = msgObservers[unique] ?: return null
+            return if (info.hasPendingCount > 0) {
+                info.hasPendingCount--;null
+            } else {
+                msgObservers.remove(info)
+            }
+        }
+
+        internal fun hasObserver(unique: Any): Boolean {
+            return msgObservers.containsKey(unique)
         }
 
         /**
@@ -58,7 +63,7 @@ abstract class MessageInterface<T> {
                 d = data
             }
             if (cls != null && cls != c) throw RuntimeException("The sent non-empty type [${c?.name}] is inconsistent with the declared type ${cls.name}!")
-            msgObservers?.forEach { (_, v) ->
+            msgObservers.forEach { (_, v) ->
                 if (v.post(c, d, ld, payload)) {
                     isUsed = true
                     d("postToUIObservers", "the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")

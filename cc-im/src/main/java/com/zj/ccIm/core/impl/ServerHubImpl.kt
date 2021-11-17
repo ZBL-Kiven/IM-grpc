@@ -108,7 +108,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * @see [ChannelRegisterInfo]
      * */
     private fun updateMsgReceiver(d: ChannelRegisterInfo, join: Boolean) {
-        if (!join) MessageFetcher.cancelFetchOfflineMessage(d.key)
+        val callId = if (join) Constance.CALL_ID_REGISTERED_CHAT + d.key else Constance.CALL_ID_LEAVE_CHAT_ROOM + d.key
+        MessageFetcher.cancelFetchOfflineMessage(d.key)
         messageStreamObserver?.let {
             try {
                 val data = ImMessageReq.newBuilder()
@@ -116,10 +117,10 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 data.ownerId = d.ownerId.toLong()
                 data.targetUserId = d.targetUserid?.toLong() ?: 0
                 data.channel = d.mChannel.serializeName
-                data.seq = if (join) Constance.CALL_ID_REGISTERED_CHAT + d.key else Constance.CALL_ID_LEAVE_CHAT_ROOM + d.key
+                data.seq = callId
                 data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE
                 it.onNext(data.build())
-                ImLogs.recordLogsInFile("server hub event ", "call ${if (join) "add" else "remove"} msg receiver with ${d.key}")
+                ImLogs.recordLogsInFile("server hub event ", "call ${if (join) "add" else "remove"} msg receiver to $it with ${d.key}")
             } catch (e: Exception) {
                 it.onError(e)
             }
