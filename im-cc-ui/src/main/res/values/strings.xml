@@ -29,8 +29,12 @@
     <string name="im_ui_question_no_time">Expired</string>
     <string name="im_ui_msg_not_allowed">These type of messages can not be sent</string>
 
+    //im 3.0
     <string name="im_ui_msg_button_recall">Recall</string>
     <string name="im_chat_delete">Delete</string>
+    <string name="im_chat_pop_refuse">Reject</string>
+    <string name="im_chat_recall_admin_text">Admin has recalled a message</string>
+    <string name="im_chat_recall_owner_text"> house owner has recalled a message</string>
 
     <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
     <string name="im_ui_month_time_format" translatable="false">MM-dd HH: mm</string>

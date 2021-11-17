@@ -106,6 +106,21 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
                 onDestroyed()
                 bubbleView = null
             }
+            val curCCLive = lastDataType == UiMsgType.MSG_TYPE_CC_LIVE
+            if (curCCLive != (data.getType() == UiMsgType.MSG_TYPE_CC_LIVE)) {
+                onDestroyed()
+                bubbleView = null
+            }
+            val curRecall = lastDataType == UiMsgType.MSG_TYPE_RECALLED
+            if (curRecall != (data.getType() == UiMsgType.MSG_TYPE_RECALLED)) {
+                onDestroyed()
+                bubbleView = null
+            }
+            val curSensitive = lastDataType == UiMsgType.MSG_TYPE_SENSITIVE
+            if (curSensitive != (data.getType() == UiMsgType.MSG_TYPE_SENSITIVE)) {
+                onDestroyed()
+                bubbleView = null
+            }
         }
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)

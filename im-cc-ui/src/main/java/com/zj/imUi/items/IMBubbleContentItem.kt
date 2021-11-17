@@ -84,17 +84,8 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
             setIconVisibility(data)
         }
         setContentColor(data)
-    //        setTime(data)
     }
 
-//    private fun setTime(data: ImMsgIn) {
-//        if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
-//            if (data.getSelfUserId() == data.getSenderId()) {
-//                timeBottom.visibility = View.VISIBLE
-//                timeBottom.setData(data)
-//            }
-//        } else timeBottom.visibility = View.GONE
-//    }
 
     private fun setContentColor(data: ImMsgIn) {
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
@@ -167,12 +158,16 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
         if (data.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION) {
             imgQuestion.visibility = View.VISIBLE
             imgReply.visibility = View.VISIBLE
-            if (data.getSenderId() == data.getSelfUserId()) {
-                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_white)
-            } else if (data.getReplyMsgQuestionIsPublished() == false) {
-                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_private)
-            } else {
-                imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_normal)
+            when {
+                data.getSenderId() == data.getSelfUserId() -> {
+                    imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_white)
+                }
+                data.getReplyMsgQuestionIsPublished() == false -> {
+                    imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_private)
+                }
+                else -> {
+                    imgReply.setImageResource(R.drawable.im_msg_item_widget_reward_icon_answer_normal)
+                }
             }
         } else {
             imgQuestion.visibility = View.GONE
@@ -305,22 +300,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context,
                 bubbleContent.addView(v, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
             }
         } finally {
-//            if (data.getType() == UiMsgType.MSG_TYPE_IMG) {
-//                bubbleContent.setOnClickListener {
-//                    Toast.makeText(context,"图片点击",Toast.LENGTH_SHORT).show()
-//                    data.onViewLargePic()
-//                }
-//            } else
                 if (data.getType() == UiMsgType.MSG_TYPE_AUDIO) {
                 chatType?.let { curContentIn?.chatType(it) }
             }
-
-//            bubbleContent.setOnLongClickListener {
-//                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-//                popFlowWindow.show(data, it) { _, _, _ ->
-//                }
-//                true
-//            }
             curContentIn?.onSetData(data)
         }
     }

@@ -59,10 +59,7 @@ class IMContentCCVideoView @JvmOverloads constructor(context: Context,
             tvCCVideoSendTime = findViewById(R.id.im_msg_item_normal_cc_video_tv_time)
             imgJumpFlag = findViewById(R.id.im_msg_item_normal_cc_video_img_flag)
             ccVideoProgressBar = findViewById(R.id.im_msg_item_cc_video_img_progressbar)
-        } //        anim.duration = 800
-        //        anim.repeatCount = ObjectAnimator.INFINITE
-        //        anim.start()
-        //        imgCCVideoCover.scaleType = ImageView.ScaleType.CENTER_INSIDE
+        }
     }
 
     override fun init(data: ImMsgIn,chatType:Any) {
