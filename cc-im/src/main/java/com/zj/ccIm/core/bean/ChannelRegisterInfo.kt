@@ -15,11 +15,11 @@ import com.zj.im.chat.poster.UIHelperCreator
 import java.lang.IllegalArgumentException
 
 @Suppress("unused")
-data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOwner? = null, val groupId: Long, val ownerId: Int, val targetUserid: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, internal var mChannel: FetchMsgChannel) : LifecycleObserver {
+data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOwner? = null, val groupId: Long, val ownerId: Int?, val targetUserid: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, internal var mChannel: FetchMsgChannel) : LifecycleObserver {
 
-    internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int, targetUserid: Int?, channel: FetchMsgChannel) : this(lo, groupId, ownerId, targetUserid, 0, null, channel)
+    internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int?, targetUserid: Int?, channel: FetchMsgChannel) : this(lo, groupId, ownerId, targetUserid, 0, null, channel)
 
-    internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int, targetUserid: Int?, channel: String) : this(lo, groupId, ownerId, targetUserid, 0, null, FetchMsgChannel.valueOf(channel.uppercase()))
+    internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int?, targetUserid: Int?, channel: String) : this(lo, groupId, ownerId, targetUserid, 0, null, FetchMsgChannel.valueOf(channel.uppercase()))
 
     /**
      * If there is already a cache of this type before registration,this registration will be ignored,
@@ -39,7 +39,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
 
     init {
         lo?.lifecycle?.addObserver(this)
-        key = createKey(mChannel.serializeName, groupId, ownerId.toLong(), targetUserid?.toLong())
+        key = createKey(mChannel.serializeName, groupId, ownerId?.toLong(), targetUserid?.toLong())
     }
 
     fun setMessageReceiveObserver(): UIHelperCreator<MessageInfoEntity, MessageInfoEntity, *> {
@@ -54,7 +54,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         val errorMsg = "your call register with channel ${mChannel.serializeName} , but %s is invalid"
         return catching({
             if (mChannel.classification == 0 && groupId < 0) throw IllegalArgumentException(String.format(errorMsg, "groupId"))
-            if (mChannel.classification == 1 && ownerId < 0) throw IllegalArgumentException(String.format(errorMsg, "ownerId"))
+            if (mChannel.classification == 1 && (ownerId == null || ownerId < 0)) throw IllegalArgumentException(String.format(errorMsg, "ownerId"))
             if (mChannel.classification == 2 && (targetUserid == null || targetUserid < 0)) throw IllegalArgumentException(String.format(errorMsg, "targetUserId"))
             true
         }, { false }) ?: false
@@ -73,7 +73,9 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
     companion object {
 
         internal fun createKey(serializeName: String, groupId: Long?, ownerId: Long?, targetUserid: Long?): String {
-            return "${serializeName}|g:${groupId}|o:${ownerId}|u:${targetUserid}"
+            val tu = if (targetUserid == null || targetUserid <= 0) -1 else targetUserid
+            val oi = if (ownerId == null || ownerId <= 0) -1 else ownerId
+            return "${serializeName}|g:${groupId}|o:${oi}|u:${tu}"
         }
 
         fun buildWithOwnerMessage(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
@@ -81,7 +83,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         }
 
         fun buildWithOwnerClapHouse(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, -1, null, FetchMsgChannel.OWNER_CLAP_HOUSE)
+            return ChannelRegisterInfo(lo, groupId, null, null, FetchMsgChannel.OWNER_CLAP_HOUSE)
         }
 
         fun buildWithFansMessage(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
@@ -89,7 +91,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         }
 
         fun buildWithFansClapHouse(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, -1, null, FetchMsgChannel.FANS_CLAP_HOUSE)
+            return ChannelRegisterInfo(lo, groupId, null, null, FetchMsgChannel.FANS_CLAP_HOUSE)
         }
 
         fun buildWithOwnerPrivateChat(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
@@ -97,7 +99,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         }
 
         fun buildWithFansPrivateChat(lo: LifecycleOwner, groupId: Long, targetUserId: Int): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, -1, targetUserId, FetchMsgChannel.OWNER_PRIVATE)
+            return ChannelRegisterInfo(lo, groupId, null, targetUserId, FetchMsgChannel.OWNER_PRIVATE)
         }
     }
 }

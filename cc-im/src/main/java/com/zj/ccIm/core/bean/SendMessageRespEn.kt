@@ -10,7 +10,7 @@ class SendMessageRespEn {
     /**
      * 大V id
      * */
-    var ownerId: Int = -1
+    var ownerId: Int? = null
 
     /**
      * 群组id

@@ -134,8 +134,10 @@ open class ClientHubImpl : ClientHub<Any?>() {
             return true
         }
         if (callId?.startsWith(Constance.CALL_ID_LEAVE_CHAT_ROOM) == true) {
-            val req = d as ImMessageReply.ReqContext
-            val bean = ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
+            val bean: ChannelRegisterInfo = if (d is ChannelRegisterInfo) d else {
+                val req = d as ImMessageReply.ReqContext
+                ChannelRegisterInfo(null, req.groupId, req.ownerId.toInt(), req.targetUserId.toInt(), req.channel)
+            }
             BadgeDbOperator.clearGroupBadge(bean)
             return true
         }

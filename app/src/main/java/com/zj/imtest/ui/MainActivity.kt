@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initConnectObserver() {
         IMHelper.getIMInterface().registerConnectionStateChangeListener(this::class.java.simpleName) {
+            if(isFinishing) return@registerConnectionStateChangeListener
             when (it) {
                 ConnectionState.CONNECTED, ConnectionState.PING, ConnectionState.PONG -> tvConn?.setBackgroundResource(R.drawable.dots_green)
                 ConnectionState.NETWORK_STATE_CHANGE, ConnectionState.CONNECTED_ERROR, ConnectionState.INIT -> tvConn?.setBackgroundResource(R.drawable.dots_red)
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         IMHelper.addReceiveObserver<SessionInfoEntity>(this::class.java.simpleName, this).listen { d, _, _ ->
-            if (d != null) {
+            if (d != null && !isFinishing) {
                 val info = "( ${if (d.role == 1) "Owner" else if (d.role == 2) "Manager" else "Member"} | ${d.groupName} )"
                 tvName?.text = BaseApp.config.getUserName()
                 tvGroupInfo?.text = info

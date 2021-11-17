@@ -14,6 +14,4 @@ class GroupFragment : BaseMessageFragment() {
     override fun createData(groupId: Long, ownerId: Int, targetUserId: Int): ChannelRegisterInfo {
         return ChannelRegisterInfo.buildWithOwnerClapHouse(this, groupId)
     }
-
-
 }

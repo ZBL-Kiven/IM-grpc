@@ -114,8 +114,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             try {
                 val data = ImMessageReq.newBuilder()
                 data.groupId = d.groupId
-                data.ownerId = d.ownerId.toLong()
-                data.targetUserId = d.targetUserid?.toLong() ?: 0
+                data.ownerId = d.ownerId?.toLong() ?: -1
+                data.targetUserId = d.targetUserid?.toLong() ?: -1
                 data.channel = d.mChannel.serializeName
                 data.seq = callId
                 data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE

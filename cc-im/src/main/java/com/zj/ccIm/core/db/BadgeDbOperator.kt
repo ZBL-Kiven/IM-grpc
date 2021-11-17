@@ -14,7 +14,7 @@ internal object BadgeDbOperator {
     fun clearGroupBadge(info: ChannelRegisterInfo) {
         when (info.mChannel.classification) {
             FetchMsgChannel.FANS_PRIVATE.classification -> {
-                val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId)
+                val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId ?: 0)
                 val sessionBadgeInfo = changeBadge(key)
                 SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(sessionBadgeInfo?.second)
             }
