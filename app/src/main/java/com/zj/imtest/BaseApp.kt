@@ -1,26 +1,43 @@
 package com.zj.imtest
 
+import android.app.Activity
 import android.app.Application
 import android.os.Build
-import com.zj.api.interceptor.HeaderProvider
+import android.os.Bundle
 import com.zj.ccIm.core.IMHelper
+import com.zj.imtest.ui.SplashActivity
+import java.lang.ref.WeakReference
 import java.util.*
 
-class BaseApp : Application() {
+class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
 
     companion object {
 
+        var startedList = mutableMapOf<String, WeakReference<Activity>>()
+        var hasInitChat: Boolean = false
         lateinit var context: Application
+        lateinit var config: IMConfig
 
-        fun initChat() {
+        fun initChat(uid: Int) {
+            hasInitChat = true
+            config = IMConfig(uid)
+            IMHelper.init(context, config)
+        }
 
-            //初始化 IM 聊天 模块，（异步完成）
-            IMHelper.init(context, IMConfig)
+        fun getLoginUisFromSp(): Int {
+            val sp = context.getSharedPreferences(context.packageName, MODE_PRIVATE)
+            return sp.getInt("user_id", 0)
+        }
+
+        fun commitNewUid(uid: Int): Boolean {
+            initChat(uid)
+            val sp = context.getSharedPreferences(context.packageName, MODE_PRIVATE)
+            return sp.edit().putInt("user_id", uid).commit()
         }
 
         fun getHeader(): Map<String, String> {
-            val token = IMConfig.getToken()
-            val userId = IMConfig.getUserId()
+            val token = config.getToken()
+            val userId = config.getUserId()
             if (token.isEmpty() || userId == 0) {
                 throw NullPointerException("the header params [userId , token] was null or empty , returened by service creating!")
             }
@@ -38,11 +55,49 @@ class BaseApp : Application() {
                 this["uuid"] = "TEST_IM_${UUID.randomUUID()}"
             }
         }
+
+        fun backToSplash() {
+            startedList.values.forEach {
+                val act = it.get()
+                if (act !is SplashActivity) {
+                    act?.finish()
+                }
+            }
+        }
     }
 
     override fun onCreate() {
         super.onCreate()
         context = this
-        initChat()
+        val login = getLoginUisFromSp()
+        if (login > 0) initChat(login)
+    }
+
+    override fun onActivityCreated(a: Activity, p1: Bundle?) {
+
+    }
+
+    override fun onActivityStarted(p0: Activity) {
+
+    }
+
+    override fun onActivityResumed(a: Activity) {
+        startedList[a.javaClass.name] = WeakReference(a)
+    }
+
+    override fun onActivityPaused(a: Activity) {
+        startedList.remove(a.javaClass.name)
+    }
+
+    override fun onActivityStopped(p0: Activity) {
+
+    }
+
+    override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
+
+    }
+
+    override fun onActivityDestroyed(p0: Activity) {
+
     }
 }

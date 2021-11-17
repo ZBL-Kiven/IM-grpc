@@ -9,6 +9,7 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.IMConfig
 import com.google.gson.Gson
+import com.zj.imtest.BaseApp
 import com.zj.imtest.ui.data.bean.RevokeMsg
 import com.zj.imtest.ui.data.bean.RiskMsg
 
@@ -287,7 +288,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getSelfUserId(): Int {
-        return IMConfig.getUserId()
+        return BaseApp.config.getUserId()
     }
 
     override fun getMsgIsReject(): Boolean {
@@ -311,7 +312,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getIsAdmin(): Boolean {
-        return IMHelper.queryAdminState(info?.groupId) == 2
+        return IMHelper.getMineRole(info?.groupId) == 2
     }
 
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/

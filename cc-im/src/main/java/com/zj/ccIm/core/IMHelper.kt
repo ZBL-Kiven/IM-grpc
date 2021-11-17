@@ -72,6 +72,7 @@ object IMHelper {
 
     fun init(app: Application, imConfig: ImConfigIn) {
         Constance.app = app
+        Constance.dbId = imConfig.getUserId()
         Fetcher.init()
         getDbHelper()?.checkDbVersion()
         val option = BaseOption.create(app)
@@ -105,8 +106,8 @@ object IMHelper {
         ImApi.getRecordApi().call({ it.updateSessionInfo(requestBody) }, Schedulers.io(), Schedulers.io()) { i, d, _ ->
             if (i && d != null) {
                 CcIM.getAppContext()?.let {
-                    val sd = DbHelper.get(it)?.getDb()?.sessionDao()
-                    val smd = DbHelper.get(it)?.getDb()?.sessionMsgDao()
+                    val sd = getDb()?.sessionDao()
+                    val smd = getDb()?.sessionMsgDao()
                     val local = sd?.findSessionById(d.groupId)
                     val mk = com.zj.database.ut.Constance.generateKey(com.zj.database.ut.Constance.KEY_OF_SESSIONS, d.groupId)
                     val localMsg = smd?.findSessionMsgInfoByKey(mk)
@@ -176,15 +177,6 @@ object IMHelper {
         }
     }
 
-    internal fun getDb(): IMDb? {
-        val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
-        return try {
-            DbHelper.get(ctx)?.getDb()
-        } catch (e: Exception) {
-            CcIM.postIMError(DBFileException());null
-        }
-    }
-
     internal fun <R> withDb(imDb: IMDb? = null, run: (IMDb) -> R?): R? {
         return try {
             (imDb ?: getDb())?.let {
@@ -195,17 +187,25 @@ object IMHelper {
         }
     }
 
-    internal fun getDbHelper(): DbHelper? {
-        val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
-        return DbHelper.get(ctx)
+    internal fun getDb(): IMDb? {
+        return getDbHelper()?.getDb()
     }
 
-    fun queryAdminState(groupId: Long?): Int {
-        if (groupId == null) return 0
-        withDb {
-            return@withDb it.sessionDao().findSessionById(groupId).role
+    internal fun getDbHelper(): DbHelper? {
+        val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
+        val dbId = Constance.dbId ?: return null
+        return try {
+            return DbHelper.get(ctx, dbId)
+        } catch (e: Exception) {
+            CcIM.postIMError(DBFileException());null
         }
-        return 0
+    }
+
+    fun getMineRole(groupId: Long?): Int {
+        if (groupId == null) return 0
+        return withDb {
+            it.sessionDao().findSessionById(groupId).role
+        } ?: 0
     }
 
     fun queryAllDBColumnsCount(): StringBuilder {

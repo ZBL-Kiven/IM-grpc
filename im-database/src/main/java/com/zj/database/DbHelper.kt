@@ -9,15 +9,15 @@ import com.zj.database.sp.SPHelper
 import com.zj.database.ut.Constance
 
 @Suppress("unused")
-class DbHelper private constructor(context: Context) {
+class DbHelper private constructor(context: Context, dbId: Int) {
 
     private var db: IMDb
-    private var dbName = "clipClaps-im"
+    private var dbName = "clipClaps-im:$dbId"
 
     private val migrations = arrayOf<Migration>()
 
     init {
-        SPHelper.init("im_sp_main", context)
+        SPHelper.init("im_sp_main:$dbId", context)
         val builder = Room.databaseBuilder(context, IMDb::class.java, dbName)
         builder.setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
         builder.allowMainThreadQueries()
@@ -76,11 +76,11 @@ class DbHelper private constructor(context: Context) {
         const val curDbVersion = 5
 
         @WorkerThread
-        fun get(context: Context): DbHelper? {
+        fun get(context: Context, dbId: Int): DbHelper? {
             if (mInstance == null) {
                 synchronized(DbHelper::class.java) {
                     if (mInstance == null) {
-                        mInstance = DbHelper(context)
+                        mInstance = DbHelper(context, dbId)
                     }
                 }
             }

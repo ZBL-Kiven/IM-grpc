@@ -1,13 +1,20 @@
 package com.zj.imtest
 
+import android.os.Handler
+import android.os.Looper
 import android.widget.Toast
 import com.zj.ccIm.core.ImConfigIn
 import com.zj.im.chat.exceptions.IMException
 import kotlin.system.exitProcess
 
-object IMConfig : ImConfigIn {
+class IMConfig(private val uid: Int) : ImConfigIn {
+
+    companion object {
+        const val defaultUid = 151118
+    }
+
     override fun getUserId(): Int {
-        return 151120
+        return uid
     }
 
     override fun getToken(): String {
@@ -43,10 +50,14 @@ object IMConfig : ImConfigIn {
     }
 
     override fun onAuthenticationError() {
-        BaseApp.context.let {
-            Toast.makeText(it, "TOKEN IS INVALID", Toast.LENGTH_SHORT).show()
+        Handler(Looper.getMainLooper()).let {
+            it.post {
+                BaseApp.context.let { ctx ->
+                    Toast.makeText(ctx, "User : ${getUserId()} has kicked out by other device!", Toast.LENGTH_SHORT).show()
+                }
+                BaseApp.backToSplash()
+            }
         }
-        exitProcess(0)
     }
 
     override fun getHeatBeatsTimeOut(): Long {
@@ -58,6 +69,6 @@ object IMConfig : ImConfigIn {
     }
 
     override fun onSdkDeadlyError(e: IMException) {
-        BaseApp.initChat()
+        BaseApp.initChat(uid)
     }
 }

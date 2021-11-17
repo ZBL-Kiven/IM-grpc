@@ -77,23 +77,23 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         }
 
         fun buildWithOwnerMessage(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, ownerId, -1, FetchMsgChannel.OWNER_MESSAGE)
+            return ChannelRegisterInfo(lo, groupId, ownerId, null, FetchMsgChannel.OWNER_MESSAGE)
         }
 
         fun buildWithOwnerClapHouse(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, -1, -1, FetchMsgChannel.OWNER_CLAP_HOUSE)
+            return ChannelRegisterInfo(lo, groupId, -1, null, FetchMsgChannel.OWNER_CLAP_HOUSE)
         }
 
         fun buildWithFansMessage(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, ownerId, -1, FetchMsgChannel.FANS_MESSAGE)
+            return ChannelRegisterInfo(lo, groupId, ownerId, null, FetchMsgChannel.FANS_MESSAGE)
         }
 
         fun buildWithFansClapHouse(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, -1, -1, FetchMsgChannel.FANS_CLAP_HOUSE)
+            return ChannelRegisterInfo(lo, groupId, -1, null, FetchMsgChannel.FANS_CLAP_HOUSE)
         }
 
         fun buildWithOwnerPrivateChat(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, ownerId, -1, FetchMsgChannel.FANS_PRIVATE)
+            return ChannelRegisterInfo(lo, groupId, ownerId, null, FetchMsgChannel.FANS_PRIVATE)
         }
 
         fun buildWithFansPrivateChat(lo: LifecycleOwner, groupId: Long, targetUserId: Int): ChannelRegisterInfo {

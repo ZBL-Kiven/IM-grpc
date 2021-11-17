@@ -1,3 +1,8 @@
 <resources>
+
     <string name="app_name">IMTest</string>
+    <string name="login">Login</string>
+    <string name="clear_db">Clear Db Data</string>
+    <string name="input_uid">Input a user id :</string>
+
 </resources>

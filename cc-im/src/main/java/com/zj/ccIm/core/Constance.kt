@@ -24,6 +24,13 @@ internal object Constance {
             } else field
         }
 
+    var dbId: Int? = null
+        get() {
+            return if (field == null) {
+                CcIM.postIMError(InitializedException("getApplication"));null
+            } else field
+        }
+
     /**-------------------------- EVENT CODE -------------------------------------------*/
     const val FETCH_SESSION_CODE = "fetch_session"
     const val FETCH_OFFLINE_MSG_CODE = "fetch_offline_message"

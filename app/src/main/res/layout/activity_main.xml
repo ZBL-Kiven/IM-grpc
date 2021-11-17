@@ -9,67 +9,103 @@
     android:orientation="vertical"
     tools:context=".ui.MainActivity">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/main_iv_head_pic"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:background="@mipmap/ic_launcher_round"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
                 android:id="@+id/main_tv_conn"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="#cac"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/dots_red"
+                app:layout_constraintStart_toEndOf="@id/main_iv_head_pic"
+                app:layout_constraintTop_toTopOf="@id/main_iv_head_pic"
                 tools:text="CONNECTING..." />
 
-            <TextView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/main_ll_info"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#cca"
-                android:gravity="center"
-                android:onClick="queryCurrent"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="queryDB" />
+                android:layout_marginStart="10dp"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/main_tv_conn"
+                app:layout_constraintTop_toTopOf="@id/main_iv_head_pic">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/main_tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="#333"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="loki" />
 
-        <TextView
-            android:id="@+id/main_tv_dots_info"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:gravity="center"
-            android:includeFontPadding="false"
-            android:textColor="#777"
-            android:textSize="12sp"
-            tools:text="msg total dots:" />
+                <TextView
+                    android:id="@+id/main_tv_group_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:maxLines="1"
+                    android:textColor="#4a4a4a"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="(group)" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/main_tv_group_desc"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:includeFontPadding="false"
+                android:textColor="#777"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@id/main_ll_info"
+                app:layout_constraintStart_toStartOf="@id/main_ll_info"
+                app:layout_constraintTop_toBottomOf="@id/main_ll_info"
+                tools:text="group desc" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginStart="80dp"
             android:layout_marginTop="3dp"
-            android:background="#d7d7d7" />
+            android:background="#a9a9a9" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/main_fg_message_tab"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginBottom="10dp"
-            app:tabIndicatorColor="#ccf"
+            android:layout_marginBottom="1dp"
+            app:tabIndicatorColor="#777"
             app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="4dp"
+            app:tabIndicatorHeight="2dp"
             app:tabSelectedTextColor="#000"
             app:tabTextColor="#999" />
 
