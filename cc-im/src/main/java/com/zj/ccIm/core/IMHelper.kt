@@ -7,10 +7,7 @@ import com.google.gson.Gson
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.annos.DeleteSessionType
 import com.zj.ccIm.core.api.ImApi
-import com.zj.ccIm.core.bean.DeleteSessionInfo
-import com.zj.ccIm.core.bean.GetMoreMessagesResult
-import com.zj.ccIm.core.bean.ChannelRegisterInfo
-import com.zj.ccIm.core.bean.SessionConfigReqEn
+import com.zj.ccIm.core.bean.*
 import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.*
 import com.zj.ccIm.core.fecher.Fetcher
@@ -43,6 +40,10 @@ object IMHelper {
     val Sender: MsgSender; get() = MsgSender().withConfig(SendMsgConfig())
 
     val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
+
+    fun <CLS : Any> route(data: RoteInfo<CLS>, callId: String) {
+        CcIM.postToUiObservers(data, callId)
+    }
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         return addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)

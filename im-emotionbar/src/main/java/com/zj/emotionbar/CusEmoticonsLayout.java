@@ -52,7 +52,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected FrameLayout extContainer;
     protected FuncLayout funcLayout;
     private ExtInflater<T> extInflater;
-    protected T extData;
+    private T extData;
 
     protected EmoticonsFuncView emoticonsFuncView;
     protected EmoticonsToolBar emoticonsToolBar;
@@ -60,7 +60,11 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected boolean dispatchKeyEventPreImeLock = false;
 
     public CusEmoticonsLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, null, 0);
+    }
+
+    public CusEmoticonsLayout(Context context, AttributeSet attrs, int def) {
+        super(context, attrs, def);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflateKeyboardBar();
         initView();
@@ -163,16 +167,15 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     public void reset() {
         EmoticonsKeyboardUtils.closeSoftKeyboard(this);
         funcLayout.hideAllFuncView();
-        extContainer.removeAllViews();
         btnFace.setImageResource(R.mipmap.ui_emo_icon_face_pop);
     }
 
     public void setExtData(T data) {
         this.extData = data;
-        if (data == null) {
-            extContainer.removeAllViews();
-        } else {
+        extContainer.removeAllViews();
+        if (data != null) {
             if (extInflater != null) extInflater.onInflate(extContainer, inflater, data);
+            post(() -> EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText));
         }
     }
 
@@ -358,6 +361,12 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     public EmoticonsFuncView getEmoticonsFuncView() {
         return emoticonsFuncView;
+    }
+
+    protected T takeExtData() {
+        T ext = extData;
+        setExtData(null);
+        return ext;
     }
 
     public EmoticonsToolBar getEmoticonsToolBarView() {

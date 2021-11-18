@@ -5,6 +5,6 @@ include ':im-cc-ui'
 
 //include ':im-core'
 //include ':im-protocol'
-include ':im-database'
+//include ':im-database'
 //include ':protoc'
 include ':im-emotionbar'

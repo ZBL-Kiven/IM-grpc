@@ -30,9 +30,11 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun setListener() {
-        et.setText("${IMConfig.defaultUid}")
+        et.setText("${IMConfig.defaultTestUid}")
         tvLogin.setOnClickListener {
-            if (BaseApp.getLoginUisFromSp() <= 0) {
+            val le = BaseApp.getLoginUisFromSp()
+            val cur = et.text?.toString()?.toInt() ?: -1
+            if (le <= 0 || cur != le) {
                 val uid = et.text?.toString()
                 if (uid.isNullOrEmpty()) {
                     Toast.makeText(this, "Input a uid at first!", Toast.LENGTH_SHORT).show()

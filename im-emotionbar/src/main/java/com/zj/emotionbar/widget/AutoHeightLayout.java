@@ -21,7 +21,15 @@ public abstract class AutoHeightLayout extends SoftKeyboardSizeWatchLayout imple
     protected int softKeyboardHeight;
     protected boolean configurationChangedFlag = false;
 
+    public AutoHeightLayout(Context context) {
+        this(context, null, 0);
+    }
+
     public AutoHeightLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public AutoHeightLayout(Context context, AttributeSet attrs, int def) {
         super(context, attrs);
         this.context = context;
         softKeyboardHeight = EmoticonsKeyboardUtils.getDefKeyboardHeight(this.context);

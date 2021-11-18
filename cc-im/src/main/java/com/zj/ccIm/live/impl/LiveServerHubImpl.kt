@@ -41,7 +41,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         val respInfo = LiveInfoEn(data.roomId, data.liveId, data.msgType, data.content)
-                        ImLogs.d("on live data received:", respInfo.toString())
+                        ImLogs.d("on live data received", respInfo.toString())
                         when (data.msgType) {
                             LiveClientHubImpl.TYPE_USER_JOIN -> {
                                 postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_REGISTER_LIVE_ROOM, respInfo, false, data.serializedSize.toLong())

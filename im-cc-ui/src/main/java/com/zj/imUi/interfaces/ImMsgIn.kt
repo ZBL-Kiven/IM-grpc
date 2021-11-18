@@ -124,7 +124,7 @@ interface ImMsgIn {
 
     fun stopAudio()
 
-    fun reply(id: String)
+    fun reply()
 
     fun block(userId: Int)
 

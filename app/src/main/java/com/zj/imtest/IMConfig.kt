@@ -10,7 +10,9 @@ import kotlin.system.exitProcess
 class IMConfig(private val uid: Int) : ImConfigIn {
 
     companion object {
-        const val defaultUid = 151118
+
+        const val defaultTestUid = 151118
+        const val ROUTE_CALL_ID_REPLY_MESSAGE = "im_route_reply_message"
     }
 
     override fun getUserId(): Int {

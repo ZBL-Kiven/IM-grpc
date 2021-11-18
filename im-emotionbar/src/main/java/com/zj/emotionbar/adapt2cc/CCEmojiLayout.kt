@@ -10,7 +10,7 @@ import com.zj.emotionbar.adapt2cc.func.FuncGridView
 import com.zj.emotionbar.epack.emoticon.AdapterUtils.getAdapter
 import com.zj.emotionbar.epack.emoticon.OnEmojiClickListener
 
-class CCEmojiLayout<T>(context: Context?, attrs: AttributeSet?) : CusEmoticonsLayout<T>(context, attrs) {
+open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CusEmoticonsLayout<T>(context, attrs, def) {
 
     private var onFuncListener: OnKeyboardListener<T>? = null
 
@@ -21,7 +21,7 @@ class CCEmojiLayout<T>(context: Context?, attrs: AttributeSet?) : CusEmoticonsLa
         }
 
         override fun onStickerClick(url: String, view: View) {
-            onFuncListener?.onStickerClick(url, view, extData)
+            onFuncListener?.onStickerClick(url, view, takeExtData())
         }
     }
 
@@ -41,21 +41,21 @@ class CCEmojiLayout<T>(context: Context?, attrs: AttributeSet?) : CusEmoticonsLa
             val content = etChat?.text.toString()
             if (content.isNotEmpty()) {
                 etChat.setText("")
-                onFuncListener?.sendText(content, extData)
+                onFuncListener?.sendText(content, takeExtData())
             }
         }
         btnVoice?.setOnTouchListener { view, motionEvent ->
-            onFuncListener?.onVoiceEvent(view, motionEvent, extData)
+            onFuncListener?.onVoiceEvent(view, motionEvent, takeExtData())
             return@setOnTouchListener false
         }
     }
 
     private fun onClick(id: Int, view: View?) {
         when (id) {
-            FuncGridView.FUNC_ITEM_ID_PIC -> onFuncListener?.onPictureClick(view, extData)
-            FuncGridView.FUNC_ITEM_ID_TAKE_PIC -> onFuncListener?.onTakePhotoClick(view, extData)
-            FuncGridView.FUNC_ITEM_ID_VIDEO -> onFuncListener?.onSelectVideoClick(view, extData)
-            FuncGridView.FUNC_ITEM_ID_FILE -> onFuncListener?.onSelectFileClick(view, extData)
+            FuncGridView.FUNC_ITEM_ID_PIC -> onFuncListener?.onPictureClick(view, takeExtData())
+            FuncGridView.FUNC_ITEM_ID_TAKE_PIC -> onFuncListener?.onTakePhotoClick(view, takeExtData())
+            FuncGridView.FUNC_ITEM_ID_VIDEO -> onFuncListener?.onSelectVideoClick(view, takeExtData())
+            FuncGridView.FUNC_ITEM_ID_FILE -> onFuncListener?.onSelectFileClick(view, takeExtData())
             else -> {
             }
         }

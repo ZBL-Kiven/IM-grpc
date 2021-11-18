@@ -124,7 +124,6 @@ public class FlowLayoutManager extends RecyclerView.LayoutManager {
         boolean isLineChange = false;
         boolean isAdd= false;
         for (int i = 0; i < getItemCount(); i++) {
-            Log.d(TAG, "lixiang index:" + i);
             View childAt = recycler.getViewForPosition(i);
             if (View.GONE == childAt.getVisibility()) {
                 continue;
