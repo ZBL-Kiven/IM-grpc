@@ -55,7 +55,6 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         this.app = context
         connectivityManager = IConnectivityManager()
         connectivityManager?.init(context) { netWorkStateChanged(it) }
-        connectDelay(0)
     }
 
     protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long

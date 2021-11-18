@@ -103,7 +103,7 @@ object IMHelper {
             return
         }
         if (req.type == null) throw java.lang.NullPointerException("get offline messages with type [1:History] or [0:Newest] , type can not be null!")
-        MessageFetcher.getOfflineMessage(req.key, req, onCalled)
+        MessageFetcher.getOfflineMessage(req.key, req, true, onCalled)
     }
 
     fun updateSessionStatus(groupId: Long, disturbType: Int? = null, top: Int? = null, groupName: String? = null, des: String? = null) {

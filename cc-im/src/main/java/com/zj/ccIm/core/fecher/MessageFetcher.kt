@@ -1,5 +1,7 @@
 package com.zj.ccIm.core.fecher
 
+import android.os.Handler
+import android.os.Looper
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.MsgType
@@ -17,14 +19,15 @@ import java.util.*
 internal object MessageFetcher {
 
     private var fetchingRunners = mutableMapOf<String, FetchMsgRunner>()
+    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     /**
      * Get the latest news of the conversation during the offline period, here is a distinction between group and single chat
      * */
-    fun getOfflineMessage(callId: String, rq: ChannelRegisterInfo, onCalled: (GetMoreMessagesResult) -> Unit) {
+    fun getOfflineMessage(callId: String, rq: ChannelRegisterInfo, threadCheck: Boolean, onCalled: (GetMoreMessagesResult) -> Unit) {
         var fetching = fetchingRunners[rq.key]
         if (fetching == null) {
-            fetching = FetchMsgRunner(callId, rq)
+            fetching = FetchMsgRunner(callId, threadCheck, rq)
             fetching.run(rq.key, onCalled)
         } else fetching.updateRequest(rq.key, onCalled)
         fetchingRunners[rq.key] = fetching
@@ -34,7 +37,7 @@ internal object MessageFetcher {
         fetchingRunners.remove(key)?.cancel()
     }
 
-    private class FetchMsgRunner(private val callId: String, private val rq: ChannelRegisterInfo) {
+    private class FetchMsgRunner(private val callId: String, private val threadCheck: Boolean = false, private val rq: ChannelRegisterInfo) {
 
         private var callIdObservers = mutableMapOf<String, (GetMoreMessagesResult) -> Unit>()
         private var compo: BaseRetrofit.RequestCompo? = null
@@ -54,7 +57,7 @@ internal object MessageFetcher {
                             mapped[k1] = cast(mappedLst)
                         }
                         val rsp = GetMoreMessagesResult(callId, isOk, mapped, rq, a, t)
-                        v.invoke(rsp)
+                        if (threadCheck) handler.post { v.invoke(rsp) } else v.invoke(rsp)
                     }
                     callIdObservers.clear()
                     fetchingRunners.remove(rq.key)

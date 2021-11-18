@@ -49,6 +49,7 @@ class SplashActivity : AppCompatActivity() {
         tvClear.setOnClickListener {
             IMHelper.loginOut()
             IMHelper.shutdown()
+            BaseApp.clear()
         }
     }
 

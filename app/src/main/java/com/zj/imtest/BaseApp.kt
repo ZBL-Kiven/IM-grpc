@@ -56,6 +56,11 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
             }
         }
 
+        fun clear(): Boolean {
+            val sp = context.getSharedPreferences(context.packageName, MODE_PRIVATE)
+            return sp.edit().clear().commit()
+        }
+
         fun backToSplash() {
             startedList.values.forEach {
                 val act = it.get()

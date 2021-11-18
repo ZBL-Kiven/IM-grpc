@@ -67,11 +67,13 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     override fun onRouteCall(callId: String?, data: Any?) {
         when (callId) {
             Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
-                if (isConnected()) MessageFetcher.getOfflineMessage(callId, data as ChannelRegisterInfo) {
-                    if (it.isOK && it.data != null) {
-                        postReceivedMessage(callId, it.data, true, 0)
-                        postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, it.rq, true, 0)
-                    } else onParseError(it.e)
+                if (isConnected()) {
+                    MessageFetcher.getOfflineMessage(callId, data as ChannelRegisterInfo, false) {
+                        if (it.isOK && it.data != null) {
+                            postReceivedMessage(callId, it.data, true, 0)
+                            postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, it.rq, true, 0)
+                        } else onParseError(it.e)
+                    }
                 }
             }
             Constance.CALL_ID_DELETE_SESSION -> {
