@@ -15,12 +15,14 @@ import com.zj.imtest.R
 import com.zj.imtest.ui.data.MsgAdapter
 import com.zj.loading.BaseLoadingView
 import com.zj.loading.DisplayMode
+import com.zj.views.list.refresh.layout.RefreshLayout
 
 abstract class BaseMessageFragment : BaseTabFragment() {
 
     private lateinit var sessionKey: String
     private var rvContent: RecyclerView? = null
     private var blv: BaseLoadingView? = null
+    private var rlv: RefreshLayout? = null
     private var adapter: MsgAdapter? = null
     private lateinit var msgReqInfo: ChannelRegisterInfo
 
@@ -53,6 +55,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
         super.onCreate()
 
         //        blv = rootView?.findViewById(R.id.im_reward_setting_loading)
+        rlv = rootView?.findViewById(R.id.im_frag_msg_rl)
         rootView?.findViewById<RecyclerView>(R.id.im_frag_msg_rv)?.let {
             adapter = MsgAdapter(it)
             it.adapter = adapter
@@ -60,6 +63,9 @@ abstract class BaseMessageFragment : BaseTabFragment() {
         }
         blv?.setOnTapListener {
             activity?.finish()
+        }
+        rlv?.setOnRefreshListener {
+            getHistoryMessage()
         }
         initMessage()
     }
@@ -97,6 +103,23 @@ abstract class BaseMessageFragment : BaseTabFragment() {
                 adapter?.change(list)
             }
             blv?.setMode(DisplayMode.NORMAL)
+        }
+    }
+
+    private fun getHistoryMessage() {
+        val firstMsgId = (adapter?.data?.firstOrNull()?.msgId) ?: return
+        val req = msgReqInfo.toReqBody(firstMsgId, 1)
+        IMHelper.getChatMsg(req) {
+            try {
+                if (it.isOK && !it.data.isNullOrEmpty()) {
+                    val data = it.data?.get(msgReqInfo.curChannelName)?.filterNotNull() ?: return@getChatMsg
+                    adapter?.add(data, 0)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                rlv?.finishRefresh()
+            }
         }
     }
 

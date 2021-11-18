@@ -4,12 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/im_frag_msg_rv"
+    <com.zj.views.list.refresh.layout.RefreshLayout
+        android:id="@+id/im_frag_msg_rl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_height="match_parent">
+
+        <com.zj.imtest.ui.base.RefreshHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/im_frag_msg_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </com.zj.views.list.refresh.layout.RefreshLayout>
 
     <!--    <com.zj.loading.BaseLoadingView-->
     <!--        android:id="@+id/im_reward_setting_loading"-->

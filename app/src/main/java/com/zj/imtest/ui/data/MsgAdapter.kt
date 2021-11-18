@@ -21,7 +21,9 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
 
     override fun add(info: List<MessageInfoEntity>, position: Int) {
         super.add(info, position)
-        recyclerView.post { recyclerView.scrollToPosition(maxPosition) }
+        if (position > 0) {
+            recyclerView.post { recyclerView.scrollToPosition(position) }
+        }
     }
 
     override fun change(d: List<MessageInfoEntity>?) {

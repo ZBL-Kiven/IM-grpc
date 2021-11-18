@@ -38,7 +38,7 @@ abstract class MessageInterface<T> {
             }
         }
 
-        internal fun hasObserver(unique: Any): Boolean {
+        fun hasObserver(unique: Any): Boolean {
             return msgObservers.containsKey(unique)
         }
 

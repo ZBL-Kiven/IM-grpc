@@ -26,6 +26,7 @@ import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.chat.interfaces.MessageInterface.Companion.hasObserver
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.utils.log.NetWorkRecordInfo
@@ -43,6 +44,10 @@ object IMHelper {
 
     fun <CLS : Any> route(data: RoteInfo<CLS>, callId: String) {
         CcIM.postToUiObservers(data, callId)
+    }
+
+    fun queryUIObserver(uniqueCode: Any): Boolean {
+        return hasObserver(uniqueCode)
     }
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
