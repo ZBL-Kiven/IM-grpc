@@ -42,9 +42,9 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context,
         }
         if (data.getMsgIsRecalled()) {
             if (data.getMsgRecallRole() == 1) {
-                tvContent.text = "群主撤回了一条消息"
+                tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
             }else
-                tvContent.text = "管理员撤回了一条消息"
+                tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
         }
     }
 

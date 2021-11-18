@@ -3,6 +3,7 @@ package com.zj.imUi.widget
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.util.Log
 
 import android.view.*
 import android.widget.PopupWindow
@@ -81,7 +82,7 @@ class BasePopFlowWindow<T> :
         val copy = ctx.get()?.getString(R.string.im_ui_msg_copy)
         val recall = ctx.get()?.getString(R.string.im_ui_msg_button_recall)
         val block = ctx.get()?.getString(R.string.im_ui_msg_block)
-        val refuse = "Refuse"
+        val refuse = ctx.get()?.getString(R.string.im_chat_pop_refuse)
         val report = "Report"
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
         val reportItems = mutableListOf(reply, copy, recall, block, refuse, report, delete)
@@ -114,7 +115,6 @@ class BasePopFlowWindow<T> :
                             filterList.add(reportItems[3])
                         }
                     }
-                    //                    else filterList.add(reportItems[5])
                 }
             }
         }
