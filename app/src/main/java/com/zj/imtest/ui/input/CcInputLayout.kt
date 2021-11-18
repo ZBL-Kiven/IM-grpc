@@ -28,7 +28,7 @@ class CcInputLayout @JvmOverloads constructor(context: Context?, attrs: Attribut
             view?.visibility = View.GONE
         } else {
             view?.visibility = View.VISIBLE
-            InputReplyLayoutInflater.inflate(view, inflater, data){
+            InputReplyLayoutInflater.inflate(view, inflater, data) {
                 setExtData(null)
             }
         }

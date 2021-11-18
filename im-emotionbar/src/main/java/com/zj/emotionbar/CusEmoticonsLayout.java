@@ -53,6 +53,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected FuncLayout funcLayout;
     private ExtInflater<T> extInflater;
     private T extData;
+    private boolean showKeyboardIfLayoutFinish = false;
 
     protected EmoticonsFuncView emoticonsFuncView;
     protected EmoticonsToolBar emoticonsToolBar;
@@ -123,6 +124,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
             if (!emoticonsEditText.isFocused()) {
                 emoticonsEditText.setFocusable(true);
                 emoticonsEditText.setFocusableInTouchMode(true);
+                emoticonsEditText.requestFocus();
             }
             return false;
         });
@@ -165,17 +167,22 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     public void reset() {
+        emoticonsEditText.clearFocus();
         EmoticonsKeyboardUtils.closeSoftKeyboard(this);
         funcLayout.hideAllFuncView();
         btnFace.setImageResource(R.mipmap.ui_emo_icon_face_pop);
     }
 
-    public void setExtData(T data) {
+    public void setExtData(final T data) {
         this.extData = data;
         extContainer.removeAllViews();
         if (data != null) {
             if (extInflater != null) extInflater.onInflate(extContainer, inflater, data);
-            post(() -> EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText));
+            if (!emoticonsEditText.isFocused()) post(() -> {
+                if (inputLayout.isShown()) {
+                    EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText);
+                }
+            });
         }
     }
 
@@ -231,6 +238,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     @Override
     public void onSoftKeyboardPop(int height) {
         super.onSoftKeyboardPop(height);
+        showKeyboardIfLayoutFinish = false;
         funcLayout.setVisibility(true);
         setExtData(extData);
         funcLayout.resetKey();
@@ -268,7 +276,9 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
             } else {
                 showText();
                 btnVoiceOrText.setImageResource(R.mipmap.ui_emo_icon_voice);
-                EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText);
+                if (!EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText)) {
+                    showKeyboardIfLayoutFinish = true;
+                }
             }
         } else if (i == R.id.im_input_btn_face) {
             toggleFuncView(FUNC_TYPE_EMOTION);

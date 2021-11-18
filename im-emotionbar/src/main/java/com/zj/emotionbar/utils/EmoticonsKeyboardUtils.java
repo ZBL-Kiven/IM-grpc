@@ -66,18 +66,18 @@ public class EmoticonsKeyboardUtils {
     }
 
     public static boolean isFullScreen(final Activity activity) {
-        return (activity.getWindow().getAttributes().flags &
-                WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
+        return (activity.getWindow().getAttributes().flags & WindowManager.LayoutParams.FLAG_FULLSCREEN) != 0;
     }
 
-    public static void openSoftKeyboard(EditText et) {
+    public static boolean openSoftKeyboard(EditText et) {
         if (et != null) {
             et.setFocusable(true);
             et.setFocusableInTouchMode(true);
             et.requestFocus();
             InputMethodManager inputManager = (InputMethodManager) et.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            if (inputManager != null) inputManager.showSoftInput(et, 0);
+            if (inputManager != null) return inputManager.showSoftInput(et, 0);
         }
+        return false;
     }
 
     public static void closeSoftKeyboard(Context context) {
