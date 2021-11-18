@@ -52,7 +52,8 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected FrameLayout extContainer;
     protected FuncLayout funcLayout;
     private ExtInflater<T> extInflater;
-    protected T extData;
+    private T extData;
+    private boolean showKeyboardIfLayoutFinish = false;
 
     protected EmoticonsFuncView emoticonsFuncView;
     protected EmoticonsToolBar emoticonsToolBar;
@@ -60,7 +61,11 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     protected boolean dispatchKeyEventPreImeLock = false;
 
     public CusEmoticonsLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, null, 0);
+    }
+
+    public CusEmoticonsLayout(Context context, AttributeSet attrs, int def) {
+        super(context, attrs, def);
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflateKeyboardBar();
         initView();
@@ -119,6 +124,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
             if (!emoticonsEditText.isFocused()) {
                 emoticonsEditText.setFocusable(true);
                 emoticonsEditText.setFocusableInTouchMode(true);
+                emoticonsEditText.requestFocus();
             }
             return false;
         });
@@ -161,18 +167,22 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     public void reset() {
+        emoticonsEditText.clearFocus();
         EmoticonsKeyboardUtils.closeSoftKeyboard(this);
         funcLayout.hideAllFuncView();
-        extContainer.removeAllViews();
         btnFace.setImageResource(R.mipmap.ui_emo_icon_face_pop);
     }
 
-    public void setExtData(T data) {
+    public void setExtData(final T data) {
         this.extData = data;
-        if (data == null) {
-            extContainer.removeAllViews();
-        } else {
+        extContainer.removeAllViews();
+        if (data != null) {
             if (extInflater != null) extInflater.onInflate(extContainer, inflater, data);
+            if (!emoticonsEditText.isFocused()) post(() -> {
+                if (inputLayout.isShown()) {
+                    EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText);
+                }
+            });
         }
     }
 
@@ -228,6 +238,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     @Override
     public void onSoftKeyboardPop(int height) {
         super.onSoftKeyboardPop(height);
+        showKeyboardIfLayoutFinish = false;
         funcLayout.setVisibility(true);
         setExtData(extData);
         funcLayout.resetKey();
@@ -265,7 +276,9 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
             } else {
                 showText();
                 btnVoiceOrText.setImageResource(R.mipmap.ui_emo_icon_voice);
-                EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText);
+                if (!EmoticonsKeyboardUtils.openSoftKeyboard(emoticonsEditText)) {
+                    showKeyboardIfLayoutFinish = true;
+                }
             }
         } else if (i == R.id.im_input_btn_face) {
             toggleFuncView(FUNC_TYPE_EMOTION);
@@ -358,6 +371,12 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     public EmoticonsFuncView getEmoticonsFuncView() {
         return emoticonsFuncView;
+    }
+
+    protected T takeExtData() {
+        T ext = extData;
+        setExtData(null);
+        return ext;
     }
 
     public EmoticonsToolBar getEmoticonsToolBarView() {

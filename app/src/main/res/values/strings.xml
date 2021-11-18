@@ -5,4 +5,12 @@
     <string name="clear_db">Clear Db Data</string>
     <string name="input_uid">Input a user id :</string>
 
+    <string name="_public">Public</string>
+    <string name="_private">Private</string>
+
+    <string name="text">Text</string>
+    <string name="image">Image</string>
+    <string name="voice">Voice</string>
+    <string name="im_msg_type_video">make a video</string>
+
 </resources>

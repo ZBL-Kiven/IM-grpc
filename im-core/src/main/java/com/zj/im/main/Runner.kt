@@ -55,6 +55,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
         this.imi = imi
         if (isInit) {
             printInFile("ChatBase.IM", "SDK already init")
+            imi.reconnect("re-init sdk")
             imi.prepare()
             return
         }

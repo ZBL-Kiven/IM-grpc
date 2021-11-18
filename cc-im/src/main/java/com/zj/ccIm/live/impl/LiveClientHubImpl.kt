@@ -33,7 +33,7 @@ class LiveClientHubImpl : ClientHubImpl() {
                 onFinish();return
             }
         }
-        CcIM.postToUiObservers(data, data.msgType)
+        CcIM.postToUiObservers(LiveInfoEn::class.java, data, data.msgType)
         onFinish()
     }
 }

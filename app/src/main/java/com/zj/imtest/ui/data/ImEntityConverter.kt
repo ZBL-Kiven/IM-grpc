@@ -7,9 +7,10 @@ import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
-import com.zj.imtest.IMConfig
 import com.google.gson.Gson
+import com.zj.ccIm.core.bean.RoteInfo
 import com.zj.imtest.BaseApp
+import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
 import com.zj.imtest.ui.data.bean.RevokeMsg
 import com.zj.imtest.ui.data.bean.RiskMsg
 
@@ -202,7 +203,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.replyMsg?.sendingState ?: -2
     }
 
-
     override fun getReplyMsgQuestionContent(): String? {
         return info?.replyMsg?.questionContent?.textContent?.text
     }
@@ -329,8 +329,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         Log.e("----- ", " stopAudio")
     }
 
-    override fun reply(id: String) {
-        Log.e("----- ", " reply")
+    override fun reply() {
+        IMHelper.route(RoteInfo(info), ROUTE_CALL_ID_REPLY_MESSAGE)
     }
 
     override fun block(userId: Int) {

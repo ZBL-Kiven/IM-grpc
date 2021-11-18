@@ -1,8 +1,6 @@
 package com.zj.ccIm.core.impl
 
 import android.app.Application
-import io.grpc.Status
-import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
 import com.zj.api.BaseApi
@@ -17,7 +15,6 @@ import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.core.fecher.MessageFetcher
-import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.logger.ImLogs
 import io.reactivex.schedulers.Schedulers
 
@@ -30,6 +27,11 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     override fun init(context: Application?) {
         super.init(context)
         BaseApi.setLoggerInterface(IMRecordSizeApi::class.java, this)
+    }
+
+    override fun onConnection() {
+        receiveMessage()
+        receiveTopic()
     }
 
     override fun send(params: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
@@ -76,11 +78,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 deleteSession(data as DeleteSessionInfo)
             }
         }
-    }
-
-    override fun onConnection() {
-        receiveMessage()
-        receiveTopic()
     }
 
     /**
@@ -136,7 +133,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         }
         ImLogs.recordLogsInFile("on connecting", "trying to receive topic")
         topicStreamObserver = withChannel {
-            it.listenTopicData(object : CusObserver<ListenTopicReply>() {
+            it.listenTopicData(object : CusObserver<ListenTopicReply>(true) {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
                     ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
                     if (isOk && data != null) {
@@ -164,22 +161,24 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         }
         ImLogs.recordLogsInFile("on connecting", "trying to receive messages")
         messageStreamObserver = withChannel {
-            it.onlineImMessage(object : CusObserver<ImMessageReply>() {
+            it.onlineImMessage(object : CusObserver<ImMessageReply>(true) {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
-                    ImLogs.recordLogsInFile("server hub event ", "on server message arrived : type = ${data?.type} seq = ${data?.reqContext?.seq}")
-                    when (data?.type) {
-                        1 -> {
-                            val d = data.reqContext
-                            val callId = d.seq
-                            postReceivedMessage(callId, d, true, data.reqContext.serializedSize.toLong())
-                        }
-                        0 -> {
-                            val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
-                            MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
-                                postReceivedMessage(key, d, true, data.serializedSize.toLong())
+                    if (isOk && data != null) {
+                        ImLogs.recordLogsInFile("server hub event ", "on server message arrived : type = ${data.type} seq = ${data.reqContext?.seq}")
+                        when (data.type) {
+                            1 -> {
+                                val d = data.reqContext
+                                val callId = d.seq
+                                postReceivedMessage(callId, d, true, data.reqContext.serializedSize.toLong())
+                            }
+                            0 -> {
+                                val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
+                                MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
+                                    postReceivedMessage(key, d, true, data.serializedSize.toLong())
+                                }
                             }
                         }
-                    }
+                    } else onParseError(t)
                 }
             })
         }
@@ -220,20 +219,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             resp.msgStatus = status
         }
         return resp
-    }
-
-    override fun onParseError(t: Throwable?) {
-        ImLogs.recordLogsInFile("server.onParseError", "${t?.message}")
-        (t as? StatusRuntimeException)?.let {
-            when (it.status.code) {
-                Status.Code.CANCELLED -> {
-                    ImLogs.recordLogsInFile("------ ", "onCanceled with message : ${t.message}")
-                }
-                else -> {
-                    super.onParseError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "))
-                }
-            }
-        } ?: super.onParseError(t)
     }
 
     /**

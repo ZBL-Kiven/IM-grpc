@@ -4,10 +4,13 @@ import android.app.Application
 import com.zj.im.chat.hub.ServerHub
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
+import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException
+import com.zj.ccIm.logger.ImLogs
 import com.zj.protocol.Grpc
 import com.zj.protocol.GrpcConfig
 import com.zj.protocol.grpc.*
+import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 
@@ -55,7 +58,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * */
     override fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
         withChannel {
-            it.ping(null, object : CusObserver<Pong>() {
+            it.ping(null, object : CusObserver<Pong>(false) {
                 override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
                     onChecked(isOk)
                 }
@@ -78,10 +81,21 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * And trigger reconnection in the appropriate scene, or choose whether to clear the buffering queue
      * */
     protected open fun onParseError(t: Throwable?) {
-        postError(t)
+        ImLogs.recordLogsInFile("server.onParseError", "${t?.message}")
+        (t as? StatusRuntimeException)?.let {
+            when (it.status.code) {
+                Status.Code.CANCELLED, Status.Code.UNAUTHENTICATED -> {
+                    ImLogs.recordLogsInFile("------ ", "onCanceled with message : ${t.message}")
+                }
+                else -> {
+                    postError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "))
+                }
+            }
+        } ?: postError(t)
     }
 
-    protected open class CusObserver<T> : StreamObserver<T> {
+    protected open class CusObserver<T>(private val isStreaming: Boolean) : StreamObserver<T> {
+
         final override fun onNext(value: T) {
             onResult(true, value, null)
         }
@@ -90,7 +104,9 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
             onResult(false, null, t)
         }
 
-        final override fun onCompleted() {}
+        final override fun onCompleted() {
+            if (isStreaming) onResult(false, null, ConnectionError("stream connection completed error."))
+        }
 
         open fun onResult(isOk: Boolean, data: T?, t: Throwable?) {}
     }

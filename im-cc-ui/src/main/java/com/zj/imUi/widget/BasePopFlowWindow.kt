@@ -23,8 +23,7 @@ import java.lang.ref.SoftReference
 import java.lang.ref.WeakReference
 import kotlin.math.max
 
-class BasePopFlowWindow<T> :
-    PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT) {
+class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT) {
 
     private var onReportOK: ((v: View?, data: T?, toString: String) -> Unit)? = null
     private var anchorView: SoftReference<View?>? = null
@@ -38,9 +37,7 @@ class BasePopFlowWindow<T> :
         isOutsideTouchable = true
     }
 
-    fun show(data: T,
-        v: View,
-        onReportOK: ((v: View?, data: T?, reportContent: String) -> Unit)? = null) {
+    fun show(data: T, v: View, onReportOK: ((v: View?, data: T?, reportContent: String) -> Unit)? = null) {
         if (data == null) return
         anchorView = SoftReference(v)
         this.onReportOK = onReportOK
@@ -52,8 +49,7 @@ class BasePopFlowWindow<T> :
     private fun initData(v: View) {
         v.post {
             if (isShowing) dismiss()
-            contentView =
-                LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
+            contentView = LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
             initReportData(v)
             showPop(v)
         }
@@ -70,8 +66,7 @@ class BasePopFlowWindow<T> :
     private fun initReportData(v: View) {
         isSelfMessage = data?.getSenderId() == data?.getSelfUserId()
         isOwner = data?.getSelfUserId() == data?.getOwnerId()
-        isNormalMsg =
-            (data?.getMsgIsReject() == false && data?.getMsgIsSensitive() == false && data?.getMsgIsRecalled() == false)
+        isNormalMsg = (data?.getMsgIsReject() == false && data?.getMsgIsSensitive() == false && data?.getMsgIsRecalled() == false)
 
         val ctx = WeakReference(v.context)
         val rv = contentView.findViewById<EmptyRecyclerView<String>>(R.id.im_pop_rv_content)
@@ -90,7 +85,7 @@ class BasePopFlowWindow<T> :
         data?.apply {
             if (isNormalMsg) {
                 if (isSelfMessage) {
-                    if(data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
+                    if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
@@ -103,14 +98,14 @@ class BasePopFlowWindow<T> :
                     if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     if (data?.getType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
                     if (isOwner) {
-                        if (data?.getQuestionStatus() == 0&&data?.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                        if (data?.getQuestionStatus() == 0 && data?.getType() == UiMsgType.MSG_TYPE_QUESTION) {
                             filterList.add(reportItems[4])
-                        }else{
+                        } else {
                             filterList.add(reportItems[2])
                             filterList.add(reportItems[3])
                         }
-                    }else if(data?.getIsAdmin() == true){
-                        if (data?.getSenderId()!=data?.getOwnerId()){
+                    } else if (data?.getIsAdmin() == true) {
+                        if (data?.getSenderId() != data?.getOwnerId()) {
                             filterList.add(reportItems[2])
                             filterList.add(reportItems[3])
                         }
@@ -118,53 +113,48 @@ class BasePopFlowWindow<T> :
                 }
             }
         }
-        rv?.setData(R.layout.im_pop_item_layout,
-            false,
-            filterList,
-            object : BaseAdapterDataSet<String?>() {
-                override fun initData(p0: BaseViewHolder<String?>?, p1: Int, reportItem: String?) {
-                    val flowText = p0?.getView<TextView>(R.id.im_pop_item_tv)
-                    flowText?.text = reportItem
-                    flowText?.setTextColor(ContextCompat.getColor(contentView.context,
-                        R.color.im_msg_text_color_white))
+        rv?.setData(R.layout.im_pop_item_layout, false, filterList, object : BaseAdapterDataSet<String?>() {
+            override fun initData(p0: BaseViewHolder<String?>?, p1: Int, reportItem: String?) {
+                val flowText = p0?.getView<TextView>(R.id.im_pop_item_tv)
+                flowText?.text = reportItem
+                flowText?.setTextColor(ContextCompat.getColor(contentView.context, R.color.im_msg_text_color_white))
 
-                }
+            }
 
-                override fun onItemClick(position: Int, v: View?, m: String?) {
-                    when (m) {
-                        reply -> {
-                            data?.getMsgId()?.let { data?.reply(it) }
-                        }
-                        copy -> {
-                            val cm = v?.let {
-                                ContextCompat.getSystemService(it.context,
-                                    ClipboardManager::class.java)
-                            }
-                            val mClipData = ClipData.newPlainText("cc", data?.getTextContent())
-                            cm?.setPrimaryClip(mClipData)
-                        }
-                        block -> {
-                            data?.getSenderId()?.let { data?.block(it) }
-                        }
-                        recall -> {
-                            data?.ownerRecallGroupMsg()
-                        }
-                        refuse -> {
-                            data?.getMsgId()?.let { data?.rejectRewardMsg(it) }
-                        }
-                        report -> {
-                            data?.getMsgId()?.let { data?.reportGroupUserMsg(it) }
-                        }
-                        delete -> {
-                            data?.deleteSendLossMsg()
-                        }
-                        else -> {
-                            Toast.makeText(v?.context, m.toString(), Toast.LENGTH_SHORT).show()
-                        }
+            override fun onItemClick(position: Int, v: View?, m: String?) {
+                when (m) {
+                    reply -> {
+                         data?.reply()
                     }
-                    dismiss()
+                    copy -> {
+                        val cm = v?.let {
+                            ContextCompat.getSystemService(it.context, ClipboardManager::class.java)
+                        }
+                        val mClipData = ClipData.newPlainText("cc", data?.getTextContent())
+                        cm?.setPrimaryClip(mClipData)
+                    }
+                    block -> {
+                        data?.getSenderId()?.let { data?.block(it) }
+                    }
+                    recall -> {
+                        data?.ownerRecallGroupMsg()
+                    }
+                    refuse -> {
+                        data?.getMsgId()?.let { data?.rejectRewardMsg(it) }
+                    }
+                    report -> {
+                        data?.getMsgId()?.let { data?.reportGroupUserMsg(it) }
+                    }
+                    delete -> {
+                        data?.deleteSendLossMsg()
+                    }
+                    else -> {
+                        Toast.makeText(v?.context, m.toString(), Toast.LENGTH_SHORT).show()
+                    }
                 }
-            })
+                dismiss()
+            }
+        })
     }
 
     private fun makeDropDownMeasureSpec(measureSpec: Int): Int {
