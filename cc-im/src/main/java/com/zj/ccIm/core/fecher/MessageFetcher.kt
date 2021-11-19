@@ -14,7 +14,6 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
-import java.util.*
 
 internal object MessageFetcher {
 
@@ -98,7 +97,7 @@ internal object MessageFetcher {
                     result.add(MessageInfoEntity().apply {
                         this.msgType = MsgType.SENSITIVE.type
                         this.channelKey = key
-                        this.clientMsgId = UUID.randomUUID().toString()
+                        this.clientMsgId = msg.clientMsgId + ":SENSITIVE"
                         this.groupId = msg.groupId
                         this.replyMsg = msg
                         this.msgId = msg.msgId

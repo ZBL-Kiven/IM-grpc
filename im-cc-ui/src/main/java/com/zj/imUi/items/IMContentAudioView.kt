@@ -26,9 +26,6 @@ class IMContentAudioView @JvmOverloads constructor(context: Context, attrs: Attr
     }
 
     override fun onStop(data: ImMsgIn?) {
-        if (data?.isAudioPlaying() == true) {
-            data.stopAudio()
-        }
         stopAnim()
     }
 
