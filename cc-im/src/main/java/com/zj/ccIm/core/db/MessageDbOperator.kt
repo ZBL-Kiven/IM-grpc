@@ -45,7 +45,7 @@ internal object MessageDbOperator {
                     msgDb.deleteMsgByClientId(callId)
                 }
                 msg.sendingState = sendingState?.type ?: SendMsgState.NONE.type
-                val pl = if (recalled) ClientHubImpl.PAYLOAD_DELETE_FROM_RECALLED else {
+                val pl = if (recalled) ClientHubImpl.PAYLOAD_CHANGED else {
                     if (!hasLocal) ClientHubImpl.PAYLOAD_ADD else ClientHubImpl.PAYLOAD_CHANGED
                 }
                 Pair(msg, pl)
@@ -54,7 +54,7 @@ internal object MessageDbOperator {
     }
 
     fun deleteMsg(clientId: String) {
-       IMHelper.withDb {
+        IMHelper.withDb {
             it.messageDao().deleteMsgByClientId(clientId)
         }
     }
