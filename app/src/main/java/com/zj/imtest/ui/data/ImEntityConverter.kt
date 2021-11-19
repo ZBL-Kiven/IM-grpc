@@ -308,7 +308,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getExtSensitiveMsgContent(): String? {
-        return getExtRiskMessageInfo()?.getSensitiveMsg()
+        return getExtRiskMessageInfo()?.getSensitiveMsg("zh")
     }
 
     override fun getIsAdmin(): Boolean {
