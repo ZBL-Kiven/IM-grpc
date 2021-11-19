@@ -33,7 +33,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
     @SuppressLint("SetTextI18n")
     fun setData(data: ImMsgIn?, chatType: Any): GroupMessageRecordItem {
         if (data == null) return this
-        if (data.getAnswerContentAudioContentUrl() != null) { // TODO: 2021/10/8 私聊状态下为白色
+        if (data.getAnswerContentAudioContentUrl() != null) {
             audioTime.text = StringBuilder(data.getAnswerContentAudioContentDuration().toString()).append("''")
             if (data.getSelfUserId() == data.getOwnerId()) {
                 if (chatType == 1 && chatType == 3) {
