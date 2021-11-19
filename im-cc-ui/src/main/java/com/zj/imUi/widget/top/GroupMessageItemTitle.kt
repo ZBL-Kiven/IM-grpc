@@ -19,9 +19,7 @@ import com.zj.views.ut.DPUtils
  * date:   2021/8/12 7:44 下午
  * description:
  */
-class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
-    attributeSet: AttributeSet? = null,
-    defStyle: Int = 0) : ConstraintLayout(context, attributeSet, defStyle) {
+class GroupMessageItemTitle @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : ConstraintLayout(context, attributeSet, defStyle) {
 
     private var mNickname: TextView
     private var mSendTime: AppCompatTextView
@@ -44,10 +42,10 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
             TimeDiffUtils.setTimeText(it1, context)
         }
 
-        mGroupRewardItem.setPadding(0,DPUtils.dp2px(1f),DPUtils.dp2px(1f),0)
+        mGroupRewardItem.setPadding(0, DPUtils.dp2px(1f), DPUtils.dp2px(1f), 0)
 
 
-        if (chatType == 1||chatType == 3) {
+        if (chatType == 1 || chatType == 3) {
             if (data.getSelfUserId() == data.getOwnerId()) {
                 mNickname.visibility = View.VISIBLE
                 mNickname.setPadding(0, 1, 0, 0)
@@ -58,15 +56,12 @@ class GroupMessageItemTitle @JvmOverloads constructor(context: Context,
             } else {
                 mNickname.visibility = View.GONE
                 mSendTime.setPadding(0, 12, 0, 0)
-                if (data.getQuestionStatus() == 0) mSendTime.setTextColor(ContextCompat.getColor(
-                    context,
-                    R.color.im_msg_text_color_black))
-                else mSendTime.setTextColor(ContextCompat.getColor(context,
-                    R.color.im_msg_text_color_gray))
+                if (data.getQuestionStatus() == 0) mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
+                else mSendTime.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
                 mSendTime.textSize = 12f
             }
         } else {
-            if (data.getQuestionStatus() == 1) {
+            if (data.getQuestionStatus() !=0) {
                 mGroupRewardItem.visibility = View.GONE
             }
             mNickname.setPadding(0, 12, 0, 0)
