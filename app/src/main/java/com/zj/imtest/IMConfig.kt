@@ -52,13 +52,11 @@ class IMConfig(private val uid: Int) : ImConfigIn {
     }
 
     override fun onAuthenticationError() {
-        Handler(Looper.getMainLooper()).let {
-            it.post {
-                BaseApp.context.let { ctx ->
-                    Toast.makeText(ctx, "User : ${getUserId()} has kicked out by other device!", Toast.LENGTH_SHORT).show()
-                }
-                BaseApp.backToSplash()
+        Handler(Looper.getMainLooper()).post {
+            BaseApp.context.let { ctx ->
+                Toast.makeText(ctx, "User : ${getUserId()} has kicked out by other device!", Toast.LENGTH_SHORT).show()
             }
+            BaseApp.backToSplash()
         }
     }
 
