@@ -20,7 +20,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imUi.utils.MessageSendTimeUtils
 import com.zj.imUi.utils.MessageReplySendTimeUtils
 import com.zj.imUi.utils.TimeDiffUtils
-import com.zj.imUi.widget.BasePopFlowWindow
+import com.zj.imUi.widget.BasePopFlowRejectWindow
 import com.zj.imUi.widget.top.GroupMessageItemTitle
 import com.zj.views.ut.DPUtils
 import java.util.*
@@ -113,7 +113,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         //之前是直接setOnLongClickListener，没有加contentLayout，导致长按点击事件无法触发
         contentLayout.setOnLongClickListener {
             if (isOwner && data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
-                val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
+                val popFlowWindow: BasePopFlowRejectWindow<ImMsgIn> = BasePopFlowRejectWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->
                 }
             }
