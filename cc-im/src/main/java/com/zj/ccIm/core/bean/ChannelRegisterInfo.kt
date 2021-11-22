@@ -81,8 +81,8 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
             return "${serializeName}|g:${groupId}|o:${oi}|u:${tu}"
         }
 
-        fun buildWithOwnerMessage(lo: LifecycleOwner, groupId: Long, ownerId: Int): ChannelRegisterInfo {
-            return ChannelRegisterInfo(lo, groupId, ownerId, null, FetchMsgChannel.OWNER_MESSAGE)
+        fun buildWithOwnerMessage(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {
+            return ChannelRegisterInfo(lo, groupId, null, null, FetchMsgChannel.OWNER_MESSAGE)
         }
 
         fun buildWithOwnerClapHouse(lo: LifecycleOwner, groupId: Long): ChannelRegisterInfo {

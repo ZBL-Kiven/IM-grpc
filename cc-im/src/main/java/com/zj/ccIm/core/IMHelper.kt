@@ -33,7 +33,6 @@ import com.zj.im.utils.log.NetWorkRecordInfo
 import io.reactivex.schedulers.Schedulers
 import okhttp3.MediaType
 import okhttp3.RequestBody
-import java.lang.StringBuilder
 
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object IMHelper {
@@ -212,18 +211,6 @@ object IMHelper {
         return withDb {
             it.sessionDao().findSessionById(groupId).role
         } ?: 0
-    }
-
-    fun queryAllDBColumnsCount(): StringBuilder {
-        val sb = StringBuilder()
-        withDb {
-            sb.append("messageCount = ${it.messageDao().findAll().size}\n")
-            sb.append("sendingCount = ${it.sendMsgDao().findAll().size}\n")
-            sb.append("sessionsCount = ${it.sessionDao().findAll().size}\n")
-            sb.append("privateOwnerSession = ${it.privateChatOwnerDao().findAll().size}\n")
-            sb.append("sessionLastMsgCount = ${it.sessionMsgDao().findAll().size}")
-        }
-        return sb
     }
 
     fun shutdown() {

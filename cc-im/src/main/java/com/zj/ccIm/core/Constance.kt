@@ -20,14 +20,14 @@ internal object Constance {
     var app: Application? = null
         get() {
             return if (field == null) {
-                CcIM.postIMError(InitializedException("getApplication"));null
+                CcIM.postIMError(InitializedException("app"));null
             } else field
         }
 
     var dbId: Int? = null
         get() {
             return if (field == null) {
-                CcIM.postIMError(InitializedException("getApplication"));null
+                CcIM.postIMError(InitializedException("dbId"));null
             } else field
         }
 
@@ -78,6 +78,8 @@ internal object Constance {
     const val TOPIC_CHAT_OWNER_INFO = "cc://chat-owner-info-topic"
 
     const val TOPIC_ROLE = "cc://group-role-topic"
+
+    const val TOPIC_ASSETS_CHANGED = "cc://change-balance"
 
     const val TOPIC_LIVE_STATE = "cc://live-status-change/all"
 

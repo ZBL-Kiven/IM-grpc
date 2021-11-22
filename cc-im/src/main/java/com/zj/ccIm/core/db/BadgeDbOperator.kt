@@ -7,27 +7,26 @@ import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.entity.SessionLastMsgInfo
 import com.zj.database.ut.Constance
-import java.lang.IllegalArgumentException
 
 internal object BadgeDbOperator {
 
     fun clearGroupBadge(info: ChannelRegisterInfo) {
-        when (info.mChannel.classification) {
-            FetchMsgChannel.FANS_PRIVATE.classification -> {
+        when (info.mChannel) {
+            FetchMsgChannel.FANS_PRIVATE -> {
                 val key = Constance.generateKey(Constance.KEY_OF_PRIVATE_OWNER, ownerId = info.ownerId ?: 0)
                 val sessionBadgeInfo = changeBadge(key)
                 SessionLastMsgDbOperator.onDealPrivateOwnerSessionLastMsgInfo(sessionBadgeInfo?.second)
             }
-            FetchMsgChannel.OWNER_PRIVATE.classification -> {
+            FetchMsgChannel.OWNER_PRIVATE -> {
                 val last = notifyOwnerSessionBadgeWithFansSessionChanged(info.targetUserid, info.groupId)
                 SessionLastMsgDbOperator.onDealPrivateFansSessionLastMsgInfo(last)
             }
-            0 -> {
+            FetchMsgChannel.OWNER_CLAP_HOUSE, FetchMsgChannel.FANS_CLAP_HOUSE -> {
                 val key = Constance.generateKey(Constance.KEY_OF_SESSIONS, groupId = info.groupId)
                 val sessionBadgeInfo = changeBadge(key)
                 SessionLastMsgDbOperator.onDealSessionLastMsgInfo(sessionBadgeInfo?.second)
             }
-            else -> throw IllegalArgumentException("unknown classification!")
+            else -> null
         }?.let { p ->
             CcIM.postToUiObservers(null, p.second, p.first)
         }

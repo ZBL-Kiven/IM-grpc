@@ -73,6 +73,9 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     payload = deal?.first ?: callId
                     d = if (deal?.second == null) d else deal.second
                 }
+                Constance.TOPIC_ASSETS_CHANGED -> {
+                    AssetsChangedOperator.changeAssetsWithTopic(d.toString());return
+                }
                 Constance.TOPIC_LIVE_STATE -> {
                     d = Gson().fromJson(d?.toString(), LiveStateInfo::class.java)
                 }

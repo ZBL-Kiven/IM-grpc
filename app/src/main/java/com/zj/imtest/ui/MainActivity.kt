@@ -74,26 +74,32 @@ class MainActivity : AppCompatActivity() {
 
     private fun initConnectObserver() {
         IMHelper.getIMInterface().registerConnectionStateChangeListener(this::class.java.simpleName) {
-            if(isFinishing) return@registerConnectionStateChangeListener
+            if (isFinishing) return@registerConnectionStateChangeListener
             when (it) {
                 ConnectionState.CONNECTED, ConnectionState.PING, ConnectionState.PONG -> tvConn?.setBackgroundResource(R.drawable.dots_green)
                 ConnectionState.NETWORK_STATE_CHANGE, ConnectionState.CONNECTED_ERROR, ConnectionState.INIT -> tvConn?.setBackgroundResource(R.drawable.dots_red)
                 ConnectionState.CONNECTION, ConnectionState.RECONNECT -> tvConn?.setBackgroundResource(R.drawable.dots_yellow)
             }
         }
-        IMHelper.addReceiveObserver<SessionInfoEntity>(this::class.java.simpleName, this).listen { d, _, _ ->
-            if (d != null && !isFinishing) {
-                val info = "( ${if (d.role == 1) "Owner" else if (d.role == 2) "Manager" else "Member"} | ${d.groupName} )"
+        IMHelper.addReceiveObserver<SessionInfoEntity>(this::class.java.simpleName, this).filterIn { d, _ ->
+            return@filterIn d.groupId == groupId
+        }.listen { d, lst, _ ->
+            var data: SessionInfoEntity? = d
+            if (data == null && lst != null) {
+                data = lst.firstOrNull()
+            }
+            if (data != null && !isFinishing) {
+                val info = "( ${if (data.role == 1) "Owner" else if (data.role == 2) "Manager" else "Member"} | ${data.groupName} )"
                 tvName?.text = BaseApp.config.getUserName()
                 tvGroupInfo?.text = info
-                val groupState = when (d.groupStatus) {
+                val groupState = when (data.groupStatus) {
                     1 -> "Stopped"
                     3 -> "NotFollow"
                     else -> "Normal"
                 }
-                val desc = "ownerId = ${d.ownerId} , myUid = ${BaseApp.config.getUserId()} , status = $groupState"
+                val desc = "ownerId = ${data.ownerId} , myUid = ${BaseApp.config.getUserId()} , status = $groupState"
                 tvGroupDesc?.text = desc
-                ivHeadPic?.let { Glide.with(this).load(d.logo).circleCrop().into(it) }
+                ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }
     }

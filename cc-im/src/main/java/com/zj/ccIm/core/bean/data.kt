@@ -31,3 +31,4 @@ data class GetMoreMessagesResult(val callId: String, val isOK: Boolean, val data
 class FetchResult(val success: Boolean, val isFirstFetch: Boolean, val isNullData: Boolean, val errorMsg: String? = null) : Serializable
 
 data class DotsInfo(var unreadMessages: Int = 0, var unreadQuestions: Int = 0, var questionNum: Int = 0)
+
