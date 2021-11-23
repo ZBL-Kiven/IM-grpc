@@ -45,9 +45,6 @@ class BasePopFlowRejectWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTE
         }
     }
 
-
-
-
     private fun initReportData(v: View) {
         isSelfMessage = data?.getSenderId() == data?.getSelfUserId()
         isOwner = data?.getSelfUserId() == data?.getOwnerId()
@@ -55,6 +52,7 @@ class BasePopFlowRejectWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTE
         val content = contentView.findViewById<AppCompatTextView>(R.id.im_pop_new_reject_content_tv)
         content.setOnClickListener {
             data?.getMsgId()?.let { it1 -> data?.rejectRewardMsg(it1) }
+            dismiss()
         }
 
     }
