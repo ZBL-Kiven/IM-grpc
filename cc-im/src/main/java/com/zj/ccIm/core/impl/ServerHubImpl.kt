@@ -147,6 +147,9 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                     registerTopicListener()
                                 }
                             }
+                            Constance.TOPIC_KICK_OUT -> {
+                                postReceivedMessage(data.topic, data.data, true, 0)
+                            }
                             else -> {
                                 val size = data.serializedSize.toLong()
                                 postReceivedMessage(data.topic, data.data, false, size)
