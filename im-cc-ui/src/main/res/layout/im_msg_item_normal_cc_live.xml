@@ -80,7 +80,6 @@
             android:layout_gravity="bottom"
             android:maxLines="3"
             android:ellipsize="end"
-            android:text="dedagwecywegawie7dgedewgdaiewdgaewdgdaewudaed"
             android:textSize="14sp"
             android:textColor="@color/im_msg_bg_color_white"
             android:id="@+id/im_msg_item_normal_cc_live_tv_title"

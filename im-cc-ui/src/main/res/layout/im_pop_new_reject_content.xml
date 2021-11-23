@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/im_pop_new_reject_content_rl"
+    android:background="@drawable/im_msg_pop_reject_bg"
+    android:alpha="0.7"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="6dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/im_pop_new_reject_content_tv"
+        android:background="@drawable/im_msg_pop_reject_btn_bg"
+        android:textColor="@color/im_msg_bg_color_white"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/im_chat_pop_refuse"
+        android:gravity="center"
+    />
+</LinearLayout>
