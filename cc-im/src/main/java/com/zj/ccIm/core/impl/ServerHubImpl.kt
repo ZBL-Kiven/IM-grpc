@@ -15,6 +15,7 @@ import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.core.fecher.MessageFetcher
+import com.zj.ccIm.error.StreamFinishException
 import com.zj.ccIm.logger.ImLogs
 import io.reactivex.schedulers.Schedulers
 
@@ -135,7 +136,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         }
         ImLogs.recordLogsInFile("on connecting", "trying to receive topic")
         topicStreamObserver = withChannel {
-            it.listenTopicData(object : CusObserver<ListenTopicReply>(true) {
+            it.listenTopicData(object : CusObserver<ListenTopicReply>("topic", true) {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
                     ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
                     if (isOk && data != null) {
@@ -151,7 +152,10 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                 postReceivedMessage(data.topic, data.data, false, size)
                             }
                         }
-                    } else onParseError(t)
+                    } else {
+                        if (t is StreamFinishException) topicStreamObserver = null
+                        onParseError(t)
+                    }
                 }
             })
         }
@@ -163,7 +167,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         }
         ImLogs.recordLogsInFile("on connecting", "trying to receive messages")
         messageStreamObserver = withChannel {
-            it.onlineImMessage(object : CusObserver<ImMessageReply>(true) {
+            it.onlineImMessage(object : CusObserver<ImMessageReply>("message", true) {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         ImLogs.recordLogsInFile("server hub event ", "on server message arrived : type = ${data.type} seq = ${data.reqContext?.seq}")
@@ -180,7 +184,10 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                 }
                             }
                         }
-                    } else onParseError(t)
+                    } else {
+                        if (t is StreamFinishException) messageStreamObserver = null
+                        onParseError(t)
+                    }
                 }
             })
         }

@@ -27,14 +27,10 @@ abstract class ImMessageDecoration<R, T : ImMessageDecoration.TimeLineViewBuilde
         val pos = parent.getChildAdapterPosition(view)
         val data = getItem(pos)
         var top = topDividerWidth
-
         val position = parent.getChildAdapterPosition(view)
         if (!tli.getTimeLine(data).isNullOrEmpty() && position != 0){
             top += tli.getTopMargin() + tli.getTextSize()
         }
-//        if (!tli.getTimeLine(data).isNullOrEmpty()) {
-//            top += tli.getTopMargin() + tli.getTextSize()
-//        }
         outRect.set(leftDividerWidth, top, rightDividerWidth, bottomDividerWidth)
     }
 

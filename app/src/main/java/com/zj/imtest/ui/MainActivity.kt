@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
     private var ivHeadPic: ImageView? = null
     private var inputLayout: CCEmojiLayout<MessageInfoEntity>? = null
     private var inputDelegate: InputDelegate? = null
+    private var groupInfoDesc = ""
+    private var badgeText = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +100,6 @@ class MainActivity : AppCompatActivity() {
                     else -> "Normal"
                 }
                 val desc = "ownerId = ${data.ownerId} , myUid = ${BaseApp.config.getUserId()} , status = $groupState"
-                tvGroupDesc?.text = desc
                 ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }

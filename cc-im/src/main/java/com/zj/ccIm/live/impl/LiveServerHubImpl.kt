@@ -3,6 +3,7 @@ package com.zj.ccIm.live.impl
 
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.impl.ServerImplGrpc
+import com.zj.ccIm.error.StreamFinishException
 import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.live.LiveInfoEn
 import com.zj.ccIm.live.LiveReqInfo
@@ -37,7 +38,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
 
     private fun listenLiveData() {
         liveStreamObserver = withChannel {
-            it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>(true) {
+            it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>("live", true) {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         val respInfo = LiveInfoEn(data.roomId, data.liveId, data.msgType, data.content)
@@ -51,7 +52,10 @@ internal class LiveServerHubImpl : ServerHubImpl() {
                             }
                             else -> postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_NEW_MESSAGE, respInfo, false, data.serializedSize.toLong())
                         }
-                    } else onParseError(t)
+                    } else {
+                        if (t is StreamFinishException) liveStreamObserver = null
+                        onParseError(t)
+                    }
                 }
             })
         }

@@ -6,6 +6,7 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException
+import com.zj.ccIm.error.StreamFinishException
 import com.zj.ccIm.logger.ImLogs
 import com.zj.protocol.Grpc
 import com.zj.protocol.GrpcConfig
@@ -58,7 +59,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * */
     override fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
         withChannel {
-            it.ping(null, object : CusObserver<Pong>(false) {
+            it.ping(null, object : CusObserver<Pong>(isStreaming = false) {
                 override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
                     onChecked(isOk)
                 }
@@ -82,19 +83,25 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * */
     protected open fun onParseError(t: Throwable?) {
         ImLogs.recordLogsInFile("server.onParseError", "${t?.message}")
-        (t as? StatusRuntimeException)?.let {
-            when (it.status.code) {
-                Status.Code.CANCELLED, Status.Code.UNAUTHENTICATED -> {
-                    ImLogs.recordLogsInFile("------ ", "onCanceled with message : ${t.message}")
-                }
-                else -> {
-                    postError(ConnectionError("server error ${it.status.code.name} ; code = ${it.status.code.value()} "))
+        when (t) {
+            is StatusRuntimeException -> {
+                when (t.status.code) {
+                    Status.Code.CANCELLED, Status.Code.UNAUTHENTICATED -> {
+                        ImLogs.recordLogsInFile("------ ", "onCanceled with message : ${t.message}")
+                    }
+                    else -> {
+                        postError(ConnectionError("server error ${t.status.code.name} ; code = ${t.status.code.value()} "))
+                    }
                 }
             }
-        } ?: postError(t)
+            is StreamFinishException -> {
+                postError(ConnectionError(t.message ?: ""))
+            }
+            else -> postError(t)
+        }
     }
 
-    protected open class CusObserver<T>(private val isStreaming: Boolean) : StreamObserver<T> {
+    protected open class CusObserver<T>(private val name: String = "", private val isStreaming: Boolean) : StreamObserver<T> {
 
         final override fun onNext(value: T) {
             onResult(true, value, null)
@@ -105,7 +112,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
 
         final override fun onCompleted() {
-            if (isStreaming) onResult(false, null, ConnectionError("stream connection completed error."))
+            if (isStreaming) onResult(false, null, StreamFinishException("$name stream connection completed error."))
         }
 
         open fun onResult(isOk: Boolean, data: T?, t: Throwable?) {}
