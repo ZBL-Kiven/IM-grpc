@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                     3 -> "NotFollow"
                     else -> "Normal"
                 }
-                val desc = "ownerId = ${data.ownerId} , myUid = ${BaseApp.config.getUserId()} , status = $groupState"
+                groupInfoDesc = "ownerId = ${data.ownerId} , myUid = ${BaseApp.config.getUserId()} , status = $groupState"
                 ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }

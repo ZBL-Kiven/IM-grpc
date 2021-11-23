@@ -30,6 +30,7 @@ internal object SendingDbOperator {
         localMsg?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
         localMsg?.questionContent?.published = d.published
         localMsg?.questionContent?.expireTime = d.expireTime
+
         return when (sendingState) {
             SendMsgState.SENDING -> null
 

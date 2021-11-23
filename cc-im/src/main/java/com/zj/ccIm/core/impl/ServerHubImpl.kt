@@ -224,8 +224,10 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             this.groupId = d.groupId
             this.diamondNum = d.diamondNum
             this.published = d.public
+            this.channelKey = d.key
         } else {
             resp.msgStatus = status
+            resp.channelKey = d.key
         }
         return resp
     }

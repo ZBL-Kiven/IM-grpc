@@ -35,7 +35,7 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d
         override fun onSuccess(path: String?) {
             ImLogs.d("MsgFileUploader", "image compress success ")
             val deleteOriginalFile = path != d.localFilePath
-            d.localFilePath = path
+            d.tempFilePath = path
             super@FileSender.startUpload(deleteOriginalFile)
         }
 
@@ -46,10 +46,10 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d
     }
 
     private val onVideoCompressListener = object : com.zj.compress.videos.CompressListener {
-        override fun onSuccess(p0: String?) {
+        override fun onSuccess(s: String?) {
             ImLogs.d("MsgFileUploader", "video start compress ... ")
-            val deleteOriginalFile = p0 != d.localFilePath
-            d.localFilePath = p0
+            val deleteOriginalFile = s != d.localFilePath
+            d.tempFilePath = s
             super@FileSender.startUpload(deleteOriginalFile)
         }
 

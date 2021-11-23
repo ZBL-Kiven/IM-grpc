@@ -57,4 +57,9 @@ class SendMessageRespEn {
      * */
     var msgStatus: Int = 0
 
+    /**
+     * the channel of msg send
+     * */
+    var channelKey: String = ""
+
 }

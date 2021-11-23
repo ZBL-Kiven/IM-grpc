@@ -19,6 +19,9 @@ internal object MessageDbOperator {
                 if (msg.sendTime <= 0) msg.sendTime = System.currentTimeMillis()
                 val msgDb = it.messageDao()
                 val hasLocal = (if (callId.isNullOrEmpty()) null else msgDb.findMsgByClientId(callId)) != null
+                if (sendingState == SendMsgState.ON_SEND_BEFORE_END) {
+                    msgDb.insertOrChangeMessage(msg)
+                }
                 if (!hasLocal && sendingState == SendMsgState.SENDING) {
                     msgDb.insertOrChangeMessage(msg)
                     if (msg.msgType == MsgType.QUESTION.type && msg.ownerId != CcIM.imConfig?.getUserId() ?: "--") {

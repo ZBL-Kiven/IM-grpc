@@ -65,6 +65,17 @@ class SendMessageReqEn {
     var diamondNum: Int? = null
 
     /**
+     *回复的消息,不参与上传，但是参与存储
+     */
+    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
+        set(value) {
+            replyMsgId = value?.msgId
+            field = value
+        }
+
+    /*====================================================== 非参与上传字段 =============================================================*/
+
+    /**
      * 文件
      */
     var localFilePath: String? = null
@@ -90,11 +101,7 @@ class SendMessageReqEn {
     var ignoreSendConditionState: Boolean = false
 
     /**
-     *回复的消息,不参与上传，但是参与存储
-     */
-    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
-        set(value) {
-            replyMsgId = value?.msgId
-            field = value
-        }
+     * 文件进行 压缩、转储等操作后的待上传地址
+     * */
+    var tempFilePath: String? = null
 }

@@ -51,7 +51,6 @@ internal object CcIM : IMInterface<Any?>() {
     override fun onSdkDeadlyError(e: IMException) {
         if (e is AuthenticationError) {
             imConfig?.onAuthenticationError()
-            shutdown(e.message ?: "AuthenticationError")
         } else imConfig?.onSdkDeadlyError(e)
     }
 

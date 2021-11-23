@@ -18,6 +18,7 @@ import io.grpc.stub.StreamObserver
 internal abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     private var channel: Grpc.CachedChannel? = null
+    private var curCachedRunningKey: String = ""
 
     abstract fun onConnection()
 
@@ -36,13 +37,15 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     override fun connect() {
         try {
-            if (channel?.isTerminated != false) {
+            val header = CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
+            val token = header.values.joinToString { it }
+            if (channel?.isTerminated != false || token != curCachedRunningKey) {
+                curCachedRunningKey = token
                 channel?.shutdownNow()
                 val url = CcIM.imConfig?.getGrpcAddress() ?: Pair("-", 0)
                 val keepAliveTimeOut = CcIM.imConfig?.getHeatBeatsTimeOut() ?: 5000L
                 val idleTimeOut = CcIM.imConfig?.getIdleTimeOut() ?: 68400000L
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                val header = CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
                 channel = Grpc.get(config).defaultHeader(header)
             }
             onConnection()

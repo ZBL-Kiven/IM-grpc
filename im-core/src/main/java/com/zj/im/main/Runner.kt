@@ -5,7 +5,6 @@ import com.zj.im.chat.core.DataStore
 import com.zj.im.chat.enums.RuntimeEfficiency
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.enums.ConnectionState
-import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.exceptions.LooperInterruptedException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub

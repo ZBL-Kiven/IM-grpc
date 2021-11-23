@@ -52,7 +52,7 @@ internal open class BaseFileSender(private val d: SendMessageReqEn, private val 
     protected open fun startUpload(isDeleteFileAfterUpload: Boolean) {
         inRunning = true
         val timeStamp = System.currentTimeMillis()
-        val path = d.localFilePath
+        val path = d.tempFilePath
         val f = if (path.isNullOrEmpty()) null else File(path)
         if (path.isNullOrEmpty() || f == null || !f.exists()) {
             observer.onError(callId, NullPointerException("the path $path can not be attach to a file"), null);return
