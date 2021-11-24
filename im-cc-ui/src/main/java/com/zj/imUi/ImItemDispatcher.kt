@@ -29,6 +29,7 @@ object ImItemDispatcher {
                     context)
                 UiMsgType.MSG_TYPE_RECALLED-> IMItemRecallTextView(context)
                 UiMsgType.MSG_TYPE_SENSITIVE-> IMItemSensitiveTextView(context)
+                UiMsgType.MSG_TYPE_SYS_REFUSE-> IMItemSystemRefuseTextView(context)
 
                 else -> IMBubbleNotAllowedTypeItem(context)
 

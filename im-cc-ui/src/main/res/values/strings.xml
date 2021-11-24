@@ -35,6 +35,8 @@
     <string name="im_chat_pop_refuse">Reject</string>
     <string name="im_chat_recall_admin_text">Admin has recalled a message</string>
     <string name="im_chat_recall_owner_text"> house owner has recalled a message</string>
+    <string name="im_chat_msg_owner_refuse">The other party refused to reply to the message</string>
+
 
     <string name="im_ui_hour_time_format" translatable="false">HH:mm</string>
     <string name="im_ui_month_time_format" translatable="false">MM-dd HH: mm</string>

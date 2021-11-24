@@ -121,6 +121,11 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
                 onDestroyed()
                 bubbleView = null
             }
+            val curRefuse= lastDataType == UiMsgType.MSG_TYPE_SYS_REFUSE
+            if (curRefuse != (data.getType() == UiMsgType.MSG_TYPE_SYS_REFUSE)) {
+                onDestroyed()
+                bubbleView = null
+            }
         }
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)
