@@ -8,6 +8,7 @@ import com.zj.database.converter.*
 import java.util.*
 
 
+@Suppress("unused")
 @Entity(tableName = "messages")
 class MessageInfoEntity {
 
@@ -39,16 +40,20 @@ class MessageInfoEntity {
     var msgId: Long = -1
 
     /**
-     * 消息类型 text/img/audio/video/question/cc_video
-     *
-     * 本地构建类型： recall/sensitive
-     */
-    var msgType: String? = null
+     * 本地字段 , 本次消息的解释类型 message / system
+     * */
+    var messageType: String = "message"
 
     /**
-     * 原始消息类型
+     * 本地字段 , 用于系统通知的消息类型 , recall/sensitive/refused
      * */
-    var originalMessageType: String? = null
+    var systemMsgType: String? = null
+
+    /**
+     * 消息类型 , 仅在解析类型为 message 的情况下生效 text/img/audio/video/question/cc_video
+     *
+     */
+    var msgType: String? = null
 
     /**
      * countryCode

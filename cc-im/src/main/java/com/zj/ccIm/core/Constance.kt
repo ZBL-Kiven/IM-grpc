@@ -14,7 +14,6 @@ object Comment {
 object ExtMsgType {
     const val EXTENDS_TYPE_RECALL = "revokeMsg"
     const val EXTENDS_TYPE_SENSITIVE_HINT = "riskMsg"
-    const val EXTENDS_TYPE_REFUSED_HINT = "refusedMsg"
 }
 
 internal object Constance {
@@ -130,17 +129,26 @@ internal fun <R> catching(run: () -> R?, deal: (() -> R?)? = null): R? {
     }
 }
 
+/**
+ * Local build type
+ * */
+enum class MessageType(val type: String) {
+    SYSTEM("system"), MESSAGE("message")
+}
+
+/**
+ * Local build type
+ * */
+enum class SystemMsgType(val type: String) {
+    RECALLED("recall"), SENSITIVE("sensitive"), REFUSED("refuse")
+}
+
+/**
+ * Server message type
+ * */
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
-    /**
-     * Local build type
-     * */
-    RECALLED("recall"), SENSITIVE("sensitive"), REFUSED("refused"),
-
-    /**
-     * Server message type
-     * */
     TEXT("text"), IMG("img"), AUDIO("audio"), CC_VIDEO("cc_video"), VIDEO("video"), QUESTION("question"), LIVE("live");
 
     companion object {

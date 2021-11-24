@@ -3,11 +3,11 @@ package com.zj.imtest.ui.data
 import android.util.Log
 import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.google.gson.Gson
+import com.zj.ccIm.core.SystemMsgType
 import com.zj.ccIm.core.bean.RoteInfo
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
@@ -296,7 +296,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getMsgIsRecalled(): Boolean {
-        return info?.msgType == MsgType.RECALLED.type
+        return info?.systemMsgType == SystemMsgType.RECALLED.type
     }
 
     override fun getMsgRecallRole(): Int? {
@@ -304,7 +304,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getMsgIsSensitive(): Boolean {
-        return info?.msgType == MsgType.SENSITIVE.type
+        return info?.systemMsgType == SystemMsgType.SENSITIVE.type
     }
 
     override fun getExtSensitiveMsgContent(): String? {

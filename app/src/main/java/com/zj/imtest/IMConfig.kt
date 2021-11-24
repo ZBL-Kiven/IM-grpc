@@ -2,6 +2,7 @@ package com.zj.imtest
 
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import com.zj.ccIm.core.ImConfigIn
 import com.zj.im.chat.exceptions.IMException
@@ -68,6 +69,7 @@ class IMConfig(private val uid: Int) : ImConfigIn {
     }
 
     override fun onSdkDeadlyError(e: IMException) {
-        BaseApp.initChat(uid)
+        if (e.errorLevel == IMException.ERROR_LEVEL_DEADLY) BaseApp.initChat(uid)
+        else Log.e(" ERROR !! =====>", e.message ?: "")
     }
 }

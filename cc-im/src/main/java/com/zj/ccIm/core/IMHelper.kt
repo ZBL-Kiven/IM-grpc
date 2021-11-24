@@ -79,7 +79,9 @@ object IMHelper {
         Constance.app = app
         Constance.dbId = imConfig.getUserId()
         Fetcher.init()
-        getDbHelper()?.checkDbVersion()
+        if (getDbHelper()?.init() != true) {
+            imConfig.onSdkDeadlyError(DBFileException())
+        }
         val option = BaseOption.create(app)
         if (imConfig.debugAble()) option.debug()
         if (imConfig.logAble()) option.logsCollectionAble { true }.logsFileName("IM").setLogsMaxRetain(3L * 24 * 60 * 60 * 1000)
@@ -199,11 +201,7 @@ object IMHelper {
     internal fun getDbHelper(): DbHelper? {
         val ctx = Constance.app ?: CcIM.getAppContext() ?: return null
         val dbId = Constance.dbId ?: return null
-        return try {
-            return DbHelper.get(ctx, dbId)
-        } catch (e: Exception) {
-            CcIM.postIMError(DBFileException());null
-        }
+        return DbHelper.get(ctx, dbId)
     }
 
     fun getMineRole(groupId: Long?): Int {

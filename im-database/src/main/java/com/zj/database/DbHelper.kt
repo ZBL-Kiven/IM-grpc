@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import com.zj.database.sp.SPHelper
 import com.zj.database.ut.Constance
+import java.lang.Exception
 
 @Suppress("unused")
 class DbHelper private constructor(context: Context, dbId: Int) {
@@ -15,6 +16,22 @@ class DbHelper private constructor(context: Context, dbId: Int) {
     private var dbName = "clipClaps-im:$dbId"
 
     private val migrations = arrayOf<Migration>()
+
+    companion object {
+        private var mInstance: DbHelper? = null
+
+        @WorkerThread
+        fun get(context: Context, dbId: Int): DbHelper? {
+            if (mInstance == null) {
+                synchronized(DbHelper::class.java) {
+                    if (mInstance == null) {
+                        mInstance = DbHelper(context, dbId)
+                    }
+                }
+            }
+            return mInstance
+        }
+    }
 
     init {
         SPHelper.init("im_sp_main:$dbId", context)
@@ -29,11 +46,20 @@ class DbHelper private constructor(context: Context, dbId: Int) {
         db = builder.build()
     }
 
+    fun init(): Boolean {
+        return try {
+            val curDbVersion = db.openHelper.writableDatabase.version
+            checkDbVersion(curDbVersion);true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun getDb(): IMDb {
         return db
     }
 
-    fun checkDbVersion() {
+    private fun checkDbVersion(curDbVersion: Int) {
         val last = SPHelper[Constance.SP_LAST_DB_VERSION, 0] ?: 0
         if (last != curDbVersion) {
             SPHelper.clear()
@@ -68,23 +94,5 @@ class DbHelper private constructor(context: Context, dbId: Int) {
     fun clearAll() {
         SPHelper.clear()
         db.clearAllTables()
-    }
-
-    companion object {
-
-        private var mInstance: DbHelper? = null
-        const val curDbVersion = 5
-
-        @WorkerThread
-        fun get(context: Context, dbId: Int): DbHelper? {
-            if (mInstance == null) {
-                synchronized(DbHelper::class.java) {
-                    if (mInstance == null) {
-                        mInstance = DbHelper(context, dbId)
-                    }
-                }
-            }
-            return mInstance
-        }
     }
 }

@@ -4,7 +4,8 @@ import android.os.Handler
 import android.os.Looper
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.core.ExtMsgType
-import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.MessageType
+import com.zj.ccIm.core.SystemMsgType
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.GetMoreMessagesResult
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
@@ -88,17 +89,21 @@ internal object MessageFetcher {
             }
             val result = arrayListOf(msg)
             msg?.channelKey = key
-            msg?.originalMessageType = msg?.msgType
+            msg?.messageType = MessageType.MESSAGE.type
+
             if (msg?.questionContent?.questionStatus == 3) { // refused message
-                msg.msgType = ExtMsgType.EXTENDS_TYPE_REFUSED_HINT
+                msg.messageType = MessageType.SYSTEM.type
+                msg.systemMsgType = SystemMsgType.REFUSED.type
             }
             msg?.extContent?.let {
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
-                    msg.msgType = MsgType.RECALLED.type
+                    msg.messageType = MessageType.SYSTEM.type
+                    msg.systemMsgType = SystemMsgType.RECALLED.type
                 }
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
                     result.add(MessageInfoEntity().apply {
-                        this.msgType = MsgType.SENSITIVE.type
+                        msg.messageType = MessageType.SYSTEM.type
+                        msg.systemMsgType = SystemMsgType.SENSITIVE.type
                         this.channelKey = key
                         this.clientMsgId = msg.clientMsgId + ":SENSITIVE"
                         this.groupId = msg.groupId
