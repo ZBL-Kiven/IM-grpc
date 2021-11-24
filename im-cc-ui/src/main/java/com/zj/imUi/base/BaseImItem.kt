@@ -76,7 +76,8 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
-        if (data.getSelfUserId() == data.getSenderId() || data.getMsgIsRecalled() || data.getMsgIsSensitive()) {
+        if (data.getSelfUserId() == data.getSenderId() || data.getMsgIsRecalled()
+            || data.getMsgIsSensitive()||data.getUiTypeWithMessageType() ==UiMsgType.MSG_TYPE_SYS_REFUSE ) {
             removeIfNotContains(ivAvatar, true)
             return
         }

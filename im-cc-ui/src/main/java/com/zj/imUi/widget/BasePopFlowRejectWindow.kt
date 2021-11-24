@@ -1,7 +1,5 @@
 package com.zj.imUi.widget
-
 import android.annotation.SuppressLint
-
 import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.AppCompatTextView
@@ -17,8 +15,6 @@ class BasePopFlowRejectWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTE
     private var data: ImMsgIn? = null
     private var isOwner: Boolean = false
     private var isSelfMessage: Boolean = false
-    private var isNormalMsg: Boolean = false
-
     init {
         isFocusable = true
         isOutsideTouchable = true
@@ -40,15 +36,14 @@ class BasePopFlowRejectWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTE
             //充满父布局
             width = v.width
             height = v.height
-            initReportData(v)
+            initReportData()
             showPop(v)
         }
     }
 
-    private fun initReportData(v: View) {
+    private fun initReportData() {
         isSelfMessage = data?.getSenderId() == data?.getSelfUserId()
         isOwner = data?.getSelfUserId() == data?.getOwnerId()
-        isNormalMsg = (data?.getMsgIsReject() == false && data?.getMsgIsSensitive() == false && data?.getMsgIsRecalled() == false)
         val content = contentView.findViewById<AppCompatTextView>(R.id.im_pop_new_reject_content_tv)
         content.setOnClickListener {
             data?.getMsgId()?.let { it1 -> data?.rejectRewardMsg(it1) }

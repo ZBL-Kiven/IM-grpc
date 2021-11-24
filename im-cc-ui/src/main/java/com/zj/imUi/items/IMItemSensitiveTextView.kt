@@ -51,9 +51,7 @@ class IMItemSensitiveTextView @JvmOverloads constructor(context: Context,
         if (childCount == 0){
             addView(contentLayout)
         }
-        if (data.getMsgIsSensitive()) {
-            tvContent.text = data.getExtSensitiveMsgContent()
-        }
+        tvContent.text = data.getExtSensitiveMsgContent()
     }
 
     override fun onResume() {
