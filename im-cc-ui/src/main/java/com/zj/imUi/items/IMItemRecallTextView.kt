@@ -15,21 +15,19 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.views.ut.DPUtils
 
 @SuppressLint("ResourceAsColor")
-class IMItemRecallTextView @JvmOverloads constructor(context: Context,
-    attrs: AttributeSet? = null,
-    def: Int = 0) : BaseBubble(context, attrs, def) {
+class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : BaseBubble(context, attrs, def) {
 
     private var tvContent: AppCompatTextView
-    private var contentLayout: View =
-        LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content_recall, this, false)
+    private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_bubble_content_recall, this, false)
     private var basePadding = DPUtils.dp2px(12f)
+
     init {
-        with(contentLayout){
+        with(contentLayout) {
             tvContent = findViewById(R.id.im_msg_bubble_content_recall_tv)
         }
         tvContent.textSize = 14f
         tvContent.gravity = Gravity.CENTER_HORIZONTAL
-        tvContent.setPadding(basePadding,basePadding/2,basePadding,basePadding/2)
+        tvContent.setPadding(basePadding, basePadding / 2, basePadding, basePadding / 2)
         tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
         tvContent.setBackgroundResource(R.drawable.im_msg_item_sensitive_cornor_bg)
 
@@ -37,14 +35,24 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context,
 
 
     override fun init(data: ImMsgIn, chatType: Any) {
-        if (childCount == 0){
+        if (childCount == 0) {
             addView(contentLayout)
         }
         if (data.getMsgIsRecalled()) {
-            if (data.getMsgRecallRole() == 1) {
-                tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
-            }else
-                tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
+            when (data.getMsgRecallRole()) {
+                2 -> tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
+                1 -> tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
+                0 -> {
+                    if (data.getSelfUserId() == data.getSenderId()){
+                        tvContent.text = "我撤回了一条消息"
+                    }else
+                        tvContent.text = "对方撤回了一条消息"
+                }
+
+
+            }
+
+
         }
     }
 
