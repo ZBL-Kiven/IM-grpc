@@ -20,6 +20,7 @@ object BubbleRenderer : BaseBubbleRenderer {
     override fun getBubble(context: Context, data: ImMsgIn, width: Int, height: Int): Drawable? {
         return null
     }
+
     override fun drawBubble(context: Context, canvas: Canvas, data: ImMsgIn, width: Int, height: Int, chatType: Int) {
         drawBackGround(context, canvas, data, width, height, chatType)
     }
@@ -51,7 +52,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE //画金色边框
                 canvas.drawPath(drawRect(context, width, height), paint)
-            } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0 && data.getPublished()) {
+            } else if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0 && data.getPublished()) {
                 paint.strokeWidth = 1f
                 paint.color = mBgColorOrigin
                 paint.style = Paint.Style.STROKE
@@ -78,7 +79,7 @@ object BubbleRenderer : BaseBubbleRenderer {
         return if (chatType == UiMsgType.GROUP_CHAT || chatType == 3) {
             if (isSelfMessage) { //自己发送的消息
                 setSelfMsgBg(context, data)
-            } else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+            } else if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
                 if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
                 else if (data.getQuestionStatus() == 0 && !data.getPublished()) {
                     ContextCompat.getColor(context, R.color.im_msg_message_item_private)
@@ -94,7 +95,7 @@ object BubbleRenderer : BaseBubbleRenderer {
             if (isSelfMessage) {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息
-                if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
                     if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
@@ -110,7 +111,7 @@ object BubbleRenderer : BaseBubbleRenderer {
     }
 
     private fun setSelfMsgBg(context: Context, data: ImMsgIn): Int {
-        return if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+        return if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
             if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
                 ContextCompat.getColor(context, R.color.im_msg_replied_bg)
             } else {

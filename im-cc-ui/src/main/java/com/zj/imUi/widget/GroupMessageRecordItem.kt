@@ -96,7 +96,7 @@ open class GroupMessageRecordItem @JvmOverloads constructor(context: Context, at
         }
 
         this.setOnLongClickListener {
-            if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) {
+            if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_AUDIO && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->
                 }

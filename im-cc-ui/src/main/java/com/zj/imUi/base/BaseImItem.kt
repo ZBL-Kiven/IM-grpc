@@ -17,9 +17,7 @@ import com.zj.imUi.UiMsgType
 import com.zj.imUi.widget.BasePopFlowWindow
 
 @Suppress("unused")
-abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context,
-    attrs: AttributeSet? = null,
-    def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
+abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def), BaseBubbleConfig<T> {
 
     companion object {
         const val NOTIFY_CHANGE_AUDIO = "notify_change_audio"
@@ -51,7 +49,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
             initBubble(data, type)
             initAvatar(data)
             initSendStatus(data)
-            lastDataType = data.getType()
+            lastDataType = data.getUiTypeWithMessageType()
         }
     }
 
@@ -66,8 +64,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
         addViewToSelf(tvNickname, getTvNickNameLayoutParams(data))
         tvNickname?.text = data.getSenderName()
-        tvNickname?.setTextColor(ContextCompat.getColor(context,
-            R.color.im_msg_text_color_gray_nickname))
+        tvNickname?.setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray_nickname))
     }
 
     fun notifyChange(d: T?, pl: Any?) {
@@ -95,34 +92,35 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     private fun initBubble(data: T, chatType: Any?) {
+        val dataType = data.getUiTypeWithMessageType()
         if (bubbleView != null) {
             val curQuestion = lastDataType == UiMsgType.MSG_TYPE_QUESTION
-            if (curQuestion != (data.getType() == UiMsgType.MSG_TYPE_QUESTION)) {
+            if (curQuestion != (dataType == UiMsgType.MSG_TYPE_QUESTION)) {
                 onDestroyed()
                 bubbleView = null
             } //  检测上一个是不是cc_video类型，不是则销毁
             val curCCVideo = lastDataType == UiMsgType.MSG_TYPE_CC_VIDEO
-            if (curCCVideo != (data.getType() == UiMsgType.MSG_TYPE_CC_VIDEO)) {
+            if (curCCVideo != (dataType == UiMsgType.MSG_TYPE_CC_VIDEO)) {
                 onDestroyed()
                 bubbleView = null
             }
             val curCCLive = lastDataType == UiMsgType.MSG_TYPE_CC_LIVE
-            if (curCCLive != (data.getType() == UiMsgType.MSG_TYPE_CC_LIVE)) {
+            if (curCCLive != (dataType == UiMsgType.MSG_TYPE_CC_LIVE)) {
                 onDestroyed()
                 bubbleView = null
             }
             val curRecall = lastDataType == UiMsgType.MSG_TYPE_RECALLED
-            if (curRecall != (data.getType() == UiMsgType.MSG_TYPE_RECALLED)) {
+            if (curRecall != (dataType == UiMsgType.MSG_TYPE_RECALLED)) {
                 onDestroyed()
                 bubbleView = null
             }
             val curSensitive = lastDataType == UiMsgType.MSG_TYPE_SENSITIVE
-            if (curSensitive != (data.getType() == UiMsgType.MSG_TYPE_SENSITIVE)) {
+            if (curSensitive != (dataType == UiMsgType.MSG_TYPE_SENSITIVE)) {
                 onDestroyed()
                 bubbleView = null
             }
-            val curRefuse= lastDataType == UiMsgType.MSG_TYPE_SYS_REFUSE
-            if (curRefuse != (data.getType() == UiMsgType.MSG_TYPE_SYS_REFUSE)) {
+            val curRefuse = lastDataType == UiMsgType.MSG_TYPE_SYS_REFUSE
+            if (curRefuse != (dataType == UiMsgType.MSG_TYPE_SYS_REFUSE)) {
                 onDestroyed()
                 bubbleView = null
             }
@@ -133,21 +131,16 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         }
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
-        bubbleView?.onSetData({ curData }, chatType as Int?)
-        val isNormalMsg =
-            curData?.getMsgIsRecalled() == false && curData?.getMsgIsReject() == false && curData?.getMsgIsSensitive() == false && curData?.getType() != UiMsgType.MSG_TYPE_CC_LIVE && curData?.getType() != UiMsgType.MSG_TYPE_CC_VIDEO && curData?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION
-
+        bubbleView?.onSetData({ data }, chatType as Int?)
+        val isNormalMsg = !data.getMsgIsRecalled() && !data.getMsgIsReject() && !data.getMsgIsSensitive() && dataType != UiMsgType.MSG_TYPE_CC_LIVE && dataType != UiMsgType.MSG_TYPE_CC_VIDEO && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION
         bubbleView?.setOnLongClickListener {
             if (isNormalMsg) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                curData?.let { it1 ->
-                    popFlowWindow.show(it1, it) { _, _, _ ->
-                    }
+                popFlowWindow.show(data, it) { _, _, _ ->
                 }
             }
             true
         }
-
     }
 
     private fun initSendStatus(data: T) {

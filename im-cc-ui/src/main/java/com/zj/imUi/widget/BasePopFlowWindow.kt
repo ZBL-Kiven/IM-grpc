@@ -3,8 +3,6 @@ package com.zj.imUi.widget
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
-import android.util.Log
-
 import android.view.*
 import android.widget.PopupWindow
 import android.widget.TextView
@@ -82,10 +80,11 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
         val delete = ctx.get()?.getString(R.string.im_chat_delete)
         val reportItems = mutableListOf(reply, copy, recall, block, refuse, report, delete)
         val filterList: MutableList<String?> = mutableListOf()
+        val dataType = data?.getUiTypeWithMessageType()
         data?.apply {
             if (isNormalMsg) {
                 if (isSelfMessage) {
-                    if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
+                    if (dataType == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
@@ -95,10 +94,10 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
                         }
                     }
                 } else { //不是自己的消息
-                    if (data?.getType() == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
-                    if (data?.getType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
+                    if (dataType == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
+                    if (dataType != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[0])
                     if (isOwner) {
-                        if (data?.getQuestionStatus() == 0 && data?.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+                        if (data?.getQuestionStatus() == 0 && dataType == UiMsgType.MSG_TYPE_QUESTION) {
                             filterList.add(reportItems[4])
                         } else {
                             filterList.add(reportItems[2])
@@ -124,7 +123,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
             override fun onItemClick(position: Int, v: View?, m: String?) {
                 when (m) {
                     reply -> {
-                         data?.reply()
+                        data?.reply()
                     }
                     copy -> {
                         val cm = v?.let {

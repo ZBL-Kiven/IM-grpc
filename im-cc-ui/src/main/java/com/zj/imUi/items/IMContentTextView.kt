@@ -11,9 +11,7 @@ import com.zj.imUi.R
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.interfaces.ImMsgIn
 
-class IMContentTextView @JvmOverloads constructor(context: Context,
-    attrs: AttributeSet? = null,
-    def: Int = 0) : AppCompatTextView(context, attrs, def), ImContentIn {
+class IMContentTextView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : AppCompatTextView(context, attrs, def), ImContentIn {
 
     override fun onSetData(data: ImMsgIn?) {
         if (data == null) return
@@ -24,9 +22,8 @@ class IMContentTextView @JvmOverloads constructor(context: Context,
         } else {
             ContextCompat.getColor(context, R.color.im_msg_message_textColor_replyMe)
         })
-        if (data.getType() == UiMsgType.MSG_TYPE_TEXT) text = data.getTextContent()
-        else if (data.getType() == UiMsgType.MSG_TYPE_QUESTION) {
-            //Q&A界面  回答文本
+        if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_TEXT) text = data.getTextContent()
+        else if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) { //Q&A界面  回答文本
             if (data.getSelfUserId() == data.getOwnerId()) {
                 setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_gray))
             } else setTextColor(ContextCompat.getColor(context, R.color.im_msg_text_color_black))
@@ -34,7 +31,7 @@ class IMContentTextView @JvmOverloads constructor(context: Context,
         }
     }
 
-    override fun chatType(chatType:Any) {
+    override fun chatType(chatType: Any) {
     }
 
 
