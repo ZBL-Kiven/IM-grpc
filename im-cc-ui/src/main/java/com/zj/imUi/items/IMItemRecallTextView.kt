@@ -39,20 +39,12 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: At
             addView(contentLayout)
         }
         if (data.getMsgIsRecalled()) {
-            when (data.getMsgRecallRole()) {
+            if (data.getRecallContent()!=null){
+                tvContent.text = data.getRecallContent()
+            }else when (data.getMsgRecallRole()) {
                 2 -> tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
                 1 -> tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
-                0 -> {
-                    if (data.getSelfUserId() == data.getSenderId()){
-                        tvContent.text = "我撤回了一条消息"
-                    }else
-                        tvContent.text = "对方撤回了一条消息"
-                }
-
-
             }
-
-
         }
     }
 

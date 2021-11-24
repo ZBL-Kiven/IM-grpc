@@ -1,14 +1,14 @@
 package com.zj.imtest.ui.data
 
 import android.util.Log
-import com.zj.ccIm.core.ExtMsgType
-import com.zj.ccIm.core.IMHelper
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.google.gson.Gson
-import com.zj.ccIm.core.SystemMsgType
+import com.zj.ccIm.core.*
 import com.zj.ccIm.core.bean.RoteInfo
+import com.zj.imUi.UiMsgType
+import com.zj.imUi.items.*
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
 import com.zj.imtest.ui.data.bean.RevokeMsg
@@ -47,10 +47,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
     override fun getTextContent(): String? {
         return info?.textContent?.text
-    }
-
-    override fun getType(): String? {
-        return info?.msgType
     }
 
     override fun getSenderAvatar(): String? {
@@ -315,6 +311,14 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return IMHelper.getMineRole(info?.groupId) == 2
     }
 
+    override fun getRecallContent(): String? {
+        return "撤回内容"
+    }
+
+    override fun getRefuseContent(): String? {
+        return "拒绝内容"
+    }
+
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/
 
     override fun isAudioPlaying(): Boolean {
@@ -379,6 +383,31 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun reportGroupUserMsg(id: String) {
+    }
+
+    override fun getUiTypeWithMessageType(): String {
+        return when (info?.messageType) {
+            MessageType.MESSAGE.type -> {
+                when (info.msgType) {
+                    MsgType.LIVE.type -> UiMsgType.MSG_TYPE_CC_LIVE
+                    MsgType.QUESTION.type -> UiMsgType.MSG_TYPE_QUESTION
+                    MsgType.CC_VIDEO.type -> UiMsgType.MSG_TYPE_CC_VIDEO
+                    MsgType.IMG.type -> UiMsgType.MSG_TYPE_IMG
+                    MsgType.TEXT.type -> UiMsgType.MSG_TYPE_TEXT
+                    MsgType.AUDIO.type -> UiMsgType.MSG_TYPE_AUDIO
+                    else -> "NONE_MSG_TYPE"
+                }
+            }
+            MessageType.SYSTEM.type -> {
+                when (info.systemMsgType) {
+                    SystemMsgType.RECALLED.type -> UiMsgType.MSG_TYPE_RECALLED
+                    SystemMsgType.SENSITIVE.type -> UiMsgType.MSG_TYPE_SENSITIVE
+                    SystemMsgType.REFUSED.type -> UiMsgType.MSG_TYPE_SYS_REFUSE
+                    else -> "NONE_SYSTEM_TYPE"
+                }
+            }
+            else -> "NONE_MESSAGE_TYPE"
+        }
     }
 
     private fun getExtRecallMessageInfo(): RevokeMsg? {

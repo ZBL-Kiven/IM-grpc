@@ -112,7 +112,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
         //之前是直接setOnLongClickListener，没有加contentLayout，导致长按点击事件无法触发
         contentLayout.setOnLongClickListener {
-            if (isOwner && data.getType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
+            if (isOwner && data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION && data.getQuestionStatus() == 0) {
                 val popFlowWindow: BasePopFlowRejectWindow<ImMsgIn> = BasePopFlowRejectWindow()
                 popFlowWindow.show(data, it) { _, _, _ ->
                 }

@@ -17,11 +17,11 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            if (d.getMsgIsRecalled() || d.getMsgIsSensitive()){
+            if (d.getMsgIsRecalled() || d.getMsgIsSensitive()) {
                 ivAvatar?.visibility = View.GONE
                 addRule(CENTER_IN_PARENT)
-            }else if (d.getSenderId() == d.getSelfUserId()) {
-                if (type == 3 && d.getType() == UiMsgType.MSG_TYPE_QUESTION) {
+            } else if (d.getSenderId() == d.getSelfUserId()) {
+                if (type == 3 && d.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
                     ivAvatar?.visibility = View.GONE
                     addRule(CENTER_IN_PARENT)
                 } else {
@@ -63,20 +63,18 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun onLoadAvatar(iv: ImageView?, d: ImMsgIn) {
         if (iv == null) return
-        Glide.with(iv)
-            .load(d.getSenderAvatar())
-            .circleCrop()
-            .placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
+        Glide.with(iv).load(d.getSenderAvatar()).circleCrop().placeholder(R.drawable.im_msg_item_default_avatar).error((R.drawable.im_msg_item_default_avatar)).into(iv)
     }
 
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
+        val dataType = data.getUiTypeWithMessageType()
         if (data.getMsgIsRecalled() || data.getMsgIsSensitive()) return null
-        if (data.getSenderId() == data.getSelfUserId() && data.getType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
-        if (data.getType() == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
-        if (data.getType() == UiMsgType.MSG_TYPE_CC_LIVE && data.getSenderId() == data.getSelfUserId()) return null
+        if (data.getSenderId() == data.getSelfUserId() && dataType == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
+        if (dataType == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null
+        if (dataType == UiMsgType.MSG_TYPE_CC_LIVE && data.getSenderId() == data.getSelfUserId()) return null
         type?.let {
             if (it == 2) {
-                if (data.getSelfUserId() == data.getSenderId() && (data.getType() == UiMsgType.MSG_TYPE_IMG || data.getType() == UiMsgType.MSG_TYPE_AUDIO)) return null
+                if (data.getSelfUserId() == data.getSenderId() && (dataType == UiMsgType.MSG_TYPE_IMG || dataType == UiMsgType.MSG_TYPE_AUDIO)) return null
             }
         }
         return BubbleRenderer

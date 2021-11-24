@@ -10,8 +10,6 @@ interface ImMsgIn {
 
     fun getMsgId(): String
 
-    fun getType(): String?
-
     fun getSendState(): Int
 
     fun getSenderId(): Int?
@@ -112,6 +110,10 @@ interface ImMsgIn {
     //是否是管理员
     fun getIsAdmin(): Boolean
 
+    fun getRecallContent(): String?
+
+    fun getRefuseContent(): String?
+
 
     /** ========================================= app interface ======================================== */
 
@@ -159,5 +161,8 @@ interface ImMsgIn {
 
     //举报
     fun reportGroupUserMsg(id: String)
+
+
+    fun getUiTypeWithMessageType(): String
 
 }
