@@ -23,11 +23,11 @@ internal object Fetcher {
     fun init() {
         CcIM.registerConnectionStateChangeListener("main_fetcher_observer") {
             when (it) {
-                ConnectionState.CONNECTED -> {
+                is ConnectionState.CONNECTED -> {
                     CcIM.pause(Constance.FETCH_SESSION_CODE)
                     BaseFetcher.startFetch(GroupSessionFetcher, PrivateOwnerSessionFetcher)
                 }
-                ConnectionState.CONNECTED_ERROR, ConnectionState.NETWORK_STATE_CHANGE -> {
+                is ConnectionState.ERROR, is ConnectionState.OFFLINE -> {
                     cancelAll()
                 }
                 else -> {

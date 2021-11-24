@@ -6,6 +6,7 @@ import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.dao.MessageDao
 import com.zj.database.dao.SendMsgDao
+import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 
 internal object SendingDbOperator {
@@ -16,21 +17,13 @@ internal object SendingDbOperator {
      * */
     fun onDealMsgSentInfo(d: SendMessageRespEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
         if (sendingState == null) return null
-
         var msgDb: MessageDao? = null
         var sendDb: SendMsgDao? = null
         IMHelper.withDb {
             msgDb = it.messageDao()
             sendDb = it.sendMsgDao()
         }
-        val localMsg = msgDb?.findMsgByClientId(callId)
-        localMsg?.sendingState = sendingState.type
-        localMsg?.msgId = d.msgId
-        localMsg?.ownerId = d.ownerId
-        localMsg?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
-        localMsg?.questionContent?.published = d.published
-        localMsg?.questionContent?.expireTime = d.expireTime
-
+        val localMsg = getLocalMsgInfo(msgDb?.findMsgByClientId(callId), d, sendingState)
         return when (sendingState) {
             SendMsgState.SENDING -> null
 
@@ -62,5 +55,21 @@ internal object SendingDbOperator {
                 Pair(localMsg, ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE)
             }
         }
+    }
+
+    private fun getLocalMsgInfo(localMsg: MessageInfoEntity?, d: SendMessageRespEn, sendingState: SendMsgState): MessageInfoEntity? {
+        var result = localMsg
+        if (result == null && sendingState == SendMsgState.FAIL) {
+            result = MessageInfoEntity()
+        }
+        result?.channelKey = d.channelKey
+        result?.clientMsgId = d.clientMsgId ?: ""
+        result?.sendingState = sendingState.type
+        result?.msgId = d.msgId
+        result?.ownerId = d.ownerId
+        result?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
+        result?.questionContent?.published = d.published
+        result?.questionContent?.expireTime = d.expireTime
+        return result
     }
 }

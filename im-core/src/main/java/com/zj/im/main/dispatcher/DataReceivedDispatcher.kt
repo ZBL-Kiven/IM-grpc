@@ -57,7 +57,7 @@ internal object DataReceivedDispatcher {
         printInFile("onNetworkStateChanged", "the SDK checked the network status changed to ${if (netWorkState == NetWorkInfo.CONNECTED) "enable" else "disable"} by net State : ${netWorkState.name}")
         chatBase?.notify()?.onNetWorkStatusChanged(netWorkState)
         if ((netWorkState == NetWorkInfo.CONNECTED && StatusHub.curConnectionState.canConnect()) || netWorkState == NetWorkInfo.DISCONNECTED) {
-            onConnectionStateChange(ConnectionState.NETWORK_STATE_CHANGE)
+            onConnectionStateChange(ConnectionState.OFFLINE)
         }
     }
 
@@ -79,10 +79,16 @@ internal object DataReceivedDispatcher {
 
     fun onConnectionStateChange(connState: ConnectionState) {
         if (connState.canConnect()) {
-            getServer("server may need to reconnect ${if (connState.case.isNotEmpty()) connState.case else ""}")?.tryToReConnect(connState.name)
+            val reason = when (connState) {
+                is ConnectionState.ERROR -> connState.reason
+                is ConnectionState.RECONNECT -> connState.reason
+                is ConnectionState.OFFLINE -> "net work state changed"
+                else -> ""
+            }
+            getServer("server may need to reconnect $reason")?.tryToReConnect(reason)
         }
         StatusHub.curConnectionState = connState
-        chatBase?.notify("on connection state changed to ${connState.name}")?.onConnectionStatusChanged(connState)
+        chatBase?.notify("on connection state changed to ${connState::class.java.simpleName}")?.onConnectionStatusChanged(connState)
     }
 
     fun onSendingProgress(callId: String, progress: Int) {

@@ -1,6 +1,7 @@
 package com.zj.ccIm.live.impl
 
 
+import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.core.impl.ServerImplGrpc
 import com.zj.ccIm.error.StreamFinishException
@@ -18,9 +19,9 @@ internal class LiveServerHubImpl : ServerHubImpl() {
 
     private var liveStreamObserver: StreamObserver<LiveRoomMessageReq>? = null
 
-    override fun onConnection() {
-        super.onConnection()
-        listenLiveData()
+    override fun onConnection(connectId: String) {
+        super.onConnection(connectId)
+        listenLiveData(connectId)
     }
 
     override fun onRouteCall(callId: String?, data: Any?) {
@@ -36,9 +37,12 @@ internal class LiveServerHubImpl : ServerHubImpl() {
         } else super.onRouteCall(callId, data)
     }
 
-    private fun listenLiveData() {
+    private fun listenLiveData(connectId: String) {
+        catching {
+            liveStreamObserver?.onCompleted()
+        }
         liveStreamObserver = withChannel {
-            it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>("live", true) {
+            it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>("live", connectId, true) {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         val respInfo = LiveInfoEn(data.roomId, data.liveId, data.msgType, data.content)

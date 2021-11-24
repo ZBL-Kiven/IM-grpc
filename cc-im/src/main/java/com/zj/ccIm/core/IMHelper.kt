@@ -128,7 +128,8 @@ object IMHelper {
     }
 
     fun registerChatRoom(req: ChannelRegisterInfo): String? {
-        return resumedChatRoomIfConnection(req, true)
+        IMChannelManager.offerLast(req)
+        return resumedChatRoomIfConnection(req)
     }
 
     fun leaveChatRoom(key: String) {
@@ -163,10 +164,9 @@ object IMHelper {
         MessageDbOperator.deleteMsg(clientId)
     }
 
-    internal fun resumedChatRoomIfConnection(req: ChannelRegisterInfo, fromReg: Boolean = false): String? {
+    internal fun resumedChatRoomIfConnection(req: ChannelRegisterInfo): String? {
         if (!req.checkValid()) return null
         CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        if (fromReg) IMChannelManager.offerLast(req)
         CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
         return req.key
     }

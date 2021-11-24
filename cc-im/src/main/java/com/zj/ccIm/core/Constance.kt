@@ -13,7 +13,8 @@ object Comment {
 
 object ExtMsgType {
     const val EXTENDS_TYPE_RECALL = "revokeMsg"
-    const val EXTENDS_TYPE_SENSITIVE_HIT = "riskMsg"
+    const val EXTENDS_TYPE_SENSITIVE_HINT = "riskMsg"
+    const val EXTENDS_TYPE_REFUSED_HINT = "refusedMsg"
 }
 
 internal object Constance {
@@ -56,6 +57,7 @@ internal object Constance {
     const val CALL_ID_REGISTER_CHAT = INTERNAL_CALL_ID_PREFIX + "_register_chat_room_"
 
     const val CALL_ID_REGISTERED_CHAT = INTERNAL_CALL_ID_PREFIX + "_registered_chat_room_"
+    const val CALL_ID_LEAVE_FROM_CHAT_ROOM = INTERNAL_CALL_ID_PREFIX + "_leave_from_chat_room_"
 
     const val CALL_ID_DELETE_SESSION = INTERNAL_CALL_ID_PREFIX + "_delete_session"
 
@@ -134,7 +136,7 @@ enum class MsgType(val type: String) {
     /**
      * Local build type
      * */
-    RECALLED("recall"), SENSITIVE("sensitive"),
+    RECALLED("recall"), SENSITIVE("sensitive"), REFUSED("refused"),
 
     /**
      * Server message type

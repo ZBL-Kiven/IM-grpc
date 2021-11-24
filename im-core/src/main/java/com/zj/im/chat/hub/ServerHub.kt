@@ -14,16 +14,18 @@ import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
+import java.util.*
 
 @Suppress("unused", "SameParameterValue", "MemberVisibilityCanBePrivate")
 abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean = false) {
 
     companion object {
         private const val PING_TIMEOUT = "reconnection because the ping was no response too many times!"
-        private const val RECONNECTION_TIME = 2000L
-        private const val HEART_BEATS_BASE_TIME = 5000L
+        private const val RECONNECTION_TIME = 3000L
+        private const val HEART_BEATS_BASE_TIME = 3000L
         private const val CONNECTION_EVENT = 0xf1378
         private const val HEART_BEATS_EVENT = 0xf1365
+        var currentConnectId: String = ""; private set
     }
 
     protected var app: Application? = null
@@ -39,8 +41,9 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 curConnectionState = ConnectionState.PING
             }
             CONNECTION_EVENT -> {
-                curConnectionState = ConnectionState.CONNECTION
-                connect()
+                curConnectionState = ConnectionState.CONNECTION(true)
+                currentConnectId = UUID.randomUUID().toString()
+                connect(currentConnectId)
             }
         }
         return@Handler false
@@ -55,13 +58,16 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         this.app = context
         connectivityManager = IConnectivityManager()
         connectivityManager?.init(context) { netWorkStateChanged(it) }
+        curConnectionState = ConnectionState.CONNECTION(false)
+        currentConnectId = UUID.randomUUID().toString()
+        connect(currentConnectId)
     }
 
     protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
 
     protected abstract fun closeConnection(case: String)
 
-    protected abstract fun connect()
+    protected abstract fun connect(connectId: String)
 
     open fun onRouteCall(callId: String?, data: T?) {}
 
@@ -74,12 +80,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     protected fun postOnConnected() {
-        curConnectionState = ConnectionState.CONNECTED
+        curConnectionState = ConnectionState.CONNECTED(false)
     }
 
     protected fun postToClose(case: String) {
         heartbeatsTime = HEART_BEATS_BASE_TIME
-        curConnectionState = ConnectionState.CONNECTED_ERROR.case(case)
+        curConnectionState = ConnectionState.ERROR(case)
     }
 
     protected fun postError(case: String) {
@@ -167,11 +173,11 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     private var curConnectionState: ConnectionState = ConnectionState.INIT
         set(value) {
             when (value) {
-                ConnectionState.PONG -> {
+                is ConnectionState.PONG -> {
                     pingHasNotResponseCount = 0
                     pongTime = System.currentTimeMillis()
                 }
-                ConnectionState.PING -> {
+                is ConnectionState.PING -> {
                     val curTime = System.currentTimeMillis()
                     val outOfTime = HEART_BEATS_BASE_TIME * 3f
                     val lastPingTime = curTime - pingTime - heartbeatsTime
@@ -185,25 +191,24 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                     }
                     pingTime = System.currentTimeMillis()
                 }
-                ConnectionState.CONNECTED -> {
+                is ConnectionState.CONNECTED -> {
                     clearPingRecord()
                     if (isAlwaysHeartBeats) nextHeartbeats()
                 }
-                ConnectionState.NETWORK_STATE_CHANGE, ConnectionState.CONNECTED_ERROR, ConnectionState.RECONNECT -> {
+                is ConnectionState.OFFLINE, is ConnectionState.ERROR, is ConnectionState.RECONNECT -> {
                     clearPingRecord()
                 }
                 else -> {
                 }
             }
             if (value != field) {
-                val case = value.pollCase()
                 field = value
-                if (value.isValidState()) DataReceivedDispatcher.pushData<T>(BaseMsgInfo.connectStateChange(value, case))
+                if (value.isValidState()) DataReceivedDispatcher.pushData<T>(BaseMsgInfo.connectStateChange(value))
                 when (value) {
-                    ConnectionState.PING -> printInFile("on connection status change ----- ", "--- $value -- ${nio(pingTime)}")
-                    ConnectionState.PONG -> printInFile("on connection status change ----- ", "--- $value -- ${nio(pongTime)}")
-                    ConnectionState.CONNECTED_ERROR -> printInFile("on connection status change ----- ", "$value  ==> reconnection with error : $case")
-                    else -> printInFile("on connection status change ----- ", "--- $value --")
+                    is ConnectionState.PING -> printInFile("on connection status change with id: $currentConnectId", "--- $value -- ${nio(pingTime)}")
+                    is ConnectionState.PONG -> printInFile("on connection status change with id: $currentConnectId", "--- $value -- ${nio(pongTime)}")
+                    is ConnectionState.ERROR -> printInFile("on connection status change with id: $currentConnectId", "$value  ==> reconnection with error : ${value.reason}")
+                    else -> printInFile("on connection status change with id: $currentConnectId", "--- $value --")
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.zj.ccIm.core.impl
 
 import android.app.Application
-import io.grpc.stub.StreamObserver
 import retrofit2.HttpException
 import com.zj.api.BaseApi
 import com.zj.api.utils.LoggerInterface
@@ -14,9 +13,11 @@ import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.api.IMRecordSizeApi
 import com.zj.ccIm.core.bean.DeleteSessionInfo
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.fecher.MessageFetcher
 import com.zj.ccIm.error.StreamFinishException
 import com.zj.ccIm.logger.ImLogs
+import io.grpc.stub.StreamObserver
 import io.reactivex.schedulers.Schedulers
 
 internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
@@ -30,9 +31,9 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         BaseApi.setLoggerInterface(IMRecordSizeApi::class.java, this)
     }
 
-    override fun onConnection() {
-        receiveMessage()
-        receiveTopic()
+    override fun onConnection(connectId: String) {
+        receiveMessage(connectId)
+        receiveTopic(connectId)
     }
 
     override fun send(params: Any?, callId: String, callBack: SendingCallBack<Any?>): Long {
@@ -52,7 +53,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                     if (callId == Constance.CALL_ID_SUBSCRIBE_NEW_TOPIC) subscribeTopics.add(it) else subscribeTopics.remove(it)
                     topicStreamObserver?.let {
                         registerTopicListener()
-                    } ?: receiveTopic()
+                    } ?: receiveTopic(currentConnectId)
                 }
             }
             else -> null
@@ -108,7 +109,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * @see [ChannelRegisterInfo]
      * */
     private fun updateMsgReceiver(d: ChannelRegisterInfo, join: Boolean) {
-        val callId = if (join) Constance.CALL_ID_REGISTERED_CHAT + d.key else Constance.CALL_ID_LEAVE_CHAT_ROOM + d.key
+        val callId = if (join) Constance.CALL_ID_REGISTERED_CHAT + d.key else Constance.CALL_ID_LEAVE_FROM_CHAT_ROOM + d.key
         MessageFetcher.cancelFetchOfflineMessage(d.key)
         messageStreamObserver?.let {
             try {
@@ -130,16 +131,16 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     /**
      * Use Grpc to create a session for monitoring Topic information for the connection，@see [ListenTopicReply]
      * */
-    private fun receiveTopic() {
-        runCatching {
+    private fun receiveTopic(connectId: String) {
+        catching {
             topicStreamObserver?.onCompleted()
         }
-        ImLogs.recordLogsInFile("on connecting", "trying to receive topic")
+        ImLogs.recordLogsInFile("on connecting...", "trying to receive topic with :$connectId")
         topicStreamObserver = withChannel {
-            it.listenTopicData(object : CusObserver<ListenTopicReply>("topic", true) {
+            it.listenTopicData(object : CusObserver<ListenTopicReply>("topic", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
-                    ImLogs.recordLogsInFile("server hub event ", "topic = ${data?.topic} \n  content = ${data?.data}")
                     if (isOk && data != null) {
+                        ImLogs.recordLogsInFile("server hub event ", "onTopic ==> observer = $this , topic = ${data.topic} \n  content = ${data.data}")
                         when (data.topic) {
                             Constance.TOPIC_CONN_SUCCESS -> {
                                 postOnConnected()
@@ -164,16 +165,16 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         }
     }
 
-    private fun receiveMessage() {
-        runCatching {
-            messageStreamObserver?.onCompleted()
+    private fun receiveMessage(connectId: String) {
+        catching {
+            messageStreamObserver?.onError(InterruptedException("new channel may created!!"))
         }
-        ImLogs.recordLogsInFile("on connecting", "trying to receive messages")
+        ImLogs.recordLogsInFile("on connecting...", "trying to receive messages with :$connectId")
         messageStreamObserver = withChannel {
-            it.onlineImMessage(object : CusObserver<ImMessageReply>("message", true) {
+            it.onlineImMessage(object : CusObserver<ImMessageReply>("message", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
-                        ImLogs.recordLogsInFile("server hub event ", "on server message arrived : type = ${data.type} seq = ${data.reqContext?.seq}")
+                        ImLogs.recordLogsInFile("server hub event ", "onMessage ==> observer =  $this: type = ${data.type} seq = ${data.reqContext?.seq}")
                         when (data.type) {
                             1 -> {
                                 val d = data.reqContext
@@ -181,9 +182,11 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                 postReceivedMessage(callId, d, true, data.reqContext.serializedSize.toLong())
                             }
                             0 -> {
+                                val callId = data.imMessage.clientMsgId
                                 val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
                                 MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
-                                    postReceivedMessage(key, d, true, data.serializedSize.toLong())
+                                    d?.textContent?.text = "server receive"
+                                    postReceivedMessage(callId, d, true, data.serializedSize.toLong())
                                 }
                             }
                         }

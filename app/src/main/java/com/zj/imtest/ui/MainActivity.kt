@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.cf.managers.TabFragmentManager
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -36,7 +37,13 @@ class MainActivity : AppCompatActivity() {
     private var inputLayout: CCEmojiLayout<MessageInfoEntity>? = null
     private var inputDelegate: InputDelegate? = null
     private var groupInfoDesc = ""
+        set(value) {
+            field = value;updateText()
+        }
     private var badgeText = ""
+        set(value) {
+            field = value;updateText()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,12 +85,16 @@ class MainActivity : AppCompatActivity() {
         IMHelper.getIMInterface().registerConnectionStateChangeListener(this::class.java.simpleName) {
             if (isFinishing) return@registerConnectionStateChangeListener
             when (it) {
-                ConnectionState.CONNECTED, ConnectionState.PING, ConnectionState.PONG -> tvConn?.setBackgroundResource(R.drawable.dots_green)
-                ConnectionState.NETWORK_STATE_CHANGE, ConnectionState.CONNECTED_ERROR, ConnectionState.INIT -> tvConn?.setBackgroundResource(R.drawable.dots_red)
-                ConnectionState.CONNECTION, ConnectionState.RECONNECT -> tvConn?.setBackgroundResource(R.drawable.dots_yellow)
+                is ConnectionState.CONNECTED, is ConnectionState.PING, is ConnectionState.PONG -> tvConn?.setBackgroundResource(R.drawable.dots_green)
+                is ConnectionState.OFFLINE, is ConnectionState.ERROR, is ConnectionState.INIT -> tvConn?.setBackgroundResource(R.drawable.dots_red)
+                is ConnectionState.CONNECTION, is ConnectionState.RECONNECT -> tvConn?.setBackgroundResource(R.drawable.dots_yellow)
             }
         }
-        IMHelper.addReceiveObserver<SessionInfoEntity>(this::class.java.simpleName, this).filterIn { d, _ ->
+        IMHelper.addReceiveObserver<MessageTotalDots>(0x1100, this).listen { r, _, _ ->
+            if (r == null) return@listen
+            badgeText = "total = ${r.dotsOfAll.unreadMessages} clapHouse = ${r.clapHouseDots.unreadMessages}  owner = ${r.privateOwnerDots.unreadMessages}  fans = ${r.privateFansDots.unreadMessages}"
+        }
+        IMHelper.addReceiveObserver<SessionInfoEntity>(0x1101, this).filterIn { d, _ ->
             return@filterIn d.groupId == groupId
         }.listen { d, lst, _ ->
             var data: SessionInfoEntity? = d
@@ -103,5 +114,10 @@ class MainActivity : AppCompatActivity() {
                 ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }
+    }
+
+    private fun updateText() {
+        val s = "$groupInfoDesc\n$badgeText"
+        tvGroupDesc?.text = s
     }
 }

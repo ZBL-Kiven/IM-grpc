@@ -1,33 +1,30 @@
 package com.zj.im.chat.enums
 
-enum class ConnectionState(var case: String = "") {
+@Suppress("unused")
+sealed class ConnectionState {
 
-    INIT, PING, PONG, CONNECTED, CONNECTION, CONNECTED_ERROR, NETWORK_STATE_CHANGE, RECONNECT;
+    object INIT : ConnectionState()
+    object PING : ConnectionState()
+    object PONG : ConnectionState()
+    class CONNECTION(val fromReconnect: Boolean) : ConnectionState()
+    class RECONNECT(val reason: String) : ConnectionState()
+    class CONNECTED(val fromReconnect: Boolean) : ConnectionState()
+    class ERROR(val reason: String) : ConnectionState()
+    object OFFLINE : ConnectionState()
 
     fun isConnected(): Boolean {
-        return this == CONNECTED || this == PING || this == PONG
+        return this is CONNECTED || this is PING || this is PONG
     }
 
     fun canConnect(): Boolean {
-        return this == INIT || this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT
+        return this is INIT || this is ERROR || this is OFFLINE || this is RECONNECT
     }
 
     fun isValidState(): Boolean {
-        return this != INIT && this != PING && this != PONG
+        return this !is INIT && this !is PING && this !is PONG
     }
 
     fun isErrorType(): Boolean {
-        return this == CONNECTED_ERROR || this == NETWORK_STATE_CHANGE || this == RECONNECT
-    }
-
-    fun case(s: String): ConnectionState {
-        this.case = s
-        return this
-    }
-
-    fun pollCase(): String {
-        val case = this.case
-        this.case = ""
-        return case
+        return this is ERROR || this is OFFLINE || this is RECONNECT
     }
 }

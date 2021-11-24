@@ -21,6 +21,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
 
     internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int?, targetUserid: Int?, channel: String) : this(lo, groupId, ownerId, targetUserid, 0, null, FetchMsgChannel.valueOf(channel.uppercase()))
 
+    internal var registeredToServer = false
     /**
      * If there is already a cache of this type before registration,this registration will be ignored,
      * and the original registration object will get a +1 value,

@@ -131,6 +131,9 @@ open class ClientHubImpl : ClientHub<Any?>() {
             IMHelper.onMsgRegistered(bean)
             return true
         }
+        if (callId?.startsWith(Constance.CALL_ID_LEAVE_FROM_CHAT_ROOM) == true) {
+            return true
+        }
         if (callId?.startsWith(Constance.CALL_ID_REGISTER_CHAT) == true) {
             BadgeDbOperator.clearGroupBadge(d as ChannelRegisterInfo)
             return true

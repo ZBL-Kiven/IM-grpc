@@ -20,6 +20,7 @@ import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
+import com.zj.im.main.StatusHub
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.NetWorkRecordInfo
@@ -56,6 +57,15 @@ import java.util.concurrent.LinkedBlockingDeque
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class IMInterface<T> : MessageInterface<T>() {
 
+    private var cachedListenClasses = LinkedBlockingDeque<Class<*>>()
+    private var cachedServiceOperations = LinkedBlockingDeque<RunnerClientStub<T>.() -> Unit>()
+    private var baseConnectionService: ChatBase<T>? = null
+    private var serviceConn: ServiceConnection? = null
+    private var client: ClientHub<T>? = null
+    private var server: ServerHub<T>? = null
+    private var isServiceConnected = false
+    internal var option: BaseOption? = null
+
     fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR) { cls ->
             setNewListener(cls, "UT2F-E17T-33I-9112")
@@ -87,22 +97,6 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             throw IllegalArgumentException("the function setNewListener can not call!")
         }
     }
-
-    private var cachedListenClasses = LinkedBlockingDeque<Class<*>>()
-
-    private var cachedServiceOperations = LinkedBlockingDeque<RunnerClientStub<T>.() -> Unit>()
-
-    private var baseConnectionService: ChatBase<T>? = null
-
-    private var serviceConn: ServiceConnection? = null
-
-    private var client: ClientHub<T>? = null
-
-    private var server: ServerHub<T>? = null
-
-    private var isServiceConnected = false
-
-    internal var option: BaseOption? = null
 
     protected fun initChat(option: BaseOption) {
         this.option = option
@@ -244,7 +238,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
      * ServerHub will receive a request to reconnect
      * */
     fun reconnect(case: String) {
-        getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.RECONNECT, case)
+        getService("IMInterface.reconnect", true)?.correctConnectionState(ConnectionState.RECONNECT(case))
     }
 
     fun getAppContext(): Application? {
@@ -280,6 +274,10 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         if (e.errorLevel != IMException.ERROR_LEVEL_ALERT || e is NoServiceException) {
             onSdkDeadlyError(e);return
         } else onError(e)
+    }
+
+    fun checkHasReconnectionStatus(): Boolean {
+        return StatusHub.hasReConnectionState.get()
     }
 
     protected open fun <A> postToUi(cls: Class<*>?, data: A?, payload: String? = null, onFinish: () -> Unit) {

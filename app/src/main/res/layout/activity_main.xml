@@ -80,14 +80,15 @@
                 android:id="@+id/main_tv_group_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="7dp"
                 android:includeFontPadding="false"
+                android:lineSpacingExtra="4dp"
                 android:textColor="#777"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="@id/main_ll_info"
                 app:layout_constraintStart_toStartOf="@id/main_ll_info"
                 app:layout_constraintTop_toBottomOf="@id/main_ll_info"
-                tools:text="group desc" />
+                tools:text="group desc group desc group desc group desc group desc group desc group desc group desc group desc " />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -387,7 +387,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     private fun getExtRiskMessageInfo(): RiskMsg? {
-        val str = info?.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HIT)
+        val str = info?.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)
         return Gson().fromJson(str, RiskMsg::class.java)
     }
 }

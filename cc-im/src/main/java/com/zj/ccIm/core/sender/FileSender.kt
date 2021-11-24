@@ -73,19 +73,22 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d
     }
 
     override fun startUpload(isDeleteFileAfterUpload: Boolean) {
-        val c = (Constance.app) ?: return
-        val cu = CompressUtils.with(c).load(d.localFilePath)
         when (d.msgType) {
             MsgType.IMG.type -> {
+                val c = (Constance.app) ?: return
+                val cu = CompressUtils.with(c).load(d.localFilePath)
                 cu.asImage().ignoreBy(300).setTargetPath(mImageOutputPath).start(onImgCompressListener)
             }
 
             MsgType.VIDEO.type -> {
+                val c = (Constance.app) ?: return
+                val cu = CompressUtils.with(c).load(d.localFilePath)
                 cu.asVideo().setLevel(2000).setOutPutFileName(mVideoOutputPath).start(onVideoCompressListener)
             }
 
-            MsgType.AUDIO.type -> {
-                super.startUpload(true)
+            else -> {
+                d.tempFilePath = d.localFilePath
+                super.startUpload(false)
             }
         }
     }

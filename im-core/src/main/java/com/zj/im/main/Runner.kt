@@ -146,7 +146,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
     override fun run(runningKey: String) {
         if (runningKey != curRunningKey) {
             msgLooper?.shutdown()
-            correctConnectionState(ConnectionState.CONNECTED_ERROR, "running key invalid")
+            correctConnectionState(ConnectionState.ERROR("running key invalid"))
             return
         }
         fun <N> with(block: () -> N): N? {
@@ -201,8 +201,8 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
         enqueue(BaseMsgInfo.onLayerChange<T>(isHidden))
     }
 
-    fun correctConnectionState(state: ConnectionState, case: String) {
-        enqueue(BaseMsgInfo.connectStateChange<T>(state, case))
+    fun correctConnectionState(state: ConnectionState) {
+        enqueue(BaseMsgInfo.connectStateChange<T>(state))
     }
 
     fun postError(e: Throwable?) {

@@ -50,7 +50,7 @@ object LiveIMHelper : (ConnectionState) -> Unit {
     }
 
     override fun invoke(s: ConnectionState) {
-        if (s == ConnectionState.CONNECTED && checkLastLiveRoomInfo != null) {
+        if (s is ConnectionState.CONNECTED && checkLastLiveRoomInfo != null) {
             checkLastLiveRoomInfo?.let { joinToLiveRoomIfChecked(it) }
         }
     }

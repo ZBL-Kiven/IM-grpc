@@ -1,16 +1,17 @@
 package com.zj.ccIm.core.impl
 
-import android.app.Application
-import com.zj.im.chat.hub.ServerHub
-import com.zj.ccIm.core.Constance
+
 import com.zj.ccIm.CcIM
+import com.zj.ccIm.core.Constance
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException
 import com.zj.ccIm.error.StreamFinishException
 import com.zj.ccIm.logger.ImLogs
+import com.zj.im.chat.hub.ServerHub
 import com.zj.protocol.Grpc
 import com.zj.protocol.GrpcConfig
-import com.zj.protocol.grpc.*
+import com.zj.protocol.grpc.MsgApiGrpc
+import com.zj.protocol.grpc.Pong
 import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
@@ -20,12 +21,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
     private var channel: Grpc.CachedChannel? = null
     private var curCachedRunningKey: String = ""
 
-    abstract fun onConnection()
-
-    override fun init(context: Application?) {
-        super.init(context)
-        connect()
-    }
+    abstract fun onConnection(connectId: String)
 
     override fun closeConnection(case: String) {
         try {
@@ -35,7 +31,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
     }
 
-    override fun connect() {
+    override fun connect(connectId: String) {
         try {
             val header = CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
             val token = header.values.joinToString { it }
@@ -48,7 +44,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
                 channel = Grpc.get(config).defaultHeader(header)
             }
-            onConnection()
+            onConnection(connectId)
         } catch (e: Exception) {
             onParseError(e)
         }
@@ -104,18 +100,18 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
     }
 
-    protected open class CusObserver<T>(private val name: String = "", private val isStreaming: Boolean) : StreamObserver<T> {
+    protected open class CusObserver<T>(private val name: String = "", private val runningKey: String = "", private val isStreaming: Boolean) : StreamObserver<T> {
 
         final override fun onNext(value: T) {
-            onResult(true, value, null)
+            if (this.runningKey == currentConnectId) onResult(true, value, null)
         }
 
         final override fun onError(t: Throwable?) {
-            onResult(false, null, t)
+            if (this.runningKey == currentConnectId) onResult(false, null, t)
         }
 
         final override fun onCompleted() {
-            if (isStreaming) onResult(false, null, StreamFinishException("$name stream connection completed error."))
+            if (isStreaming && this.runningKey == currentConnectId) onResult(false, null, StreamFinishException("$name stream connection completed error."))
         }
 
         open fun onResult(isOk: Boolean, data: T?, t: Throwable?) {}

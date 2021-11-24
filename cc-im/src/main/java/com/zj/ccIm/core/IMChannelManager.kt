@@ -42,11 +42,11 @@ internal object IMChannelManager {
     }
 
     fun tryToRegisterAfterConnected(): Boolean {
+        if (!CcIM.checkHasReconnectionStatus()) return false
         lastMsgRegister.forEach { b ->
             IMHelper.resumedChatRoomIfConnection(b)
-            return true
         }
-        return false
+        return lastMsgRegister.isNotEmpty()
     }
 
     fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, isRecent: Boolean, sendBefore: OnSendBefore<Any?>?) {

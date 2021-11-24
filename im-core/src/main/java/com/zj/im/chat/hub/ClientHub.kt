@@ -37,10 +37,6 @@ abstract class ClientHub<T> {
 
     abstract fun progressUpdate(progress: Int, callId: String)
 
-    fun setConnectState(state: ConnectionState) {
-        DataReceivedDispatcher.pushData(BaseMsgInfo.connectStateChange<T>(state))
-    }
-
     internal fun onSendingStateChanged(sendingState: SendMsgState, callId: String, data: T?, isSpecialData: Boolean, resend: Boolean) {
         onMsgPatch(data, callId, isSpecialData, sendingState, resend) {
             StatusHub.isReceiving = false

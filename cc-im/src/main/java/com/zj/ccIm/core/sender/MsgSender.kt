@@ -81,6 +81,7 @@ open class MsgSender internal constructor() {
     fun sendAudio(filePath: String, duration: Long, groupId: Long, replyMsg: MessageInfoEntity? = null): String {
         val sen = SendMessageReqEn()
         sen.localFilePath = filePath
+        sen.tempFilePath = filePath
         sen.msgType = MsgType.AUDIO.type
         sen.groupId = groupId
         sen.clientMsgId = config.callId

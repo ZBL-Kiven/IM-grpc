@@ -29,12 +29,14 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
             return sp.getInt("user_id", 0)
         }
 
+        @Suppress("SpellCheckingInspection")
         fun commitNewUid(uid: Int): Boolean {
             initChat(uid)
             val sp = context.getSharedPreferences(context.packageName, MODE_PRIVATE)
             return sp.edit().putInt("user_id", uid).commit()
         }
 
+        @Suppress("SpellCheckingInspection")
         fun getHeader(): Map<String, String> {
             val token = config.getToken()
             val userId = config.getUserId()

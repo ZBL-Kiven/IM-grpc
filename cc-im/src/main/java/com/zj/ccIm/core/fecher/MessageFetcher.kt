@@ -73,11 +73,11 @@ internal object MessageFetcher {
         }
     }
 
-    fun <T : Any> dealMessageExtContent(d: T?, key: String): List<Any?> {
+    fun <T : Any> dealMessageExtContent(d: T?, key: String): List<MessageInfoEntity?> {
         if (d == null) return arrayListOf()
         if (d is Collection<*>) {
             if (d.isEmpty()) return arrayListOf()
-            val lst = arrayListOf<Any?>()
+            val lst = arrayListOf<MessageInfoEntity?>()
             d.forEach {
                 lst.addAll(dealMessageExtContent(it, key))
             }
@@ -86,14 +86,17 @@ internal object MessageFetcher {
             val msg: MessageInfoEntity? = (d as? MessageInfoEntity) ?: (d as? ImMessage)?.let {
                 ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
             }
-            val result = arrayListOf<Any?>(msg)
+            val result = arrayListOf(msg)
             msg?.channelKey = key
             msg?.originalMessageType = msg?.msgType
+            if (msg?.questionContent?.questionStatus == 3) { // refused message
+                msg.msgType = ExtMsgType.EXTENDS_TYPE_REFUSED_HINT
+            }
             msg?.extContent?.let {
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
                     msg.msgType = MsgType.RECALLED.type
                 }
-                if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HIT)) {
+                if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
                     result.add(MessageInfoEntity().apply {
                         this.msgType = MsgType.SENSITIVE.type
                         this.channelKey = key

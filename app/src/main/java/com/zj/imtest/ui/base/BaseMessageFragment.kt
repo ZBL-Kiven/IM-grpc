@@ -1,6 +1,5 @@
 package com.zj.imtest.ui.base
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +53,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
     override fun onCreate() {
         super.onCreate()
 
-        //        blv = rootView?.findViewById(R.id.im_reward_setting_loading)
+        //  blv = rootView?.findViewById(R.id.im_reward_setting_loading)
         rlv = rootView?.findViewById(R.id.im_frag_msg_rl)
         rootView?.findViewById<RecyclerView>(R.id.im_frag_msg_rv)?.let {
             adapter = MsgAdapter(it)
@@ -121,10 +120,5 @@ abstract class BaseMessageFragment : BaseTabFragment() {
                 rlv?.finishRefresh()
             }
         }
-    }
-
-    override fun onDestroyed() {
-        super.onDestroyed()
-        Log.e("------ ", "onFragment destroy ${System.currentTimeMillis()}")
     }
 }
