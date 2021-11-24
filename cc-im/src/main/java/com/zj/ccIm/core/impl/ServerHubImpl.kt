@@ -185,7 +185,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                 val callId = data.imMessage.clientMsgId
                                 val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
                                 MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
-                                    d?.textContent?.text = "server receive"
                                     postReceivedMessage(callId, d, true, data.serializedSize.toLong())
                                 }
                             }
