@@ -31,7 +31,6 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: At
         tvContent.setPadding(basePadding, basePadding / 2, basePadding, basePadding / 2)
         tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))
         tvContent.setBackgroundResource(R.drawable.im_msg_item_sensitive_cornor_bg)
-
     }
 
 
@@ -40,11 +39,11 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: At
             addView(contentLayout)
         }
         if (data.getMsgIsRecalled()) {
-            if (data.getRecallContent()!=null){
-                tvContent.text = data.getRecallContent()
+            if (data.getRecallContent(context)!=null){
+                tvContent.text = data.getRecallContent(context)
             }else when (data.getMsgRecallRole()) {
-                2 -> tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
-                1 -> tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
+                1 -> tvContent.text = context.getString(R.string.im_chat_recall_owner_text)
+                2 -> tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
                 else -> {
                     Log.e("im-ui:role",data.getMsgRecallRole().toString())
                 }
