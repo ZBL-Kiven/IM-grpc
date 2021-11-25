@@ -10,6 +10,7 @@ import android.os.IBinder
 import androidx.lifecycle.LifecycleOwner
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.enums.ConnectionState
+import com.zj.im.chat.exceptions.IMArgumentException
 import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.exceptions.NecessaryAttributeEmptyException
 import com.zj.im.chat.exceptions.NoServiceException
@@ -22,6 +23,7 @@ import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
 import com.zj.im.main.StatusHub
 import com.zj.im.sender.OnSendBefore
+import com.zj.im.utils.ProcessUtil
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.NetWorkRecordInfo
 import com.zj.im.utils.log.logger.NetRecordUtils
@@ -86,7 +88,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return this.addReceiveObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
-    fun <X> setNewListener(cls: Class<*>, imm: X) {
+    internal fun <X> setNewListener(cls: Class<*>, imm: X) {
         if (imm.toString() == "UT2Q-99BR-E88-2271" || imm.toString() == "UT2F-E17T-33I-9112") {
             if (isServiceConnected) {
                 onNewListenerRegistered(cls)
@@ -104,6 +106,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             it.init(this)
             return
         }
+        val pid = ProcessUtil.getCurrentProcessName(option.context)
+        val packageName = option.context.applicationContext.packageName
+        if (pid != packageName) {
+            onError(IMArgumentException("unable to start im service , please call it in your app main process!"))
+            return
+        }
         serviceConn = object : ServiceConnection {
             override fun onServiceDisconnected(name: ComponentName?) {
                 isServiceConnected = false
@@ -111,6 +119,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
             }
 
             override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+                if (binder !is ChatBase.ConnectionBinder<*>) return
                 cast<Any?, ChatBase.ConnectionBinder<T>?>(binder)?.service?.let {
                     baseConnectionService = it
                     baseConnectionService?.init(this@IMInterface)
@@ -288,8 +297,10 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         cachedListenClasses.clear()
         cachedServiceOperations.clear()
         getService("shutDown by $case", true)?.shutDown()
-        serviceConn?.let {
-            option?.context?.unbindService(it)
+        kotlin.runCatching {
+            serviceConn?.let {
+                option?.context?.unbindService(it)
+            }
         }
         serviceConn = null
         baseConnectionService = null

@@ -190,7 +190,7 @@ object IMHelper {
                 run(it)
             }
         } catch (e: Exception) {
-            ImLogs.recordErrorInFile("IMHelper.OpenDb", "failed to open db ,case : ${e.message}");null
+            ImLogs.recordErrorInFile("IMHelper.OpenDb", "failed to open db with thread ${Thread.currentThread().name} ,case : ${e::class.java} , ${e.message}");null
         }
     }
 

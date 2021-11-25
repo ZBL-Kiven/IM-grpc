@@ -149,23 +149,15 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
             correctConnectionState(ConnectionState.ERROR("running key invalid"))
             return
         }
-        fun <N> with(block: () -> N): N? {
-            return try {
-                return block()
-            } catch (e: Exception) {
-                postError(e)
-                null
-            }
-        }
-        with {
+        catching {
             dataStore?.pop()?.let {
                 eventHub?.handle(it)
             }
         }
-        with {
+        catching {
             TimeOutUtils.updateNode()
         }
-        with {
+        catching {
             sendingPool?.pop()?.let {
                 sendingPool?.lock()
                 SendExecutors(it, imi?.getServer("send"), this)
@@ -254,20 +246,30 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
 
     open fun shutDown() {
         printInFile("ChatBase.IM", " the SDK has begin shutdown with $runningKey")
-        msgLooper?.shutdown()
-        TimeOutUtils.clear()
-        AppUtils.destroy()
+        catching { msgLooper?.shutdown() }
+        catching { TimeOutUtils.clear() }
+        catching { AppUtils.destroy() }
         MainLooper.removeCallbacksAndMessages(null)
-        getClient("shutdown call")?.shutdown()
-        getServer("shutdown call")?.shutdown()
+        catching { getClient("shutdown call")?.shutdown() }
+        catching { getServer("shutdown call")?.shutdown() }
         runningKey = ""
-        dataStore?.shutDown()
-        sendingPool?.clear()
+        catching { dataStore?.shutDown() }
+        catching { sendingPool?.clear() }
         dataStore = null
         msgLooper = null
         eventHub = null
         sendingPool = null
         isInit = false
         printInFile("ChatBase.IM", " the SDK was shutdown")
+    }
+
+    protected fun catching(run: () -> Unit) {
+        return try {
+            run()
+        } catch (e: Exception) {
+            postError(e)
+        } catch (e: java.lang.Exception) {
+            postError(e)
+        }
     }
 }

@@ -45,7 +45,7 @@ internal object CcIM : IMInterface<Any?>() {
     }
 
     override fun onError(e: IMException) {
-        if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
+       // if (BuildConfig.DEBUG && e !is ConnectionError) throw  e
     }
 
     override fun onSdkDeadlyError(e: IMException) {

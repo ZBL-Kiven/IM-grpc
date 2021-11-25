@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     private val groupId = 32L
     private val ownerId = 151120
-    private val targetUserId = 151473
+    private val targetUserId = 151118
     private var tvConn: View? = null
     private var tvName: TextView? = null
     private var tvGroupInfo: TextView? = null
@@ -120,4 +120,9 @@ class MainActivity : AppCompatActivity() {
         val s = "$groupInfoDesc\n$badgeText"
         tvGroupDesc?.text = s
     }
+
+//    override fun finish() {
+//        super.finish()
+//        IMHelper.shutdown()
+//    }
 }

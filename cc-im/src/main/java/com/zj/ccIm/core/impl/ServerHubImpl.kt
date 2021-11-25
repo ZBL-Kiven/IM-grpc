@@ -32,6 +32,13 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     override fun onConnection(connectId: String) {
+        catching {
+            topicStreamObserver?.onCompleted()
+        }
+        catching {
+            messageStreamObserver?.onCompleted()
+        }
+        ImLogs.recordLogsInFile("on connecting...", "start connect to server with id : $connectId")
         receiveMessage(connectId)
         receiveTopic(connectId)
     }
@@ -115,8 +122,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             try {
                 val data = ImMessageReq.newBuilder()
                 data.groupId = d.groupId
-                data.ownerId = d.ownerId?.toLong() ?: -1
-                data.targetUserId = d.targetUserid?.toLong() ?: -1
+                data.ownerId = d.ownerId?.toLong() ?: 0
+                data.targetUserId = d.targetUserid?.toLong() ?: 0
                 data.channel = d.mChannel.serializeName
                 data.seq = callId
                 data.op = if (join) ImMessageReq.Op.JOIN else ImMessageReq.Op.LEAVE
@@ -132,10 +139,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * Use Grpc to create a session for monitoring Topic information for the connection，@see [ListenTopicReply]
      * */
     private fun receiveTopic(connectId: String) {
-        catching {
-            topicStreamObserver?.onCompleted()
-        }
-        ImLogs.recordLogsInFile("on connecting...", "trying to receive topic with :$connectId")
         topicStreamObserver = withChannel {
             it.listenTopicData(object : CusObserver<ListenTopicReply>("topic", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
@@ -166,10 +169,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     }
 
     private fun receiveMessage(connectId: String) {
-        catching {
-            messageStreamObserver?.onError(InterruptedException("new channel may created!!"))
-        }
-        ImLogs.recordLogsInFile("on connecting...", "trying to receive messages with :$connectId")
         messageStreamObserver = withChannel {
             it.onlineImMessage(object : CusObserver<ImMessageReply>("message", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {

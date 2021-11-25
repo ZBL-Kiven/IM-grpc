@@ -126,9 +126,11 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             val all = lastMsgDb.findAll()
             val sessions = it.sessionDao().allSessions
             val ownerSessions = it.privateChatOwnerDao().findAll()
-            fun patchDotsInfo(key: String, info: DotsInfo) {
-                val allContains = all.firstOrNull { a -> a.key == key }
-                if (allContains != null) all.remove(allContains)
+            fun patchDotsInfo(key: String, info: DotsInfo, inAll: Boolean = false) {
+                if (!inAll) {
+                    val allContains = all.firstOrNull { a -> a.key == key }
+                    if (allContains != null) all.remove(allContains)
+                }
                 lastMsgDb.findSessionMsgInfoByKey(key)?.let { i ->
                     info.questionNum += i.questionNum
                     info.unreadQuestions += i.unreadQuesNum ?: 0
@@ -149,7 +151,7 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
             val fansDots = DotsInfo()
             all.forEach { d ->
                 val key = generateKey(com.zj.database.ut.Constance.KEY_OF_PRIVATE_FANS, userId = d.targetUserId)
-                patchDotsInfo(key, fansDots)
+                patchDotsInfo(key, fansDots, true)
             }
             val totalUnreadMessages = sessionDots.unreadMessages + ownerDots.unreadMessages + fansDots.unreadMessages
             val totalQuestions = sessionDots.questionNum + ownerDots.questionNum + fansDots.questionNum

@@ -35,12 +35,8 @@ internal class ChatBase<T> : Runner<T>() {
             StatusHub.isRunningInBackground = isHidden
             DataReceivedDispatcher.checkNetWork(isHidden)
         }
-        try {
+        catching {
             imi?.onAppLayerChanged(isHidden)
-        } catch (t: Exception) {
-            postError(t)
-        } catch (t: java.lang.Exception) {
-            postError(t)
         }
         val changedNames = if (isHidden) {
             arrayOf("foreground", "background")
@@ -60,7 +56,7 @@ internal class ChatBase<T> : Runner<T>() {
     }
 
     override fun shutDown() {
-        NetRecordUtils.removeRecordListener()
+        catching { NetRecordUtils.removeRecordListener() }
         super.shutDown()
     }
 }

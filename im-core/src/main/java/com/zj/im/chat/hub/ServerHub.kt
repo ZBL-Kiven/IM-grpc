@@ -205,9 +205,9 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 field = value
                 if (value.isValidState()) DataReceivedDispatcher.pushData<T>(BaseMsgInfo.connectStateChange(value))
                 when (value) {
-                    is ConnectionState.PING -> printInFile("on connection status change with id: $currentConnectId", "--- $value -- ${nio(pingTime)}")
-                    is ConnectionState.PONG -> printInFile("on connection status change with id: $currentConnectId", "--- $value -- ${nio(pongTime)}")
-                    is ConnectionState.ERROR -> printInFile("on connection status change with id: $currentConnectId", "$value  ==> reconnection with error : ${value.reason}")
+                    is ConnectionState.PING -> printInFile("on connection status change with id: $currentConnectId", "--- ${value::class.java.simpleName} -- ${nio(pingTime)}")
+                    is ConnectionState.PONG -> printInFile("on connection status change with id: $currentConnectId", "--- ${value::class.java.simpleName} -- ${nio(pongTime)}")
+                    is ConnectionState.ERROR -> printInFile("on connection status change with id: $currentConnectId", "${value::class.java.simpleName}  ==> reconnection with error : ${value.reason}")
                     else -> printInFile("on connection status change with id: $currentConnectId", "--- $value --")
                 }
             }

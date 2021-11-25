@@ -39,4 +39,4 @@ dependencies {
     api 'com.google.protobuf:protobuf-java:3.17.2'
 }
 
-//apply from: "upload.gradle"
+apply from: "upload.gradle"

@@ -1,8 +1,10 @@
 package com.zj.protocol;
 
 import androidx.arch.core.util.Function;
+import androidx.core.util.Consumer;
 import androidx.core.util.Pair;
 
+import com.zj.protocol.grpc.MsgApiGrpc;
 import com.zj.protocol.utl.ClientHeaderInterceptor;
 
 import java.util.ArrayList;
@@ -21,78 +23,91 @@ import io.grpc.stub.AbstractStub;
 @SuppressWarnings("unused")
 public final class Grpc {
 
-    private static Map<String, CachedChannel> cachedChannels;
     private volatile static Grpc current;
+    private volatile CachedChannel<MsgApiGrpc.MsgApiStub> cache;
 
-    private Grpc() {
-        if (cachedChannels != null) cachedChannels.clear();
-        cachedChannels = new HashMap<>();
+    public static boolean isAlive() {
+        return current != null && current.cache != null && current.cache.isAlive();
     }
 
-    public static CachedChannel get(GrpcConfig config) {
+    public static void reset() {
+        if (current != null && current.cache != null) current.cache.reset();
+    }
+
+    public static void shutdown() {
+        if (current != null && current.cache != null) current.cache.shutdown();
+    }
+
+    public static MsgApiGrpc.MsgApiStub stub(Map<String, String> header) {
+        if (current == null || current.cache == null) return null;
+        Function<ManagedChannel, MsgApiGrpc.MsgApiStub> func = MsgApiGrpc::newStub;
+        return current.cache.stub(header, func);
+    }
+
+    public static void build(GrpcConfig config, Consumer<Boolean> consumer) {
         if (current == null) {
             synchronized (Grpc.class) {
                 if (current == null) current = new Grpc();
             }
         }
-        return current.create(config);
+        current.createChannel(config, consumer);
     }
 
-    private CachedChannel create(GrpcConfig config) {
+    private void createChannel(GrpcConfig config, Consumer<Boolean> consumer) {
         String key = config.getHost() + config.getPort();
-        CachedChannel c = cachedChannels.get(key);
-        if (c == null) {
-            c = new CachedChannel(key, config);
-            cachedChannels.put(key, c);
+        if (cache == null || !cache.isAlive() || !cache.key.equals(key)) {
+            if (cache != null) {
+                cache.shutdown();
+            }
+            cache = new CachedChannel<>(key, config, consumer);
+        } else {
+            consumer.accept(cache.isAlive());
         }
-        return c;
     }
 
-    public static class CachedChannel {
+    private static class CachedChannel<T extends AbstractStub<T>> {
 
         private final ManagedChannel channel;
         private final String key;
-        private Map<String, String> headerDefault;
+        private boolean inConnection;
+        private T cachedStub;
 
-        private CachedChannel(String key, GrpcConfig config) {
+        private CachedChannel(String key, GrpcConfig config, Consumer<Boolean> consumer) {
             this.key = key;
-            this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).keepAliveTimeout(config.getKeepAliveTimeOut(), TimeUnit.MILLISECONDS).keepAliveWithoutCalls(true).idleTimeout(config.getIdleTimeOut(), TimeUnit.MILLISECONDS).usePlaintext().build();
+            inConnection = true;
+            this.channel = ManagedChannelBuilder.forAddress(config.getHost(), config.getPort()).keepAliveTimeout(config.getKeepAliveTimeOut(), TimeUnit.MILLISECONDS).idleTimeout(config.getIdleTimeOut(), TimeUnit.MILLISECONDS).usePlaintext().build();
+            channel.notifyWhenStateChanged(ConnectivityState.READY, () -> {
+                cachedStub = null;
+                inConnection = false;
+                consumer.accept(true);
+            });
         }
 
-        public CachedChannel defaultHeader(Map<String, String> h) {
-            headerDefault = h;
-            return this;
+        public T stub(Map<String, String> header, Function<ManagedChannel, T> f) {
+            if (cachedStub == null) cachedStub = new RequestBuilder<>(channel, f, header).build();
+            return cachedStub;
         }
 
-        public <T extends AbstractStub<T>> RequestBuilder<T> stub(Function<ManagedChannel, T> f) {
-            return new RequestBuilder<>(channel, f, headerDefault);
+        public boolean isAlive() {
+            return inConnection || (!channel.isShutdown() && !channel.isTerminated());
         }
 
         public void shutdown() {
-            clear();
-            channel.shutdown();
-        }
-
-        public void shutdownNow() {
-            clear();
+            reset();
             channel.shutdownNow();
         }
 
-        public boolean isTerminated() {
-            return channel.isTerminated();
+        public void reset() {
+            channel.enterIdle();
+            channel.resetConnectBackoff();
         }
 
-        public void resetConnectBackoff() {
-            channel.resetConnectBackoff();
+        public boolean isTerminated() {
+            return channel.isShutdown() || channel.isTerminated();
         }
 
         public void notifyWhenStateChanged(ConnectivityState source, Runnable callback) {
             channel.notifyWhenStateChanged(source, callback);
-        }
-
-        private void clear() {
-            cachedChannels.remove(key);
-            headerDefault.clear();
         }
 
     }

@@ -2,7 +2,6 @@ package com.zj.ccIm.core.impl
 
 
 import com.zj.ccIm.CcIM
-import com.zj.ccIm.core.Constance
 import com.zj.ccIm.error.ConnectionError
 import com.zj.ccIm.error.InitializedException
 import com.zj.ccIm.error.StreamFinishException
@@ -18,14 +17,13 @@ import io.grpc.stub.StreamObserver
 
 internal abstract class ServerImplGrpc : ServerHub<Any?>() {
 
-    private var channel: Grpc.CachedChannel? = null
     private var curCachedRunningKey: String = ""
 
     abstract fun onConnection(connectId: String)
 
     override fun closeConnection(case: String) {
         try {
-            channel?.shutdownNow()
+            Grpc.shutdown()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -33,18 +31,22 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
 
     override fun connect(connectId: String) {
         try {
-            val header = CcIM.imConfig?.getApiHeader() ?: throw InitializedException("the configuration header must not be null!")
-            val token = header.values.joinToString { it }
-            if (channel?.isTerminated != false || token != curCachedRunningKey) {
-                curCachedRunningKey = token
-                channel?.shutdownNow()
+            if (!Grpc.isAlive()) {
                 val url = CcIM.imConfig?.getGrpcAddress() ?: Pair("-", 0)
                 val keepAliveTimeOut = CcIM.imConfig?.getHeatBeatsTimeOut() ?: 5000L
                 val idleTimeOut = CcIM.imConfig?.getIdleTimeOut() ?: 68400000L
                 val config = GrpcConfig(url.first, url.second, keepAliveTimeOut, idleTimeOut)
-                channel = Grpc.get(config).defaultHeader(header)
+                Grpc.build(config) {
+                    if (!it) {
+                        postError(InitializedException("grpc create error !"))
+                    } else {
+                        onConnection(connectId)
+                    }
+                }
+            } else {
+                Grpc.reset()
+                onConnection(connectId)
             }
-            onConnection(connectId)
         } catch (e: Exception) {
             onParseError(e)
         }
@@ -67,12 +69,9 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
     }
 
     protected fun <R> withChannel(require: Boolean = true, r: (MsgApiGrpc.MsgApiStub) -> R?): R? {
-        channel?.let {
-            if (it.isTerminated && require) {
-                postToClose(Constance.CONNECTION_RESET);return null
-            }
-            return r(it.stub { c -> MsgApiGrpc.newStub(c) }.build())
-        } ?: if (require) postToClose(Constance.CONNECTION_UNAVAILABLE)
+        CcIM.imConfig?.getApiHeader()?.let { header ->
+            return r(Grpc.stub(header))
+        } ?: if (require) postError(InitializedException("the configuration header must not be null!"))
         return null
     }
 
