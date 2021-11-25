@@ -4,12 +4,11 @@ import android.content.Context
 import android.graphics.Canvas
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import com.zj.imUi.UiMsgType
 import com.zj.imUi.interfaces.ImMsgIn
 import kotlin.math.min
 
-abstract class BaseBubble @JvmOverloads constructor(context: Context,
-    attrs: AttributeSet? = null,
-    def: Int = 0) : RelativeLayout(context, attrs, def) {
+abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : RelativeLayout(context, attrs, def) {
 
     protected var curData: (() -> ImMsgIn?)? = null
     protected var chatType: Any? = null
@@ -33,12 +32,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context,
         if (canvas == null || width <= 0 || height <= 0) return
         curData?.invoke()?.let { d ->
             baseBubbleRenderer?.let {
-                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context,
-                    canvas,
-                    d,
-                    width,
-                    height,
-                    chatType as Int?)
+                it.getBubble(context, d, width, height)?.draw(canvas) ?: it.onDrawBubble(context, canvas, d, width, height, chatType as Int?)
             }
         }
         super.dispatchDraw(canvas)
@@ -47,7 +41,10 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context,
     //设置气泡最大宽度为屏幕80%
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val size = MeasureSpec.getSize(widthMeasureSpec)
-        val isFull = (chatType == 3 && curData?.invoke()?.getSelfUserId() ==curData?.invoke()?.getSenderId())||curData?.invoke()?.getMsgIsRecalled() == true||curData?.invoke()?.getMsgIsSensitive() == true
+        val isFull = (chatType == 3 && curData?.invoke()?.getSelfUserId() == curData?.invoke()?.getSenderId())
+                || curData?.invoke()?.getMsgIsRecalled() == true
+                || curData?.invoke()?.getMsgIsSensitive() == true
+                || curData?.invoke()?.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE
         val maxWidth = if (isFull) {
             (resources.displayMetrics.widthPixels * 1)
         } else (resources.displayMetrics.widthPixels * 0.8).toInt()

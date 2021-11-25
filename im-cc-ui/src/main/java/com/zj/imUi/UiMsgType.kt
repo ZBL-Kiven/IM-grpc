@@ -11,7 +11,7 @@ object UiMsgType {
 
     const val MSG_TYPE_RECALLED = "recall"
     const val MSG_TYPE_SENSITIVE = "sensitive"
-    const val MSG_TYPE_SYS_REFUSE = "refused"
+    const val MSG_TYPE_SYS_REFUSE = "refuse"
 
 
     const val GROUP_CHAT = 1

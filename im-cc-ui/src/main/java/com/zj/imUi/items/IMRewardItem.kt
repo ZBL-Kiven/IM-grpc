@@ -55,7 +55,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
 
     enum class RewardMsgState(val type: Int) {
-        WAIT_REPLY(0), ALREADY_REPLIED(1), REJECTED(2)
+        WAIT_REPLY(0), ALREADY_REPLIED(1), REJECTED(3)
     }
 
     private var contentLayout: View = LayoutInflater.from(context).inflate(R.layout.im_msg_item_owner_reward_question, this, false)

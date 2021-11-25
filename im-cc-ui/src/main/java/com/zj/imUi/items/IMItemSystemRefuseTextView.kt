@@ -47,12 +47,10 @@ class IMItemSystemRefuseTextView @JvmOverloads constructor(context: Context, att
         if (childCount == 0) {
             addView(contentLayout)
         }
-        if (data.getRefuseContent()!=null){
-            tvContent.text = data.getRefuseContent()
-        }else {
-            if (data.getSelfUserId() == data.getSenderId()) {
-                tvContent.text = "我拒绝了一条消息"
-            } else tvContent.text = context.getString(R.string.im_chat_msg_owner_refuse)
+        if (data.getRefuseContent(context) != null) {
+            tvContent.text = data.getRefuseContent(context)
+        } else {
+            tvContent.text = context.getString(R.string.im_chat_msg_owner_refuse)
         }
     }
 

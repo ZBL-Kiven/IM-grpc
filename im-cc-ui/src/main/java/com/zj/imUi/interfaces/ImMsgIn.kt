@@ -1,5 +1,7 @@
 package com.zj.imUi.interfaces
 
+import android.content.Context
+
 interface ImMsgIn {
 
     /**================================ msg bean converter ===================================*/
@@ -110,9 +112,9 @@ interface ImMsgIn {
     //是否是管理员
     fun getIsAdmin(): Boolean
 
-    fun getRecallContent(): String?
+    fun getRecallContent(context: Context): String?
 
-    fun getRefuseContent(): String?
+    fun getRefuseContent(context: Context): String?
 
 
     /** ========================================= app interface ======================================== */
