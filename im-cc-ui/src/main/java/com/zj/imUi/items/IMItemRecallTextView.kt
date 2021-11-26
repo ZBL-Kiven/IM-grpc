@@ -46,6 +46,7 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: At
                 2 -> tvContent.text = context.getString(R.string.im_chat_recall_admin_text)
                 else -> {
                     Log.e("im-ui:role",data.getMsgRecallRole().toString())
+                    contentLayout.visibility = View.GONE
                 }
             }
         }
