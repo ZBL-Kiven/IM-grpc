@@ -3,14 +3,15 @@ package com.zj.ccIm.core.fecher
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.MainLooper
 import com.zj.ccIm.core.ExtMsgType
+import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MessageType
 import com.zj.ccIm.core.SystemMsgType
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.GetMoreMessagesResult
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
+import com.zj.database.entity.BaseMessageInfo
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
@@ -72,11 +73,11 @@ internal object MessageFetcher {
         }
     }
 
-    fun <T : Any> dealMessageExtContent(d: T?, key: String): List<MessageInfoEntity?> {
+    fun <T : Any> dealMessageExtContent(d: T?, key: String): List<Any?> {
         if (d == null) return arrayListOf()
         if (d is Collection<*>) {
             if (d.isEmpty()) return arrayListOf()
-            val lst = arrayListOf<MessageInfoEntity?>()
+            val lst = arrayListOf<Any?>()
             d.forEach {
                 lst.addAll(dealMessageExtContent(it, key))
             }
@@ -85,39 +86,39 @@ internal object MessageFetcher {
             val msg: MessageInfoEntity? = (d as? MessageInfoEntity) ?: (d as? ImMessage)?.let {
                 ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
             }
-            val result = arrayListOf(msg)
-            msg?.channelKey = key
-            msg?.messageType = MessageType.MESSAGE.type
-
-            if (msg?.questionContent?.questionStatus == 3) { // refused message
-                msg.messageType = MessageType.SYSTEM.type
-                msg.systemMsgType = SystemMsgType.REFUSED.type
-            }
-            msg?.extContent?.let {
-                if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
+            run with@{
+                if (IMHelper.getDb()?.sendMsgDao()?.findByCallId(msg?.clientMsgId) != null) {
+                    return@with
+                }
+                msg?.channelKey = key
+                msg?.messageType = MessageType.MESSAGE.type
+                if (msg?.questionContent?.questionStatus == 3) { // refused message
                     msg.messageType = MessageType.SYSTEM.type
-                    msg.systemMsgType = SystemMsgType.RECALLED.type
+                    msg.systemMsgType = SystemMsgType.REFUSED.type
                 }
-                if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
-                    result.add(MessageInfoEntity().apply {
-                        this.extContent = msg.extContent
-                        this.messageType = MessageType.SYSTEM.type
-                        this.systemMsgType = SystemMsgType.SENSITIVE.type
-                        this.channelKey = key
-                        this.clientMsgId = msg.clientMsgId + ":SENSITIVE"
-                        this.groupId = msg.groupId
-                        this.replyMsg = msg
-                        this.msgId = msg.msgId
-                        this.ownerId = msg.ownerId
-                        this.sendingState = SendMsgState.NONE.type
-                        this.sender = msg.sender
-                        this.countryCode = msg.countryCode
-                        this.extContent = it
-                    })
-                    msg.extContent = null
-                }
+                return dealMsgExtendsContent(msg)
             }
-            return result
+            return arrayListOf()
         }
+    }
+
+    fun <T : BaseMessageInfo?> dealMsgExtendsContent(info: T?): List<Any?> {
+        if (info == null) return arrayListOf()
+        val lst = mutableListOf<Any?>(info)
+        info.extContent?.let {
+            if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
+                info.messageType = MessageType.SYSTEM.type
+                info.systemMsgType = SystemMsgType.RECALLED.type
+            }
+            if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
+                val systemInfo = info.copyTo(MessageInfoEntity())
+                systemInfo?.messageType = MessageType.SYSTEM.type
+                systemInfo?.systemMsgType = SystemMsgType.SENSITIVE.type
+                systemInfo?.clientMsgId = info.clientMsgId + ":SENSITIVE"
+                lst.add(systemInfo)
+                info.extContent = null
+            }
+        }
+        return lst
     }
 }

@@ -51,7 +51,6 @@ abstract class MessageInterface<T> {
                 onFinish()
                 return
             }
-            var isUsed = false
             val c: Class<*>?
             var d: Any? = null
             var ld: Collection<*>? = null
@@ -65,12 +64,10 @@ abstract class MessageInterface<T> {
             if (cls != null && cls != c) throw RuntimeException("The sent non-empty type [${c?.name}] is inconsistent with the declared type ${cls.name}!")
             msgObservers.forEach { (_, v) ->
                 if (v.post(c, d, ld, payload)) {
-                    isUsed = true
-                    d("postToUIObservers", "the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")
+                    v.log("the observer names ${v.getUnique()} and subscribe of ${v.getSubscribeClassName()}.class successful and received the data")
                 }
             }
             onFinish()
-            if (!isUsed) d("postToUIObservers", "the data ${cls?.simpleName}.class has been abandon with none consumer")
         }
     }
 

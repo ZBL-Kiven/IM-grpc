@@ -10,24 +10,32 @@ import java.util.*
 
 @Suppress("unused")
 @Entity(tableName = "messages")
-class MessageInfoEntity {
+class MessageInfoEntity : BaseMessageInfo() {
 
-    var channelKey: String = ""
+    /**
+     * 订阅一条消息通道所需要的唯一键，由客户端生成
+     * */
+    override var channelKey: String = ""
 
     /**
      * 客户端消息id
      */
-    @PrimaryKey var clientMsgId: String = UUID.randomUUID().toString()
+    @PrimaryKey override var clientMsgId: String = UUID.randomUUID().toString()
 
     /**
      * 群组id
      */
-    var groupId: Long = -1
+    override var groupId: Long = -1
 
     /**
      * 群主id
      */
-    var ownerId: Int? = null
+    override var ownerId: Int? = null
+
+    /**
+     * 信息id
+     */
+    override var msgId: Long = -1
 
     /**
      * 发送时间
@@ -35,25 +43,20 @@ class MessageInfoEntity {
     var sendTime: Long = 0
 
     /**
-     * 信息id
-     */
-    var msgId: Long = -1
-
-    /**
      * 本地字段 , 本次消息的解释类型 message / system
      * */
-    var messageType: String = "message"
+    override var messageType: String = "message"
 
     /**
      * 本地字段 , 用于系统通知的消息类型 , recall/sensitive/refused
      * */
-    var systemMsgType: String? = null
+    override var systemMsgType: String? = null
 
     /**
      * 消息类型 , 仅在解析类型为 message 的情况下生效 text/img/audio/video/question/cc_video
      *
      */
-    var msgType: String? = null
+    override var msgType: String? = null
 
     /**
      * countryCode
@@ -91,11 +94,6 @@ class MessageInfoEntity {
     @TypeConverters(QuestionContentConverter::class) var questionContent: QuestionContent? = null
 
     /**
-     * 消息扩展字段
-     * */
-    @TypeConverters(ExtContentConverter::class) var extContent: Map<String, String>? = null
-
-    /**
      * 直播消息类型
      * */
     @TypeConverters(LiveMessageContentConverter::class) var liveMessage: LiveMessageEntity? = null
@@ -113,7 +111,12 @@ class MessageInfoEntity {
     /**
      * 回复消息
      */
-    @TypeConverters(MessageConverter::class) var replyMsg: MessageInfoEntity? = null
+    @TypeConverters(MessageConverter::class) override var replyMsg: MessageInfoEntity? = null
+
+    /**
+     * 消息扩展字段
+     * */
+    @TypeConverters(ExtContentConverter::class) override var extContent: Map<String, String>? = null
 
     /**
      * 0 正常， 1 撤回
@@ -125,7 +128,7 @@ class MessageInfoEntity {
     /**
      * 本地状态，是否发送成功 , 0 无状态，比如收到新消息
      * */
-    var sendingState: Int = 0
+    override var sendingState: Int = 0
 
     /**
      * 本地新增的辅助参数，用于展示拥有差值的消息时间

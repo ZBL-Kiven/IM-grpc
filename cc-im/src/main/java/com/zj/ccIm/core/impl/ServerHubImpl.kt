@@ -8,6 +8,7 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.protocol.grpc.*
 import com.zj.ccIm.core.Constance
+import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.api.IMRecordSizeApi
@@ -105,13 +106,15 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (d.clientMsgId != callId) d.clientMsgId = callId
         ImApi.getRecordApi().request({ it.sendMsg(d) }, Schedulers.io(), Schedulers.io()) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
             var resp = data
-            resp?.reqInfo = d
             resp?.channelKey = d.key
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
                 resp = setErrorMsgResult(resp, d, (a as? ImApi.EH.HttpErrorBody)?.code ?: 0)
             }
-            callBack.result(isOk, resp, d.autoRetryResend, throwable, a)
+            resp?.extContent = mapOf(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT to "{\"riskMsg\":\"{\\\"multilingual\\\":{\\\"EN\\\":\\\"大范甘迪个\\\",\\\"ID\\\":\\\"地方个梵蒂冈\\\",\\\"ZH\\\":\\\"你大爷\\\"},\\\"riskId\\\":21}\"}")
+            MessageFetcher.dealMsgExtendsContent(resp).forEach { i ->
+                callBack.result(isOk, i, d.autoRetryResend, throwable, a)
+            }
         }
     }
 
@@ -228,7 +231,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {
         var resp = r
         if (resp == null) resp = SendMessageRespEn().apply {
-            this.reqInfo = d
             this.clientMsgId = d.clientMsgId
             this.msgStatus = status
             this.groupId = d.groupId

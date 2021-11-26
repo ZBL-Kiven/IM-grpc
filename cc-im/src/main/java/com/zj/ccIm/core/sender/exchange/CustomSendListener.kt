@@ -3,6 +3,7 @@ package com.zj.ccIm.core.sender.exchange
 import com.zj.ccIm.MainLooper
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.sender.CustomSendingCallback
+import com.zj.im.utils.cast
 
 sealed class CustomSendListener<O : Any>(private val targetClass: Class<O>) {
 
@@ -26,11 +27,11 @@ sealed class CustomSendListener<O : Any>(private val targetClass: Class<O>) {
 
     private fun getTargetInfo(sendState: SendMsgState, callId: String, d: Any?, payloadInfo: Any?): Pair<O?, String?>? {
         if (d == null) return null
-        var result: Pair<O?, String?>? = null
-        if (targetClass != d::class.java) {
-            result = changeDataToTarget(sendState, callId, d, payloadInfo)
+        return if (targetClass != d::class.java) {
+            changeDataToTarget(sendState, callId, d, payloadInfo)
+        } else {
+            Pair<Nothing?, String>(cast(d), payloadInfo.toString())
         }
-        return result
     }
 
     fun setPending(): CustomSendListener<O> {

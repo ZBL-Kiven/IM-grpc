@@ -24,11 +24,7 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
             when (info.sendingUp) {
                 SendingUp.CANCEL -> {
                     clearTimeout()
-                    if (info.customSendingCallback != null) {
-                        info.customSendingCallback?.onResult(isOK = false, retryAble = false, callId = info.callId, d = info.data, throwable = exc, payloadInfo = null)
-                    } else {
-                        done.result(isOK = false, retryAble = false, d = info, throwable = exc, payloadInfo = null)
-                    }
+                    done.result(isOK = false, retryAble = false, d = info, throwable = exc, payloadInfo = null)
                 }
                 else -> {
                     val data = info.data ?: throw NullPointerException("what's the point you are sending an empty message?")
@@ -38,12 +34,8 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
                             exc = throwable
                             clearTimeout()
                             val canRetry = retryAble && !DataReceivedDispatcher.isDataEnable()
-                            info.customSendingCallback?.let {
-                                info.customSendingCallback?.onResult(isOK, canRetry, callId = info.callId, d, exc, payloadInfo)
-                                if (it.pending) {
-                                    notifyChange(info, isOK, data, d, canRetry, exc, payloadInfo, done)
-                                }
-                            } ?: notifyChange(info, isOK, data, d, canRetry, exc, payloadInfo, done)
+                            info.data = if ((!isOK && canRetry) || d == null) data else d
+                            done.result(isOK && d != null, canRetry, info, exc, payloadInfo)
                         }
                     }) ?: throw NullPointerException("server can not be null !!")
                 }
@@ -55,13 +47,7 @@ internal class SendExecutors<T>(info: BaseMsgInfo<T>, server: ServerHub<T>?, don
         }
     }
 
-    private fun notifyChange(info: BaseMsgInfo<T>, isOK: Boolean, data: T?, d: T?, canRetry: Boolean, exc: Throwable?, payloadInfo: Any?, done: SendExecutorsInterface<T>) {
-        info.data = if ((!isOK && canRetry) || d == null) data else d
-        done.result(isOK, canRetry, info, exc, payloadInfo)
-    }
-
     internal interface SendExecutorsInterface<T> {
         fun result(isOK: Boolean, retryAble: Boolean, d: BaseMsgInfo<T>, throwable: Throwable?, payloadInfo: Any?)
     }
-
 }

@@ -85,7 +85,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
 
     private fun initMessageObserver() {
         val observer = msgReqInfo.setMessageReceiveObserver().filterIn(::getMessageFilter)
-        observer.ignoreNullData = false
+        observer.ignoreNullData(false)
         observer.listen { d, list, pl ->
             if (d != null) {
                 d.replyMsg?.let {

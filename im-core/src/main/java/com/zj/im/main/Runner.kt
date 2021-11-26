@@ -166,13 +166,21 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
     }
 
     override fun result(isOK: Boolean, retryAble: Boolean, d: BaseMsgInfo<T>, throwable: Throwable?, payloadInfo: Any?) {
-        if (isOK) {
-            printInFile("SendExecutors.send", "the data [${d.callId}] has been send to server")
-            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, d.callId, d.data, d.isResend))
-        } else {
-            printInFile("SendExecutors.send", "send ${d.callId} was failed with error : ${throwable?.message} , payload = $payloadInfo")
-            if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend))
+        fun notify() {
+            if (isOK) {
+                printInFile("SendExecutors.send", "the data [${d.callId}] has been send to server")
+                enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, d.callId, d.data, d.isResend))
+            } else {
+                printInFile("SendExecutors.send", "send ${d.callId} was failed with error : ${throwable?.message} , payload = $payloadInfo")
+                if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend))
+            }
         }
+        d.customSendingCallback?.let {
+            d.customSendingCallback?.onResult(isOK, retryAble, callId = d.callId, d.data, throwable, payloadInfo)
+            if (it.pending) {
+                notify()
+            }
+        } ?: notify()
         sendingPool?.unLock()
     }
 

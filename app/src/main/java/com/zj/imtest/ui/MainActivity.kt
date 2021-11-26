@@ -96,9 +96,9 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun onSendResult(isOK: Boolean, retryAble: Boolean, callId: String, d: MessageInfoEntity?, throwable: Throwable?, payloadInfo: Any?) {
-                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}")
+                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}   ext = ${d?.extContent.toString()}")
                 }
-            }.setPending()).build().sendText("asdasdasdasdaf", groupId)
+            }).build().sendText("bitch", groupId)
         }
     }
 

@@ -102,6 +102,7 @@ internal object SendingDbOperator {
         result?.sendTime = if (d.sendTime <= 0) System.currentTimeMillis() else d.sendTime
         result?.questionContent?.published = d.published
         result?.questionContent?.expireTime = d.expireTime
+        result?.extContent = d.extContent
         return result
     }
 }

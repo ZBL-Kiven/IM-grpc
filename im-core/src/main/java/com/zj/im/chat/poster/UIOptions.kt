@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.utils.cast
-import com.zj.im.utils.log.logger.printInFile
+import com.zj.im.utils.log.logger.d
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -49,12 +49,12 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
                 0 -> {
                     castNotSafety<Any?, R?>(it.obj)?.let { r ->
                         result(r, null, payload)
-                    } ?: println("the data ${it.obj} was handled but null result in cast transform")
+                    } ?: log("the data ${it.obj} was handled but null result in cast transform")
                 }
                 1 -> {
                     castNotSafety<Any?, List<R>?>(it.obj)?.let { lst ->
                         result(null, lst, payload)
-                    } ?: println("the data ${it.obj} was handled but null list result in cast transform")
+                    } ?: log("the data ${it.obj} was handled but null list result in cast transform")
                 }
             }
         }
@@ -168,14 +168,14 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
             }
         } ?: data)
     }
+
+    internal fun log(str: String) {
+        if (creator.logAble) d("im-ui", str)
+    }
 }
 
 @Suppress("UNCHECKED_CAST")
 @Throws(java.lang.ClassCastException::class, ClassCastException::class)
 internal fun <I, O> castNotSafety(a: I): O {
     return a as O
-}
-
-private fun log(str: String) {
-    printInFile("im-ui", str)
 }
