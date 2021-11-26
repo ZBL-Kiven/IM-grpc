@@ -105,7 +105,7 @@ internal object MessageFetcher {
     fun <T : BaseMessageInfo?> dealMsgExtendsContent(info: T?): List<Any?> {
         if (info == null) return arrayListOf()
         val lst = mutableListOf<Any?>(info)
-        info.extContent?.let {
+        info.extContent?.toMutableMap()?.let {
             if (it.containsKey(ExtMsgType.EXTENDS_TYPE_RECALL)) {
                 info.messageType = MessageType.SYSTEM.type
                 info.systemMsgType = SystemMsgType.RECALLED.type
@@ -116,7 +116,7 @@ internal object MessageFetcher {
                 systemInfo?.systemMsgType = SystemMsgType.SENSITIVE.type
                 systemInfo?.clientMsgId = info.clientMsgId + ":SENSITIVE"
                 lst.add(systemInfo)
-                info.extContent = null
+                it.remove(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)
             }
         }
         return lst

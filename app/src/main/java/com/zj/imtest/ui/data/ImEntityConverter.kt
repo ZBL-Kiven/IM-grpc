@@ -9,7 +9,6 @@ import com.google.gson.Gson
 import com.zj.ccIm.core.*
 import com.zj.ccIm.core.bean.RoteInfo
 import com.zj.imUi.UiMsgType
-import com.zj.imUi.items.*
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
 import com.zj.imtest.ui.data.bean.RevokeMsg
@@ -292,6 +291,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.questionContent?.questionStatus == 3
     }
 
+    override fun getMsgUIIsReject(): Boolean {
+        return info?.systemMsgType == SystemMsgType.REFUSED.type
+    }
+
     override fun getMsgIsRecalled(): Boolean {
         return info?.systemMsgType == SystemMsgType.RECALLED.type
     }
@@ -312,11 +315,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return IMHelper.getMineRole(info?.groupId) == 2
     }
 
-    override fun getRecallContent(context: Context): String? {
+    override fun getRecallContent(context: Context): String {
         return "撤回内容"
     }
 
-    override fun getRefuseContent(context: Context): String? {
+    override fun getRefuseContent(context: Context): String {
         return "拒绝内容"
     }
 
@@ -402,8 +405,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
             MessageType.SYSTEM.type -> {
                 when (info.systemMsgType) {
                     SystemMsgType.RECALLED.type -> UiMsgType.MSG_TYPE_RECALLED
-                    SystemMsgType.SENSITIVE.type -> UiMsgType.MSG_TYPE_SENSITIVE
                     SystemMsgType.REFUSED.type -> UiMsgType.MSG_TYPE_SYS_REFUSE
+                    SystemMsgType.SENSITIVE.type -> UiMsgType.MSG_TYPE_SENSITIVE
                     else -> "NONE_SYSTEM_TYPE"
                 }
             }

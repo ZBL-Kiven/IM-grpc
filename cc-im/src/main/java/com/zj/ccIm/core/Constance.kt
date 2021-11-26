@@ -35,13 +35,6 @@ internal object Constance {
     const val FETCH_SESSION_CODE = "fetch_session"
     const val FETCH_OFFLINE_MSG_CODE = "fetch_offline_message"
 
-    /**-------------------------- HINT MSG ------------------------------*/
-
-    const val CONNECTION_RESET: String = "reconnection because the connection is already terminate!"
-
-    const val CONNECTION_UNAVAILABLE: String = "reconnection because the connection is unavailable!"
-
-
     /**-------------------------- CALL IDS ------------------------------*/
 
     const val INTERNAL_CALL_ID_PREFIX = "internal_call"
