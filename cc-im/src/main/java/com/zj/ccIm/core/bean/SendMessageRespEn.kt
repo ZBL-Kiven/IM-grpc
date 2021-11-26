@@ -1,6 +1,10 @@
 package com.zj.ccIm.core.bean
 
+import com.zj.database.entity.SendMessageReqEn
+
 class SendMessageRespEn {
+
+    lateinit var reqInfo: SendMessageReqEn
 
     /**
      * true 黑名单

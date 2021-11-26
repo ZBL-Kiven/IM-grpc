@@ -105,6 +105,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (d.clientMsgId != callId) d.clientMsgId = callId
         ImApi.getRecordApi().request({ it.sendMsg(d) }, Schedulers.io(), Schedulers.io()) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
             var resp = data
+            resp?.reqInfo = d
             resp?.channelKey = d.key
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
@@ -227,6 +228,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
     private fun setErrorMsgResult(r: SendMessageRespEn?, d: SendMessageReqEn, status: Int): SendMessageRespEn {
         var resp = r
         if (resp == null) resp = SendMessageRespEn().apply {
+            this.reqInfo = d
             this.clientMsgId = d.clientMsgId
             this.msgStatus = status
             this.groupId = d.groupId

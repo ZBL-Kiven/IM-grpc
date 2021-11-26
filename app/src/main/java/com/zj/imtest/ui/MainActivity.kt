@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initListener() {
         ivHeadPic?.setOnClickListener {
-            IMHelper.CustomSender.setCustomSendCallback(object : CustomSendingCallback<Any?>() {
+            IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).setCustomSendCallback(object : CustomSendingCallback<Any?>() {
 
                 override fun onStart(callId: String, d: Any?) {
                     Log.e("=======>", "CustomSendingCallback: onStart $callId")
