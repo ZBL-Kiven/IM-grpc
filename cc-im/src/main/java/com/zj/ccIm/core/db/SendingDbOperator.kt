@@ -4,18 +4,50 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.impl.ClientHubImpl
+import com.zj.ccIm.core.sender.Converter
 import com.zj.database.dao.MessageDao
 import com.zj.database.dao.SendMsgDao
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.enums.SendMsgState
 
 internal object SendingDbOperator {
+
+    fun onDealSendMsgReqInfo(d: SendMessageReqEn?, sendingState: SendMsgState?, callId: String?): Pair<MessageInfoEntity?, String?>? {
+        return if (d != null) {
+            val sst = sendingState ?: SendMsgState.SENDING
+            if (sst == SendMsgState.SENDING) d.diamondNum?.let {
+                AssetsChangedOperator.onAssetsChanged(callId, -it, null)
+            }
+            onDealMsgSendInfo(d, sst, callId)
+        } else null
+    }
+
+    fun onDealSendMsgRespInfo(d: SendMessageRespEn?, sendingState: SendMsgState?, callId: String?): Pair<MessageInfoEntity?, String?>? {
+        return if (d != null) {
+            run assets@{
+                if (sendingState != SendMsgState.SUCCESS && sendingState != SendMsgState.NONE) {
+                    val diamond = d.diamondNum ?: return@assets
+                    AssetsChangedOperator.onAssetsChanged(callId, diamond, null)
+                } else {
+                    val sparks = d.sparkNum ?: return@assets
+                    AssetsChangedOperator.onAssetsChanged(callId, null, sparks)
+                }
+            }
+            onDealMsgSentInfo(d, sendingState, callId)
+        } else null
+    }
+
+    fun onDealMsgSendInfo(d: SendMessageReqEn, sendingState: SendMsgState, callId: String?): Pair<MessageInfoEntity?, String?>? {
+        val msg = Converter.exchangeMsgInfoBySendingInfo(d, sendingState)
+        return MessageDbOperator.onDealMessages(msg, callId, sendingState)
+    }
 
     /**
      * When the message is sent, the state callback event,
      * here is the message that the database already exists in the database and is sent to the UI.
      * */
-    fun onDealMsgSentInfo(d: SendMessageRespEn, callId: String?, sendingState: SendMsgState?): Pair<Any?, String?>? {
+    fun onDealMsgSentInfo(d: SendMessageRespEn, sendingState: SendMsgState?, callId: String?): Pair<MessageInfoEntity?, String?>? {
         if (sendingState == null) return null
         var msgDb: MessageDao? = null
         var sendDb: SendMsgDao? = null

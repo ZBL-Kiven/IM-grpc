@@ -151,7 +151,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
     private fun send(sen: SendMessageReqEn, isRecent: Boolean = false, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
         val p = if (sendBefore != null) checkPermission() else null
         if (sendBefore == null || p?.first == true) {
-            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore, config.customSendCallback)
+            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore, config.customSendListener?.callback)
         } else {
             CcIM.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
         }

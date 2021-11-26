@@ -1,11 +1,15 @@
 package com.zj.ccIm
 
+import android.os.Handler
+import android.os.Looper
 import com.zj.ccIm.core.IMHelper
 import com.zj.database.entity.PrivateOwnerEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.database.entity.SessionLastMsgInfo
 import java.lang.StringBuilder
+
+internal object MainLooper : Handler(Looper.getMainLooper())
 
 object UT {
 

@@ -12,7 +12,6 @@ import com.zj.ccIm.core.bean.*
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.database.entity.*
 import com.zj.ccIm.core.db.*
-import com.zj.ccIm.core.sender.Converter
 import com.zj.ccIm.error.AuthenticationError
 import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
@@ -163,34 +162,14 @@ open class ClientHubImpl : ClientHub<Any?>() {
         var pl: String? = null
         when (cls) {
             SendMessageReqEn::class.java -> {
-                if (d != null) {
-                    val sst = sendingState ?: SendMsgState.SENDING
-                    val data = d as SendMessageReqEn
-                    if (sst == SendMsgState.SENDING) data.diamondNum?.let {
-                        AssetsChangedOperator.onAssetsChanged(callId, -it, null)
-                    }
-                    val msg = Converter.exchangeMsgInfoBySendingInfo(data, sst)
-                    val r = MessageDbOperator.onDealMessages(msg, callId, sendingState)
-                    first = r?.first
-                    pl = r?.second
-                }
+                val r = SendingDbOperator.onDealSendMsgReqInfo(d as? SendMessageReqEn, sendingState, callId)
+                first = r?.first
+                pl = r?.second
             }
             SendMessageRespEn::class.java -> {
-                if (d != null) {
-                    val data = d as SendMessageRespEn
-                    run assets@{
-                        if (sendingState != SendMsgState.SUCCESS && sendingState != SendMsgState.NONE) {
-                            val diamond = data.diamondNum ?: return@assets
-                            AssetsChangedOperator.onAssetsChanged(callId, diamond, null)
-                        } else {
-                            val sparks = data.sparkNum ?: return@assets
-                            AssetsChangedOperator.onAssetsChanged(callId, null, sparks)
-                        }
-                    }
-                    val r = SendingDbOperator.onDealMsgSentInfo(data, callId, sendingState)
-                    first = r?.first
-                    pl = r?.second
-                }
+                val r = SendingDbOperator.onDealSendMsgRespInfo(d as? SendMessageRespEn, sendingState, callId)
+                first = r?.first
+                pl = r?.second
             }
             MessageInfoEntity::class.java -> {
                 if (!dc.isNullOrEmpty()) {

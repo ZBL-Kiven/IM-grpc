@@ -1,10 +1,9 @@
 package com.zj.ccIm.core.fecher
 
-import android.os.Handler
-import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.CcIM
+import com.zj.ccIm.MainLooper
 import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.FetchResult
@@ -18,7 +17,6 @@ internal object Fetcher {
             return field++
         }
     private val cachedResultListener = mutableMapOf<String, MutableMap<Int, FetchResultRunner>>()
-    private val handler = Handler(Looper.getMainLooper())
 
     fun init() {
         CcIM.registerConnectionStateChangeListener("main_fetcher_observer") {
@@ -71,7 +69,7 @@ internal object Fetcher {
         prop.fetchIds.forEach {
             val r = cachedResultListener.remove(prop.dealCls?.getPayload())?.get(it) ?: return@forEach
             r.result = result
-            handler.post(r)
+            MainLooper.post(r)
         }
         if (formRefresh) ImLogs.d("Fetcher", "on refresh result : ${result.success}")
         CcIM.postToUiObservers(result, prop.dealCls?.getPayload())

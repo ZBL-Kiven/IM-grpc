@@ -1,8 +1,7 @@
 package com.zj.ccIm.core.fecher
 
-import android.os.Handler
-import android.os.Looper
 import com.zj.api.base.BaseRetrofit
+import com.zj.ccIm.MainLooper
 import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.MessageType
 import com.zj.ccIm.core.SystemMsgType
@@ -19,7 +18,6 @@ import com.zj.protocol.utl.ProtoBeanUtils
 internal object MessageFetcher {
 
     private var fetchingRunners = mutableMapOf<String, FetchMsgRunner>()
-    private val handler by lazy { Handler(Looper.getMainLooper()) }
 
     /**
      * Get the latest news of the conversation during the offline period, here is a distinction between group and single chat
@@ -57,7 +55,7 @@ internal object MessageFetcher {
                             mapped[k1] = cast(mappedLst)
                         }
                         val rsp = GetMoreMessagesResult(callId, isOk, mapped, rq, a, t)
-                        if (threadCheck) handler.post { v.invoke(rsp) } else v.invoke(rsp)
+                        if (threadCheck) MainLooper.post { v.invoke(rsp) } else v.invoke(rsp)
                     }
                     callIdObservers.clear()
                     fetchingRunners.remove(rq.key)

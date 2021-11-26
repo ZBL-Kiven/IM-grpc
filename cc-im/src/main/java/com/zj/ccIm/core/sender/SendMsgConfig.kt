@@ -1,6 +1,6 @@
 package com.zj.ccIm.core.sender
 
-import com.zj.im.sender.CustomSendingCallback
+import com.zj.ccIm.core.sender.exchange.CustomSendListener
 import java.util.*
 
 @Suppress("unused")
@@ -9,7 +9,7 @@ class SendMsgConfig internal constructor(internal val fromCustom: Boolean = fals
     internal var callId = UUID.randomUUID().toString()
     internal var sendConditionCheck = false
     internal var connectionStateCheck = false
-    internal var customSendCallback: CustomSendingCallback<Any?>? = null
+    internal var customSendListener: CustomSendListener<*>? = null
 
     fun customCallId(callId: String): SendMsgConfig {
         this.callId = callId
@@ -26,8 +26,8 @@ class SendMsgConfig internal constructor(internal val fromCustom: Boolean = fals
         return this
     }
 
-    fun setCustomSendCallback(customSendCallback: CustomSendingCallback<Any?>?): SendMsgConfig {
-        this.customSendCallback = customSendCallback
+    fun <O, E : CustomSendListener<O>> setCustomSendCallback(customSendListener: E?): SendMsgConfig {
+        this.customSendListener = customSendListener
         return this
     }
 
