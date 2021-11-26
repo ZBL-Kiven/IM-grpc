@@ -12,7 +12,7 @@ object TimeLineInflateModel {
     private const val maximumDiffDisplayTime: Long = 2 * 60 * 1000
 
     fun inflateTimeLine(ctx: Context, dataTime: Long, lastTime: Long, maxDiffTimeStamp: Long = maximumDiffDisplayTime): String? {
-        return if (abs(lastTime - dataTime) > maxDiffTimeStamp) {
+        return if (dataTime > 0 && abs(lastTime - dataTime) > maxDiffTimeStamp) {
             getTimeString(ctx, dataTime)
         } else null
     }
