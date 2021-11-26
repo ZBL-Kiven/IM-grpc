@@ -1,6 +1,7 @@
 package com.zj.imtest.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,6 +16,7 @@ import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
 import com.zj.im.chat.enums.ConnectionState
+import com.zj.im.sender.CustomSendingCallback
 import com.zj.imtest.BaseApp
 import com.zj.imtest.R
 import com.zj.imtest.ui.base.BaseMessageFragment
@@ -59,8 +61,8 @@ class MainActivity : AppCompatActivity() {
         inputDelegate = InputDelegate(inputLayout, groupId)
         inputLayout?.setOnFuncListener(inputDelegate)
         initConnectObserver()
-        val f1 = MessageFragment().setData(groupId, ownerId, targetUserId)
-        val f2 = GroupFragment().setData(groupId, ownerId, targetUserId)
+        val f1 = GroupFragment().setData(groupId, ownerId, targetUserId)
+        val f2 = MessageFragment().setData(groupId, ownerId, targetUserId)
         val fragments = arrayOf(f1, f2)
         fragmentManager = object : TabFragmentManager<Long, BaseMessageFragment>(this, container, 0, tab, groupId, groupId) {
 
@@ -78,6 +80,26 @@ class MainActivity : AppCompatActivity() {
                 inputLayout?.setScrollerView(frg?.getKeyboardScrollerView())
                 inputDelegate?.updateCurChannel(frg?.getData())
             }
+        }
+        initListener()
+    }
+
+    private fun initListener() {
+        ivHeadPic?.setOnClickListener {
+            IMHelper.CustomSender.setCustomSendCallback(object : CustomSendingCallback<Any?>() {
+
+                override fun onStart(callId: String, d: Any?) {
+                    Log.e("=======>", "CustomSendingCallback: onStart $callId")
+                }
+
+                override fun onSendingUploading(progress: Int, callId: String) {
+                    Log.e("=======>", "CustomSendingCallback: progress $callId")
+                }
+
+                override fun onResult(isOK: Boolean, retryAble: Boolean, callId: String, d: Any?, throwable: Throwable?, payloadInfo: Any?) {
+                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK")
+                }
+            }.setPending()).build().sendText("asdasdasdasdaf", groupId)
         }
     }
 
@@ -120,9 +142,4 @@ class MainActivity : AppCompatActivity() {
         val s = "$groupInfoDesc\n$badgeText"
         tvGroupDesc?.text = s
     }
-
-//    override fun finish() {
-//        super.finish()
-//        IMHelper.shutdown()
-//    }
 }

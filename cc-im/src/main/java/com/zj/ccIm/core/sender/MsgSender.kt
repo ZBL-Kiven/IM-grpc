@@ -14,14 +14,7 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
 
 @Suppress("unused")
-open class MsgSender internal constructor() {
-
-    private lateinit var config: SendMsgConfig
-
-    internal fun withConfig(config: SendMsgConfig): MsgSender {
-        this.config = config
-        return this
-    }
+open class MsgSender internal constructor(private val config: SendMsgConfig) {
 
     fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean): String {
         val sen = SendMessageReqEn()
@@ -158,7 +151,7 @@ open class MsgSender internal constructor() {
     private fun send(sen: SendMessageReqEn, isRecent: Boolean = false, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
         val p = if (sendBefore != null) checkPermission() else null
         if (sendBefore == null || p?.first == true) {
-            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore)
+            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore, config.customSendCallback)
         } else {
             CcIM.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
         }

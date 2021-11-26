@@ -30,7 +30,7 @@ class PrivateFansEn {
     var groupId: Long? = null
 
     /**
-     * 忽略数据库字段，由推送时拼装
+     * 群内最后一条消息，推送时拼装
      * */
     var lastMsgInfo: SessionLastMsgInfo? = null
 }

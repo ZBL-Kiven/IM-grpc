@@ -22,6 +22,7 @@ import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
 import com.zj.im.main.StatusHub
+import com.zj.im.sender.CustomSendingCallback
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.ProcessUtil
 import com.zj.im.utils.cast
@@ -219,12 +220,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     /**
      * send a msg ，see [RunnerClientStub.send]
      * */
-    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        getServiceOrCache("IMInterface.send") { send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore) }
+    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
+        getServiceOrCache("IMInterface.send") { send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback) }
     }
 
-    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        getServiceOrCache("IMInterface.resend") { send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore) }
+    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
+        getServiceOrCache("IMInterface.resend") { send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback) }
     }
 
     fun routeToClient(data: T, callId: String) {

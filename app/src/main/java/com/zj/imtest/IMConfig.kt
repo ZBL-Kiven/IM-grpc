@@ -68,6 +68,10 @@ class IMConfig(private val uid: Int) : ImConfigIn {
         return 24 * 60 * 60 * 1000
     }
 
+    override fun onAlertError(e: IMException) {
+        e.printStackTrace()
+    }
+
     override fun onSdkDeadlyError(e: IMException) {
         if (e.errorLevel == IMException.ERROR_LEVEL_DEADLY) BaseApp.initChat(uid)
         else Log.e(" ERROR !! =====>", e.message ?: "")

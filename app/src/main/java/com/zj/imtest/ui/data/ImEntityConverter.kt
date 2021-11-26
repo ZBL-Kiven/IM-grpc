@@ -1,5 +1,6 @@
 package com.zj.imtest.ui.data
 
+import android.content.Context
 import android.util.Log
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
@@ -311,11 +312,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return IMHelper.getMineRole(info?.groupId) == 2
     }
 
-    override fun getRecallContent(): String? {
+    override fun getRecallContent(context: Context): String? {
         return "撤回内容"
     }
 
-    override fun getRefuseContent(): String? {
+    override fun getRefuseContent(context: Context): String? {
         return "拒绝内容"
     }
 

@@ -66,10 +66,18 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
         if (info == null) return null
         if (info.key.isEmpty()) throw NullPointerException("you must generate a MsgKey before update!")
         return IMHelper.withDb {
+            var sessionName: String? = info.newMsg?.sender?.senderName
+            var sessionAvatar: String? = info.newMsg?.sender?.senderAvatar
+            val fromOwnerSend = info.newMsg?.sender?.senderId == info.newMsg?.ownerId
+            val isReplyMsg = info.newMsg?.replyMsg?.msgType == MsgType.QUESTION.type
+            if (fromOwnerSend && isReplyMsg) {
+                sessionAvatar = info.newMsg?.replyMsg?.sender?.senderAvatar
+                sessionName = info.newMsg?.replyMsg?.sender?.senderName
+            }
             val sessionInfo = PrivateFansEn()
             sessionInfo.lastMsgInfo = info
-            sessionInfo.avatar = info.newMsg?.sender?.senderAvatar
-            sessionInfo.userName = info.newMsg?.sender?.senderName
+            sessionInfo.avatar = sessionAvatar
+            sessionInfo.userName = sessionName
             sessionInfo.userId = info.targetUserId
             sessionInfo.groupId = info.groupId
             val lastMsgDb = it.sessionMsgDao()

@@ -2,6 +2,7 @@ package com.zj.im.chat.modle
 
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.chat.enums.ConnectionState
+import com.zj.im.sender.CustomSendingCallback
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.Constance
@@ -50,6 +51,8 @@ internal class BaseMsgInfo<T> private constructor() {
 
     var isHidden: Boolean = false
 
+    var customSendingCallback: CustomSendingCallback<T>? = null
+
     /**
      *the pending id for per message，
      *
@@ -94,20 +97,20 @@ internal class BaseMsgInfo<T> private constructor() {
             return baseInfo
         }
 
-        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, joinInTop: Boolean): BaseMsgInfo<T> {
+        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?): BaseMsgInfo<T> {
             return BaseMsgInfo<T>().apply {
                 this.data = data
                 this.callId = callId
                 this.timeOut = timeOut
                 this.isResend = isResend
-                this.joinInTop = joinInTop
                 this.onSendBefore = sendBefore
-                this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
                 this.createdTs = getIncrementNumber()
                 this.type = MessageHandleType.SEND_MSG
                 this.sendingState = SendMsgState.SENDING
                 this.ignoreStateCheck = ignoreStateCheck
                 this.ignoreConnecting = ignoreConnecting
+                this.customSendingCallback = customSendingCallback
+                this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
             }
         }
 

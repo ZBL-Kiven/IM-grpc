@@ -102,8 +102,9 @@ internal object MessageFetcher {
                 }
                 if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
                     result.add(MessageInfoEntity().apply {
-                        msg.messageType = MessageType.SYSTEM.type
-                        msg.systemMsgType = SystemMsgType.SENSITIVE.type
+                        this.extContent = msg.extContent
+                        this.messageType = MessageType.SYSTEM.type
+                        this.systemMsgType = SystemMsgType.SENSITIVE.type
                         this.channelKey = key
                         this.clientMsgId = msg.clientMsgId + ":SENSITIVE"
                         this.groupId = msg.groupId
@@ -115,6 +116,7 @@ internal object MessageFetcher {
                         this.countryCode = msg.countryCode
                         this.extContent = it
                     })
+                    msg.extContent = null
                 }
             }
             return result

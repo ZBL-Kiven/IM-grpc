@@ -37,7 +37,7 @@ import okhttp3.RequestBody
 @Suppress("MemberVisibilityCanBePrivate", "unused")
 object IMHelper {
 
-    val Sender: MsgSender; get() = MsgSender().withConfig(SendMsgConfig())
+    val Sender: MsgSender; get() = MsgSender(SendMsgConfig())
 
     val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
 

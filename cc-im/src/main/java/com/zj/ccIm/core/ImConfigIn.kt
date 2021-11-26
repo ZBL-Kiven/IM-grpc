@@ -24,11 +24,13 @@ interface ImConfigIn {
 
     fun useLive(): Boolean = false
 
-    fun onAuthenticationError()
-
     fun getHeatBeatsTimeOut(): Long
 
     fun getIdleTimeOut(): Long
+
+    fun onAlertError(e: IMException)
+
+    fun onAuthenticationError()
 
     fun onSdkDeadlyError(e: IMException)
 

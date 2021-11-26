@@ -39,6 +39,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             messageStreamObserver?.onCompleted()
         }
         ImLogs.recordLogsInFile("on connecting...", "start connect to server with id : $connectId")
+        messageStreamObserver = null
+        topicStreamObserver = null
         receiveMessage(connectId)
         receiveTopic(connectId)
     }
@@ -95,6 +97,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * send msg to server
      * */
     private fun sendMsg(d: Any?, callId: String, callBack: SendingCallBack<Any?>) {
+        ImLogs.d("server hub event ", "on new msg send")
         if (d !is SendMessageReqEn) {
             callBack.result(false, null, false, IllegalArgumentException("the send msg type is not supported except SendMessageReqEn.class"), null)
             return
@@ -102,6 +105,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         if (d.clientMsgId != callId) d.clientMsgId = callId
         ImApi.getRecordApi().request({ it.sendMsg(d) }, Schedulers.io(), Schedulers.io()) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
             var resp = data
+            resp?.channelKey = d.key
             val isOk = isSuccess && resp != null && !resp.black
             if (!isOk) {
                 resp = setErrorMsgResult(resp, d, (a as? ImApi.EH.HttpErrorBody)?.code ?: 0)
@@ -231,7 +235,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             this.channelKey = d.key
         } else {
             resp.msgStatus = status
-            resp.channelKey = d.key
         }
         return resp
     }

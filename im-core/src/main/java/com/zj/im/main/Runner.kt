@@ -2,33 +2,30 @@ package com.zj.im.main
 
 import android.app.Application
 import com.zj.im.chat.core.DataStore
+import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.enums.RuntimeEfficiency
 import com.zj.im.chat.enums.SendMsgState
-import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.exceptions.LooperInterruptedException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.modle.BaseMsgInfo
-import com.zj.im.chat.modle.SendingUp
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.main.dispatcher.EventHub
 import com.zj.im.main.impl.IMInterface
 import com.zj.im.main.impl.RunnerClientStub
 import com.zj.im.main.impl.RunningObserver
+import com.zj.im.sender.CustomSendingCallback
 import com.zj.im.sender.OnSendBefore
-import com.zj.im.sender.OnStatus
 import com.zj.im.sender.SendExecutors
 import com.zj.im.sender.SendingPool
 import com.zj.im.utils.*
-import com.zj.im.utils.Constance
-import com.zj.im.utils.EfficiencyUtils
-import com.zj.im.utils.TimeOutUtils
-import com.zj.im.utils.log.logger.*
+import com.zj.im.utils.log.logger.FileUtils
+import com.zj.im.utils.log.logger.initLogCollectors
 import com.zj.im.utils.log.logger.printInFile
 import java.io.File
 
 @Suppress("MemberVisibilityCanBePrivate")
-internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClientStub<T>, SendExecutors.SendExecutorsInterface<T> {
+internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, SendExecutors.SendExecutorsInterface<T> {
 
     private var dataStore: DataStore<T>? = null
     private var msgLooper: MsgLooper? = null
@@ -97,7 +94,7 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
     private fun initQueue() {
         eventHub = EventHub()
         dataStore = DataStore()
-        sendingPool = SendingPool(this)
+        sendingPool = SendingPool()
     }
 
     fun getClient(case: String): ClientHub<T>? {
@@ -124,9 +121,12 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
     /**
      * send a msg
      * */
-    override fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?) {
-        enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
-        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, false))
+    override fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?) {
+        if (customSendingCallback == null || customSendingCallback.pending) {
+            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
+        }
+        customSendingCallback?.onStart(callId, data)
+        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback))
     }
 
     private fun setLooperEfficiency(total: Int) {
@@ -174,19 +174,6 @@ internal abstract class Runner<T> : RunningObserver(), OnStatus<T>, RunnerClient
             if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend))
         }
         sendingPool?.unLock()
-    }
-
-    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?, payloadInfo: Any?) {
-        if (isFinish) {
-            if (isOK) {
-                printInFile("SendExecutors.send", "$callId before sending task success\npayload = $payloadInfo")
-            } else {
-                printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
-            }
-            sendingPool?.setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data, payloadInfo)
-        } else {
-            enqueue(BaseMsgInfo.onProgressChange<T>(progress, callId))
-        }
     }
 
     private fun onLayerChanged(isHidden: Boolean) {

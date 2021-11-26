@@ -5,6 +5,7 @@ import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.SendMessageReqEn
+import com.zj.im.sender.CustomSendingCallback
 import com.zj.im.sender.OnSendBefore
 import java.util.concurrent.LinkedBlockingDeque
 
@@ -49,16 +50,16 @@ internal object IMChannelManager {
         return lastMsgRegister.isNotEmpty()
     }
 
-    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, isRecent: Boolean, sendBefore: OnSendBefore<Any?>?) {
+    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, isRecent: Boolean, sendBefore: OnSendBefore<Any?>?, customSendCallback: CustomSendingCallback<Any?>?) {
         if (sen.key.isEmpty()) {
             sen.key = lastMsgRegister.peekLast()?.key ?: ""
         }
         if (sen.key.isEmpty()) ImLogs.recordErrorInFile("sendMsgWithChannel", "you are sending a message without sending key ,this message may couldn't retry if failed!")
         ImLogs.recordLogsInFile("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
         if (isRecent) {
-            CcIM.resend(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
+            CcIM.resend(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore, customSendCallback)
         } else {
-            CcIM.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore)
+            CcIM.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, sendBefore, customSendCallback)
         }
     }
 

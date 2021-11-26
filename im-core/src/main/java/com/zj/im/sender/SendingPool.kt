@@ -5,11 +5,12 @@ import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.modle.SendingUp
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.utils.cusListOf
+import com.zj.im.utils.log.logger.printInFile
 
 /**
  * Created by ZJJ
  */
-internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
+internal class SendingPool<T> : OnStatus<T> {
 
     private var sending = false
 
@@ -33,7 +34,7 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
 
     fun push(info: BaseMsgInfo<T>) {
         sendMsgQueue.add(info)
-        if (info.onSendBefore != null) info.onSendBefore?.call(onStateChange)
+        if (info.onSendBefore != null) info.onSendBefore?.call(this)
     }
 
     fun lock() {
@@ -87,5 +88,23 @@ internal class SendingPool<T>(private val onStateChange: OnStatus<T>) {
     fun clear() {
         sendMsgQueue.clear()
         sending = false
+    }
+
+    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?, payloadInfo: Any?) {
+        if (isFinish) {
+            if (isOK) {
+                printInFile("SendExecutors.send", "$callId before sending task success\npayload = $payloadInfo")
+            } else {
+                printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
+            }
+            setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data, payloadInfo)
+        } else {
+            sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
+                customSendingCallback?.let {
+                    it.onSendingUploading(progress, callId)
+                    if (it.pending) DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
+                } ?: DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
+            }
+        }
     }
 }
