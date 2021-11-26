@@ -65,7 +65,7 @@ class GroupRewardItem @JvmOverloads constructor(context: Context,
                     R.color.im_msg_reward_text_color_timeout))
                 rewardLinearLayout.setBackgroundResource(R.drawable.im_msg_item_widget_reward_bg_obtained_me)
                 sparkImg.setImageResource(R.drawable.im_msg_item_widget_reward_diamonds_gray)
-                if (!data.getMsgIsReject()) plus = "- "
+                if (!data.getMsgUIIsReject()) plus = "- "
             }
             data.getDiamonds().let {
                 textRewardNumber.text = StringBuilder(plus).append(it)

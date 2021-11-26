@@ -26,7 +26,7 @@ class IMItemRecallTextView @JvmOverloads constructor(context: Context, attrs: At
         with(contentLayout) {
             tvContent = findViewById(R.id.im_msg_bubble_content_recall_tv)
         }
-        tvContent.textSize = 14f
+        tvContent.textSize = 13f
         tvContent.gravity = Gravity.CENTER_HORIZONTAL
         tvContent.setPadding(basePadding, basePadding / 2, basePadding, basePadding / 2)
         tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_white))

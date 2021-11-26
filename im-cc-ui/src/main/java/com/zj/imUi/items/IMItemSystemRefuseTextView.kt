@@ -49,8 +49,6 @@ class IMItemSystemRefuseTextView @JvmOverloads constructor(context: Context, att
         }
         if (data.getRefuseContent(context) != null) {
             tvContent.text = data.getRefuseContent(context)
-        } else {
-            tvContent.text = context.getString(R.string.im_chat_msg_owner_refuse)
         }
     }
 

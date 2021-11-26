@@ -80,7 +80,7 @@ object BubbleRenderer : BaseBubbleRenderer {
             if (isSelfMessage) { //自己发送的消息
                 setSelfMsgBg(context, data)
             } else if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
-                if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
+                if (data.getQuestionStatus() == 1 || data.getMsgUIIsReject()) ContextCompat.getColor(context, R.color.im_msg_replied_bg)
                 else if (data.getQuestionStatus() == 0 && !data.getPublished()) {
                     ContextCompat.getColor(context, R.color.im_msg_message_item_private)
                 } else {
@@ -96,7 +96,7 @@ object BubbleRenderer : BaseBubbleRenderer {
                 ContextCompat.getColor(context, R.color.im_msg_bg_origin)
             } else { //其他人的消息
                 if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
-                    if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
+                    if (data.getQuestionStatus() == 1 || data.getMsgUIIsReject()) {
                         ContextCompat.getColor(context, R.color.im_msg_bg_color_white)
                     } else {
                         if (!data.getPublished()) { //打赏消息状态
@@ -112,7 +112,7 @@ object BubbleRenderer : BaseBubbleRenderer {
 
     private fun setSelfMsgBg(context: Context, data: ImMsgIn): Int {
         return if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_QUESTION) {
-            if (data.getQuestionStatus() == 1 || data.getMsgIsReject()) {
+            if (data.getQuestionStatus() == 1 || data.getMsgUIIsReject()) {
                 ContextCompat.getColor(context, R.color.im_msg_replied_bg)
             } else {
                 if (!data.getPublished()) { //打赏消息状态
