@@ -95,7 +95,7 @@ internal object SendingDbOperator {
             result = MessageInfoEntity()
         }
         result?.channelKey = d.channelKey
-        result?.clientMsgId = d.clientMsgId ?: ""
+        result?.clientMsgId = d.clientMsgId
         result?.sendingState = sendingState.type
         result?.msgId = d.msgId
         result?.ownerId = d.ownerId

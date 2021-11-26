@@ -20,7 +20,7 @@ internal object MessageDbOperator {
                 val msgDb = it.messageDao()
                 val sendMsgDao = it.sendMsgDao()
                 val hasLocal = (if (callId.isNullOrEmpty()) null else msgDb.findMsgByClientId(callId)) != null
-                val inSending = (if (callId.isNullOrEmpty()) null else sendMsgDao.findByCallId(callId)) != null
+                val sendingInfo = if (callId.isNullOrEmpty()) null else sendMsgDao.findByCallId(callId)
                 if (sendingState == SendMsgState.ON_SEND_BEFORE_END) {
                     msgDb.insertOrChangeMessage(msg)
                 }
@@ -42,10 +42,12 @@ internal object MessageDbOperator {
                 }
                 msg.sendingState = sendingState?.type ?: SendMsgState.NONE.type
                 val recalled = msg.extContent?.containsKey(EXTENDS_TYPE_RECALL) == true
-                if ((hasLocal || inSending) && (recalled || sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
-                    sendMsgDao.deleteByCallId(callId)
-                    msgDb.deleteMsgByClientId(callId)
-                    msg.sendingState = SendMsgState.SUCCESS.type
+                if (sendingInfo != null && sendingInfo.key == msg.channelKey) {
+                    if (hasLocal && (recalled || sendingState == SendMsgState.SUCCESS || sendingState == SendMsgState.NONE)) {
+                        sendMsgDao.deleteByCallId(callId)
+                        msgDb.deleteMsgByClientId(callId)
+                        msg.sendingState = SendMsgState.SUCCESS.type
+                    }
                 }
                 val pl = when {
                     msg.sendingState == SendMsgState.SUCCESS.type -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE

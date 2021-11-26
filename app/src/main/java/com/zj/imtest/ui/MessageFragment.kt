@@ -9,9 +9,15 @@ class MessageFragment : BaseMessageFragment() {
 
     override fun createData(groupId: Long, ownerId: Int, targetUserId: Int): ChannelRegisterInfo {
         return if (ownerId == BaseApp.config.getUserId()) {
-            ChannelRegisterInfo.buildWithFansPrivateChat(this, groupId, targetUserId)
+            ChannelRegisterInfo.buildWithOwnerMessage(this, groupId)
         } else {
-            ChannelRegisterInfo.buildWithOwnerPrivateChat(this, groupId, ownerId)
+            ChannelRegisterInfo.buildWithFansMessage(this, groupId, ownerId)
         }
+
+        //  return if (ownerId == BaseApp.config.getUserId()) {
+        //            ChannelRegisterInfo.buildWithFansPrivateChat(this, groupId, targetUserId)
+        //        } else {
+        //            ChannelRegisterInfo.buildWithOwnerPrivateChat(this, groupId, ownerId)
+        //        }
     }
 }

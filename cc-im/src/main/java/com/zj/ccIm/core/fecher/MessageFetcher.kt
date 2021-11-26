@@ -87,8 +87,8 @@ internal object MessageFetcher {
                 ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
             }
             run with@{
-                if (IMHelper.getDb()?.sendMsgDao()?.findByCallId(msg?.clientMsgId) != null) {
-                    return@with
+                IMHelper.getDb()?.sendMsgDao()?.findByCallId(msg?.clientMsgId)?.let {
+                    if (it.key == key) return@with
                 }
                 msg?.channelKey = key
                 msg?.messageType = MessageType.MESSAGE.type

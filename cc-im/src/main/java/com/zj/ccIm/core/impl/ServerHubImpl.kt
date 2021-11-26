@@ -111,7 +111,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             if (!isOk) {
                 resp = setErrorMsgResult(resp, d, (a as? ImApi.EH.HttpErrorBody)?.code ?: 0)
             }
-            resp?.extContent = mapOf(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT to "{\"riskMsg\":\"{\\\"multilingual\\\":{\\\"EN\\\":\\\"大范甘迪个\\\",\\\"ID\\\":\\\"地方个梵蒂冈\\\",\\\"ZH\\\":\\\"你大爷\\\"},\\\"riskId\\\":21}\"}")
             MessageFetcher.dealMsgExtendsContent(resp).forEach { i ->
                 callBack.result(isOk, i, d.autoRetryResend, throwable, a)
             }

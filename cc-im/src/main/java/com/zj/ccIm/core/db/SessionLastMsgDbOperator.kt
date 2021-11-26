@@ -68,7 +68,7 @@ internal object SessionLastMsgDbOperator : SessionOperateIn {
         return IMHelper.withDb {
             var sessionName: String? = info.newMsg?.sender?.senderName
             var sessionAvatar: String? = info.newMsg?.sender?.senderAvatar
-            val fromOwnerSend = info.newMsg?.sender?.senderId == info.newMsg?.ownerId
+            val fromOwnerSend = info.newMsg?.sender?.senderId == info.ownerId
             val isReplyMsg = info.newMsg?.replyMsg?.msgType == MsgType.QUESTION.type
             if (fromOwnerSend && isReplyMsg) {
                 sessionAvatar = info.newMsg?.replyMsg?.sender?.senderAvatar
