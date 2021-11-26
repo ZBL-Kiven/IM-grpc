@@ -108,6 +108,8 @@ interface ImMsgIn {
 
     //打赏是否被拒绝
     fun getMsgIsReject(): Boolean
+    //打赏是否被拒绝,用于UI
+    fun getMsgUIIsReject(): Boolean
 
     //是否是管理员
     fun getIsAdmin(): Boolean

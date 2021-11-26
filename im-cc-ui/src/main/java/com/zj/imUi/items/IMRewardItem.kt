@@ -149,7 +149,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
         //问题内容
         textQuestion.text = data.getQuestionTextContent() //当为群主视角查看未回答问题时,增加可点击textView控件
         val messageNormal = data.getSendState() == 0 || data.getSendState() == 3
-        if (data.getMsgIsReject()) { //调整Flag位置
+        if (data.getMsgUIIsReject()) { //调整Flag位置
             val lp = FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             lp.gravity = Gravity.END
             lp.setMargins(0, DPUtils.dp2px(-60f), DPUtils.dp2px(10f), 10)
@@ -213,7 +213,7 @@ class IMRewardItem @JvmOverloads constructor(context: Context, attributeSet: Att
 
 
         when {
-            data.getMsgIsReject() -> {
+            data.getMsgUIIsReject() -> {
                 setAlreadyReplyBg(RewardMsgState.REJECTED.type)
             }
             data.getQuestionStatus() == RewardMsgState.WAIT_REPLY.type -> {
