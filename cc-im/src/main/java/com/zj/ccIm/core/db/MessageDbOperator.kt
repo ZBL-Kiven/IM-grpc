@@ -65,6 +65,7 @@ internal object MessageDbOperator {
     private fun getMessagePayload(msg: MessageInfoEntity, hasLocal: Boolean): String {
         return when {
             msg.sendingState == SendMsgState.SUCCESS.type -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
+            msg.systemMsgType == SystemMsgType.SENSITIVE.type -> ClientHubImpl.PAYLOAD_ADD
             msg.systemMsgType == SystemMsgType.RECALLED.type -> ClientHubImpl.PAYLOAD_CHANGED
             !hasLocal -> ClientHubImpl.PAYLOAD_ADD
             else -> ClientHubImpl.PAYLOAD_CHANGED
