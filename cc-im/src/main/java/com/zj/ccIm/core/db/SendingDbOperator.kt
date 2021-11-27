@@ -76,7 +76,7 @@ internal object SendingDbOperator {
                     d.msgStatus == ImApi.EH.GROUP_MEMBER_NOT_EXIST -> ClientHubImpl.PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST
                     d.msgStatus == ImApi.EH.GROUP_STOPPED -> ClientHubImpl.PAYLOAD_DELETE_GROUP_STOPPED
                     d.msgStatus == ImApi.EH.REPEAT_ANSWER -> ClientHubImpl.PAYLOAD_DELETE_REPEAT_ANSWER
-                    d.msgStatus == ImApi.EH.DIAMOND_NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_REPEAT_ANSWER
+                    d.msgStatus == ImApi.EH.DIAMOND_NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)

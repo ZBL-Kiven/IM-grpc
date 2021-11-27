@@ -10,9 +10,9 @@ abstract class CustomSendingCallback<T> {
 
     internal var pending: Boolean = false
 
-    open fun onStart(callId: String, d: T?) {}
+    open fun onStart(callId: String, ignoreSendState: Boolean, d: T?) {}
 
-    open fun onSendingUploading(progress: Int, callId: String) {}
+    open fun onSendingUploading(progress: Int, ignoreSendState: Boolean, callId: String) {}
 
     abstract fun onResult(isOK: Boolean, retryAble: Boolean, callId: String, d: T?, throwable: Throwable?, payloadInfo: Any?)
 }

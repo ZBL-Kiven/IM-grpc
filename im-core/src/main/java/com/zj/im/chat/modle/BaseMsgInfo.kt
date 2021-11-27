@@ -11,15 +11,17 @@ import com.zj.im.utils.getIncrementNumber
 /**
  * Created by ZJJ
  */
-enum class MessageHandleType {
+internal enum class MessageHandleType {
     NETWORK_STATE, RECEIVED_MSG, CONNECT_STATE, SEND_MSG, SEND_STATE_CHANGE, SEND_PROGRESS_CHANGED, LAYER_CHANGED, ROUTE_CLIENT, ROUTE_SERVER
 }
 
-enum class SendingUp {
+internal enum class SendingUp {
     NORMAL, READY, WAIT, CANCEL
 }
 
 internal class BaseMsgInfo<T> private constructor() {
+
+    var sendWithoutState: Boolean = false
 
     var ignoreConnecting: Boolean = false
 
@@ -73,13 +75,14 @@ internal class BaseMsgInfo<T> private constructor() {
             }
         }
 
-        fun <T> sendingStateChange(state: SendMsgState?, callId: String, data: T?, isResend: Boolean): BaseMsgInfo<T> {
+        fun <T> sendingStateChange(state: SendMsgState?, callId: String, data: T?, isResend: Boolean, ignoreSendState: Boolean): BaseMsgInfo<T> {
             val baseInfo = BaseMsgInfo<T>()
-            baseInfo.sendingState = state
-            baseInfo.callId = callId
             baseInfo.data = data
+            baseInfo.callId = callId
             baseInfo.isResend = isResend
+            baseInfo.sendingState = state
             baseInfo.type = MessageHandleType.SEND_STATE_CHANGE
+            baseInfo.sendWithoutState = (state == SendMsgState.SENDING || state == SendMsgState.ON_SEND_BEFORE_END) && ignoreSendState
             return baseInfo
         }
 
@@ -97,7 +100,7 @@ internal class BaseMsgInfo<T> private constructor() {
             return baseInfo
         }
 
-        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?): BaseMsgInfo<T> {
+        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?): BaseMsgInfo<T> {
             return BaseMsgInfo<T>().apply {
                 this.data = data
                 this.callId = callId
@@ -106,9 +109,10 @@ internal class BaseMsgInfo<T> private constructor() {
                 this.onSendBefore = sendBefore
                 this.createdTs = getIncrementNumber()
                 this.type = MessageHandleType.SEND_MSG
-                this.sendingState = SendMsgState.SENDING
+                this.sendWithoutState = ignoreSendState
                 this.ignoreStateCheck = ignoreStateCheck
                 this.ignoreConnecting = ignoreConnecting
+                this.sendingState = SendMsgState.SENDING
                 this.customSendingCallback = customSendingCallback
                 this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
             }

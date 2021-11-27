@@ -85,7 +85,7 @@ internal object TimeOutUtils {
                                 }
                                 if (rev.isNotEmpty()) rev.forEach { t ->
                                     it.remove(t)
-                                    DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.TIME_OUT, t.callId, t.data, t.isResend))
+                                    DataReceivedDispatcher.pushData(BaseMsgInfo.sendingStateChange(SendMsgState.TIME_OUT, t.callId, t.data, t.isResend, false))
                                 }
                                 rev.clear()
                             }

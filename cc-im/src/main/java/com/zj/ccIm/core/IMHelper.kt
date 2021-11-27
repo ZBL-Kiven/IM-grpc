@@ -137,7 +137,7 @@ object IMHelper {
     fun leaveChatRoom(key: String) {
         val r = IMChannelManager.destroy(key)
         if (r != null) {
-            CcIM.send(r, Constance.CALL_ID_LEAVE_CHAT_ROOM + r.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+            CcIM.send(r, Constance.CALL_ID_LEAVE_CHAT_ROOM + r.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, ignoreSendState = true, sendBefore = null)
         }
     }
 
@@ -169,7 +169,7 @@ object IMHelper {
     internal fun resumedChatRoomIfConnection(req: ChannelRegisterInfo): String? {
         if (!req.checkValid()) return null
         CcIM.pause(Constance.FETCH_OFFLINE_MSG_CODE)
-        CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, sendBefore = null)
+        CcIM.send(req, Constance.CALL_ID_REGISTER_CHAT + req.key, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = false, ignoreConnecting = false, ignoreSendState = true, sendBefore = null)
         return req.key
     }
 

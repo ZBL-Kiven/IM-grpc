@@ -24,7 +24,7 @@ class SendMessageRespEn : BaseMessageInfo() {
 
     override var replyMsg: MessageInfoEntity? = null
 
-    override var extContent: Map<String, String>? = null
+    //override var extContent: Map<String, String>? = null
 
     override var sendingState: Int = SendMsgState.SUCCESS.type
 
@@ -62,5 +62,7 @@ class SendMessageRespEn : BaseMessageInfo() {
      * send msg state , 0: normal , else see [com.zj.ccIm.core.api.ImApi.EH]
      * */
     var msgStatus: Int = 0
+
+    override var extContent: Map<String, String>? = null
 
 }

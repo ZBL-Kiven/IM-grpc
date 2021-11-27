@@ -8,6 +8,7 @@ import com.zj.imUi.interfaces.ImMsgIn
 import com.google.gson.Gson
 import com.zj.ccIm.core.*
 import com.zj.ccIm.core.bean.RoteInfo
+import com.zj.ccIm.core.sender.exchange.MessageInfoEntityDataExchange
 import com.zj.imUi.UiMsgType
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
@@ -350,7 +351,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun onReplyQuestion() {
-        IMHelper.Sender.sendText("ok thanks", getGroupId(), info)
+        IMHelper.CustomSender.sendWithoutState().build().sendText("ok thanks", getGroupId(), info)
     }
 
     override fun onViewLargePic() {

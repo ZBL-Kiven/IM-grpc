@@ -7,9 +7,15 @@ import java.util.*
 class SendMsgConfig internal constructor(internal val fromCustom: Boolean = false) {
 
     internal var callId = UUID.randomUUID().toString()
+    internal var sendWithoutState = false
     internal var sendConditionCheck = false
     internal var connectionStateCheck = false
     internal var customSendListener: CustomSendListener<*>? = null
+
+    fun sendWithoutState(): SendMsgConfig {
+        sendWithoutState = true
+        return this
+    }
 
     fun customCallId(callId: String): SendMsgConfig {
         this.callId = callId

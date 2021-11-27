@@ -12,6 +12,7 @@ import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.entity.BaseMessageInfo
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
@@ -113,6 +114,7 @@ internal object MessageFetcher {
             if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
                 val systemInfo = info.copyTo(MessageInfoEntity())
                 systemInfo?.messageType = MessageType.SYSTEM.type
+                systemInfo?.sendingState = SendMsgState.NONE.type
                 systemInfo?.systemMsgType = SystemMsgType.SENSITIVE.type
                 systemInfo?.clientMsgId = info.clientMsgId + ":SENSITIVE"
                 lst.add(systemInfo)

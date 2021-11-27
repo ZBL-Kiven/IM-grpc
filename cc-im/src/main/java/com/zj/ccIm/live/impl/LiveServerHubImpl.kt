@@ -49,12 +49,12 @@ internal class LiveServerHubImpl : ServerHubImpl() {
                         ImLogs.d("on live data received", respInfo.toString())
                         when (data.msgType) {
                             LiveClientHubImpl.TYPE_USER_JOIN -> {
-                                postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_REGISTER_LIVE_ROOM, respInfo, false, data.serializedSize.toLong())
+                                postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_REGISTER_LIVE_ROOM, respInfo,  isSpecialData = false, data.serializedSize.toLong())
                             }
                             LiveClientHubImpl.TYPE_USER_KICK_OUT -> {
-                                postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_LEAVE_LIVE_ROOM, respInfo, false, data.serializedSize.toLong())
+                                postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_LEAVE_LIVE_ROOM, respInfo,  isSpecialData = false, data.serializedSize.toLong())
                             }
-                            else -> postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_NEW_MESSAGE, respInfo, false, data.serializedSize.toLong())
+                            else -> postReceivedMessage(LiveIMHelper.CALL_ID_LIVE_NEW_MESSAGE, respInfo,  isSpecialData = false, data.serializedSize.toLong())
                         }
                     } else {
                         if (t is StreamFinishException) liveStreamObserver = null

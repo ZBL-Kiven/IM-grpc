@@ -121,12 +121,12 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
     /**
      * send a msg
      * */
-    override fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?) {
+    override fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?) {
         if (customSendingCallback == null || customSendingCallback.pending) {
-            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend))
+            enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend, ignoreSendState))
         }
-        customSendingCallback?.onStart(callId, data)
-        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback))
+        customSendingCallback?.onStart(callId, ignoreSendState, data)
+        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback))
     }
 
     private fun setLooperEfficiency(total: Int) {
@@ -169,10 +169,10 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         fun notify() {
             if (isOK) {
                 printInFile("SendExecutors.send", "the data [${d.callId}] has been send to server")
-                enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, d.callId, d.data, d.isResend))
+                enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SUCCESS, d.callId, d.data, d.isResend, false))
             } else {
                 printInFile("SendExecutors.send", "send ${d.callId} was failed with error : ${throwable?.message} , payload = $payloadInfo")
-                if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend))
+                if (retryAble) enqueue(d) else enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.FAIL.setSpecialBody(payloadInfo), d.callId, d.data, d.isResend, false))
             }
         }
         d.customSendingCallback?.let {

@@ -27,7 +27,7 @@ internal class SendingPool<T> : OnStatus<T> {
             } else {
                 sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
             }
-            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend)
+            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend, sendWithoutState)
             DataReceivedDispatcher.pushData(notifyState)
         }
     }
@@ -101,7 +101,7 @@ internal class SendingPool<T> : OnStatus<T> {
         } else {
             sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
                 customSendingCallback?.let {
-                    it.onSendingUploading(progress, callId)
+                    it.onSendingUploading(progress, sendWithoutState, callId)
                     if (it.pending) DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
                 } ?: DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
             }

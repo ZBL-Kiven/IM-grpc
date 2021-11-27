@@ -13,9 +13,10 @@ internal interface RunnerClientStub<T> {
      * @param isResend Whether this transmission is a retransmission or not, this mark will affect all passes [IMInterface.addReceiveObserver] The result of the registered listener
      * @param isSpecialData This tag will make this message ignore and send detection
      * @param ignoreConnecting This tag will make this message ignore connection status detection (including device network connection)
+     * @param ignoreSendState This tag will set the message never notify to ui before success
      * @param sendBefore The processing protocol that the message can carry Process, it will run in an independent thread of IM and wait for execution in the queue
      * */
-    fun send(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?)
+    fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?)
 
     /**
      * Add a pending entry to the IM processing queue
