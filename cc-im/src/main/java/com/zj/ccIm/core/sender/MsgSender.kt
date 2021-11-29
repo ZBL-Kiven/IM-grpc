@@ -142,6 +142,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
     }
 
     private fun setRetryProp(sen: SendMessageReqEn) {
+        sen.sendWithoutState = config.sendWithoutState
         sen.ignoreConnectionState = config.connectionStateCheck
         sen.ignoreSendConditionState = config.sendConditionCheck
         sen.autoRetryResend = !config.fromCustom && MsgType.canRetryType(sen.msgType)
@@ -151,7 +152,7 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
     private fun send(sen: SendMessageReqEn, isRecent: Boolean = false, sendBefore: OnSendBefore<Any?>? = FileSender.getIfSupport(sen)) {
         val p = if (sendBefore != null) checkPermission() else null
         if (sendBefore == null || p?.first == true) {
-            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, isRecent, sendBefore = sendBefore, config.customSendListener?.callback)
+            IMChannelManager.sendMsgWithChannel(sen, sen.clientMsgId, Constance.SEND_MSG_DEFAULT_TIMEOUT, isSpecialData = sen.ignoreSendConditionState, ignoreConnecting = sen.ignoreConnectionState, ignoreSendState = sen.sendWithoutState, isRecent, sendBefore = sendBefore, config.customSendListener?.callback)
         } else {
             CcIM.postError(SecurityException("from:MsgSender . PERMISSION_DENIED with permission ${p?.second}"))
         }

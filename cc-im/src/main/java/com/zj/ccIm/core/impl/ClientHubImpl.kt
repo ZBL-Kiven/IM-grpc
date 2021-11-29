@@ -25,7 +25,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_FETCH_OWNER_SESSION = "ClientHubImpl.payload_fetch_owner_session"
 
         const val PAYLOAD_ADD = "ClientHubImpl.payload_add"
-        const val PAYLOAD_DELETE = "PAYLOAD_DELETE"
+        const val PAYLOAD_DELETE = "ClientHubImpl.payload_delete"
         const val PAYLOAD_CHANGED = "ClientHubImpl.payload_change"
         const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
         const val PAYLOAD_DELETE_FROM_BLOCKED = PAYLOAD_DELETE + "_case_block"
@@ -45,12 +45,12 @@ open class ClientHubImpl : ClientHub<Any?>() {
      * Use [isInterruptData] to intercept content that you don't want to be pushed to the UI.
      * @param data can only be an instance or a collection of instances
      * @param callId is uniformly designated by the sender's front end Unique identifier, only valid at the front end.
-     * @param isSpecialData The special type will get the highest priority of the queue.
+     * @param ignoreSendState This data request is not pushed to UIObservers.
      * @param sendingState The message sending state is usually returned by [ServerHubImpl]. Whether
      * @param isResent is marked as retransmitted, only the message sent by calling [com.zj.im.main.impl.IMInterface.resend] will get the TRUE flag.
      * @param onFinish is called to unblock the queue. By default, it is called after ClientHub pushes.
      * */
-    override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
+    override fun onMsgPatch(data: Any?, callId: String?, ignoreSendState: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
         var d = data
         var payload: String? = callId
         try {
@@ -100,17 +100,17 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     if (d is Collection<*>) {
                         (d as? Collection<*>)?.let {
                             val cls = it.firstOrNull()?.javaClass
-                            val deal = dealWithDb(cls, null, it, callId, sendingState)
-                            d = if (deal.second.isNullOrEmpty()) d else deal.second
+                            val deal = dealWithDb(cls, null, it, callId, sendingState, ignoreSendState)
+                            d = if (deal?.second.isNullOrEmpty()) d else deal?.second
                         }
                     } else {
-                        val deal = dealWithDb(d?.javaClass, d, null, callId, sendingState)
-                        d = if (deal.first == null) d else deal.first
-                        payload = if (deal.third.isNullOrEmpty()) callId else deal.third
+                        val deal = dealWithDb(d?.javaClass, d, null, callId, sendingState, ignoreSendState)
+                        d = if (deal?.first == null) d else deal.first
+                        payload = if (deal?.third.isNullOrEmpty()) callId else deal?.third
                     }
                 }
             }
-            super.onMsgPatch(d, payload, isSpecialData, sendingState, isResent, onFinish)
+            super.onMsgPatch(d, payload, ignoreSendState, sendingState, isResent, onFinish)
         } catch (e: Exception) {
             ImLogs.recordErrorInFile("onMsgPatch", "parse received msg error with :\ncallId = $callId\nerror = ${e.message} \ndata = $d")
             onFinish()
@@ -156,7 +156,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         return interruptDefault
     }
 
-    private fun dealWithDb(cls: Class<*>?, d: Any?, dc: Collection<*>?, callId: String?, sendingState: SendMsgState?): Triple<Any?, List<Any?>?, String?> {
+    private fun dealWithDb(cls: Class<*>?, d: Any?, dc: Collection<*>?, callId: String?, sendingState: SendMsgState?, ignoreSendState: Boolean): Triple<Any?, List<Any?>?, String?>? {
         var first: Any? = null
         val second = arrayListOf<Any?>()
         var pl: String? = null
@@ -185,7 +185,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
                 }
             }
         }
-        return Triple(first, second, pl)
+        return if (!ignoreSendState) Triple(first, second, pl) else null
     }
 
     override fun onRouteCall(callId: String?, data: Any?) {
@@ -219,8 +219,8 @@ open class ClientHubImpl : ClientHub<Any?>() {
             resendMsg?.forEach { msg ->
                 if (msg.autoResendWhenBootStart) IMHelper.Sender.resendMessage(msg)
                 else {
-                    val fm = dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL)
-                    CcIM.postToUiObservers(null, fm.first, fm.third)
+                    val fm = dealWithDb(msg.javaClass, msg, null, msg.clientMsgId, SendMsgState.FAIL, false)
+                    CcIM.postToUiObservers(null, fm?.first, fm?.third)
                 }
             }
         }

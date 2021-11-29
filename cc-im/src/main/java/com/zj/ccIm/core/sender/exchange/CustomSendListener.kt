@@ -10,17 +10,17 @@ sealed class CustomSendListener<O : Any>(private val targetClass: Class<O>) {
     protected var isPendingSet = false
 
     internal val callback = object : CustomSendingCallback<Any?>() {
-        override fun onStart(callId: String, d: Any?) {
+        override fun onStart(callId: String, ignoreSendState: Boolean, d: Any?) {
             val data = getTargetInfo(SendMsgState.SENDING, callId, d, null) ?: return
-            MainLooper.post { onSendingStart(callId, data.first) }
+            if (!ignoreSendState) MainLooper.post { onSendingStart(callId, data.first) }
         }
 
-        override fun onSendingUploading(progress: Int, callId: String) {
-            MainLooper.post { onSendingProgress(callId, progress) }
+        override fun onSendingUploading(progress: Int, ignoreSendState: Boolean, callId: String) {
+            if (!ignoreSendState) MainLooper.post { onSendingProgress(callId, progress) }
         }
 
         override fun onResult(isOK: Boolean, retryAble: Boolean, callId: String, d: Any?, throwable: Throwable?, payloadInfo: Any?) {
-            val data = getTargetInfo(SendMsgState.SUCCESS, callId, d, payloadInfo) ?: return
+            val data = getTargetInfo(if (isOK) SendMsgState.SUCCESS else SendMsgState.FAIL, callId, d, payloadInfo) ?: return
             MainLooper.post { onSendResult(isOK, retryAble, callId, data.first, throwable, data.second) }
         }
     }

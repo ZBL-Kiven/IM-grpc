@@ -3,7 +3,9 @@ package com.zj.ccIm.core.db
 import com.zj.ccIm.core.ExtMsgType.EXTENDS_TYPE_RECALL
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.MessageType
 import com.zj.ccIm.core.MsgType
+import com.zj.ccIm.core.SystemMsgType
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
@@ -49,12 +51,7 @@ internal object MessageDbOperator {
                         msg.sendingState = SendMsgState.SUCCESS.type
                     }
                 }
-                val pl = when {
-                    msg.sendingState == SendMsgState.SUCCESS.type -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
-                    !hasLocal -> ClientHubImpl.PAYLOAD_ADD
-                    else -> ClientHubImpl.PAYLOAD_CHANGED
-                }
-                Pair(msg, pl)
+                Pair(msg, getMessagePayload(msg, hasLocal))
             }
         } else return null
     }
@@ -62,6 +59,16 @@ internal object MessageDbOperator {
     fun deleteMsg(clientId: String) {
         IMHelper.withDb {
             it.messageDao().deleteMsgByClientId(clientId)
+        }
+    }
+
+    private fun getMessagePayload(msg: MessageInfoEntity, hasLocal: Boolean): String {
+        return when {
+            msg.systemMsgType == SystemMsgType.SENSITIVE.type -> ClientHubImpl.PAYLOAD_ADD
+            msg.systemMsgType == SystemMsgType.RECALLED.type -> ClientHubImpl.PAYLOAD_CHANGED
+            msg.sendingState == SendMsgState.SUCCESS.type -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
+            !hasLocal -> ClientHubImpl.PAYLOAD_ADD
+            else -> ClientHubImpl.PAYLOAD_CHANGED
         }
     }
 }

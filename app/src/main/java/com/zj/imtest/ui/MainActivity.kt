@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private val groupId = 32L
     private val ownerId = 151120
-    private val targetUserId = 151118
+    private val targetUserId = 151473
     private var tvConn: View? = null
     private var tvName: TextView? = null
     private var tvGroupInfo: TextView? = null
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initListener() {
         ivHeadPic?.setOnClickListener {
-            IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).setCustomSendCallback(object : MessageInfoEntityDataExchange() {
+            IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).sendWithoutState().setCustomSendCallback(object : MessageInfoEntityDataExchange() {
                 override fun onSendingStart(callId: String, d: MessageInfoEntity?) {
                     Log.e("=======>", "CustomSendingCallback: onStart $callId   d = ${d?.textContent?.text}")
                 }

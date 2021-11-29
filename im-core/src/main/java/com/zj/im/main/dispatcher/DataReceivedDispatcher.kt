@@ -61,12 +61,12 @@ internal object DataReceivedDispatcher {
         }
     }
 
-    fun <T> sendingStateChanged(sendingState: SendMsgState, callId: String, data: T?, isSpecialData: Boolean, resend: Boolean) {
-        getClient("on sending state changed")?.onSendingStateChanged(sendingState, callId, cast(data), isSpecialData, resend)
+    fun <T> sendingStateChanged(sendingState: SendMsgState, callId: String, data: T?, ignoreSendState: Boolean, resend: Boolean) {
+        getClient("on sending state changed")?.onSendingStateChanged(sendingState, callId, cast(data), ignoreSendState, resend)
     }
 
-    fun <T> received(data: T?, sendingState: SendMsgState?, callId: String, isSpecialData: Boolean) {
-        sendingStateChanged(sendingState ?: SendMsgState.NONE, callId, data, isSpecialData, false)
+    fun <T> received(data: T?, sendingState: SendMsgState?, callId: String) {
+        sendingStateChanged(sendingState ?: SendMsgState.NONE, callId, data, ignoreSendState = false, resend = false)
     }
 
     fun <T> routeToClient(data: T?, callId: String) {

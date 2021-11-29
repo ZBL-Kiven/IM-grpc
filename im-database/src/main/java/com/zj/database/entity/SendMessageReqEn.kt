@@ -86,6 +86,11 @@ class SendMessageReqEn {
     var autoRetryResend: Boolean = true
 
     /**
+     * 发送时不需要推送
+     * */
+    var sendWithoutState: Boolean = false
+
+    /**
      * 初始化是否自动重试发送发送中消息
      * */
     var autoResendWhenBootStart: Boolean = true

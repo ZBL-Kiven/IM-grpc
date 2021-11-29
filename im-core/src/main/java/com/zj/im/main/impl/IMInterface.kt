@@ -218,14 +218,14 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     protected open fun onNewListenerRegistered(cls: Class<*>) {}
 
     /**
-     * send a msg ，see [RunnerClientStub.send]
+     * send a msg ，see [RunnerClientStub.sendMsg]
      * */
-    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
-        getServiceOrCache("IMInterface.send") { send(data, callId, timeOut, false, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback) }
+    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
+        getServiceOrCache("IMInterface.send") { sendMsg(data, callId, timeOut, false, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback) }
     }
 
-    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
-        getServiceOrCache("IMInterface.resend") { send(data, callId, timeOut, true, isSpecialData, ignoreConnecting, sendBefore, customSendingCallback) }
+    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
+        getServiceOrCache("IMInterface.resend") { sendMsg(data, callId, timeOut, true, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback) }
     }
 
     fun routeToClient(data: T, callId: String) {

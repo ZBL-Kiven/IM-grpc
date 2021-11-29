@@ -8,7 +8,6 @@ import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.protocol.grpc.*
 import com.zj.ccIm.core.Constance
-import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
 import com.zj.ccIm.core.api.IMRecordSizeApi
@@ -82,8 +81,8 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                 if (isConnected()) {
                     MessageFetcher.getOfflineMessage(callId, data as ChannelRegisterInfo, false) {
                         if (it.isOK && it.data != null) {
-                            postReceivedMessage(callId, it.data, true, 0)
-                            postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, it.rq, true, 0)
+                            postReceivedMessage(callId, it.data,  isSpecialData = true, size = 0)
+                            postReceivedMessage(Constance.CALL_ID_GET_OFFLINE_MESSAGES_SUCCESS, it.rq,   isSpecialData = true, 0)
                         } else onParseError(it.e)
                     }
                 }
@@ -159,11 +158,11 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                                 }
                             }
                             Constance.TOPIC_KICK_OUT -> {
-                                postReceivedMessage(data.topic, data.data, true, 0)
+                                postReceivedMessage(data.topic, data.data,   isSpecialData = true, 0)
                             }
                             else -> {
                                 val size = data.serializedSize.toLong()
-                                postReceivedMessage(data.topic, data.data, false, size)
+                                postReceivedMessage(data.topic, data.data,   isSpecialData = false, size)
                             }
                         }
                     } else {
@@ -185,13 +184,13 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
                             1 -> {
                                 val d = data.reqContext
                                 val callId = d.seq
-                                postReceivedMessage(callId, d, true, data.reqContext.serializedSize.toLong())
+                                postReceivedMessage(callId, d,   isSpecialData = true, data.reqContext.serializedSize.toLong())
                             }
                             0 -> {
                                 val callId = data.imMessage.clientMsgId
                                 val key = ChannelRegisterInfo.createKey(data.reqContext.channel, data.reqContext.groupId, data.reqContext.ownerId, data.reqContext.targetUserId)
                                 MessageFetcher.dealMessageExtContent(data.imMessage, key).forEach { d ->
-                                    postReceivedMessage(callId, d, true, data.serializedSize.toLong())
+                                    postReceivedMessage(callId, d,   isSpecialData = true, data.serializedSize.toLong())
                                 }
                             }
                         }
