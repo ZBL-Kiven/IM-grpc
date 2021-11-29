@@ -5,6 +5,7 @@
     <color name="im_msg_reward_text_color_timeout">#FFEAECF3</color>
     <color name="im_msg_reward_text_color_member_waitReply">#FF8277E1</color>
     <color name="im_msg_popWindow_bg">#333333</color>
+    <color name="im_msg_popWindow_reject_bg">#4D000000</color>
     <color name="im_msg_popWindow_line">#17000000</color>
 
 

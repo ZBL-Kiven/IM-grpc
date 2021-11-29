@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     >
     <solid
-        android:color="@color/im_msg_popWindow_bg"
+        android:color="@color/im_msg_popWindow_reject_bg"
         />
     <corners
         android:topLeftRadius="0dp"

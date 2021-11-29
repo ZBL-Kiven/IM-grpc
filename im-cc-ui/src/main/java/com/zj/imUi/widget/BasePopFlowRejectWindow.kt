@@ -49,7 +49,6 @@ class BasePopFlowRejectWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTE
             data?.getMsgId()?.let { it1 -> data?.rejectRewardMsg(it1) }
             dismiss()
         }
-
     }
 
     private fun showPop(anchor: View) {
