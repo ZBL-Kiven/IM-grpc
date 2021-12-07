@@ -29,6 +29,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
     private var data: ImMsgIn? = null
     private var isOwner: Boolean = false
     private var isSelfMessage: Boolean = false
+    private var isReplyQuestion: Boolean = false
     private var isNormalMsg: Boolean = false
 
     init {
@@ -36,20 +37,20 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
         isOutsideTouchable = true
     }
 
-    fun show(data: T, v: View,chatType: Int, onReportOK: ((v: View?, data: T?, reportContent: String) -> Unit)? = null) {
+    fun show(data: T, v: View, chatType: Int, onReportOK: ((v: View?, data: T?, reportContent: String) -> Unit)? = null) {
         if (data == null) return
         anchorView = SoftReference(v)
         this.onReportOK = onReportOK
         this.data = data as? ImMsgIn
-        initData(v,chatType)
+        initData(v, chatType)
     }
 
     @SuppressLint("InflateParams")
-    private fun initData(v: View,chatType: Int) {
+    private fun initData(v: View, chatType: Int) {
         v.post {
             if (isShowing) dismiss()
             contentView = LayoutInflater.from(v.context).inflate(R.layout.im_pop_new_content, null, false)
-            initReportData(v,chatType)
+            initReportData(v, chatType)
             showPop(v)
         }
     }
@@ -62,8 +63,9 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
     }
 
 
-    private fun initReportData(v: View,chatType:Int) {
+    private fun initReportData(v: View, chatType: Int) {
         isSelfMessage = data?.getSenderId() == data?.getSelfUserId()
+        isReplyQuestion = data?.getReplyMsgType() == UiMsgType.MSG_TYPE_QUESTION
         isOwner = data?.getSelfUserId() == data?.getOwnerId()
         isNormalMsg = (data?.getMsgIsReject() == false && data?.getMsgIsSensitive() == false && data?.getMsgIsRecalled() == false)
 
@@ -83,14 +85,14 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
         val filterList: MutableList<String?> = mutableListOf()
         val dataType = data?.getUiTypeWithMessageType()
         data?.apply {
-            if (isNormalMsg) {
+            if (isNormalMsg&&!isReplyQuestion) {
                 if (isSelfMessage) {
                     if (dataType == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
                         if (it != null) {
                             if (it < 0) filterList.add(reportItems[6])
                             else {
-                                if (isOwner && data?.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) filterList.add(reportItems[2])
+                                if (isOwner) filterList.add(reportItems[2])
                             }
                         }
                     }
@@ -111,9 +113,9 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
                         }
                     }
                 }
-                if (dataType!=UiMsgType.MSG_TYPE_QUESTION&&(data?.getSendState()?:0==1||data?.getSendState()?:0 == 3)&&chatType==UiMsgType.GROUP_CHAT){
-                    filterList.add(reportItems[5])
-                }
+            }
+            if (isNormalMsg&& (data?.getSendState() ?: -1 == 0 || data?.getSendState() ?: -1 == 3)) {
+                filterList.add(reportItems[5])
             }
         }
         rv?.setData(R.layout.im_pop_item_layout, false, filterList, object : BaseAdapterDataSet<String?>() {
@@ -152,7 +154,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
                         data?.deleteSendLossMsg()
                     }
                     else -> {
-                        Log.e("im_cc_ui____pop",m.toString())
+                        Log.e("im_cc_ui____pop", m.toString())
                     }
                 }
                 dismiss()

@@ -44,7 +44,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
         this.setOnLongClickListener {
             if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data, it) { _, _, _ ->
+                popFlowWindow.show(data, it,UiMsgType.GROUP_CHAT) { _, _, _ ->
                 }
             }
             true
