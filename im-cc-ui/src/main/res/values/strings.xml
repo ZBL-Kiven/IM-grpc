@@ -33,6 +33,7 @@
     <string name="im_ui_msg_button_recall">Recall</string>
     <string name="im_chat_delete">Delete</string>
     <string name="im_chat_pop_refuse">Reject</string>
+    <string name="Report">Report</string>
     <string name="im_chat_recall_admin_text">Admin has recalled a message</string>
     <string name="im_chat_recall_owner_text"> house owner has recalled a message</string>
     <string name="im_chat_msg_owner_refuse">The other party refused to reply to the message</string>
