@@ -8,7 +8,6 @@ import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.main.StatusHub
 import com.zj.im.utils.log.NetWorkRecordInfo
 import com.zj.im.utils.log.NetRecordChangedListener
-import com.zj.im.utils.log.logger.d
 import java.lang.RuntimeException
 import java.util.concurrent.ConcurrentHashMap
 

@@ -19,8 +19,6 @@ data class RoleInfo(val groupId: Long, val role: Int)
 
 data class LiveStateInfo(val userId: String, val livingStatus: Boolean)
 
-data class RoteInfo<CLS : Any>(val data: CLS?, val pending: Any? = null)
-
 
 /**
  * ============================================================ unobservable classes =============================================================================================================================

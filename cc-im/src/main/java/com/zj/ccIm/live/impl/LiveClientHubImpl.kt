@@ -22,8 +22,8 @@ class LiveClientHubImpl : ClientHubImpl() {
         const val TYPE_LIVE_USER_FOLLOW = "user_follow"
     }
 
-    override fun onMsgPatch(data: Any?, callId: String?, isSpecialData: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
-        (data as? LiveInfoEn)?.let { onPatchLiveMsg(data, onFinish) } ?: super.onMsgPatch(data, callId, isSpecialData, sendingState, isResent, onFinish)
+    override fun onMsgPatch(data: Any?, callId: String?, ignoreSendState: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
+        (data as? LiveInfoEn)?.let { onPatchLiveMsg(data, onFinish) } ?: super.onMsgPatch(data, callId, ignoreSendState, sendingState, isResent, onFinish)
     }
 
     private fun onPatchLiveMsg(data: LiveInfoEn, onFinish: () -> Unit) {

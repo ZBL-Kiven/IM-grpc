@@ -7,7 +7,7 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.google.gson.Gson
 import com.zj.ccIm.core.*
-import com.zj.ccIm.core.bean.RoteInfo
+import com.zj.im.chat.modle.RouteInfo
 import com.zj.imUi.UiMsgType
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
@@ -338,7 +338,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun reply() {
-        IMHelper.route(RoteInfo(info), ROUTE_CALL_ID_REPLY_MESSAGE)
+        IMHelper.route(RouteInfo(info), ROUTE_CALL_ID_REPLY_MESSAGE)
     }
 
     override fun block(userId: Int) {

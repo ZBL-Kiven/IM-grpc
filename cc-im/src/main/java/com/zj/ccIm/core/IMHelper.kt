@@ -27,6 +27,7 @@ import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.core.BaseOption
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.chat.interfaces.MessageInterface.Companion.hasObserver
+import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.utils.log.NetWorkRecordInfo
@@ -41,33 +42,37 @@ object IMHelper {
 
     val CustomSender: SendMsgConfig; get() = SendMsgConfig(true)
 
-    fun <CLS : Any> route(data: RoteInfo<CLS>, callId: String) {
-        CcIM.postToUiObservers(data, callId)
+    fun <CLS : Any> route(data: RouteInfo<CLS>, callId: String) {
+        CcIM.routeToUi(data, callId)
     }
 
     fun queryUIObserver(uniqueCode: Any): Boolean {
         return hasObserver(uniqueCode)
     }
 
-    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        return addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
+    inline fun <reified T : Any> addRouteInfoObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
+        return this.addRouteInfoObserver(T::class.java, uniqueCode, lifecycleOwner)
+    }
+
+    fun <T : Any> addRouteInfoObserver(cls: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
+        return CcIM.addRouteInfoObserver(cls, uniqueCode, lifecycleOwner)
     }
 
     inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return addObserver(T::class.java, uniqueCode, lifecycleOwner)
-    }
-
-    fun <T : Any> addObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        if (classT == MessageInfoEntity::class.java) {
+        if (T::class.java == MessageInfoEntity::class.java) {
             throw IllegalStateException("please use [ChannelRegisterInfo] to register message observer!")
         }
-        return CcIM.addReceiveObserver(classT, uniqueCode, lifecycleOwner)
+        return this.addTransferObserver(T::class.java, T::class.java, uniqueCode, lifecycleOwner).build()
+    }
+
+    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        if (T::class.java == MessageInfoEntity::class.java) {
+            throw IllegalStateException("please use [ChannelRegisterInfo] to register message observer!")
+        }
+        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
     }
 
     fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        if (classT == MessageInfoEntity::class.java) {
-            throw IllegalStateException("please use [ChannelRegisterInfo] to register message observer!")
-        }
         return CcIM.addTransferObserver(classT, classR, uniqueCode, lifecycleOwner)
     }
 

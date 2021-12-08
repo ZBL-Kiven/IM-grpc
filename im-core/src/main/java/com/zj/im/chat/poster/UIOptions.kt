@@ -6,6 +6,7 @@ import android.os.Looper
 import android.os.Message
 import androidx.lifecycle.*
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
 import java.util.*
@@ -76,7 +77,18 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     }
 
     fun post(cls: Class<*>?, data: Any?, ld: Collection<*>?, payload: String?): Boolean {
-        if (cls == creator.inCls || cls?.simpleName == creator.inCls.simpleName) {
+        fun sameClass(c: Class<*>?, c1: Class<*>?): Boolean {
+            if (c == null || c1 == null) return false
+            return c == c1 || c.simpleName == c1.simpleName
+        }
+
+        val dataIsRouter = sameClass(cls, RouteInfo::class.java)
+        val creatorIsRouter = sameClass(creator.inCls, RouteInfo::class.java)
+        val isRouteHandle = if (dataIsRouter && creatorIsRouter) {
+            sameClass((data as? RouteInfo<*>)?.data?.javaClass, creator.innerCls)
+        } else false
+        val canHandle = !creatorIsRouter && sameClass(cls, creator.inCls)
+        if (isRouteHandle || canHandle) {
             postData(cls, cast(data), cast(ld), payload)
             return true
         }

@@ -18,6 +18,7 @@ import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.chat.modle.BaseMsgInfo
+import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
@@ -31,7 +32,7 @@ import com.zj.im.utils.log.logger.NetRecordUtils
 import com.zj.im.utils.log.logger.d
 import com.zj.im.utils.log.logger.printErrorInFile
 import com.zj.im.utils.log.logger.printInFile
-import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 import java.util.concurrent.LinkedBlockingDeque
 
 
@@ -70,15 +71,24 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     internal var option: BaseOption? = null
 
     fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        if (classT == RouteInfo::class.java) throw IllegalStateException("Must use [#addRouteInfoObserver] to observe the RouteInfo type.")
         return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR) { cls ->
-            setNewListener(cls, "UT2F-E17T-33I-9112")
+            setNewListener(cls)
         }
     }
 
     fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return UIHelperCreator(uniqueCode, lifecycleOwner, classT, classT, null) { cls ->
-            setNewListener(cls, "UT2Q-99BR-E88-2271")
-        }
+        return addTransferObserver(classT, classT, uniqueCode, lifecycleOwner).build()
+    }
+
+    fun <T : Any> addRouteInfoObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
+        if (classT == RouteInfo::class.java) throw IllegalStateException("Needn't to use RouteInfo wrapped type, use addRouteInfoUIObserver<Int> such as need to monitor <Route<Int>>")
+        val r = RouteInfo<T>(null).javaClass
+        return UIHelperCreator(uniqueCode, lifecycleOwner, r, r, null, classT) {}
+    }
+
+    inline fun <reified T : Any> addRouteInfoObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
+        return this.addRouteInfoObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
     inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
@@ -89,15 +99,11 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return this.addReceiveObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
-    internal fun <X> setNewListener(cls: Class<*>, imm: X) {
-        if (imm.toString() == "UT2Q-99BR-E88-2271" || imm.toString() == "UT2F-E17T-33I-9112") {
-            if (isServiceConnected) {
-                onNewListenerRegistered(cls)
-            } else {
-                cachedListenClasses.add(cls)
-            }
+    private fun <N> setNewListener(cls: Class<N>) {
+        if (isServiceConnected) {
+            onNewListenerRegistered(cls)
         } else {
-            throw IllegalArgumentException("the function setNewListener can not call!")
+            cachedListenClasses.add(cls)
         }
     }
 
@@ -226,6 +232,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
         getServiceOrCache("IMInterface.resend") { sendMsg(data, callId, timeOut, true, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback) }
+    }
+
+    fun <CLS : Any> routeToUi(data: RouteInfo<CLS>, callId: String) {
+        postToUi(RouteInfo::class.java, data, callId) {
+            d("IMInterface.routeToUi", "the data ${data.data} has been route to ui observers")
+        }
     }
 
     fun routeToClient(data: T, callId: String) {

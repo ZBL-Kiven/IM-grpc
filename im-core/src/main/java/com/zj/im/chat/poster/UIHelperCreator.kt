@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 
 
 @Suppress("unused")
-class UIHelperCreator<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, internal val inCls: Class<T>, internal val outerCls: Class<R>, internal val handlerCls: Class<L>?, private val inObserver: (Class<R>) -> Unit) {
+class UIHelperCreator<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, internal val inCls: Class<T>, internal val outerCls: Class<R>, internal val handlerCls: Class<L>?, internal val innerCls: Class<*>? = null, private val inObserver: (Class<R>) -> Unit) {
 
     internal var filterIn: ((T, String?) -> Boolean)? = null
     internal var filterOut: ((R, String?) -> Boolean)? = null

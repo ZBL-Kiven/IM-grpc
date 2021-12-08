@@ -2,11 +2,11 @@ package com.zj.imtest.ui.input
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.bean.RoteInfo
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
 import com.zj.emotionbar.interfaces.ExtInflater
@@ -16,9 +16,13 @@ class CcInputLayout @JvmOverloads constructor(context: Context?, attrs: Attribut
 
     init {
         setExtInflater(this)
-        IMHelper.addReceiveObserver<RoteInfo<MessageInfoEntity>>("CcInputLayout").filterIn { _, c -> c == IMConfig.ROUTE_CALL_ID_REPLY_MESSAGE }.listen { r, _, payload ->
+        IMHelper.addRouteInfoObserver<MessageInfoEntity>("CcInputLayout").listen { r, _, payload ->
+            Log.e("------ ", "$r")
             if (payload != IMConfig.ROUTE_CALL_ID_REPLY_MESSAGE) return@listen
             setExtData(r?.data)
+        }
+        IMHelper.addRouteInfoObserver<Int>("CcInputLayout.test").listen { r, _, _ ->
+            Log.e("------ ", "===>  $r")
         }
     }
 
