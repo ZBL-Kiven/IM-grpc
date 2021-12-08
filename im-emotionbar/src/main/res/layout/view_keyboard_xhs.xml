@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:background="@color/color_primary_light_grey_dark"
+    android:background="#FFFFFF"
     android:clickable="true"
     android:focusable="true"
     android:orientation="vertical">
@@ -23,11 +23,11 @@
 
         <ImageView
             android:id="@+id/im_input_btn_voice_or_text"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="12dp"
-            android:src="@mipmap/ui_emo_icon_voice"
+            android:background="@mipmap/ui_emo_icon_voice"
             tools:ignore="ContentDescription" />
 
         <Button
@@ -65,10 +65,8 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:maxLines="3"
-                android:paddingStart="8dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="5dp"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="5dp"
                 android:textSize="16sp" />
 
             <ImageView
@@ -94,8 +92,8 @@
 
             <ImageView
                 android:id="@+id/im_input_btn_multimedia"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_centerInParent="true"
                 android:background="@mipmap/ui_emo_icon_more"
                 tools:ignore="ContentDescription" />

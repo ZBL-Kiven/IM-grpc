@@ -3,15 +3,15 @@
 
     <item android:state_focused="true">
         <shape>
-            <corners android:radius="8dp"/>
-            <solid android:color="@color/color_primary_color_high_light"/>
+            <corners android:radius="24dp"/>
+            <solid android:color="#F5F7F9"/>
         </shape>
     </item>
 
     <item android:state_focused="false">
         <shape>
-            <corners android:radius="8dp"/>
-            <solid android:color="@color/color_primary_color_mediu_light"/>
+            <corners android:radius="24dp"/>
+            <solid android:color="#F5F7F9"/>
         </shape>
     </item>
 </selector>

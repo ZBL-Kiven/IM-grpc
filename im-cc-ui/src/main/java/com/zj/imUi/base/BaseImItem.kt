@@ -76,8 +76,7 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
     }
 
     open fun initAvatar(data: T) {
-        if (data.getSelfUserId() == data.getSenderId() || data.getMsgIsRecalled()
-            || data.getMsgIsSensitive()||data.getUiTypeWithMessageType() ==UiMsgType.MSG_TYPE_SYS_REFUSE ) {
+        if (data.getSelfUserId() == data.getSenderId() || data.getMsgIsRecalled() || data.getMsgIsSensitive() || data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE) {
             removeIfNotContains(ivAvatar, true)
             return
         }
@@ -133,11 +132,14 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData({ data }, chatType as Int?)
-        val isNormalMsg = !data.getMsgIsRecalled() && !data.getMsgIsReject() && !data.getMsgIsSensitive() && dataType != UiMsgType.MSG_TYPE_CC_LIVE && dataType != UiMsgType.MSG_TYPE_CC_VIDEO && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION
+        val isNormalMsg = !data.getMsgIsRecalled() && !data.getMsgIsReject() && !data.getMsgIsSensitive()
+                && dataType != UiMsgType.MSG_TYPE_CC_LIVE
+                && dataType != UiMsgType.MSG_TYPE_CC_VIDEO
+                && dataType != UiMsgType.MSG_TYPE_QUESTION
         bubbleView?.setOnLongClickListener {
-            if (isNormalMsg) {
+            if (isNormalMsg && chatType == UiMsgType.GROUP_CHAT) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
-                popFlowWindow.show(data, it) { _, _, _ ->
+                popFlowWindow.show(data, it, type as Int) { _, _, _ ->
                 }
             }
             true
