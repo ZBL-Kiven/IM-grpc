@@ -26,7 +26,7 @@ data class RoteInfo<CLS : Any>(val data: CLS?, val pending: Any? = null)
  * ============================================================ unobservable classes =============================================================================================================================
  * */
 
-data class GetMoreMessagesResult(val callId: String, val isOK: Boolean, val data: Map<String, List<MessageInfoEntity?>?>?, val rq: ChannelRegisterInfo, val pl: Any?, val e: Throwable?)
+data class GetMoreMessagesResult(val callId: String, val isOK: Boolean, val data: List<MessageInfoEntity?>?, val rq: ChannelRegisterInfo, val pl: Any?, val e: Throwable?)
 
 class FetchResult(val success: Boolean, val isFirstFetch: Boolean, val isNullData: Boolean, val errorMsg: String? = null) : Serializable
 

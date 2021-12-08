@@ -84,16 +84,11 @@ open class ClientHubImpl : ClientHub<Any?>() {
                     d = if (deal?.second == null) d else deal.second
                 }
                 Constance.CALL_ID_GET_OFFLINE_CHAT_MESSAGES -> {
-                    cast<Any?, Map<String, List<MessageInfoEntity>>?>(data)?.forEach { (k, v) ->
-                        val trans = arrayListOf<MessageInfoEntity>()
-                        v.forEach {
-                            val t = MessageDbOperator.onDealMessages(it, callId, sendingState)?.first
-                            if (t != null) trans.add(t)
-                        }
-                        payload = k
-                        d = trans
-                        CcIM.postToUiObservers(MessageInfoEntity::class.java, d, payload)
+                    d = cast<Any?, List<MessageInfoEntity>?>(data)?.map { it ->
+                        MessageDbOperator.onDealMessages(it, callId, sendingState)?.first
                     }
+                    payload = callId
+                    CcIM.postToUiObservers(MessageInfoEntity::class.java, d, payload)
                     onFinish();return
                 }
                 else -> {

@@ -48,15 +48,11 @@ internal object MessageFetcher {
                 ImLogs.d("server hub event ", "get offline msg for type [$callId] -> ${if (isOk) "success" else "failed"} with ${rq.key} ${if (!isOk) ", error case: ${t?.message}" else ""}")
                 synchronized(callIdObservers) {
                     callIdObservers.forEach { (k, v) ->
-                        val mapped = mutableMapOf<String, List<MessageInfoEntity?>?>()
-                        data?.forEach { (k1, v1) ->
-                            val mappedLst = arrayListOf<Any?>()
-                            v1?.forEach {
-                                mappedLst.addAll(dealMessageExtContent(it, k))
-                            }
-                            mapped[k1] = cast(mappedLst)
+                        val mappedLst = arrayListOf<Any?>()
+                        data?.get(rq.curChannelName)?.forEach {
+                            mappedLst.addAll(dealMessageExtContent(it, k))
                         }
-                        val rsp = GetMoreMessagesResult(callId, isOk, mapped, rq, a, t)
+                        val rsp = GetMoreMessagesResult(callId, isOk, cast(mappedLst), rq, a, t)
                         if (threadCheck) MainLooper.post { v.invoke(rsp) } else v.invoke(rsp)
                     }
                     callIdObservers.clear()

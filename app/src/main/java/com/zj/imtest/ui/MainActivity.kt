@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private val groupId = 32L
     private val ownerId = 151120
-    private val targetUserId = 151473
+    private val targetUserId =  151254 //151473
     private var tvConn: View? = null
     private var tvName: TextView? = null
     private var tvGroupInfo: TextView? = null

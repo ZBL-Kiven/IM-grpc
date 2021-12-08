@@ -111,7 +111,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
         IMHelper.getChatMsg(req) {
             try {
                 if (it.isOK && !it.data.isNullOrEmpty()) {
-                    val data = it.data?.get(msgReqInfo.curChannelName)?.filterNotNull() ?: return@getChatMsg
+                    val data = it.data?.filterNotNull() ?: return@getChatMsg
                     adapter?.add(data, 0)
                 }
             } catch (e: Exception) {

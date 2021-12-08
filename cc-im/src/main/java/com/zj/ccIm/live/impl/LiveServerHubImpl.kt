@@ -42,7 +42,7 @@ internal class LiveServerHubImpl : ServerHubImpl() {
             liveStreamObserver?.onCompleted()
         }
         liveStreamObserver = withChannel {
-            it.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>("live", connectId, true) {
+            it?.liveRoomMessage(object : ServerImplGrpc.CusObserver<LiveRoomMessageReply>("live", connectId, true) {
                 override fun onResult(isOk: Boolean, data: LiveRoomMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         val respInfo = LiveInfoEn(data.roomId, data.liveId, data.msgType, data.content)

@@ -146,7 +146,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * */
     private fun receiveTopic(connectId: String) {
         topicStreamObserver = withChannel {
-            it.listenTopicData(object : CusObserver<ListenTopicReply>("topic", connectId, true) {
+            it?.listenTopicData(object : CusObserver<ListenTopicReply>("topic", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ListenTopicReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         ImLogs.recordLogsInFile("server hub event ", "onTopic ==> observer = $this , topic = ${data.topic} \n  content = ${data.data}")
@@ -176,7 +176,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
 
     private fun receiveMessage(connectId: String) {
         messageStreamObserver = withChannel {
-            it.onlineImMessage(object : CusObserver<ImMessageReply>("message", connectId, true) {
+            it?.onlineImMessage(object : CusObserver<ImMessageReply>("message", connectId, true) {
                 override fun onResult(isOk: Boolean, data: ImMessageReply?, t: Throwable?) {
                     if (isOk && data != null) {
                         ImLogs.recordLogsInFile("server hub event ", "onMessage ==> observer =  $this: type = ${data.type} seq = ${data.reqContext?.seq}")

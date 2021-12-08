@@ -8,9 +8,7 @@ import com.zj.imUi.ui.ImMsgView
 import com.zj.views.list.adapters.BaseAdapter.ViewBuilder
 
 
-class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(
-    recyclerView,
-    ViewBuilder { _, _, _ -> ImMsgView(recyclerView.context) }) {
+class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(recyclerView, ViewBuilder { _, _, _ -> ImMsgView(recyclerView.context) }) {
 
     override fun add(data: MutableList<MessageInfoEntity>?) {
         super.add(data)
@@ -35,10 +33,7 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
     }
 
 
-    override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?,
-        position: Int,
-        module: MessageInfoEntity?,
-        payloads: MutableList<Any>?) {
+    override fun initData(holder: com.zj.views.list.holders.BaseViewHolder<MessageInfoEntity>?, position: Int, module: MessageInfoEntity?, payloads: MutableList<Any>?) {
         val m = ImEntityConverter(module)
         (holder?.itemView as? ImMsgView)?.let {
             if (payloads.isNullOrEmpty()) {

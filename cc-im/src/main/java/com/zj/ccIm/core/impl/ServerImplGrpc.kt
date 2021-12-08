@@ -60,7 +60,7 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
      * */
     override fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
         withChannel {
-            it.ping(null, object : CusObserver<Pong>(isStreaming = false) {
+            it?.ping(null, object : CusObserver<Pong>(isStreaming = false) {
                 override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
                     onChecked(isOk)
                 }
@@ -68,9 +68,11 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
     }
 
-    protected fun <R> withChannel(require: Boolean = true, r: (MsgApiGrpc.MsgApiStub) -> R?): R? {
+    protected fun <R> withChannel(require: Boolean = true, r: (MsgApiGrpc.MsgApiStub?) -> R?): R? {
         CcIM.imConfig?.getApiHeader()?.let { header ->
-            return r(Grpc.stub(header))
+            Grpc.stub(header)?.let {
+                return r(it)
+            } ?: if (require) postError(InitializedException("the Grpc stub is null!"))
         } ?: if (require) postError(InitializedException("the configuration header must not be null!"))
         return null
     }
