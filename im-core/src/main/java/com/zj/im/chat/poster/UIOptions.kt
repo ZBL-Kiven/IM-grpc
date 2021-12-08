@@ -4,17 +4,14 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
 import java.util.*
 import kotlin.collections.ArrayList
 
-internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, inObserver: (Class<R>) -> Unit, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleObserver {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, inObserver: (Class<R>) -> Unit, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
 
     init {
         lifecycleOwner?.let {
@@ -78,18 +75,6 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
         return uniqueCode
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    fun destroy() {
-        try {
-            MessageInterface.removeAnObserver(this.getUnique())
-            handler.removeCallbacksAndMessages(null)
-            lifecycleOwner?.lifecycle?.removeObserver(this)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    @Suppress("UNCHECKED_CAST")
     fun post(cls: Class<*>?, data: Any?, ld: Collection<*>?, payload: String?): Boolean {
         if (cls == creator.inCls || cls?.simpleName == creator.inCls.simpleName) {
             postData(cls, cast(data), cast(ld), payload)
@@ -171,6 +156,20 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
 
     internal fun log(str: String) {
         if (creator.logAble) d("im-ui", str)
+    }
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        if (event == Lifecycle.Event.ON_DESTROY) destroy()
+    }
+
+    internal fun destroy() {
+        try {
+            MessageInterface.removeAnObserver(this.getUnique())
+            handler.removeCallbacksAndMessages(null)
+            lifecycleOwner?.lifecycle?.removeObserver(this)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
 

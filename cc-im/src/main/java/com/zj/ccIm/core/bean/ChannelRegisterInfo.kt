@@ -1,9 +1,6 @@
 package com.zj.ccIm.core.bean
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.*
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.annos.MsgFetchType
 import com.zj.ccIm.core.IMChannelManager
@@ -15,13 +12,14 @@ import com.zj.im.chat.poster.UIHelperCreator
 import java.lang.IllegalArgumentException
 
 @Suppress("unused")
-data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOwner? = null, val groupId: Long, val ownerId: Int?, val targetUserid: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, internal var mChannel: FetchMsgChannel) : LifecycleObserver {
+data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOwner? = null, val groupId: Long, val ownerId: Int?, val targetUserid: Int?, val msgId: Long?, @MsgFetchType val type: Int? = null, internal var mChannel: FetchMsgChannel) : LifecycleEventObserver {
 
     internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int?, targetUserid: Int?, channel: FetchMsgChannel) : this(lo, groupId, ownerId, targetUserid, 0, null, channel)
 
     internal constructor(lo: LifecycleOwner? = null, groupId: Long, ownerId: Int?, targetUserid: Int?, channel: String) : this(lo, groupId, ownerId, targetUserid, 0, null, FetchMsgChannel.valueOf(channel.uppercase()))
 
     internal var registeredToServer = false
+
     /**
      * If there is already a cache of this type before registration,this registration will be ignored,
      * and the original registration object will get a +1 value,
@@ -34,7 +32,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
      * */
     var key = ""; internal set
 
-    var observerKey = ""; internal set
+    @Suppress("MemberVisibilityCanBePrivate") var observerKey = ""; internal set
 
     val curChannelName: String; get() = mChannel.serializeName
 
@@ -62,16 +60,6 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
             if (mChannel.classification == 2 && (targetUserid == null || targetUserid < 0)) throw IllegalArgumentException(String.format(errorMsg, "targetUserId"))
             true
         }, { false }) ?: false
-    }
-
-    @OnLifecycleEvent(value = Lifecycle.Event.ON_RESUME)
-    private fun resume() {
-        IMChannelManager.resumeRegisterInfo(this)
-    }
-
-    @OnLifecycleEvent(value = Lifecycle.Event.ON_DESTROY)
-    private fun destroyed() {
-        IMHelper.leaveChatRoom(key)
     }
 
     companion object {
@@ -104,6 +92,15 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
 
         fun buildWithFansPrivateChat(lo: LifecycleOwner, groupId: Long, targetUserId: Int): ChannelRegisterInfo {
             return ChannelRegisterInfo(lo, groupId, null, targetUserId, FetchMsgChannel.OWNER_PRIVATE)
+        }
+    }
+
+    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+        when (event) {
+            Lifecycle.Event.ON_RESUME -> IMChannelManager.resumeRegisterInfo(this)
+            Lifecycle.Event.ON_DESTROY -> IMHelper.leaveChatRoom(key)
+            else -> {
+            }
         }
     }
 }
