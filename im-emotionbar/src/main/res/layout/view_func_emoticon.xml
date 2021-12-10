@@ -2,21 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/color_emotions_bg"
     android:orientation="vertical">
 
     <com.zj.emotionbar.widget.EmotionsTabBar
         android:id="@+id/view_etv"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bar_height"
-        android:background="@color/color_primary_light_grey_dark"
+        android:background="@color/color_emotions_bg"
         android:orientation="vertical" />
 
     <com.zj.emotionbar.widget.EmoticonsFuncView
         android:id="@+id/view_epv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_primary_color_mediu_light"
+        android:background="@color/color_emotions_bg"
         android:orientation="vertical" />
 
 </LinearLayout>

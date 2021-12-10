@@ -1,5 +1,6 @@
 package com.zj.imtest.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
@@ -14,6 +15,11 @@ import com.zj.cf.managers.TabFragmentManager
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
+import com.zj.emotionbar.aemoj.DefEmoticons
+import com.zj.emotionbar.data.Emoticon
+import com.zj.emotionbar.data.EmoticonPack
+import com.zj.emotionbar.epack.emoticon.EmoticonEntityUtils
+import com.zj.emotionbar.utils.getResourceUri
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.modle.RouteInfo
 import com.zj.imtest.BaseApp
@@ -110,6 +116,7 @@ class MainActivity : AppCompatActivity() {
             when (it) {
                 is ConnectionState.CONNECTED, is ConnectionState.PING, is ConnectionState.PONG -> tvConn?.setBackgroundResource(R.drawable.dots_green)
                 is ConnectionState.OFFLINE, is ConnectionState.ERROR, is ConnectionState.INIT -> tvConn?.setBackgroundResource(R.drawable.dots_red)
+
                 is ConnectionState.CONNECTION, is ConnectionState.RECONNECT -> tvConn?.setBackgroundResource(R.drawable.dots_yellow)
             }
         }
@@ -137,6 +144,31 @@ class MainActivity : AppCompatActivity() {
                 ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }
+        val packs = mutableListOf<EmoticonPack<out Emoticon>>()
+        packs.add(getEmoji(applicationContext, 1))
+        packs.add(getEmoji(applicationContext, 2))
+        packs.add(EmoticonPack<EmoticonEntityUtils.BigEmoticon>().apply {
+            iconUri = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+            payType = 1
+            emoticons = mutableListOf()
+            id = 3
+        })
+        inputLayout?.setEmoticon(packs)
+    }
+
+    private fun getEmoji(context: Context, id: Int): EmoticonPack<EmoticonEntityUtils.BigEmoticon> {
+        val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+        DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+            val emoticon = EmoticonEntityUtils.BigEmoticon()
+            emoticon.code = it.emoji
+            emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+            return@mapTo emoticon
+        }
+        val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
+        pack.emoticons = emojiArray
+        pack.id = id
+        pack.iconUri = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+        return pack
     }
 
     private fun updateText() {

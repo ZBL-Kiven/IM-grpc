@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.core.content.ContextCompat
 import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
@@ -29,6 +29,7 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
     private var leftView = FrameLayout(context)
     private var rightView = FrameLayout(context)
     private var adapterFactory: EmotionsTabAdapterFactory<out RecyclerView.ViewHolder>? = null
+    private val tabIconMargin = (Resources.getSystem().displayMetrics.density * 13f + 0.5f).toInt()
 
     init {
         orientation = HORIZONTAL
@@ -46,6 +47,7 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
 
     private fun addRecyclerView(context: Context) {
         recyclerView.layoutParams = LayoutParams(0, WRAP_CONTENT, 1f)
+        recyclerView.setPadding(tabIconMargin, 0, tabIconMargin, 0)
         layoutManager = SmoothScrollLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
         addView(recyclerView)
@@ -135,7 +137,7 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
 
     var itemClickListeners: OnToolBarItemClickListener? = null
     private val tabIconSize = (Resources.getSystem().displayMetrics.density * 24f + 0.5f).toInt()
-    private val tabIconMargin = (Resources.getSystem().displayMetrics.density * 13f + 0.5f).toInt()
+
 
     init {
         packs.forEach {
@@ -144,30 +146,28 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = ImageView(parent.context)
-        val lp = ViewGroup.MarginLayoutParams(tabIconSize, tabIconSize)
-        lp.setMargins(tabIconMargin, 0, tabIconMargin, 0)
-        view.layoutParams = lp
-        return ViewHolder(view)
+        var itemView = LayoutInflater.from(parent.context).inflate(R.layout.view_table_item, parent, false)
+        return ViewHolder(itemView)
     }
 
 
     override fun getItemCount() = packs.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val context = holder.itemView.context
         val fus = packs[position].iconUri ?: ""
-        (holder.itemView as? ImageView)?.let { ImageLoader.displayImage(fus, it) }
+        ImageLoader.displayImage(fus, holder.imageView)
         if (packs[position].tag == null) {
             packs[position].tag = false
         }
-        val bid = if (packs[position].tag as Boolean) R.color.color_primary_light_grey else R.color.color_primary_light_dark
-        holder.itemView.setBackgroundColor(ContextCompat.getColor(context, bid))
+        val bid = if (packs[position].tag as Boolean) R.drawable.ui_bg_emo_tab_selected else R.drawable.ui_bg_emo_tab_normal
+        holder.itemView.setBackgroundResource(bid)
         holder.itemView.isClickable = true
         holder.itemView.setOnClickListener {
             itemClickListeners?.onToolBarItemClick(packs[position])
         }
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var imageView: ImageView = itemView.findViewById(R.id.emo_tab_item_iv_image)
+    }
 }

@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -20,6 +21,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.zj.emotionbar.data.Emoticon;
 import com.zj.emotionbar.data.EmoticonPack;
@@ -43,6 +45,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     protected LayoutInflater inflater;
     protected ImageView btnVoiceOrText;
+    protected LinearLayout mLlRootView;
     protected Button btnVoice;
     protected EmoticonsEditText emoticonsEditText;
     protected ImageView btnFace;
@@ -57,8 +60,11 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     protected EmoticonsFuncView emoticonsFuncView;
     protected EmoticonsToolBar emoticonsToolBar;
-
+    private TextView mTvBlocked;
+    private EmoticonsFuncView.EmoticonsFuncListener mEmoticonsFuncListener;
     protected boolean dispatchKeyEventPreImeLock = false;
+    private boolean isBlocked = false;
+    private int viewModel = 1;
 
     public CusEmoticonsLayout(Context context, AttributeSet attrs) {
         this(context, null, 0);
@@ -89,6 +95,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     protected void initView() {
         btnVoiceOrText = findViewById(R.id.im_input_btn_voice_or_text);
+        mTvBlocked = findViewById(R.id.im_input_tv_blocked);
         btnVoice = findViewById(R.id.im_input_btn_voice);
         emoticonsEditText = findViewById(R.id.im_input_et_chat);
         btnFace = findViewById(R.id.im_input_btn_face);
@@ -97,6 +104,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         btnSend = findViewById(R.id.im_input_btn_send);
         extContainer = findViewById(R.id.im_input_ext_container);
         funcLayout = findViewById(R.id.im_input_key_board_func);
+        mLlRootView = findViewById(R.id.im_emotion_ll_root_view);
         btnVoiceOrText.setOnClickListener(this);
         btnFace.setOnClickListener(this);
         btnMultimedia.setOnClickListener(this);
@@ -144,8 +152,12 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
                     btnSend.setVisibility(VISIBLE);
                     btnMultimedia.setVisibility(GONE);
                 } else {
-                    btnMultimedia.setVisibility(VISIBLE);
                     btnSend.setVisibility(GONE);
+                    if (viewModel == 0) {
+                        btnMultimedia.setVisibility(GONE);
+                    } else {
+                        btnMultimedia.setVisibility(VISIBLE);
+                    }
                 }
             }
         });
@@ -156,6 +168,26 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         emoticonsToolBar.setPackList(packList);
         emoticonsFuncView.setAdapter(adapter);
         adapter.setAdapterListener(() -> emoticonsToolBar.notifyDataChanged());
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+        if (isBlocked) {
+            mTvBlocked.setVisibility(View.VISIBLE);
+            reset();
+        } else {
+            mTvBlocked.setVisibility(View.GONE);
+        }
+    }
+
+    public void setOnPageEmoticonSelectedListener(EmoticonsFuncView.EmoticonsFuncListener listener) {
+        mEmoticonsFuncListener = listener;
+    }
+
+    public void setViewNormaModel() {
+        viewModel = 0;
+        btnVoiceOrText.setVisibility(View.GONE);
+        btnMultimedia.setVisibility(View.GONE);
     }
 
     public void setExtInflater(ExtInflater<T> inflater) {
@@ -264,11 +296,18 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     @Override
     public void onCurrentEmoticonPackChanged(EmoticonPack<? extends Emoticon> currentPack) {
         emoticonsToolBar.selectEmotionPack(currentPack);
+        if (mEmoticonsFuncListener != null) mEmoticonsFuncListener.onCurrentEmoticonPackChanged(currentPack);
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        if (mEmoticonsFuncListener != null) mEmoticonsFuncListener.onPageSelected(position);
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
+        if (isBlocked) return;
         if (i == R.id.im_input_btn_voice_or_text) {
             if (inputLayout.isShown()) {
                 btnVoiceOrText.setImageResource(R.mipmap.ui_emo_icon_keyboard);
@@ -290,6 +329,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     @Override
     public void onToolBarItemClick(@NonNull EmoticonPack<? extends Emoticon> pack) {
         emoticonsFuncView.setCurrentPageSet(pack);
+        emoticonsToolBar.selectEmotionPack(pack);
     }
 
     @Override
@@ -373,13 +413,21 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         return emoticonsFuncView;
     }
 
+    public TextView getBlockedView() {
+        return mTvBlocked;
+    }
+
     protected T takeExtData() {
         T ext = extData;
-        setExtData(null);
         return ext;
     }
 
+
     public EmoticonsToolBar getEmoticonsToolBarView() {
         return emoticonsToolBar;
+    }
+
+    public View getChatInputRootView() {
+        return mLlRootView;
     }
 }

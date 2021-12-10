@@ -3,19 +3,32 @@ package com.zj.emotionbar.adpater
 import androidx.viewpager.widget.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
+import com.zj.emotionbar.interfaces.GridPageFactory
 import com.zj.emotionbar.interfaces.OnEmoticonClickListener
+import com.zj.emotionbar.interfaces.OnPayClickListener
+import com.zj.emotionbar.interfaces.PayPageFactory
 
+/**
+ * viewPager Adapter
+ */
 open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) : PagerAdapter() {
 
     var adapterListener: EmoticonPacksAdapterListener? = null
     private var clickListener: OnEmoticonClickListener<Emoticon>? = null
+    private var payListener: OnPayClickListener<EmoticonPack<Emoticon>>? = null
     private var isUpdateAll = false
 
     fun setClickListener(l: OnEmoticonClickListener<Emoticon>?) {
         this.clickListener = l
     }
+
+    fun setPayClickListener(payListener: OnPayClickListener<EmoticonPack<Emoticon>>?) {
+        this.payListener = payListener
+    }
+
 
     fun getEmoticonPackPosition(pack: EmoticonPack<out Emoticon>): Int {
         return packList.indexOf(pack)
@@ -26,9 +39,8 @@ open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) 
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        if (container.childCount > 0) container.removeAllViews()
-        val pack: EmoticonPack<*> = packList[position]
-        val view = pack.getView(container.context, clickListener)
+        val pack = packList[position] as EmoticonPack<Emoticon>
+        val view = pack.getView(container.context, pack, clickListener, payListener)
         view.tag = position
         container.addView(view)
         pack.isDataChanged = false
