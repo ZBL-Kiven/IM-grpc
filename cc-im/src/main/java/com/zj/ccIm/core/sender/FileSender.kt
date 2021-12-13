@@ -11,6 +11,7 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d
     companion object {
 
         fun getIfSupport(d: SendMessageReqEn): FileSender? {
+            if (d.url.isNullOrEmpty().not()) return null
             return when (d.msgType) {
                 MsgType.IMG.type, MsgType.VIDEO.type, MsgType.AUDIO.type -> {
                     FileSender(d)
