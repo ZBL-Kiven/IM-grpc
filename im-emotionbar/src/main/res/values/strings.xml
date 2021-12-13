@@ -15,4 +15,7 @@
     <string name="ui_input_tap_to_speaking">按住 说话</string>
     <string name="ui_input_release_to_send">松开 发送</string>
     <string name="ui_input_send">发送</string>
+    <string name="im_func_album">Album</string>
+    <string name="im_func_shot">Shot</string>
+    <string name="im_func_live">Live</string>
 </resources>

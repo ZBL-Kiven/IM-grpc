@@ -9,17 +9,9 @@ import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.interfaces.OnEmoticonClickListener
 import com.zj.emotionbar.utils.getResourceUri
 
-object AdapterUtils {
+object EmoticonEntityUtils {
 
-    fun getAdapter(context: Context, emoticonClickListener: OnEmoticonClickListener<Emoticon>?): EmoticonPacksAdapter {
-        val packs = mutableListOf<EmoticonPack<out Emoticon>>()
-        packs.add(getEmoji(context))
-        val adapter = EmoticonPacksAdapter(packs)
-        adapter.setClickListener(emoticonClickListener)
-        return adapter
-    }
-
-    private fun getEmoji(context: Context): EmoticonPack<Emoticon> {
+    fun getEmoji(context: Context): EmoticonPack<Emoticon> {
         val emojiArray = mutableListOf<Emoticon>()
         DefEmoticons.sEmojiArray.mapTo(emojiArray) {
             val emoticon = Emoticon()
@@ -29,11 +21,11 @@ object AdapterUtils {
         }
         val pack = EmoticonPack<Emoticon>()
         pack.emoticons = emojiArray
-        pack.iconUri = context.getResourceUri(R.mipmap.icon_face_thumb)
+        pack.iconUri = context.getResourceUri(R.mipmap.app_emo_func_ic_used)
         return pack
     }
 
     class DeleteEmoticon : Emoticon()
 
-    class BigEmoticon: Emoticon()
+    class BigEmoticon : Emoticon()
 }

@@ -12,5 +12,6 @@
     <color name="color_primary_text_color">#e7f3e9</color>
     <color name="color_primary_color_high_light">#f7fff9</color>
     <color name="color_primary_color_mediu_light">#eff0e9</color>
+    <color name="color_emotions_bg">#FFFFFF</color>
 
 </resources>

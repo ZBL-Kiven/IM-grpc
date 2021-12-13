@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.zj.emotionbar.data.Emoticon;
+import com.zj.emotionbar.data.EmoticonPack;
 import com.zj.emotionbar.interfaces.OnEmoticonClickListener;
 
 
@@ -21,12 +22,13 @@ public abstract class OnEmojiClickListener implements OnEmoticonClickListener<Em
         if (emoticon == null) {
             return;
         }
-        if (emoticon instanceof AdapterUtils.DeleteEmoticon) {
+
+        if (emoticon instanceof EmoticonEntityUtils.DeleteEmoticon) {
             int action = KeyEvent.ACTION_DOWN;
             int code = KeyEvent.KEYCODE_DEL;
             KeyEvent event = new KeyEvent(action, code);
             getEt().onKeyDown(KeyEvent.KEYCODE_DEL, event);
-        } else if (emoticon instanceof AdapterUtils.BigEmoticon) {
+        } else if (emoticon instanceof EmoticonEntityUtils.BigEmoticon) {
             onStickerClick(emoticon.getUri(), v);
         } else {
             String content = emoticon.getCode();

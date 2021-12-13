@@ -3,9 +3,7 @@ package com.zj.emotionbar.aemoj;
 import com.zj.emotionbar.R;
 
 public class DefEmoticons {
-
     public static final EmojiBean[] sEmojiArray;
-
     static {
         sEmojiArray = new EmojiBean[]{
                 //

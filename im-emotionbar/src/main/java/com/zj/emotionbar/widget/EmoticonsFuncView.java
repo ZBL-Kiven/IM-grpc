@@ -28,19 +28,21 @@ public class EmoticonsFuncView extends ViewPager {
         addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (Math.abs(positionOffset) < 0.000001) {
-                    mCurrentPagePosition = position;
-                }
             }
 
             @Override
             public void onPageSelected(int position) {
                 Log.d(TAG, "onPageSelected position:" + position);
-
+                if (mCurrentPagePosition==position)return;
+                mCurrentPagePosition = position;
+                EmoticonPack<?> pack = mAdapter.getPackList().get(position);
+                mEmoticonsFuncListener.onCurrentEmoticonPackChanged(pack);
+                mEmoticonsFuncListener.onPageSelected(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
+
             }
         });
 
@@ -70,5 +72,6 @@ public class EmoticonsFuncView extends ViewPager {
     public interface EmoticonsFuncListener {
 
         void onCurrentEmoticonPackChanged(EmoticonPack<? extends Emoticon> currentPack);
+        void onPageSelected(int position);
     }
 }

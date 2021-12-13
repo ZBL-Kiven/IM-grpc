@@ -1,9 +1,11 @@
 package com.zj.imtest.ui.input
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.zj.album.AlbumIns
@@ -15,7 +17,13 @@ import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
 import com.zj.emotionbar.adapt2cc.OnKeyboardListener
+import com.zj.emotionbar.aemoj.DefEmoticons
+import com.zj.emotionbar.data.Emoticon
+import com.zj.emotionbar.data.EmoticonPack
+import com.zj.emotionbar.epack.emoticon.EmoticonEntityUtils
+import com.zj.emotionbar.utils.getResourceUri
 import com.zj.imtest.BaseApp
+import com.zj.imtest.BaseApp.Companion.context
 
 
 class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val groupId: Long) : OnKeyboardListener<MessageInfoEntity> {
@@ -37,10 +45,28 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
         startAlbum(false, view, extData)
     }
 
+    override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
+        emoticonPack?.let { pack ->
+            inputLayout?.context?.let {
+                Toast.makeText(it, "{${pack.payType}}", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
+
+    override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
+        inputLayout?.context?.let {
+            Toast.makeText(it, "PAY", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onSelectFileClick(view: View?, extData: MessageInfoEntity?) {
     }
 
     override fun onStickerClick(url: String, view: View?, extData: MessageInfoEntity?) {
+        inputLayout?.context?.let {
+            IMHelper.Sender.sendUrlImg(url, 200, 200, groupId, extData)
+        }
     }
 
     override fun sendText(content: String, extData: MessageInfoEntity?) {
@@ -51,6 +77,21 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
 
     override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {
 
+    }
+
+    private fun getEmoji(context: Context, id: Int): EmoticonPack<EmoticonEntityUtils.BigEmoticon> {
+        val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+        DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+            val emoticon = EmoticonEntityUtils.BigEmoticon()
+            emoticon.code = it.emoji
+            emoticon.uri = context.getResourceUri(it.icon)
+            return@mapTo emoticon
+        }
+        val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
+        pack.emoticons = emojiArray
+        pack.id = id
+        pack.iconUri = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+        return pack
     }
 
     private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
