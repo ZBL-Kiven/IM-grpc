@@ -16,6 +16,7 @@ object EmoticonEntityUtils {
         DefEmoticons.sEmojiArray.mapTo(emojiArray) {
             val emoticon = Emoticon()
             emoticon.code = it.emoji
+            emoticon.icon = context.getResourceUri(it.icon)
             emoticon.uri = context.getResourceUri(it.icon)
             return@mapTo emoticon
         }

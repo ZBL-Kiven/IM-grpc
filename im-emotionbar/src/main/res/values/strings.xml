@@ -18,4 +18,5 @@
     <string name="im_func_album">Album</string>
     <string name="im_func_shot">Shot</string>
     <string name="im_func_live">Live</string>
+    <string name="im_emotion_to_unlock">to unlock</string>
 </resources>

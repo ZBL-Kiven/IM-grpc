@@ -54,7 +54,7 @@ class ImageAdapter<T : Emoticon>(context: Context, private val emoticons: List<T
     override fun onBindViewHolder(holder: ImgViewHolder, position: Int) {
         val image = holder.itemView as ImageView
         val data = getItem(position)
-        val uri = data.uri
+        val uri = data.icon
         if (uri != null) GlideLoader.displayImage(uri, image)
         holder.itemView.setOnClickListener {
             clickListener?.onEmoticonClick(data, it)
