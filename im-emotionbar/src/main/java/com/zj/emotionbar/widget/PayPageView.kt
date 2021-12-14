@@ -4,7 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.zj.emotionbar.R
+import com.zj.emotionbar.data.EmoticonPack
 
 /**
  * @author: JayQiu
@@ -12,6 +14,8 @@ import com.zj.emotionbar.R
  * @description:
  */
 class PayPageView @JvmOverloads constructor(context: Context, attr: AttributeSet? = null, def: Int = 0, private val payAction: (() -> Unit)?) : LinearLayout(context, attr, def) {
+    private var mTvPrice: TextView? = null
+
     init {
         View.inflate(context, R.layout.view_pay_page, this)
         initView()
@@ -21,5 +25,10 @@ class PayPageView @JvmOverloads constructor(context: Context, attr: AttributeSet
         findViewById<LinearLayout>(R.id.im_emotion_ll_pay).setOnClickListener {
             payAction?.invoke()
         }
+        mTvPrice = findViewById(R.id.im_emotion_tv_Price)
+    }
+
+    fun showData(price: Int? = 0) {
+        mTvPrice?.text = "$price"
     }
 }

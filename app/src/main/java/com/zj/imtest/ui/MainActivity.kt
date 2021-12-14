@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
         packs.add(EmoticonPack<EmoticonEntityUtils.BigEmoticon>().apply {
             iconUri = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
             payType = 1
+            price = 10
             emoticons = mutableListOf()
             id = 3
         })
@@ -162,12 +163,13 @@ class MainActivity : AppCompatActivity() {
             val emoticon = EmoticonEntityUtils.BigEmoticon()
             emoticon.code = it.emoji
             emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+            emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
             return@mapTo emoticon
         }
         val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
         pack.emoticons = emojiArray
         pack.id = id
-        pack.iconUri = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+        pack.iconUri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return pack
     }
 

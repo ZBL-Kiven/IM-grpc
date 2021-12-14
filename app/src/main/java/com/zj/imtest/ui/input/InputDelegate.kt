@@ -47,16 +47,26 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
         emoticonPack?.let { pack ->
-            inputLayout?.context?.let {
-                Toast.makeText(it, "{${pack.payType}}", Toast.LENGTH_SHORT).show()
-            }
+            inputLayout?.context?.let {}
         }
 
     }
 
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
         inputLayout?.context?.let {
-            Toast.makeText(it, "PAY", Toast.LENGTH_SHORT).show()
+            if (emoticonPack != null) {
+                val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+                DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+                    val emoticon = EmoticonEntityUtils.BigEmoticon()
+                    emoticon.code = it.emoji
+                    emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                    emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                    return@mapTo emoticon
+                }
+                emoticonPack.payType = 0
+                emoticonPack.emoticons = emojiArray.toMutableList()
+                inputLayout.updateEmoticon(emoticonPack)
+            }
         }
     }
 
@@ -77,21 +87,6 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
 
     override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {
 
-    }
-
-    private fun getEmoji(context: Context, id: Int): EmoticonPack<EmoticonEntityUtils.BigEmoticon> {
-        val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
-        DefEmoticons.sEmojiArray.mapTo(emojiArray) {
-            val emoticon = EmoticonEntityUtils.BigEmoticon()
-            emoticon.code = it.emoji
-            emoticon.uri = context.getResourceUri(it.icon)
-            return@mapTo emoticon
-        }
-        val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
-        pack.emoticons = emojiArray
-        pack.id = id
-        pack.iconUri = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
-        return pack
     }
 
     private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
