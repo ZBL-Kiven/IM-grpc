@@ -21,7 +21,7 @@ public interface OnKeyboardListener<T> {
 
     void onSelectFileClick(View view, @Nullable T extData);
 
-    void onStickerClick(@NonNull String url, View view, @Nullable T extData);
+    void sendSticker(@NonNull String url, View view, @Nullable T extData);
 
     void sendText(@NonNull String content, @Nullable T extData);
 

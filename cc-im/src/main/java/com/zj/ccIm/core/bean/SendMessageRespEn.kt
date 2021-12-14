@@ -59,7 +59,7 @@ class SendMessageRespEn : BaseMessageInfo() {
     var expireTime: Long = -1L
 
     /**
-     * send msg state , 0: normal , else see [com.zj.ccIm.core.api.ImApi.EH]
+     * send msg state , 0: normal , 2 sensitive error , else see [com.zj.ccIm.core.api.ImApi.EH]
      * */
     var msgStatus: Int = 0
 

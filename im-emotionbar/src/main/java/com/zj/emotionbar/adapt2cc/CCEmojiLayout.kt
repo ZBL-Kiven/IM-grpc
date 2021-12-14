@@ -25,7 +25,7 @@ open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: 
         }
 
         override fun onStickerClick(url: String, view: View) {
-            onFuncListener?.onStickerClick(url, view, takeExtData())
+            onFuncListener?.sendSticker(url, view, takeExtData())
         }
     }
 

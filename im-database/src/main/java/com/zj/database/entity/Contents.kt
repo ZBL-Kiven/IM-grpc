@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package com.zj.database.entity
 
 
@@ -38,6 +40,28 @@ class QuestionContent {
     var expireTime: Long = 0
     var answerMsgType: String? = null
     var contentType: String? = null
+}
+
+class EmotionMessage {
+    /**
+     * 表情id
+     */
+    var id = 0
+
+    /**
+     * 表情包id
+     */
+    var emotionId = 0
+
+    /**
+     * 图标
+     */
+    var icon: String? = null
+
+    /**
+     * 表情地址
+     */
+    var url: String? = null
 }
 
 class SenderInfo {

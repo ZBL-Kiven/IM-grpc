@@ -235,4 +235,19 @@ public interface ImMessageOrBuilder extends
 
   java.lang.String getExtContentOrThrow(
       java.lang.String key);
+
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   * @return Whether the emotionMessage field is set.
+   */
+  boolean hasEmotionMessage();
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   * @return The emotionMessage.
+   */
+  EmotionMessage getEmotionMessage();
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   */
+  EmotionMessageOrBuilder getEmotionMessageOrBuilder();
 }

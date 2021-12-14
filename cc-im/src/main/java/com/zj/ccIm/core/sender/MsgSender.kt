@@ -9,12 +9,28 @@ import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
+import com.zj.database.entity.EmotionMessage
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
 
 @Suppress("unused")
 open class MsgSender internal constructor(private val config: SendMsgConfig) {
+
+    fun sendEmotion(groupId: Long, path: String, packId: Int, emojiId: Int): String {
+        val sen = SendMessageReqEn()
+        sen.groupId = groupId
+        sen.msgType = MsgType.EMOTION.type
+        sen.clientMsgId = config.callId
+        sen.emotionMessage = EmotionMessage().apply {
+            this.id = emojiId
+            this.emotionId = packId
+            this.url = path
+        }
+        setRetryProp(sen)
+        send(sen)
+        return config.callId
+    }
 
     fun sendRewardTextMsg(content: String, groupId: Long, diamondNum: Int = 0, rewardMsgType: MsgType, isPublic: Boolean): String {
         val sen = SendMessageReqEn()

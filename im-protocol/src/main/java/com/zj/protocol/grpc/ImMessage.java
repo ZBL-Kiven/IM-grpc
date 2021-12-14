@@ -223,6 +223,19 @@ private static final long serialVersionUID = 0L;
                 extContent__.getKey(), extContent__.getValue());
             break;
           }
+          case 154: {
+            EmotionMessage.Builder subBuilder = null;
+            if (emotionMessage_ != null) {
+              subBuilder = emotionMessage_.toBuilder();
+            }
+            emotionMessage_ = input.readMessage(EmotionMessage.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(emotionMessage_);
+              emotionMessage_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -724,6 +737,32 @@ private static final long serialVersionUID = 0L;
     return map.get(key);
   }
 
+  public static final int EMOTIONMESSAGE_FIELD_NUMBER = 19;
+  private EmotionMessage emotionMessage_;
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   * @return Whether the emotionMessage field is set.
+   */
+  @java.lang.Override
+  public boolean hasEmotionMessage() {
+    return emotionMessage_ != null;
+  }
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   * @return The emotionMessage.
+   */
+  @java.lang.Override
+  public EmotionMessage getEmotionMessage() {
+    return emotionMessage_ == null ? EmotionMessage.getDefaultInstance() : emotionMessage_;
+  }
+  /**
+   * <code>.app.EmotionMessage emotionMessage = 19;</code>
+   */
+  @java.lang.Override
+  public EmotionMessageOrBuilder getEmotionMessageOrBuilder() {
+    return getEmotionMessage();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -795,6 +834,9 @@ private static final long serialVersionUID = 0L;
         internalGetExtContent(),
         ExtContentDefaultEntryHolder.defaultEntry,
         18);
+    if (emotionMessage_ != null) {
+      output.writeMessage(19, getEmotionMessage());
+    }
     unknownFields.writeTo(output);
   }
 
@@ -880,6 +922,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(18, extContent__);
     }
+    if (emotionMessage_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(19, getEmotionMessage());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -958,6 +1004,11 @@ private static final long serialVersionUID = 0L;
     }
     if (!internalGetExtContent().equals(
         other.internalGetExtContent())) return false;
+    if (hasEmotionMessage() != other.hasEmotionMessage()) return false;
+    if (hasEmotionMessage()) {
+      if (!getEmotionMessage()
+          .equals(other.getEmotionMessage())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1029,6 +1080,10 @@ private static final long serialVersionUID = 0L;
     if (!internalGetExtContent().getMap().isEmpty()) {
       hash = (37 * hash) + EXTCONTENT_FIELD_NUMBER;
       hash = (53 * hash) + internalGetExtContent().hashCode();
+    }
+    if (hasEmotionMessage()) {
+      hash = (37 * hash) + EMOTIONMESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getEmotionMessage().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1256,6 +1311,12 @@ private static final long serialVersionUID = 0L;
         liveContentBuilder_ = null;
       }
       internalGetMutableExtContent().clear();
+      if (emotionMessageBuilder_ == null) {
+        emotionMessage_ = null;
+      } else {
+        emotionMessage_ = null;
+        emotionMessageBuilder_ = null;
+      }
       return this;
     }
 
@@ -1338,6 +1399,11 @@ private static final long serialVersionUID = 0L;
       }
       result.extContent_ = internalGetExtContent();
       result.extContent_.makeImmutable();
+      if (emotionMessageBuilder_ == null) {
+        result.emotionMessage_ = emotionMessage_;
+      } else {
+        result.emotionMessage_ = emotionMessageBuilder_.build();
+      }
       onBuilt();
       return result;
     }
@@ -1441,6 +1507,9 @@ private static final long serialVersionUID = 0L;
       }
       internalGetMutableExtContent().mergeFrom(
           other.internalGetExtContent());
+      if (other.hasEmotionMessage()) {
+        mergeEmotionMessage(other.getEmotionMessage());
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -2979,6 +3048,122 @@ private static final long serialVersionUID = 0L;
       internalGetMutableExtContent().getMutableMap()
           .putAll(values);
       return this;
+    }
+
+    private EmotionMessage emotionMessage_;
+    private com.google.protobuf.SingleFieldBuilderV3<EmotionMessage, EmotionMessage.Builder, EmotionMessageOrBuilder> emotionMessageBuilder_;
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     * @return Whether the emotionMessage field is set.
+     */
+    public boolean hasEmotionMessage() {
+      return emotionMessageBuilder_ != null || emotionMessage_ != null;
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     * @return The emotionMessage.
+     */
+    public EmotionMessage getEmotionMessage() {
+      if (emotionMessageBuilder_ == null) {
+        return emotionMessage_ == null ? EmotionMessage.getDefaultInstance() : emotionMessage_;
+      } else {
+        return emotionMessageBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public Builder setEmotionMessage(EmotionMessage value) {
+      if (emotionMessageBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        emotionMessage_ = value;
+        onChanged();
+      } else {
+        emotionMessageBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public Builder setEmotionMessage(
+        EmotionMessage.Builder builderForValue) {
+      if (emotionMessageBuilder_ == null) {
+        emotionMessage_ = builderForValue.build();
+        onChanged();
+      } else {
+        emotionMessageBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public Builder mergeEmotionMessage(EmotionMessage value) {
+      if (emotionMessageBuilder_ == null) {
+        if (emotionMessage_ != null) {
+          emotionMessage_ =
+            EmotionMessage.newBuilder(emotionMessage_).mergeFrom(value).buildPartial();
+        } else {
+          emotionMessage_ = value;
+        }
+        onChanged();
+      } else {
+        emotionMessageBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public Builder clearEmotionMessage() {
+      if (emotionMessageBuilder_ == null) {
+        emotionMessage_ = null;
+        onChanged();
+      } else {
+        emotionMessage_ = null;
+        emotionMessageBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public EmotionMessage.Builder getEmotionMessageBuilder() {
+      
+      onChanged();
+      return getEmotionMessageFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    public EmotionMessageOrBuilder getEmotionMessageOrBuilder() {
+      if (emotionMessageBuilder_ != null) {
+        return emotionMessageBuilder_.getMessageOrBuilder();
+      } else {
+        return emotionMessage_ == null ?
+            EmotionMessage.getDefaultInstance() : emotionMessage_;
+      }
+    }
+    /**
+     * <code>.app.EmotionMessage emotionMessage = 19;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<EmotionMessage, EmotionMessage.Builder, EmotionMessageOrBuilder>
+        getEmotionMessageFieldBuilder() {
+      if (emotionMessageBuilder_ == null) {
+        emotionMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<EmotionMessage, EmotionMessage.Builder, EmotionMessageOrBuilder>(
+                getEmotionMessage(),
+                getParentForChildren(),
+                isClean());
+        emotionMessage_ = null;
+      }
+      return emotionMessageBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

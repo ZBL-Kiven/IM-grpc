@@ -63,7 +63,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
     override fun onSelectFileClick(view: View?, extData: MessageInfoEntity?) {
     }
 
-    override fun onStickerClick(url: String, view: View?, extData: MessageInfoEntity?) {
+    override fun sendSticker(url: String, view: View?, extData: MessageInfoEntity?) {
         inputLayout?.context?.let {
             IMHelper.Sender.sendUrlImg(url, 200, 200, groupId, extData)
         }

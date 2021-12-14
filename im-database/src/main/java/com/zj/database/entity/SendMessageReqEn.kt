@@ -3,6 +3,7 @@ package com.zj.database.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.zj.database.converter.EmojiContentConverter
 import com.zj.database.converter.MessageConverter
 
 @Entity(tableName = "sendingMsg")
@@ -72,6 +73,11 @@ class SendMessageReqEn {
             replyMsgId = value?.msgId
             field = value
         }
+
+    /**
+     * emoji
+     * */
+    @TypeConverters(EmojiContentConverter::class) var emotionMessage: EmotionMessage? = null
 
     /*====================================================== 非参与上传字段 =============================================================*/
 

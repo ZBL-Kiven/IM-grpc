@@ -147,10 +147,14 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                 }
             }
         }
-        serviceConn?.let {
-            this.option?.context?.let { ctx ->
-                ctx.bindService(Intent(ctx, ChatBase::class.java), it, Service.BIND_AUTO_CREATE)
+        try {
+            serviceConn?.let {
+                this.option?.context?.let { ctx ->
+                    ctx.bindService(Intent(ctx, ChatBase::class.java), it, Service.BIND_AUTO_CREATE)
+                }
             }
+        } catch (e: Exception) {
+            onError(IMArgumentException("unable to start im service , case: ${e.message}"))
         }
     }
 

@@ -84,7 +84,17 @@ internal object SendingDbOperator {
             SendMsgState.NONE, SendMsgState.SUCCESS -> {
                 sendDb?.deleteByCallId(d.clientMsgId)
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
-                Pair(localMsg, ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE)
+                val pl = when (d.msgStatus) {
+                    /**
+                     * There is needn't to deal with it temporarily.
+                     * The message here is only displayed to itself in the Group.
+                     * Whether it can be pulled and whether it is received by others is the backend logic.
+                     *
+                     * [ImApi.EH.SENSITIVE_WORD_ERROR] -> [ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS]
+                     * */
+                    else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
+                }
+                Pair(localMsg, pl)
             }
         }
     }

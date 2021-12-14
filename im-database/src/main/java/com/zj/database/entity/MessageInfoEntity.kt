@@ -119,6 +119,11 @@ class MessageInfoEntity : BaseMessageInfo() {
     @TypeConverters(ExtContentConverter::class) override var extContent: Map<String, String>? = null
 
     /**
+     * emoji content
+     * */
+    @TypeConverters(EmojiContentConverter::class) var emotionMessage: EmotionMessage? = null
+
+    /**
      * 0 正常， 1 撤回
      * */
     @Deprecated("not recommend use it anymore", replaceWith = ReplaceWith("replace with", "com.zj.database.entity.MessageInfoEntity.extContent")) var status: Int = 0

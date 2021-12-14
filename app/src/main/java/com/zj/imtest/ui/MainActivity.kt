@@ -2,6 +2,7 @@ package com.zj.imtest.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.MessageTotalDots
+import com.zj.ccIm.core.sender.exchange.MessageInfoEntityDataExchange
 import com.zj.cf.managers.TabFragmentManager
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
@@ -92,21 +94,19 @@ class MainActivity : AppCompatActivity() {
     private fun initListener() {
 
         ivHeadPic?.setOnClickListener {
+            IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).sendWithoutState().setCustomSendCallback(object : MessageInfoEntityDataExchange() {
+                override fun onSendingStart(callId: String, d: MessageInfoEntity?) {
+                    Log.e("=======>", "CustomSendingCallback: onStart $callId   d = ${d?.textContent?.text}")
+                }
 
-            //            IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).sendWithoutState().setCustomSendCallback(object : MessageInfoEntityDataExchange() {
-            //                override fun onSendingStart(callId: String, d: MessageInfoEntity?) {
-            //                    Log.e("=======>", "CustomSendingCallback: onStart $callId   d = ${d?.textContent?.text}")
-            //                }
-            //
-            //                override fun onSendingProgress(callId: String, progress: Int) {
-            //                    Log.e("=======>", "CustomSendingCallback: progress $callId")
-            //                }
-            //
-            //                override fun onSendResult(isOK: Boolean, retryAble: Boolean, callId: String, d: MessageInfoEntity?, throwable: Throwable?, payloadInfo: Any?) {
-            //                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}   ext = ${d?.extContent.toString()}")
-            //                }
-            //            }).build().sendText("bitch", groupId)
-            IMHelper.route(RouteInfo(0), "123123")
+                override fun onSendingProgress(callId: String, progress: Int) {
+                    Log.e("=======>", "CustomSendingCallback: progress $callId")
+                }
+
+                override fun onSendResult(isOK: Boolean, retryAble: Boolean, callId: String, d: MessageInfoEntity?, throwable: Throwable?, payloadInfo: Any?) {
+                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}   ext = ${d?.extContent.toString()}")
+                }
+            }).build().sendText("bitch", groupId)
         }
     }
 

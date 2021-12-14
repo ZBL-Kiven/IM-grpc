@@ -24,8 +24,10 @@ internal class IConnectivityManager {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             isLowerNChange(context)
         } else {
-            this.connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager?
-            connectivityManager?.registerNetworkCallback(request, netCallBack)
+            kotlin.runCatching {
+                this.connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager?
+                connectivityManager?.registerNetworkCallback(request, netCallBack)
+            }
         }
     }
 
