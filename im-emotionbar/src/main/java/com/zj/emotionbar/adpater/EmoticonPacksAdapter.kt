@@ -57,7 +57,7 @@ open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) 
     }
 
     override fun getItemPosition(obj: Any): Int {
-        return POSITION_UNCHANGED
+        return POSITION_NONE
     }
 
     override fun notifyDataSetChanged() {

@@ -47,15 +47,26 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
         emoticonPack?.let { pack ->
-            inputLayout?.context?.let {
-            }
+            inputLayout?.context?.let {}
         }
 
     }
 
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
         inputLayout?.context?.let {
-            Toast.makeText(it, "PAY", Toast.LENGTH_SHORT).show()
+            if (emoticonPack != null) {
+                val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+                DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+                    val emoticon = EmoticonEntityUtils.BigEmoticon()
+                    emoticon.code = it.emoji
+                    emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                    emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                    return@mapTo emoticon
+                }
+                emoticonPack.payType = 0
+                emoticonPack.emoticons = emojiArray.toMutableList()
+                inputLayout.updateEmoticon(emoticonPack)
+            }
         }
     }
 

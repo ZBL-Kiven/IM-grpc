@@ -78,7 +78,7 @@ open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: 
                     return@forEachIndexed
                 }
             }
-            setEmoticon(packList)
+            emoticonPacksAdapter?.notifyDataSetChanged()
             onToolBarItemClick(packList[selectIndex])
         }
     }

@@ -11,17 +11,21 @@ import com.bumptech.glide.Glide
 import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
+import com.zj.emotionbar.utils.EmoticonsKeyboardUtils.dip2px
 import com.zj.emotionbar.utils.imageloader.GlideLoader
 import com.zj.emotionbar.utils.imageloader.ImageLoader
+import com.zj.emotionbar.widget.GridSpacingItemDecoration
 
 open class GridPageFactory<T : EmoticonPack<O>, O : Emoticon> : PageFactory<T, O> {
 
     override fun create(context: Context, pack: T, clickListener: OnEmoticonClickListener<Emoticon>?, payClickListener: OnPayClickListener<EmoticonPack<Emoticon>>?): View {
         val pageView = RecyclerView(context)
         val lm = GridLayoutManager(context, 5)
+        pageView.addItemDecoration(GridSpacingItemDecoration(5, dip2px(context, 12f), false))
         pageView.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
         pageView.layoutManager = lm
         pageView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        pageView.setPadding(dip2px(context, 12f), 0, dip2px(context, 12f), 0)
         val adapter = createAdapter(context, pack.emoticons, clickListener)
         pageView.adapter = adapter
         return pageView
@@ -33,9 +37,6 @@ open class GridPageFactory<T : EmoticonPack<O>, O : Emoticon> : PageFactory<T, O
 }
 
 class ImageAdapter<T : Emoticon>(context: Context, private val emoticons: List<T>, private val clickListener: OnEmoticonClickListener<Emoticon>?) : RecyclerView.Adapter<ImageAdapter.ImgViewHolder>() {
-    private val imageHeight = (Resources.getSystem().displayMetrics.density * 24f + 0.5f).toInt()
-    private val defaultItemSize = context.resources.getDimension(R.dimen.item_emoticon_size_default).toInt()
-    private val padding = context.resources.getDimension(R.dimen.item_emoticon_padding).toInt()
 
     override fun getItemCount(): Int {
         return emoticons.size
@@ -45,8 +46,7 @@ class ImageAdapter<T : Emoticon>(context: Context, private val emoticons: List<T
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImgViewHolder {
         val iv = ImageView(parent.context)
-        val lp = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, defaultItemSize)
-        iv.setPadding(0, padding, 0, padding)
+        val lp = RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT)
         iv.layoutParams = lp
         return ImgViewHolder(iv)
     }

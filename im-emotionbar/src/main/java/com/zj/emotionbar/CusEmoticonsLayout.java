@@ -200,6 +200,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
 
     public void reset() {
         emoticonsEditText.clearFocus();
+        emoticonsEditText.setFocusable(true);
         EmoticonsKeyboardUtils.closeSoftKeyboard(this);
         funcLayout.hideAllFuncView();
         btnFace.setImageResource(R.mipmap.ui_emo_icon_face_pop);

@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
         pack.emoticons = emojiArray
         pack.id = id
-        pack.iconUri = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+        pack.iconUri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return pack
     }
 
