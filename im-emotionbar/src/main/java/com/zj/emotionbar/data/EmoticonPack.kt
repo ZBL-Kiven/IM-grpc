@@ -8,19 +8,22 @@ import com.zj.emotionbar.interfaces.OnPayClickListener
 import com.zj.emotionbar.interfaces.PayPageFactory
 
 class EmoticonPack<T : Emoticon> {
-    var iconUri: String? = null
+    enum class EmoticonType(var type: Int) {
+        FREE(0), PAY(1)
+    }
+
+    var image: String? = null
     var name: String? = null
-    var isDataChanged = false
-    var payType = 0
+    var type = 0
     var id: Int = 0
     var price: Int = 0
     var tag: Any? = null
     lateinit var emoticons: MutableList<T>
 
-    fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<Emoticon>?, payClickListener: OnPayClickListener<EmoticonPack<Emoticon>>?): View {
+    fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<T>?, payClickListener: OnPayClickListener<EmoticonPack<T>>?): View {
 
-        return when (payType) {
-            1 -> PayPageFactory<EmoticonPack<T>, T>().create(context, pack, payClickListener = payClickListener)
+        return when (type) {
+            EmoticonType.PAY.type -> PayPageFactory<EmoticonPack<T>, T>().create(context, pack, payClickListener = payClickListener)
             else -> GridPageFactory<EmoticonPack<T>, T>().create(context, pack, listener)
         }
 

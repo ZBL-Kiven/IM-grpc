@@ -1,11 +1,9 @@
 package com.zj.imtest.ui.input
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.zj.album.AlbumIns
@@ -21,12 +19,10 @@ import com.zj.emotionbar.aemoj.DefEmoticons
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.epack.emoticon.EmoticonEntityUtils
-import com.zj.emotionbar.utils.getResourceUri
 import com.zj.imtest.BaseApp
-import com.zj.imtest.BaseApp.Companion.context
 
 
-class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val groupId: Long) : OnKeyboardListener<MessageInfoEntity> {
+class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Emoticon>?, private val groupId: Long) : OnKeyboardListener<MessageInfoEntity, Emoticon> {
 
     private var curChannel: ChannelRegisterInfo? = null
 
@@ -46,10 +42,9 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
     }
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
-        emoticonPack?.let { pack ->
+        emoticonPack?.let {
             inputLayout?.context?.let {}
         }
-
     }
 
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
@@ -58,12 +53,12 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
                 val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
                 DefEmoticons.sEmojiArray.mapTo(emojiArray) {
                     val emoticon = EmoticonEntityUtils.BigEmoticon()
-                    emoticon.code = it.emoji
-                    emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                    emoticon.id = it.icon
+                    emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
                     emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
                     return@mapTo emoticon
                 }
-                emoticonPack.payType = 0
+                emoticonPack.type = 0
                 emoticonPack.emoticons = emojiArray.toMutableList()
                 inputLayout.updateEmoticon(emoticonPack)
             }
@@ -73,10 +68,15 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
     override fun onSelectFileClick(view: View?, extData: MessageInfoEntity?) {
     }
 
-    override fun sendSticker(url: String, view: View?, extData: MessageInfoEntity?) {
-        inputLayout?.context?.let {
-            IMHelper.Sender.sendUrlImg(url, 200, 200, groupId, extData)
+    override fun sendSticker(emoticon: Emoticon, view: View?, extData: MessageInfoEntity?) {
+        curChannel?.let {
+            emoticon.url?.let { it1 ->
+                emoticon.pack?.let { it2 ->
+                    emoticon.id?.let { it3 -> IMHelper.Sender.sendEmotion(it.groupId, it1, it2.id, it3) }
+                }
+            }
         }
+
     }
 
     override fun sendText(content: String, extData: MessageInfoEntity?) {
@@ -85,9 +85,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
         }
     }
 
-    override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {
-
-    }
+    override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {}
 
     private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
         (v?.context as? FragmentActivity)?.let {

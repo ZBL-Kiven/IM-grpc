@@ -1,13 +1,9 @@
 package com.zj.emotionbar;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -23,10 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.zj.emotionbar.adpater.EmoticonPacksAdapter;
 import com.zj.emotionbar.data.Emoticon;
 import com.zj.emotionbar.data.EmoticonPack;
+import com.zj.emotionbar.interfaces.EmoticonsFuncListener;
 import com.zj.emotionbar.interfaces.EmoticonsToolBar;
-import com.zj.emotionbar.adpater.EmoticonPacksAdapter;
 import com.zj.emotionbar.interfaces.ExtInflater;
 import com.zj.emotionbar.interfaces.OnToolBarItemClickListener;
 import com.zj.emotionbar.utils.EmoticonsKeyboardUtils;
@@ -38,7 +38,7 @@ import com.zj.emotionbar.widget.FuncLayout;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnClickListener, EmoticonsFuncView.EmoticonsFuncListener, OnToolBarItemClickListener, EmoticonsEditText.OnBackKeyClickListener, FuncLayout.OnFuncChangeListener {
+public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout implements View.OnClickListener, EmoticonsFuncListener<E>, OnToolBarItemClickListener<E>, EmoticonsEditText.OnBackKeyClickListener, FuncLayout.OnFuncChangeListener {
 
     public static final int FUNC_TYPE_EMOTION = -1;
     public static final int FUNC_TYPE_APS = -2;
@@ -58,10 +58,10 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     private T extData;
     private boolean showKeyboardIfLayoutFinish = false;
 
-    protected EmoticonsFuncView emoticonsFuncView;
-    protected EmoticonsToolBar emoticonsToolBar;
+    protected EmoticonsFuncView<E> emoticonsFuncView;
+    protected EmoticonsToolBar<E> emoticonsToolBar;
     private TextView mTvBlocked;
-    private EmoticonsFuncView.EmoticonsFuncListener mEmoticonsFuncListener;
+    private EmoticonsFuncListener<E> mEmoticonsFuncListener;
     protected boolean dispatchKeyEventPreImeLock = false;
     private boolean isBlocked = false;
     private int viewModel = 1;
@@ -163,8 +163,8 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         });
     }
 
-    public void setAdapter(@NonNull EmoticonPacksAdapter adapter) {
-        List<EmoticonPack<? extends Emoticon>> packList = adapter.getPackList();
+    public void setAdapter(@NonNull EmoticonPacksAdapter<E> adapter) {
+        List<EmoticonPack<E>> packList = adapter.getPackList();
         emoticonsToolBar.setPackList(packList);
         emoticonsFuncView.setAdapter(adapter);
         adapter.setAdapterListener(() -> emoticonsToolBar.notifyDataChanged());
@@ -180,7 +180,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         }
     }
 
-    public void setOnPageEmoticonSelectedListener(EmoticonsFuncView.EmoticonsFuncListener listener) {
+    public void setOnPageEmoticonSelectedListener(EmoticonsFuncListener<E> listener) {
         mEmoticonsFuncListener = listener;
     }
 
@@ -295,7 +295,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     @Override
-    public void onCurrentEmoticonPackChanged(EmoticonPack<? extends Emoticon> currentPack) {
+    public void onCurrentEmoticonPackChanged(EmoticonPack<E> currentPack) {
         emoticonsToolBar.selectEmotionPack(currentPack);
         if (mEmoticonsFuncListener != null) mEmoticonsFuncListener.onCurrentEmoticonPackChanged(currentPack);
     }
@@ -328,7 +328,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     @Override
-    public void onToolBarItemClick(@NonNull EmoticonPack<? extends Emoticon> pack) {
+    public void onToolBarItemClick(@NonNull EmoticonPack<E> pack) {
         emoticonsFuncView.setCurrentPageSet(pack);
         emoticonsToolBar.selectEmotionPack(pack);
     }
@@ -386,11 +386,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         }
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             boolean isFocused;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                isFocused = emoticonsEditText.getShowSoftInputOnFocus();
-            } else {
-                isFocused = emoticonsEditText.isFocused();
-            }
+            isFocused = emoticonsEditText.getShowSoftInputOnFocus();
             if (isFocused) {
                 emoticonsEditText.onKeyDown(event.getKeyCode(), event);
             }
@@ -410,7 +406,7 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
         return btnSend;
     }
 
-    public EmoticonsFuncView getEmoticonsFuncView() {
+    public EmoticonsFuncView<E> getEmoticonsFuncView() {
         return emoticonsFuncView;
     }
 
@@ -419,12 +415,10 @@ public class CusEmoticonsLayout<T> extends AutoHeightLayout implements View.OnCl
     }
 
     protected T takeExtData() {
-        T ext = extData;
-        return ext;
+        return extData;
     }
 
-
-    public EmoticonsToolBar getEmoticonsToolBarView() {
+    public EmoticonsToolBar<E> getEmoticonsToolBarView() {
         return emoticonsToolBar;
     }
 

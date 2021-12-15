@@ -1,24 +1,20 @@
 package com.zj.emotionbar.interfaces
 
 import android.content.Context
-import android.content.res.Resources
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.utils.EmoticonsKeyboardUtils.dip2px
 import com.zj.emotionbar.utils.imageloader.GlideLoader
-import com.zj.emotionbar.utils.imageloader.ImageLoader
 import com.zj.emotionbar.widget.GridSpacingItemDecoration
 
-open class GridPageFactory<T : EmoticonPack<O>, O : Emoticon> : PageFactory<T, O> {
+open class GridPageFactory<T : EmoticonPack<E>, E : Emoticon> : PageFactory<T, E> {
 
-    override fun create(context: Context, pack: T, clickListener: OnEmoticonClickListener<Emoticon>?, payClickListener: OnPayClickListener<EmoticonPack<Emoticon>>?): View {
+    override fun create(context: Context, pack: T, clickListener: OnEmoticonClickListener<E>?, payClickListener: OnPayClickListener<T>?): View {
         val pageView = RecyclerView(context)
         val lm = GridLayoutManager(context, 5)
         pageView.addItemDecoration(GridSpacingItemDecoration(5, dip2px(context, 12f), false))
@@ -26,23 +22,25 @@ open class GridPageFactory<T : EmoticonPack<O>, O : Emoticon> : PageFactory<T, O
         pageView.layoutManager = lm
         pageView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         pageView.setPadding(dip2px(context, 12f), 0, dip2px(context, 12f), 0)
-        val adapter = createAdapter(context, pack.emoticons, clickListener)
+        val adapter = createAdapter(pack.emoticons, clickListener)
         pageView.adapter = adapter
         return pageView
     }
 
-    open fun <T : Emoticon> createAdapter(context: Context, emoticons: List<T>, clickListener: OnEmoticonClickListener<Emoticon>?): RecyclerView.Adapter<*> {
-        return ImageAdapter(context, emoticons, clickListener)
+    open fun createAdapter(emoticons: MutableList<E>, clickListener: OnEmoticonClickListener<E>?): RecyclerView.Adapter<*> {
+        return ImageAdapter(emoticons, clickListener)
     }
 }
 
-class ImageAdapter<T : Emoticon>(context: Context, private val emoticons: List<T>, private val clickListener: OnEmoticonClickListener<Emoticon>?) : RecyclerView.Adapter<ImageAdapter.ImgViewHolder>() {
+class ImageAdapter<E : Emoticon>(private val emoticons: List<E>, private val clickListener: OnEmoticonClickListener<E>?) : RecyclerView.Adapter<ImageAdapter.ImgViewHolder>() {
 
     override fun getItemCount(): Int {
         return emoticons.size
     }
 
-    private fun getItem(position: Int): Emoticon = emoticons[position]
+    private fun getItem(position: Int): E {
+        return emoticons[position]
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImgViewHolder {
         val iv = ImageView(parent.context)

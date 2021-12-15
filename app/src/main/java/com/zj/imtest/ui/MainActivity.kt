@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
     private var tvGroupInfo: TextView? = null
     private var tvGroupDesc: TextView? = null
     private var ivHeadPic: ImageView? = null
-    private var inputLayout: CCEmojiLayout<MessageInfoEntity>? = null
+    private var inputLayout: CCEmojiLayout<MessageInfoEntity, Emoticon>? = null
     private var inputDelegate: InputDelegate? = null
     private var groupInfoDesc = ""
         set(value) {
@@ -144,12 +144,12 @@ class MainActivity : AppCompatActivity() {
                 ivHeadPic?.let { Glide.with(this).load(data.logo).circleCrop().into(it) }
             }
         }
-        val packs = mutableListOf<EmoticonPack<out Emoticon>>()
+        val packs = mutableListOf<EmoticonPack<Emoticon>>()
+        packs.add(getEmoji(applicationContext, 6))
         packs.add(getEmoji(applicationContext, 1))
-        packs.add(getEmoji(applicationContext, 2))
-        packs.add(EmoticonPack<EmoticonEntityUtils.BigEmoticon>().apply {
-            iconUri = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
-            payType = 1
+        packs.add(EmoticonPack<Emoticon>().apply {
+            image = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
+            type = EmoticonPack.EmoticonType.PAY.type
             price = 10
             emoticons = mutableListOf()
             id = 3
@@ -157,19 +157,21 @@ class MainActivity : AppCompatActivity() {
         inputLayout?.setEmoticon(packs)
     }
 
-    private fun getEmoji(context: Context, id: Int): EmoticonPack<EmoticonEntityUtils.BigEmoticon> {
+    private fun getEmoji(context: Context, id: Int): EmoticonPack<Emoticon> {
+        val pack = EmoticonPack<Emoticon>()
+        pack.id = id
         val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
         DefEmoticons.sEmojiArray.mapTo(emojiArray) {
             val emoticon = EmoticonEntityUtils.BigEmoticon()
-            emoticon.code = it.emoji
-            emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+            emoticon.id = 34
+            emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
             emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+            emoticon.pack = EmoticonPack<Emoticon>().apply { this.id = id }
             return@mapTo emoticon
         }
-        val pack = EmoticonPack<EmoticonEntityUtils.BigEmoticon>()
-        pack.emoticons = emojiArray
-        pack.id = id
-        pack.iconUri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+        pack.emoticons = emojiArray.toMutableList()
+
+        pack.image = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return pack
     }
 

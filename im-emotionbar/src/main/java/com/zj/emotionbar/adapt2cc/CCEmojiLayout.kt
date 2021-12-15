@@ -11,40 +11,42 @@ import com.zj.emotionbar.adpater.EmoticonPacksAdapter
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.epack.emoticon.OnEmojiClickListener
+import com.zj.emotionbar.interfaces.EmoticonsFuncListener
 import com.zj.emotionbar.interfaces.OnPayClickListener
-import com.zj.emotionbar.widget.EmoticonsFuncView
 
-open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CusEmoticonsLayout<T>(context, attrs, def) {
-    private var emoticonPacksAdapter: EmoticonPacksAdapter? = null
-    private var onFuncListener: OnKeyboardListener<T>? = null
+open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CusEmoticonsLayout<T, E>(context, attrs, def) {
+    private var emoticonPacksAdapter: EmoticonPacksAdapter<E>? = null
+    private var onFuncListener: OnKeyboardListener<T, E>? = null
 
-    private val onEmojiClickListener: OnEmojiClickListener = object : OnEmojiClickListener() {
+    private val onEmojiClickListener = object : OnEmojiClickListener<E>() {
 
         override fun getEt(): EditText? {
             return etChat
         }
 
-        override fun onStickerClick(url: String, view: View) {
-            onFuncListener?.sendSticker(url, view, takeExtData())
+
+        override fun onStickerClick(emoticon: E, view: View?) {
+            onFuncListener?.sendSticker(emoticon, view, takeExtData())
         }
     }
 
-    private val pageEmoticonSelectedListener: EmoticonsFuncView.EmoticonsFuncListener = object : EmoticonsFuncView.EmoticonsFuncListener {
-        override fun onCurrentEmoticonPackChanged(currentPack: EmoticonPack<out Emoticon>?) {
-            onFuncListener?.onPageEmoticonSelected(currentPack as EmoticonPack<Emoticon>?)
+    private val pageEmoticonSelectedListener = object : EmoticonsFuncListener<E> {
+
+        override fun onCurrentEmoticonPackChanged(currentPack: EmoticonPack<E>?) {
+            onFuncListener?.onPageEmoticonSelected(currentPack)
         }
 
         override fun onPageSelected(position: Int) {
         }
 
     }
-    private val payClickListener = OnPayClickListener<EmoticonPack<Emoticon>> { onFuncListener?.onPayClick(it) }
+    private val payClickListener = OnPayClickListener<EmoticonPack<E>> { onFuncListener?.onPayClick(it) }
 
     init {
         initEmoticon()
     }
 
-    fun setOnFuncListener(funcListener: OnKeyboardListener<T>?) {
+    fun setOnFuncListener(funcListener: OnKeyboardListener<T, E>?) {
         this.onFuncListener = funcListener
     }
 
@@ -64,15 +66,14 @@ open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: 
             onFuncListener?.onVoiceEvent(view, motionEvent, takeExtData())
             return@setOnTouchListener false
         }
-
     }
 
-    fun updateEmoticon(pack: EmoticonPack<out Emoticon>) {
+    fun updateEmoticon(pack: EmoticonPack<E>) {
         emoticonPacksAdapter?.let {
             var selectIndex = 0
-            var packList = it.packList.toMutableList()
-            packList.forEachIndexed { index, pakcItem ->
-                if (pakcItem.id == pack.id) {
+            val packList = it.packList.toMutableList()
+            packList.forEachIndexed { index, packItem ->
+                if (packItem.id == pack.id) {
                     packList[index] = pack
                     selectIndex = index
                     return@forEachIndexed
@@ -83,7 +84,7 @@ open class CCEmojiLayout<T> @JvmOverloads constructor(context: Context?, attrs: 
         }
     }
 
-    fun setEmoticon(packList: List<EmoticonPack<out Emoticon>>) {
+    fun setEmoticon(packList: MutableList<EmoticonPack<E>>) {
         setOnPageEmoticonSelectedListener(pageEmoticonSelectedListener)
         emoticonPacksAdapter = EmoticonPacksAdapter(packList)
         emoticonPacksAdapter?.setClickListener(onEmojiClickListener)
