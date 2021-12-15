@@ -222,6 +222,10 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
                     isSameType = curContentIn is IMContentImageView
                     if (isSameType) null else IMContentImageView(context)
                 }
+                UiMsgType.MSG_TYPE_CC_EMOTION -> {
+                    isSameType = curContentIn is IMContentEmotionImageView
+                    if (isSameType) null else IMContentEmotionImageView(context)
+                }
 
                 UiMsgType.MSG_TYPE_AUDIO -> {
                     isSameType = curContentIn is IMContentAudioView
@@ -231,6 +235,9 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
             } ?: return
 
             if (v is IMContentImageView && data.getSelfUserId() == data.getSenderId()) {
+                if (data.getReplyMsgClientMsgId() == null || chatType == 2) llContent.setPadding(0, 0, 0, 0)
+                else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
+            }else if (v is IMContentEmotionImageView && data.getSelfUserId() == data.getSenderId()) {
                 if (data.getReplyMsgClientMsgId() == null || chatType == 2) llContent.setPadding(0, 0, 0, 0)
                 else llContent.setPadding(baseContentMargins, baseContentMargins, baseContentMargins, DPUtils.dp2px(8f))
             } else if (v is IMContentAudioView && data.getSelfUserId() == data.getSenderId()) {
