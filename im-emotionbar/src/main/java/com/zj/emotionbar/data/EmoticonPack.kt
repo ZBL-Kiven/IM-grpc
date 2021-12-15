@@ -18,7 +18,7 @@ class EmoticonPack<T : Emoticon> {
     var id: Int = 0
     var price: Int = 0
     var tag: Any? = null
-    lateinit var emoticons: MutableList<T>
+    var emoticons: MutableList<T>? = mutableListOf()
 
     fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<T>?, payClickListener: OnPayClickListener<EmoticonPack<T>>?): View {
 

@@ -22,7 +22,7 @@ open class GridPageFactory<T : EmoticonPack<E>, E : Emoticon> : PageFactory<T, E
         pageView.layoutManager = lm
         pageView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         pageView.setPadding(dip2px(context, 12f), 0, dip2px(context, 12f), 0)
-        val adapter = createAdapter(pack.emoticons, clickListener)
+        val adapter = createAdapter(pack.emoticons?: mutableListOf(), clickListener)
         pageView.adapter = adapter
         return pageView
     }
