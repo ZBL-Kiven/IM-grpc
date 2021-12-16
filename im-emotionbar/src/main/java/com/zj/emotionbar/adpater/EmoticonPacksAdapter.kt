@@ -11,7 +11,7 @@ import com.zj.emotionbar.interfaces.OnPayClickListener
 /**
  * viewPager Adapter
  */
-open class EmoticonPacksAdapter<E : Emoticon>(val packList: List<EmoticonPack<E>>) : PagerAdapter() {
+open class EmoticonPacksAdapter<E : Emoticon>(val packList: MutableList<EmoticonPack<E>>) : PagerAdapter() {
 
     var adapterListener: EmoticonPacksAdapterListener? = null
     private var clickListener: OnEmoticonClickListener<E>? = null
@@ -53,12 +53,19 @@ open class EmoticonPacksAdapter<E : Emoticon>(val packList: List<EmoticonPack<E>
     }
 
     override fun getItemPosition(obj: Any): Int {
-        return POSITION_NONE
+        obj as View
+        return if (obj.tag as Int == updatePosition) POSITION_NONE
+        else POSITION_UNCHANGED
     }
 
     override fun notifyDataSetChanged() {
         super.notifyDataSetChanged()
-        adapterListener?.onDataSetChanged()
+    }
+
+    var updatePosition = -1
+    fun notifyDataIndexChanged(position: Int) {
+        updatePosition = position
+        notifyDataSetChanged()
     }
 
     interface EmoticonPacksAdapterListener {

@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val packs = mutableListOf<EmoticonPack<Emoticon>>()
-        packs.add(getEmoji(applicationContext, 6))
+        packs.add(getEmoji(applicationContext, -1))
         packs.add(getEmoji(applicationContext, 1))
         packs.add(EmoticonPack<Emoticon>().apply {
             image = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
@@ -161,14 +161,16 @@ class MainActivity : AppCompatActivity() {
         val pack = EmoticonPack<Emoticon>()
         pack.id = id
         val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
-        DefEmoticons.sEmojiArray.mapTo(emojiArray) {
-            val emoticon = EmoticonEntityUtils.BigEmoticon()
-            emoticon.id = 34
-            emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-            emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-            emoticon.pack = EmoticonPack<Emoticon>().apply { this.id = id }
-            return@mapTo emoticon
+
+        for (i in 1..5) {
+            emojiArray.add(EmoticonEntityUtils.BigEmoticon().apply {
+                this.id = 34
+                this.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                this.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                this.pack = EmoticonPack<Emoticon>().apply { this.id = id }
+            })
         }
+
         pack.emoticons = emojiArray.toMutableList()
 
         pack.image = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"

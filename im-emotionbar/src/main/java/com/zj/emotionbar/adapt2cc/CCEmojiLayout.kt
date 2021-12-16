@@ -71,16 +71,14 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
     fun updateEmoticon(pack: EmoticonPack<E>) {
         emoticonPacksAdapter?.let {
             var selectIndex = 0
-            val packList = it.packList.toMutableList()
-            packList.forEachIndexed { index, packItem ->
+            it.packList.forEachIndexed { index, packItem ->
                 if (packItem.id == pack.id) {
-                    packList[index] = pack
+                    it.packList[index] = pack
                     selectIndex = index
                     return@forEachIndexed
                 }
             }
-            emoticonPacksAdapter?.notifyDataSetChanged()
-            onToolBarItemClick(packList[selectIndex])
+            emoticonPacksAdapter?.notifyDataIndexChanged(selectIndex)
         }
     }
 
