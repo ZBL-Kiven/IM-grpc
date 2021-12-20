@@ -13,6 +13,7 @@ import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.database.entity.GroupInfoEntity
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
 import com.zj.emotionbar.adapt2cc.OnKeyboardListener
@@ -50,6 +51,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
         }
     }
 
+
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
         inputLayout?.context?.let {
             if (emoticonPack != null) {
@@ -75,6 +77,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
     }
 
     override fun sendSticker(emoticon: Emoticon, view: View?, extData: MessageInfoEntity?) {
+
         curChannel?.let {
             emoticon.url?.let { it1 ->
                 emoticon.pack?.let { it2 ->
@@ -94,45 +97,45 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
     }
 
 
-private fun getUseEmoticonPackList(emoticonInfo: MutableList<Emoticon>): EmoticonPack<Emoticon> {
-    return EmoticonPack<Emoticon>().apply {
-        this.emoticons = emoticonInfo
-        this.type = EmoticonPack.EmoticonType.FREE.type
-        this.id = -1
-        this.image = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
-    }
-}
-
-override fun sendText(content: String, extData: MessageInfoEntity?) {
-    curChannel?.let {
-        IMHelper.Sender.sendText(content, it.groupId, extData)
-    }
-}
-
-override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {}
-
-private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
-    (v?.context as? FragmentActivity)?.let {
-        val i = ActivityCompat.checkSelfPermission(BaseApp.context, Manifest.permission.READ_EXTERNAL_STORAGE)
-        val i1 = ActivityCompat.checkSelfPermission(BaseApp.context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (i == PackageManager.PERMISSION_GRANTED && i1 == PackageManager.PERMISSION_GRANTED) {
-            val maxSelectCount = if (isImage) 9 else 1
-            val mimeType = if (isImage) AlbumOptions.ofImage() else AlbumOptions.ofVideo()
-            AlbumIns.with(it).setOriginalPolymorphism(true).simultaneousSelection(true).maxSelectedCount(maxSelectCount).mimeTypes(mimeType).sortWithDesc(true).useOriginDefault(false).imgSizeRange(1, 20000000).videoSizeRange(1, 200000000).imageScaleEffect(ScaleEffect.QUAD).pagerTransitionEffect(TransitionEffect.Zoom).start { isOk, data ->
-                if (isOk) {
-                    data?.forEach { f ->
-                        if (f.isImage) {
-                            IMHelper.Sender.sendImg(f.path, 200, 200, groupId, extData)
-                        }
-                        if (f.isVideo) {
-                            IMHelper.Sender.sendVideo(f.path, 200, 200, f.duration, groupId, extData)
-                        }
-                    }
-                } else inputLayout?.reset()
-            }
-        } else {
-            ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
+    private fun getUseEmoticonPackList(emoticonInfo: MutableList<Emoticon>): EmoticonPack<Emoticon> {
+        return EmoticonPack<Emoticon>().apply {
+            this.emoticons = emoticonInfo
+            this.type = EmoticonPack.EmoticonType.FREE.type
+            this.id = -1
+            this.image = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
         }
     }
-}
+
+    override fun sendText(content: String, extData: MessageInfoEntity?) {
+        curChannel?.let {
+            IMHelper.Sender.sendText(content, it.groupId, extData)
+        }
+    }
+
+    override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {}
+
+    private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
+        (v?.context as? FragmentActivity)?.let {
+            val i = ActivityCompat.checkSelfPermission(BaseApp.context, Manifest.permission.READ_EXTERNAL_STORAGE)
+            val i1 = ActivityCompat.checkSelfPermission(BaseApp.context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (i == PackageManager.PERMISSION_GRANTED && i1 == PackageManager.PERMISSION_GRANTED) {
+                val maxSelectCount = if (isImage) 9 else 1
+                val mimeType = if (isImage) AlbumOptions.ofImage() else AlbumOptions.ofVideo()
+                AlbumIns.with(it).setOriginalPolymorphism(true).simultaneousSelection(true).maxSelectedCount(maxSelectCount).mimeTypes(mimeType).sortWithDesc(true).useOriginDefault(false).imgSizeRange(1, 20000000).videoSizeRange(1, 200000000).imageScaleEffect(ScaleEffect.QUAD).pagerTransitionEffect(TransitionEffect.Zoom).start { isOk, data ->
+                    if (isOk) {
+                        data?.forEach { f ->
+                            if (f.isImage) {
+                                IMHelper.Sender.sendImg(f.path, 200, 200, groupId, extData)
+                            }
+                            if (f.isVideo) {
+                                IMHelper.Sender.sendVideo(f.path, 200, 200, f.duration, groupId, extData)
+                            }
+                        }
+                    } else inputLayout?.reset()
+                }
+            } else {
+                ActivityCompat.requestPermissions(it, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), 100)
+            }
+        }
+    }
 }

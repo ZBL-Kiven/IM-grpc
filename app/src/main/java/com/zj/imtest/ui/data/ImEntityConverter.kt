@@ -243,6 +243,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.answerMsg?.audioContent?.duration
     }
 
+    override fun getEmotionUrl(): String? {
+        return info?.emotionMessage?.url
+    }
+
     override fun getAnswerContentAudioContentUrl(): String? {
         return info?.answerMsg?.audioContent?.url
     }

@@ -8,6 +8,7 @@ import com.zj.ccIm.CcIM
 import com.zj.ccIm.annos.DeleteSessionType
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.*
+import com.zj.ccIm.core.db.GroupInfoDbOperator
 import com.zj.ccIm.core.db.MessageDbOperator
 import com.zj.ccIm.core.fecher.*
 import com.zj.ccIm.core.fecher.Fetcher
@@ -22,6 +23,7 @@ import com.zj.ccIm.live.LiveIMHelper
 import com.zj.ccIm.logger.ImLogs
 import com.zj.database.DbHelper
 import com.zj.database.IMDb
+import com.zj.database.entity.GroupInfoEntity
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.im.chat.core.BaseOption
@@ -74,6 +76,14 @@ object IMHelper {
 
     fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         return CcIM.addTransferObserver(classT, classR, uniqueCode, lifecycleOwner)
+    }
+
+    fun getLocalGroupInfo(groupId: Long): GroupInfoEntity? {
+        return GroupInfoDbOperator.getGroupInfoById(groupId)
+    }
+
+    fun insertOrUpdateLocalGroupInfo(groupInfoEntity: GroupInfoEntity) {
+        return GroupInfoDbOperator.insertOrUpdateGroupInfo(groupInfoEntity)
     }
 
     fun getIMInterface(): MessageInterface<*> {
