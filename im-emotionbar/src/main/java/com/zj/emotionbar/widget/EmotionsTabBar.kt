@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
@@ -50,6 +51,7 @@ open class EmotionsTabBar<E : Emoticon> @JvmOverloads constructor(context: Conte
         recyclerView.setPadding(tabIconMargin, 0, tabIconMargin, 0)
         layoutManager = SmoothScrollLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         addView(recyclerView)
         adapterFactory = DefaultAdapterFactory()
     }
@@ -78,7 +80,9 @@ open class EmotionsTabBar<E : Emoticon> @JvmOverloads constructor(context: Conte
 
         if (position != null) {
             adapterFactory?.onEmotionPackSelect(position)
-            recyclerView.adapter?.notifyDataSetChanged()
+            recyclerView.adapter?.let {
+                it.notifyItemRangeChanged(0, it.itemCount)
+            }
         }
     }
 
