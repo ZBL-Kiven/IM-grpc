@@ -9,7 +9,7 @@ import com.zj.emotionbar.interfaces.PayPageFactory
 
 class EmoticonPack<T : Emoticon> {
     enum class EmoticonType(var type: Int) {
-        FREE(0), PAY(1), USED(-1)// 最近使用的
+        FREE(0), PAY(1), USED(-1), LOADING(-2)// 最近使用的
     }
 
     var image: String? = null
