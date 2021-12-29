@@ -19,6 +19,8 @@ public interface OnKeyboardListener<T,E extends Emoticon> {
 
     void onPayClick(@Nullable EmoticonPack<E> emoticonPack);
 
+    void onRetryClick(@Nullable EmoticonPack<E> emoticonPack);
+
     void onSelectFileClick(View view, @Nullable T extData);
 
     void sendSticker(@NonNull E emoticon , View view, @Nullable T extData);

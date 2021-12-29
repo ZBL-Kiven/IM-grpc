@@ -7,6 +7,7 @@ import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.interfaces.OnEmoticonClickListener
 import com.zj.emotionbar.interfaces.OnPayClickListener
+import com.zj.emotionbar.interfaces.OnRetryClickListener
 
 /**
  * viewPager Adapter
@@ -16,6 +17,7 @@ open class EmoticonPacksAdapter<E : Emoticon>(val packList: MutableList<Emoticon
     var adapterListener: EmoticonPacksAdapterListener? = null
     private var clickListener: OnEmoticonClickListener<E>? = null
     private var payListener: OnPayClickListener<EmoticonPack<E>>? = null
+    private var retryListener: OnRetryClickListener<EmoticonPack<E>>? = null
     private var isUpdateAll = false
 
     fun setClickListener(l: OnEmoticonClickListener<E>?) {
@@ -24,6 +26,10 @@ open class EmoticonPacksAdapter<E : Emoticon>(val packList: MutableList<Emoticon
 
     fun setPayClickListener(payListener: OnPayClickListener<EmoticonPack<E>>?) {
         this.payListener = payListener
+    }
+
+    fun setRetryClickListenerListener(retryListener: OnRetryClickListener<EmoticonPack<E>>?) {
+        this.retryListener = retryListener
     }
 
 
@@ -37,7 +43,7 @@ open class EmoticonPacksAdapter<E : Emoticon>(val packList: MutableList<Emoticon
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val pack = packList[position]
-        val view = pack.getView(container.context, pack, clickListener, payListener)
+        val view = pack.getView(container.context, pack, clickListener, payListener, retryListener)
         view.tag = position
         container.addView(view)
         isUpdateAll = false

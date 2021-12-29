@@ -19,4 +19,6 @@
     <string name="im_func_shot">Shot</string>
     <string name="im_func_live">Live</string>
     <string name="im_emotion_to_unlock">to unlock</string>
+    <string name="z_player_str_loading_video_error_tint">点击重试</string>
+    <string name="Please_check_your_Internet_connection_and_try_again">请检查你的网络之后再尝试.</string>
 </resources>

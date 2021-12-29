@@ -55,21 +55,35 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
         inputLayout?.context?.let {
             if (emoticonPack != null) {
+                val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+                emoticonPack.status = EmoticonPack.EmoticonStatus.LOADING
+                emoticonPack.emoticons = emojiArray.toMutableList()
+                inputLayout.updateEmoticon(emoticonPack)
                 Handler().postDelayed({
-                    val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
-                    DefEmoticons.sEmojiArray.mapTo(emojiArray) {
-                        val emoticon = EmoticonEntityUtils.BigEmoticon()
-                        emoticon.id = it.icon
-                        emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-                        emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-                        emoticon.pack = emoticonPack
-                        return@mapTo emoticon
-                    }
                     emoticonPack.type = 0
+                    emoticonPack.status = EmoticonPack.EmoticonStatus.ERROR
                     emoticonPack.emoticons = emojiArray.toMutableList()
                     inputLayout.updateEmoticon(emoticonPack)
-                }, 2000)
+                }, 5000)
             }
+        }
+    }
+
+    override fun onRetryClick(emoticonPack: EmoticonPack<Emoticon>?) {
+        if (emoticonPack != null) {
+            val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+            DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+                val emoticon = EmoticonEntityUtils.BigEmoticon()
+                emoticon.id = it.icon
+                emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                emoticon.pack = emoticonPack
+                return@mapTo emoticon
+            }
+            emoticonPack.type = 0
+            emoticonPack.status = EmoticonPack.EmoticonStatus.NORMAL
+            emoticonPack.emoticons = emojiArray.toMutableList()
+            inputLayout?.updateEmoticon(emoticonPack)
         }
     }
 
