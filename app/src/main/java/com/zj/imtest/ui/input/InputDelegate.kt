@@ -46,7 +46,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
     }
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
-        emoticonPack?.let { pack ->
+        emoticonPack?.let { _ ->
             inputLayout?.context?.let {}
         }
 
