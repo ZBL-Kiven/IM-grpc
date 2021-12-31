@@ -16,19 +16,25 @@ import com.zj.emotionbar.widget.GridSpacingItemDecoration
 
 open class GridPageFactory<T : EmoticonPack<E>, E : Emoticon> : PageFactory<T, E> {
 
-    override fun create(context: Context, pack: T, clickListener: OnEmoticonClickListener<E>?, payClickListener: OnPayClickListener<T>?): View {
+    override fun create(context: Context, pack: T, clickListener: OnEmoticonClickListener<E>?, payClickListener: OnPayClickListener<T>?, retryClickListener: OnRetryClickListener<T>?): View {
         val gridPageView = GridPageView(context)
-        if (pack.type == EmoticonPack.EmoticonType.LOADING.type) {
-            gridPageView.showLoading()
-        } else {
-            gridPageView.showData()
-            val pageView = gridPageView.getRecyclerView()
-            val lm = GridLayoutManager(context, 5)
-            pageView?.addItemDecoration(GridSpacingItemDecoration(5, dip2px(context, 12f), false))
-            pageView?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-            pageView?.layoutManager = lm
-            val adapter = createAdapter(pack.emoticons ?: mutableListOf(), clickListener)
-            pageView?.adapter = adapter
+        when (pack.status) {
+            EmoticonPack.EmoticonStatus.LOADING -> {
+                gridPageView.showLoading()
+            }
+            EmoticonPack.EmoticonStatus.ERROR -> {
+                gridPageView.showError()
+                gridPageView.setRetryOnClickListener { retryClickListener?.onRetryClick(pack) }
+            }else -> {
+                gridPageView.showData()
+                val pageView = gridPageView.getRecyclerView()
+                val lm = GridLayoutManager(context, 5)
+                pageView?.addItemDecoration(GridSpacingItemDecoration(5, dip2px(context, 12f), false))
+                pageView?.overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+                pageView?.layoutManager = lm
+                val adapter = createAdapter(pack.emoticons ?: mutableListOf(), clickListener)
+                pageView?.adapter = adapter
+            }
         }
 
         return gridPageView

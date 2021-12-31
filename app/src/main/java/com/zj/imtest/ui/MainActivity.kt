@@ -153,6 +153,7 @@ class MainActivity : AppCompatActivity() {
             price = 10
             emoticons = mutableListOf()
             id = 3
+            status=EmoticonPack.EmoticonStatus.NORMAL
         })
         inputLayout?.setEmoticon(packs)
     }
@@ -172,7 +173,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         pack.emoticons = emojiArray.toMutableList()
-
+        pack.status = EmoticonPack.EmoticonStatus.NORMAL
         pack.image = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return pack
     }

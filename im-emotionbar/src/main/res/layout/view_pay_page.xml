@@ -1,41 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ui_emo_icon_pay_status" />
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:id="@+id/im_emotion_ll_pay"
-        android:background="@drawable/ui_bg_emo_pay"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="8dp">
+        android:id="@+id/im_emotion_ll_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableEnd="@mipmap/ui_emo_icon_pay_type"
-            android:drawablePadding="5dp"
-            android:text="0"
-            android:id="@+id/im_emotion_tv_Price"
-            android:textColor="@color/color_emotions_bg"
-            android:textSize="14sp" />
+            android:src="@mipmap/ui_emo_icon_pay_status" />
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/im_emotion_ll_pay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:text="@string/im_emotion_to_unlock"
-            android:textColor="@color/color_emotions_bg"
-            android:textSize="14sp" />
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ui_bg_emo_pay"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/im_emotion_tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@mipmap/ui_emo_icon_pay_type"
+                android:drawablePadding="5dp"
+                android:text="0"
+                android:textColor="@color/color_emotions_bg"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/im_emotion_to_unlock"
+                android:textColor="@color/color_emotions_bg"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/im_emotion_ll_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminateTint="#FEA30F" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/im_emotion_ll_retry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="48dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="@string/Please_check_your_Internet_connection_and_try_again"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/im_emotion_tv_retry"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ui_bg_emo_pay"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/z_player_str_loading_video_error_tint"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:visibility="visible" />
+    </LinearLayout>
+
+</FrameLayout>

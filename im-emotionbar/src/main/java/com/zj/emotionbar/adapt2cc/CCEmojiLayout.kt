@@ -13,6 +13,7 @@ import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.epack.emoticon.OnEmojiClickListener
 import com.zj.emotionbar.interfaces.EmoticonsFuncListener
 import com.zj.emotionbar.interfaces.OnPayClickListener
+import com.zj.emotionbar.interfaces.OnRetryClickListener
 
 open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CusEmoticonsLayout<T, E>(context, attrs, def) {
     private var emoticonPacksAdapter: EmoticonPacksAdapter<E>? = null
@@ -41,7 +42,7 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
 
     }
     private val payClickListener = OnPayClickListener<EmoticonPack<E>> { onFuncListener?.onPayClick(it) }
-
+    private val retryClickListener=OnRetryClickListener<EmoticonPack<E>>{onFuncListener?.onRetryClick(it)}
     init {
         initEmoticon()
     }
@@ -87,6 +88,7 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
         emoticonPacksAdapter = EmoticonPacksAdapter(packList)
         emoticonPacksAdapter?.setClickListener(onEmojiClickListener)
         emoticonPacksAdapter?.setPayClickListener(payClickListener)
+        emoticonPacksAdapter?.setRetryClickListenerListener(retryClickListener)
         emoticonPacksAdapter?.let {
             setAdapter(it)
         }
