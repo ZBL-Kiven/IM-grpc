@@ -49,7 +49,7 @@ class IMContentEmotionImageView @JvmOverloads constructor(context: Context, attr
         val corners = if (data.getImgContentUrl() != null) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
         else TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
         data.getEmotionUrl()?.let {
-            Glide.with(this).load(it).centerInside().placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).override(200, 200).addListener(object : RequestListener<Drawable> {
+            Glide.with(this).load(it).centerInside().placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).override(400, 400).addListener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
                     return false
                 }
