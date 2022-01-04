@@ -10,7 +10,50 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingHorizontal="12dp" />
+    <LinearLayout
+        android:id="@+id/im_emotion_ll_price"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EBFFFFFF"
+        android:gravity="center"
+        android:clickable="true"
+        android:visibility="gone"
+        android:orientation="vertical">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ui_emo_icon_pay_status" />
+
+        <LinearLayout
+            android:id="@+id/im_emotion_ll_pay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ui_bg_emo_pay"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/im_emotion_tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@mipmap/ui_emo_icon_pay_type"
+                android:drawablePadding="5dp"
+                android:text="0"
+                android:textColor="@color/color_emotions_bg"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/im_emotion_to_unlock"
+                android:textColor="@color/color_emotions_bg"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/im_emotion_ll_loading"
         android:layout_width="match_parent"

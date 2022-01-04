@@ -24,8 +24,12 @@ open class GridPageFactory<T : EmoticonPack<E>, E : Emoticon> : PageFactory<T, E
             }
             EmoticonPack.EmoticonStatus.ERROR -> {
                 gridPageView.showError()
-                gridPageView.setRetryOnClickListener { retryClickListener?.onRetryClick(pack) }
-            }else -> {
+            }
+            else -> {
+                if (EmoticonPack.EmoticonType.PAY.type == pack.type) {
+                    gridPageView.showPrice(pack.price)
+
+                }
                 gridPageView.showData()
                 val pageView = gridPageView.getRecyclerView()
                 val lm = GridLayoutManager(context, 5)
@@ -35,8 +39,17 @@ open class GridPageFactory<T : EmoticonPack<E>, E : Emoticon> : PageFactory<T, E
                 val adapter = createAdapter(pack.emoticons ?: mutableListOf(), clickListener)
                 pageView?.adapter = adapter
             }
-        }
 
+        }
+        gridPageView?.onGridPageClickListener = object : GridPageClickListener {
+            override fun onPayClickListener() {
+                payClickListener?.onPayClick(pack)
+            }
+
+            override fun onRetryClickListener() {
+                retryClickListener?.onRetryClick(pack)
+            }
+        }
         return gridPageView
     }
 

@@ -147,14 +147,7 @@ class MainActivity : AppCompatActivity() {
         val packs = mutableListOf<EmoticonPack<Emoticon>>()
         packs.add(getEmoji(applicationContext, -1))
         packs.add(getEmoji(applicationContext, 1))
-        packs.add(EmoticonPack<Emoticon>().apply {
-            image = applicationContext.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
-            type = EmoticonPack.EmoticonType.PAY.type
-            price = 10
-            emoticons = mutableListOf()
-            id = 3
-            status=EmoticonPack.EmoticonStatus.NORMAL
-        })
+        packs.add(getEmoji(applicationContext, 3))
         inputLayout?.setEmoticon(packs)
     }
 
@@ -166,15 +159,19 @@ class MainActivity : AppCompatActivity() {
         for (i in 1..5) {
             emojiArray.add(EmoticonEntityUtils.BigEmoticon().apply {
                 this.id = 34
-                this.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-                this.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                this.url = "https://pic1.zhimg.com/v2-d58ce10bf4e01f5086c604a9cfed29f3_r.jpg?source=1940ef5c"
+                this.icon = "https://pic1.zhimg.com/v2-d58ce10bf4e01f5086c604a9cfed29f3_r.jpg?source=1940ef5c"
                 this.pack = EmoticonPack<Emoticon>().apply { this.id = id }
+
             })
         }
 
         pack.emoticons = emojiArray.toMutableList()
         pack.status = EmoticonPack.EmoticonStatus.NORMAL
-        pack.image = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+        pack.image = "https://th.bing.com/th/id/R.c6c03edea530e9caa677c9d17f193a4d?rik=MBgpsjumbTD5eQ&riu=http%3a%2f%2fwww.desktx.com%2fd%2ffile%2fwallpaper%2fscenery%2f20170209%2fca186d97701674b996264b2d352894a7.jpg&ehk=HunG%2fPF7pUbpcS34cWpNvlS%2faoDPbcaTYL6LFFPQIIM%3d&risl=&pid=ImgRaw&r=0"
+        if (id==3){
+            pack.type = EmoticonPack.EmoticonType.PAY.type
+        }
         return pack
     }
 

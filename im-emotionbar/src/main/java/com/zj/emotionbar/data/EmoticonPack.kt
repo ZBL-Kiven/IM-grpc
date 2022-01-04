@@ -23,11 +23,6 @@ class EmoticonPack<T : Emoticon> {
     var emoticons: MutableList<T>? = mutableListOf()
 
     fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<T>?, payClickListener: OnPayClickListener<EmoticonPack<T>>?, retryClickListener: OnRetryClickListener<EmoticonPack<T>>?): View {
-
-        return when (type) {
-            EmoticonType.PAY.type -> PayPageFactory<EmoticonPack<T>, T>().create(context, pack, payClickListener = payClickListener)
-            else -> GridPageFactory<EmoticonPack<T>, T>().create(context, pack, clickListener = listener, retryClickListener = retryClickListener)
-        }
-
+        return GridPageFactory<EmoticonPack<T>, T>().create(context, pack, listener, payClickListener, retryClickListener)
     }
 }
