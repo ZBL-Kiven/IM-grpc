@@ -94,6 +94,9 @@ interface ImMsgIn {
     fun getAnswerContentAudioContentUrl(): String?
     fun getAnswerContentAudioContentDuration(): Long?
 
+
+    fun getEmotionUrl():String?
+
     //获取敏感消息内容
     fun getExtSensitiveMsgContent(): String?
 
@@ -117,6 +120,7 @@ interface ImMsgIn {
     fun getRecallContent(context: Context): String?
 
     fun getRefuseContent(context: Context): String?
+
 
 
     /** ========================================= app interface ======================================== */

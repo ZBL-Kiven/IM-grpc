@@ -2,6 +2,8 @@ package com.zj.emotionbar.interfaces;
 
 import android.view.View;
 
-public interface OnEmoticonClickListener<T> {
-    void onEmoticonClick(T t, View v);
+import com.zj.emotionbar.data.Emoticon;
+
+public interface OnEmoticonClickListener<E extends Emoticon> {
+    void onEmoticonClick(E t, View v);
 }

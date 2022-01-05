@@ -9,10 +9,11 @@ import android.widget.FrameLayout
 import com.zj.ccIm.core.IMHelper
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
+import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.interfaces.ExtInflater
 import com.zj.imtest.IMConfig
 
-class CcInputLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CCEmojiLayout<MessageInfoEntity>(context, attrs, def), ExtInflater<MessageInfoEntity> {
+class CcInputLayout @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, def: Int = 0) : CCEmojiLayout<MessageInfoEntity, Emoticon>(context, attrs, def), ExtInflater<MessageInfoEntity> {
 
     init {
         setExtInflater(this)

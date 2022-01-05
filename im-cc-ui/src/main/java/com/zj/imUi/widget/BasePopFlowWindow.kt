@@ -85,7 +85,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
         val filterList: MutableList<String?> = mutableListOf()
         val dataType = data?.getUiTypeWithMessageType()
         data?.apply {
-            if (isNormalMsg&&!isReplyQuestion) {
+            if (isNormalMsg && !isReplyQuestion) {
                 if (isSelfMessage) {
                     if (dataType == UiMsgType.MSG_TYPE_TEXT) filterList.add(reportItems[1])
                     data?.getSendState().let {
@@ -114,7 +114,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
                     }
                 }
             }
-            if (isNormalMsg&& (data?.getSendState() ?: -1 == 0 || data?.getSendState() ?: -1 == 3)) {
+            if (isNormalMsg && (data?.getSendState() ?: -1 == 0 || data?.getSendState() ?: -1 == 3 )&& !isOwner && data?.getIsAdmin() == false) {
                 filterList.add(reportItems[5])
             }
         }

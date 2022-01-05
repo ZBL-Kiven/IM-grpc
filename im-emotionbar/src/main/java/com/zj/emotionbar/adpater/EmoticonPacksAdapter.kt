@@ -1,36 +1,39 @@
 package com.zj.emotionbar.adpater
 
-import androidx.viewpager.widget.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
-import com.zj.emotionbar.R
+import androidx.viewpager.widget.PagerAdapter
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
-import com.zj.emotionbar.interfaces.GridPageFactory
 import com.zj.emotionbar.interfaces.OnEmoticonClickListener
 import com.zj.emotionbar.interfaces.OnPayClickListener
-import com.zj.emotionbar.interfaces.PayPageFactory
+import com.zj.emotionbar.interfaces.OnRetryClickListener
 
 /**
  * viewPager Adapter
  */
-open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) : PagerAdapter() {
+open class EmoticonPacksAdapter<E : Emoticon>(val packList: MutableList<EmoticonPack<E>>) : PagerAdapter() {
 
     var adapterListener: EmoticonPacksAdapterListener? = null
-    private var clickListener: OnEmoticonClickListener<Emoticon>? = null
-    private var payListener: OnPayClickListener<EmoticonPack<Emoticon>>? = null
+    private var clickListener: OnEmoticonClickListener<E>? = null
+    private var payListener: OnPayClickListener<EmoticonPack<E>>? = null
+    private var retryListener: OnRetryClickListener<EmoticonPack<E>>? = null
     private var isUpdateAll = false
 
-    fun setClickListener(l: OnEmoticonClickListener<Emoticon>?) {
+    fun setClickListener(l: OnEmoticonClickListener<E>?) {
         this.clickListener = l
     }
 
-    fun setPayClickListener(payListener: OnPayClickListener<EmoticonPack<Emoticon>>?) {
+    fun setPayClickListener(payListener: OnPayClickListener<EmoticonPack<E>>?) {
         this.payListener = payListener
     }
 
+    fun setRetryClickListenerListener(retryListener: OnRetryClickListener<EmoticonPack<E>>?) {
+        this.retryListener = retryListener
+    }
 
-    fun getEmoticonPackPosition(pack: EmoticonPack<out Emoticon>): Int {
+
+    fun getEmoticonPackPosition(pack: EmoticonPack<E>): Int {
         return packList.indexOf(pack)
     }
 
@@ -39,11 +42,10 @@ open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) 
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val pack = packList[position] as EmoticonPack<Emoticon>
-        val view = pack.getView(container.context, pack, clickListener, payListener)
+        val pack = packList[position]
+        val view = pack.getView(container.context, pack, clickListener, payListener, retryListener)
         view.tag = position
         container.addView(view)
-        pack.isDataChanged = false
         isUpdateAll = false
         return view
     }
@@ -57,12 +59,19 @@ open class EmoticonPacksAdapter(val packList: List<EmoticonPack<out Emoticon>>) 
     }
 
     override fun getItemPosition(obj: Any): Int {
-        return POSITION_NONE
+        obj as View
+        return if (obj.tag as Int == updatePosition) POSITION_NONE
+        else POSITION_UNCHANGED
     }
 
     override fun notifyDataSetChanged() {
         super.notifyDataSetChanged()
-        adapterListener?.onDataSetChanged()
+    }
+
+    var updatePosition = -1
+    fun notifyDataIndexChanged(position: Int) {
+        updatePosition = position
+        notifyDataSetChanged()
     }
 
     interface EmoticonPacksAdapterListener {

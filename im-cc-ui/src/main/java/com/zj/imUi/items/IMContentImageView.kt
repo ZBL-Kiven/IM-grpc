@@ -42,7 +42,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
             data.onViewLargePic()
         }
         this.setOnLongClickListener {
-            if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgType() != UiMsgType.MSG_TYPE_QUESTION) {
+            if (data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_IMG) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()
                 popFlowWindow.show(data, it,UiMsgType.GROUP_CHAT) { _, _, _ ->
                 }
@@ -68,15 +68,15 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
 
         imgUrl?.let {
             Glide.with(this).load(it).override(arrayInt[0], arrayInt[1]).centerInside().placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).addListener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                        return false
-                    }
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    return false
+                }
 
-                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                        anim.cancel()
-                        return false
-                    }
-                }).into(this)
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    anim.cancel()
+                    return false
+                }
+            }).into(this)
         }
     }
 
@@ -99,7 +99,7 @@ class IMContentImageView @JvmOverloads constructor(context: Context, attrs: Attr
         }
 
         return run {
-            val dataWidth = imgWidth ?: maxH
+            val dataWidth = imgWidth ?: maxW
             val dataHeight = imgHeight ?: maxH
             AutomationImageCalculateUtils.proportionalWH(dataWidth, dataHeight, maxW, maxH, 0.5f)
         }

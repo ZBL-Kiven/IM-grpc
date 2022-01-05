@@ -54,6 +54,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getImgContentUrl(): String? {
+        return "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return info?.imgContent?.url
     }
 
@@ -243,6 +244,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return info?.answerMsg?.audioContent?.duration
     }
 
+    override fun getEmotionUrl(): String? {
+        return info?.emotionMessage?.url
+    }
+
     override fun getAnswerContentAudioContentUrl(): String? {
         return info?.answerMsg?.audioContent?.url
     }
@@ -287,16 +292,17 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return BaseApp.config.getUserId()
     }
 
-    override fun getMsgIsReject(): Boolean {
-        return info?.questionContent?.questionStatus == 3
-    }
 
     override fun getMsgUIIsReject(): Boolean {
-        return info?.systemMsgType == SystemMsgType.REFUSED.type
+        return info?.questionContent?.questionStatus == 3
     }
 
     override fun getMsgIsRecalled(): Boolean {
         return info?.systemMsgType == SystemMsgType.RECALLED.type
+    }
+
+    override fun getMsgIsReject(): Boolean {
+        return info?.systemMsgType == SystemMsgType.REFUSED.type
     }
 
     override fun getMsgRecallRole(): Int? {
@@ -304,7 +310,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getMsgIsSensitive(): Boolean {
-        return info?.systemMsgType == SystemMsgType.SENSITIVE.type
+        return getUiTypeWithMessageType() == SystemMsgType.SENSITIVE.type
     }
 
     override fun getExtSensitiveMsgContent(): String? {
@@ -316,7 +322,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getRecallContent(context: Context): String {
-        return "撤回内容"
+        return "null"
     }
 
     override fun getRefuseContent(context: Context): String {
@@ -399,7 +405,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
                     MsgType.IMG.type -> UiMsgType.MSG_TYPE_IMG
                     MsgType.TEXT.type -> UiMsgType.MSG_TYPE_TEXT
                     MsgType.AUDIO.type -> UiMsgType.MSG_TYPE_AUDIO
-                    else -> "NONE_MSG_TYPE"
+                    MsgType.EMOTION.type->UiMsgType.MSG_TYPE_CC_EMOTION
+                    else -> UiMsgType.MSG_NONE_MSG_TYPE
                 }
             }
             MessageType.SYSTEM.type -> {
@@ -407,12 +414,13 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
                     SystemMsgType.RECALLED.type -> UiMsgType.MSG_TYPE_RECALLED
                     SystemMsgType.REFUSED.type -> UiMsgType.MSG_TYPE_SYS_REFUSE
                     SystemMsgType.SENSITIVE.type -> UiMsgType.MSG_TYPE_SENSITIVE
-                    else -> "NONE_SYSTEM_TYPE"
+                    else ->UiMsgType.MSG_NONE_MSG_TYPE
                 }
             }
-            else -> "NONE_MESSAGE_TYPE"
+            else -> UiMsgType.MSG_NONE_MSG_TYPE
         }
     }
+
 
     private fun getExtRecallMessageInfo(): RevokeMsg? {
         val str = info?.extContent?.get(ExtMsgType.EXTENDS_TYPE_RECALL)

@@ -1,11 +1,10 @@
 package com.zj.imtest.ui.input
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.FragmentActivity
 import com.zj.album.AlbumIns
@@ -26,7 +25,7 @@ import com.zj.imtest.BaseApp
 import com.zj.imtest.BaseApp.Companion.context
 
 
-class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val groupId: Long) : OnKeyboardListener<MessageInfoEntity> {
+class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Emoticon>?, private val groupId: Long) : OnKeyboardListener<MessageInfoEntity, Emoticon> {
 
     private var curChannel: ChannelRegisterInfo? = null
 
@@ -49,33 +48,74 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
         emoticonPack?.let { _ ->
             inputLayout?.context?.let {}
         }
-
     }
+
 
     override fun onPayClick(emoticonPack: EmoticonPack<Emoticon>?) {
         inputLayout?.context?.let {
             if (emoticonPack != null) {
                 val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
-                DefEmoticons.sEmojiArray.mapTo(emojiArray) {
-                    val emoticon = EmoticonEntityUtils.BigEmoticon()
-                    emoticon.code = it.emoji
-                    emoticon.uri = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-                    emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
-                    return@mapTo emoticon
-                }
-                emoticonPack.payType = 0
+                emoticonPack.status = EmoticonPack.EmoticonStatus.LOADING
                 emoticonPack.emoticons = emojiArray.toMutableList()
                 inputLayout.updateEmoticon(emoticonPack)
+                Handler().postDelayed({
+                    emoticonPack.type = 0
+                    emoticonPack.status = EmoticonPack.EmoticonStatus.ERROR
+                    emoticonPack.emoticons = emojiArray.toMutableList()
+                    inputLayout.updateEmoticon(emoticonPack)
+                }, 5000)
             }
+        }
+    }
+
+    override fun onRetryClick(emoticonPack: EmoticonPack<Emoticon>?) {
+        if (emoticonPack != null) {
+            val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+            DefEmoticons.sEmojiArray.mapTo(emojiArray) {
+                val emoticon = EmoticonEntityUtils.BigEmoticon()
+                emoticon.id = it.icon
+                emoticon.url = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                emoticon.icon = "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
+                emoticon.pack = emoticonPack
+                return@mapTo emoticon
+            }
+            emoticonPack.type = 0
+            emoticonPack.status = EmoticonPack.EmoticonStatus.NORMAL
+            emoticonPack.emoticons = emojiArray.toMutableList()
+            inputLayout?.updateEmoticon(emoticonPack)
         }
     }
 
     override fun onSelectFileClick(view: View?, extData: MessageInfoEntity?) {
     }
 
-    override fun sendSticker(url: String, view: View?, extData: MessageInfoEntity?) {
-        inputLayout?.context?.let {
-            IMHelper.Sender.sendUrlImg(url, 200, 200, groupId, extData)
+    override fun sendSticker(emoticon: Emoticon, view: View?, extData: MessageInfoEntity?) {
+
+        curChannel?.let {
+            emoticon.url?.let { it1 ->
+                emoticon.pack?.let { it2 ->
+                    emoticon.id?.let { it3 -> IMHelper.Sender.sendEmotion(it.groupId, it1, it2.id, it3) }
+                    val emojiArray = mutableListOf<EmoticonEntityUtils.BigEmoticon>()
+                    emojiArray.add(EmoticonEntityUtils.BigEmoticon().apply {
+                        this.id = 34
+                        this.url = "https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg"
+                        this.icon = "https://scpic.chinaz.net/files/pic/pic9/202009/apic27858.jpg"
+                        this.pack = EmoticonPack<Emoticon>().apply { this.id = id }
+                    })
+                    inputLayout?.updateEmoticon(getUseEmoticonPackList(emojiArray.toMutableList()))
+                }
+
+            }
+        }
+    }
+
+
+    private fun getUseEmoticonPackList(emoticonInfo: MutableList<Emoticon>): EmoticonPack<Emoticon> {
+        return EmoticonPack<Emoticon>().apply {
+            this.emoticons = emoticonInfo
+            this.type = EmoticonPack.EmoticonType.FREE.type
+            this.id = -1
+            this.image = context.getResourceUri(com.zj.emotionbar.R.mipmap.app_emo_func_ic_used)
         }
     }
 
@@ -85,9 +125,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<*>?, private val grou
         }
     }
 
-    override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {
-
-    }
+    override fun onVoiceEvent(view: View?, ev: MotionEvent?, extData: MessageInfoEntity?) {}
 
     private fun startAlbum(isImage: Boolean, v: View?, extData: MessageInfoEntity?) {
         (v?.context as? FragmentActivity)?.let {

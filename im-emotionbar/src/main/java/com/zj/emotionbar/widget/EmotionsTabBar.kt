@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.zj.emotionbar.R
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
@@ -21,14 +22,14 @@ import com.zj.emotionbar.interfaces.OnToolBarItemClickListener
 import com.zj.emotionbar.utils.imageloader.ImageLoader
 
 @Suppress("unused")
-open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : LinearLayout(context, attrs, def), EmoticonsToolBar {
+open class EmotionsTabBar<E : Emoticon> @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : LinearLayout(context, attrs, def), EmoticonsToolBar<E> {
 
     private var recyclerView = RecyclerView(context)
     private var layoutManager: SmoothScrollLayoutManager? = null
-    private var emotionPacks: List<EmoticonPack<out Emoticon>>? = null
+    private var emotionPacks: List<EmoticonPack<E>>? = null
     private var leftView = FrameLayout(context)
     private var rightView = FrameLayout(context)
-    private var adapterFactory: EmotionsTabAdapterFactory<out RecyclerView.ViewHolder>? = null
+    private var adapterFactory: EmotionsTabAdapterFactory<E, out RecyclerView.ViewHolder>? = null
     private val tabIconMargin = (Resources.getSystem().displayMetrics.density * 13f + 0.5f).toInt()
 
     init {
@@ -50,15 +51,16 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
         recyclerView.setPadding(tabIconMargin, 0, tabIconMargin, 0)
         layoutManager = SmoothScrollLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.layoutManager = layoutManager
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         addView(recyclerView)
         adapterFactory = DefaultAdapterFactory()
     }
 
-    override fun setToolBarItemClickListener(listener: OnToolBarItemClickListener?) {
+    override fun setToolBarItemClickListener(listener: OnToolBarItemClickListener<E>?) {
         adapterFactory?.itemClickListeners = listener
     }
 
-    override fun selectEmotionPack(pack: EmoticonPack<out Emoticon>) {
+    override fun selectEmotionPack(pack: EmoticonPack<E>) {
         val position = emotionPacks?.indexOf(pack)
 
         val manager = layoutManager
@@ -78,11 +80,13 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
 
         if (position != null) {
             adapterFactory?.onEmotionPackSelect(position)
-            recyclerView.adapter?.notifyDataSetChanged()
+            recyclerView.adapter?.let {
+                it.notifyItemRangeChanged(0, it.itemCount)
+            }
         }
     }
 
-    override fun setPackList(packs: List<EmoticonPack<out Emoticon>>) {
+    override fun setPackList(packs: List<EmoticonPack<E>>) {
         emotionPacks = packs
         recyclerView.adapter = adapterFactory?.createAdapter(packs)
     }
@@ -96,29 +100,24 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
     }
 
     override fun notifyDataChanged() {
-        recyclerView.adapter?.notifyDataSetChanged()
+        recyclerView.adapter?.let {
+            it.notifyItemRangeChanged(0, it.itemCount)
+        }
     }
 
-    interface EmotionsTabAdapterFactory<T : RecyclerView.ViewHolder> {
-        var itemClickListeners: OnToolBarItemClickListener?
-        fun createAdapter(packs: List<EmoticonPack<out Emoticon>>): RecyclerView.Adapter<out T>
+    open class DefaultAdapterFactory<E : Emoticon> : EmotionsTabAdapterFactory<E, EmotionPackTabAdapter<E>.ViewHolder> {
 
-        fun onEmotionPackSelect(position: Int)
-    }
+        override var itemClickListeners: OnToolBarItemClickListener<E>? = null
+        private lateinit var packList: List<EmoticonPack<E>>
 
-    open class DefaultAdapterFactory : EmotionsTabAdapterFactory<EmotionPackTabAdapter.ViewHolder> {
-
-        override var itemClickListeners: OnToolBarItemClickListener? = null
-        private lateinit var packList: List<EmoticonPack<out Emoticon>>
-
-        override fun createAdapter(packs: List<EmoticonPack<out Emoticon>>): RecyclerView.Adapter<out EmotionPackTabAdapter.ViewHolder> {
+        override fun createAdapter(packs: List<EmoticonPack<E>>): RecyclerView.Adapter<out EmotionPackTabAdapter<E>.ViewHolder> {
             packList = packs
             val adapter = getAdapter(packList)
             adapter.itemClickListeners = itemClickListeners
             return adapter
         }
 
-        protected open fun getAdapter(packs: List<EmoticonPack<out Emoticon>>): EmotionPackTabAdapter {
+        protected open fun getAdapter(packs: List<EmoticonPack<E>>): EmotionPackTabAdapter<E> {
             return EmotionPackTabAdapter(packs)
         }
 
@@ -130,14 +129,21 @@ open class EmotionsTabBar @JvmOverloads constructor(context: Context, attrs: Att
     }
 }
 
+
+interface EmotionsTabAdapterFactory<E : Emoticon, T : RecyclerView.ViewHolder> {
+    var itemClickListeners: OnToolBarItemClickListener<E>?
+    fun createAdapter(packs: List<EmoticonPack<E>>): RecyclerView.Adapter<out T>
+
+    fun onEmotionPackSelect(position: Int)
+}
+
+
 /**
  * packs: MutablePair first is selected state
  */
-open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emoticon>>) : RecyclerView.Adapter<EmotionPackTabAdapter.ViewHolder>() {
+open class EmotionPackTabAdapter<E : Emoticon>(private val packs: List<EmoticonPack<E>>) : RecyclerView.Adapter<EmotionPackTabAdapter<E>.ViewHolder>() {
 
-    var itemClickListeners: OnToolBarItemClickListener? = null
-    private val tabIconSize = (Resources.getSystem().displayMetrics.density * 24f + 0.5f).toInt()
-
+    var itemClickListeners: OnToolBarItemClickListener<E>? = null
 
     init {
         packs.forEach {
@@ -146,7 +152,7 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var itemView = LayoutInflater.from(parent.context).inflate(R.layout.view_table_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.view_table_item, parent, false)
         return ViewHolder(itemView)
     }
 
@@ -154,7 +160,7 @@ open class EmotionPackTabAdapter(private val packs: List<EmoticonPack<out Emotic
     override fun getItemCount() = packs.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val fus = packs[position].iconUri ?: ""
+        val fus = packs[position].image ?: ""
         ImageLoader.displayImage(fus, holder.imageView)
         if (packs[position].tag == null) {
             packs[position].tag = false

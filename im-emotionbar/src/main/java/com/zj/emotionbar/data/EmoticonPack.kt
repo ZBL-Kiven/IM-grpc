@@ -2,27 +2,27 @@ package com.zj.emotionbar.data
 
 import android.content.Context
 import android.view.View
-import com.zj.emotionbar.interfaces.GridPageFactory
-import com.zj.emotionbar.interfaces.OnEmoticonClickListener
-import com.zj.emotionbar.interfaces.OnPayClickListener
-import com.zj.emotionbar.interfaces.PayPageFactory
+import com.zj.emotionbar.interfaces.*
 
 class EmoticonPack<T : Emoticon> {
-    var iconUri: String? = null
+    enum class EmoticonType(var type: Int) {
+        FREE(0), PAY(1), USED(-1) // 最近使用的
+    }
+
+    enum class EmoticonStatus(var type: Int) {
+        LOADING(-1), ERROR(0), NORMAL(1)
+    }
+
+    var image: String? = null
     var name: String? = null
-    var isDataChanged = false
-    var payType = 0
+    var type = 0
+    var status: EmoticonStatus = EmoticonStatus.LOADING
     var id: Int = 0
     var price: Int = 0
     var tag: Any? = null
-    lateinit var emoticons: MutableList<T>
+    var emoticons: MutableList<T>? = mutableListOf()
 
-    fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<Emoticon>?, payClickListener: OnPayClickListener<EmoticonPack<Emoticon>>?): View {
-
-        return when (payType) {
-            1 -> PayPageFactory<EmoticonPack<T>, T>().create(context, pack, payClickListener = payClickListener)
-            else -> GridPageFactory<EmoticonPack<T>, T>().create(context, pack, listener)
-        }
-
+    fun getView(context: Context, pack: EmoticonPack<T>, listener: OnEmoticonClickListener<T>?, payClickListener: OnPayClickListener<EmoticonPack<T>>?, retryClickListener: OnRetryClickListener<EmoticonPack<T>>?): View {
+        return GridPageFactory<EmoticonPack<T>, T>().create(context, pack, listener, payClickListener, retryClickListener)
     }
 }
