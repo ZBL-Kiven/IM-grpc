@@ -70,6 +70,9 @@ internal object SendingDbOperator {
                 if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE_FROM_BLOCKED
+                    /**
+                     * 暂时没有使用，Payload 保留
+                     * */
                     d.msgStatus == ImApi.EH.SENSITIVE_WORD -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
                     d.msgStatus == ImApi.EH.NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
                     d.msgStatus == ImApi.EH.NOT_OWNER -> ClientHubImpl.PAYLOAD_DELETE_NOT_OWNER
@@ -85,13 +88,7 @@ internal object SendingDbOperator {
                 sendDb?.deleteByCallId(d.clientMsgId)
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
                 val pl = when (d.msgStatus) {
-                    /**
-                     * There is needn't to deal with it temporarily.
-                     * The message here is only displayed to itself in the Group.
-                     * Whether it can be pulled and whether it is received by others is the backend logic.
-                     *
-                     * [ImApi.EH.SENSITIVE_WORD_ERROR] -> [ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS]
-                     * */
+                    ImApi.EH.SENSITIVE_WORD_ERROR -> ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)

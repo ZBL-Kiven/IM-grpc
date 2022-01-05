@@ -30,6 +30,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
         const val PAYLOAD_DELETE_FROM_BLOCKED = PAYLOAD_DELETE + "_case_block"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words"
+        const val PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words_refused"
         const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = PAYLOAD_DELETE + "_case_not_following"
         const val PAYLOAD_DELETE_NOT_ENOUGH = PAYLOAD_DELETE + "_case_not_enough_coins"
         const val PAYLOAD_DELETE_NOT_OWNER = PAYLOAD_DELETE + "_case_not_owner"
