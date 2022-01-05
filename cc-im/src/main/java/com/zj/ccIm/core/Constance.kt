@@ -16,6 +16,10 @@ object ExtMsgType {
     const val EXTENDS_TYPE_SENSITIVE_HINT = "riskMsg"
 }
 
+object ExtMsgKeys {
+    const val SENSITIVE_OTHER = "other"
+}
+
 internal object Constance {
     var app: Application? = null
         get() {

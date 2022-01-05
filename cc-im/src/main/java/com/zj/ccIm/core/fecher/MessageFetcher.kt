@@ -2,10 +2,7 @@ package com.zj.ccIm.core.fecher
 
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.MainLooper
-import com.zj.ccIm.core.ExtMsgType
-import com.zj.ccIm.core.IMHelper
-import com.zj.ccIm.core.MessageType
-import com.zj.ccIm.core.SystemMsgType
+import com.zj.ccIm.core.*
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.GetMoreMessagesResult
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
@@ -108,6 +105,11 @@ internal object MessageFetcher {
                 info.systemMsgType = SystemMsgType.RECALLED.type
             }
             if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
+                if (it.containsKey(ExtMsgKeys.SENSITIVE_OTHER)) {
+                    if (cast<Any?, Boolean>(it[ExtMsgKeys.SENSITIVE_OTHER]) == true) {
+                        return@let
+                    }
+                }
                 val systemInfo = info.copyTo(MessageInfoEntity())
                 systemInfo?.messageType = MessageType.SYSTEM.type
                 systemInfo?.sendingState = SendMsgState.NONE.type
