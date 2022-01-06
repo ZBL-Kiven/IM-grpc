@@ -114,7 +114,7 @@ class BasePopFlowWindow<T> : PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT, Vi
                     }
                 }
             }
-            if (isNormalMsg && (data?.getSendState() ?: -1 == 0 || data?.getSendState() ?: -1 == 3 && !isOwner && data?.getIsAdmin() == false)) {
+            if (isNormalMsg && (data?.getSendState() ?: -1 == 0 || data?.getSendState() ?: -1 == 3 )&& !isOwner && data?.getIsAdmin() == false) {
                 filterList.add(reportItems[5])
             }
         }

@@ -13,7 +13,6 @@ import com.zj.album.ui.preview.images.transformer.TransitionEffect
 import com.zj.album.ui.views.image.easing.ScaleEffect
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
-import com.zj.database.entity.GroupInfoEntity
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
 import com.zj.emotionbar.adapt2cc.OnKeyboardListener
@@ -46,7 +45,7 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
 //    }
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
-        emoticonPack?.let {
+        emoticonPack?.let { _ ->
             inputLayout?.context?.let {}
         }
     }

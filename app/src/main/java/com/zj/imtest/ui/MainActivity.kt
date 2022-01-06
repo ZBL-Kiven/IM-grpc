@@ -2,6 +2,7 @@ package com.zj.imtest.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -104,15 +105,15 @@ class MainActivity : AppCompatActivity() {
         ivHeadPic?.setOnClickListener {
             IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).sendWithoutState().setCustomSendCallback(object : MessageInfoEntityDataExchange() {
                 override fun onSendingStart(callId: String, d: MessageInfoEntity?) {
-                    Log.e("=======>", "CustomSendingCallback: onStart $callId   d = ${d?.textContent?.text}")
+                    Log.e("=======>", "CustomSendingCallback: onStart $callId   d = ${d?.textContent?.text} , thread = ${Thread.currentThread().name} ,main = ${Looper.getMainLooper().thread.name}")
                 }
 
                 override fun onSendingProgress(callId: String, progress: Int) {
-                    Log.e("=======>", "CustomSendingCallback: progress $callId")
+                    Log.e("=======>", "CustomSendingCallback: progress $callId , thread = ${Thread.currentThread().name} ,main = ${Looper.getMainLooper().thread.name}")
                 }
 
                 override fun onSendResult(isOK: Boolean, retryAble: Boolean, callId: String, d: MessageInfoEntity?, throwable: Throwable?, payloadInfo: Any?) {
-                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}   ext = ${d?.extContent.toString()}")
+                    Log.e("=======>", "CustomSendingCallback: onResult $callId  isOk = $isOK   d = ${d?.textContent?.text}   ext = ${d?.extContent.toString()} , thread = ${Thread.currentThread().name} ,main = ${Looper.getMainLooper().thread.name}")
                 }
             }).build().sendText("bitch", groupId)
         }

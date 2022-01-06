@@ -1,5 +1,6 @@
 package com.zj.ccIm.core.db
 
+import com.zj.ccIm.core.ExtMsgKeys
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
@@ -10,6 +11,7 @@ import com.zj.database.dao.SendMsgDao
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.enums.SendMsgState
+import com.zj.im.utils.cast
 
 internal object SendingDbOperator {
 
@@ -70,6 +72,9 @@ internal object SendingDbOperator {
                 if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE_FROM_BLOCKED
+                    /**
+                     * 暂时没有使用，Payload 保留
+                     * */
                     d.msgStatus == ImApi.EH.SENSITIVE_WORD -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
                     d.msgStatus == ImApi.EH.NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
                     d.msgStatus == ImApi.EH.NOT_OWNER -> ClientHubImpl.PAYLOAD_DELETE_NOT_OWNER
@@ -85,13 +90,13 @@ internal object SendingDbOperator {
                 sendDb?.deleteByCallId(d.clientMsgId)
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
                 val pl = when (d.msgStatus) {
-                    /**
-                     * There is needn't to deal with it temporarily.
-                     * The message here is only displayed to itself in the Group.
-                     * Whether it can be pulled and whether it is received by others is the backend logic.
-                     *
-                     * [ImApi.EH.SENSITIVE_WORD_ERROR] -> [ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS]
-                     * */
+                    ImApi.EH.SENSITIVE_WORD_ERROR -> {
+                        var pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS
+                        if (d.extContent?.containsKey(ExtMsgKeys.SENSITIVE_OTHER) == true && cast<Any?, Boolean>(d.extContent?.get(ExtMsgKeys.SENSITIVE_OTHER)) == true) {
+                            pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER
+                        }
+                        pl
+                    }
                     else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
                 }
                 Pair(localMsg, pl)
