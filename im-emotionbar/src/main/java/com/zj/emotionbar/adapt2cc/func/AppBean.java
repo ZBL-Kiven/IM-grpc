@@ -18,7 +18,7 @@ public class AppBean {
         return id;
     }
 
-    AppBean(int id, int icon, String funcName) {
+    public AppBean(int id, int icon, String funcName) {
         this.id = id;
         this.icon = icon;
         this.funcName = funcName;

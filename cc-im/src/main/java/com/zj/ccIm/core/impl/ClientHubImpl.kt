@@ -17,6 +17,7 @@ import com.zj.ccIm.logger.ImLogs
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessageReply
 
+@Suppress("MemberVisibilityCanBePrivate")
 open class ClientHubImpl : ClientHub<Any?>() {
 
     companion object {
@@ -26,11 +27,15 @@ open class ClientHubImpl : ClientHub<Any?>() {
 
         const val PAYLOAD_ADD = "ClientHubImpl.payload_add"
         const val PAYLOAD_DELETE = "ClientHubImpl.payload_delete"
+        const val PAYLOAD_REFUSE = "ClientHubImpl.payload_refused"
         const val PAYLOAD_CHANGED = "ClientHubImpl.payload_change"
         const val PAYLOAD_CHANGED_SEND_STATE = "ClientHubImpl.payload_change_send_state"
+
+        const val PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS = PAYLOAD_REFUSE + "_case_sensitive_words"
+        const val PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER = PAYLOAD_REFUSE + "_case_sensitive_words_other"
+
         const val PAYLOAD_DELETE_FROM_BLOCKED = PAYLOAD_DELETE + "_case_block"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words"
-        const val PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words_refused"
         const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = PAYLOAD_DELETE + "_case_not_following"
         const val PAYLOAD_DELETE_NOT_ENOUGH = PAYLOAD_DELETE + "_case_not_enough_coins"
         const val PAYLOAD_DELETE_NOT_OWNER = PAYLOAD_DELETE + "_case_not_owner"
