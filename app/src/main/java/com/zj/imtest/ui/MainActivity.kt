@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -17,6 +18,8 @@ import com.zj.cf.managers.TabFragmentManager
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
+import com.zj.emotionbar.adapt2cc.func.AppBean
+import com.zj.emotionbar.adapt2cc.func.FuncGridView
 import com.zj.emotionbar.aemoj.DefEmoticons
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
@@ -66,6 +69,11 @@ class MainActivity : AppCompatActivity() {
         inputLayout = findViewById(R.id.main_input_layout)
         tvGroupDesc = findViewById(R.id.main_tv_group_desc)
         inputDelegate = InputDelegate(inputLayout, groupId)
+        var mAppBeanList= ArrayList<AppBean>()
+        mAppBeanList.add(AppBean(FuncGridView.FUNC_ITEM_ID_PIC, R.mipmap.app_emo_func_icon_photo, getString(R.string.im_func_album)))
+        mAppBeanList.add(AppBean(FuncGridView.FUNC_ITEM_ID_TAKE_PIC, R.mipmap.app_emo_func_icon_camera, getString(R.string.im_func_shot)))
+        mAppBeanList.add(AppBean(FuncGridView.FUNC_ITEM_ID_VIDEO, R.mipmap.app_emo_func_icon_audio, getString(R.string.im_func_live)))
+        inputLayout?.addFuncView(FuncGridView(this ,mAppBeanList) { id: Int, view: View? -> Toast.makeText(this, "==="+inputLayout?.takeExtData(), Toast.LENGTH_SHORT).show() })
         inputLayout?.setOnFuncListener(inputDelegate)
         initConnectObserver()
         val f1 = GroupFragment().setData(groupId, ownerId, targetUserId)
@@ -169,7 +177,7 @@ class MainActivity : AppCompatActivity() {
         pack.emoticons = emojiArray.toMutableList()
         pack.status = EmoticonPack.EmoticonStatus.NORMAL
         pack.image = "https://th.bing.com/th/id/R.c6c03edea530e9caa677c9d17f193a4d?rik=MBgpsjumbTD5eQ&riu=http%3a%2f%2fwww.desktx.com%2fd%2ffile%2fwallpaper%2fscenery%2f20170209%2fca186d97701674b996264b2d352894a7.jpg&ehk=HunG%2fPF7pUbpcS34cWpNvlS%2faoDPbcaTYL6LFFPQIIM%3d&risl=&pid=ImgRaw&r=0"
-        if (id==3){
+        if (id == 3) {
             pack.type = EmoticonPack.EmoticonType.PAY.type
         }
         return pack

@@ -42,7 +42,8 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
 
     }
     private val payClickListener = OnPayClickListener<EmoticonPack<E>> { onFuncListener?.onPayClick(it) }
-    private val retryClickListener=OnRetryClickListener<EmoticonPack<E>>{onFuncListener?.onRetryClick(it)}
+    private val retryClickListener = OnRetryClickListener<EmoticonPack<E>> { onFuncListener?.onRetryClick(it) }
+
     init {
         initEmoticon()
     }
@@ -54,7 +55,6 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
 
     @SuppressLint("ClickableViewAccessibility")
     private fun initEmoticon() {
-        addFuncView(FuncGridView(context) { id: Int, view: View? -> this.onClick(id, view) })
         btnSend?.setOnClickListener {
             val content = etChat?.text.toString()
             if (content.isNotEmpty()) {
@@ -91,17 +91,6 @@ open class CCEmojiLayout<T, E : Emoticon> @JvmOverloads constructor(context: Con
         emoticonPacksAdapter?.setRetryClickListenerListener(retryClickListener)
         emoticonPacksAdapter?.let {
             setAdapter(it)
-        }
-    }
-
-    private fun onClick(id: Int, view: View?) {
-        when (id) {
-            FuncGridView.FUNC_ITEM_ID_PIC -> onFuncListener?.onPictureClick(view, takeExtData())
-            FuncGridView.FUNC_ITEM_ID_TAKE_PIC -> onFuncListener?.onTakePhotoClick(view, takeExtData())
-            FuncGridView.FUNC_ITEM_ID_VIDEO -> onFuncListener?.onSelectVideoClick(view, takeExtData())
-            FuncGridView.FUNC_ITEM_ID_FILE -> onFuncListener?.onSelectFileClick(view, takeExtData())
-            else -> {
-            }
         }
     }
 }

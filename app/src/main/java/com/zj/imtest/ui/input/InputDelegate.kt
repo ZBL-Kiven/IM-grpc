@@ -34,16 +34,16 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
         this.curChannel = data
     }
 
-    override fun onPictureClick(view: View?, extData: MessageInfoEntity?) {
-        startAlbum(true, view, extData)
-    }
-
-    override fun onTakePhotoClick(view: View?, extData: MessageInfoEntity?) {
-    }
-
-    override fun onSelectVideoClick(view: View?, extData: MessageInfoEntity?) {
-        startAlbum(false, view, extData)
-    }
+//    override fun onPictureClick(view: View?, extData: MessageInfoEntity?) {
+//        startAlbum(true, view, extData)
+//    }
+//
+//    override fun onTakePhotoClick(view: View?, extData: MessageInfoEntity?) {
+//    }
+//
+//    override fun onSelectVideoClick(view: View?, extData: MessageInfoEntity?) {
+//        startAlbum(false, view, extData)
+//    }
 
     override fun onPageEmoticonSelected(emoticonPack: EmoticonPack<Emoticon>?) {
         emoticonPack?.let {
@@ -87,8 +87,6 @@ class InputDelegate(private val inputLayout: CCEmojiLayout<MessageInfoEntity, Em
         }
     }
 
-    override fun onSelectFileClick(view: View?, extData: MessageInfoEntity?) {
-    }
 
     override fun sendSticker(emoticon: Emoticon, view: View?, extData: MessageInfoEntity?) {
 

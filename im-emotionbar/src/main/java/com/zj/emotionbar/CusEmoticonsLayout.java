@@ -414,7 +414,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
         return mTvBlocked;
     }
 
-    protected T takeExtData() {
+    public T takeExtData() {
         return extData;
     }
 
