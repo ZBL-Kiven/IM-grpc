@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatImageView
@@ -25,12 +26,15 @@ import com.zj.views.ut.DPUtils
 class IMContentEmotionImageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, def: Int = 0) : AppCompatImageView(context, attrs, def), ImContentIn {
 
     private var anim: ObjectAnimator = ObjectAnimator.ofInt(this, "ImageLevel", 0, 10000)
+    private var mWidth: Int = 400
 
     init {
         anim.duration = 800
         anim.repeatCount = ObjectAnimator.INFINITE
         anim.start()
         this.scaleType = ScaleType.CENTER_CROP
+        mWidth = getScreenWidth(context) / 4
+
     }
 
     override fun onSetData(data: ImMsgIn?) {
@@ -41,24 +45,33 @@ class IMContentEmotionImageView @JvmOverloads constructor(context: Context, attr
         }
     }
 
+    /**
+     * 获取屏幕的宽度
+     */
+    fun getScreenWidth(context: Context): Int {
+        val dm = context.applicationContext.resources.displayMetrics
+        return dm.widthPixels
+    }
+
     override fun chatType(chatType: Any) {
     }
+
 
     private fun loadImg(data: ImMsgIn) {
         adjustViewBounds = true
         val corners = if (data.getImgContentUrl() != null) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8f, context.resources.displayMetrics).toInt()
         else TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1f, context.resources.displayMetrics).toInt()
         data.getEmotionUrl()?.let {
-            Glide.with(this).load(it).centerInside().placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).override(400, 400).addListener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
+            Glide.with(this).load(it).centerInside().placeholder(R.drawable.im_msg_item_img_loading).error(R.drawable.im_msg_item_img_loading).apply(RequestOptions.bitmapTransform(RoundedCorners(corners))).override(mWidth, mWidth).addListener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                        return false
+                    }
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    anim.cancel()
-                    return false
-                }
-            }).into(this)
+                    override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                        anim.cancel()
+                        return false
+                    }
+                }).into(this)
         }
     }
 
