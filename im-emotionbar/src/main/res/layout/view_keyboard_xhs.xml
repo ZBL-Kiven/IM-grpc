@@ -38,7 +38,7 @@
                 android:src="@mipmap/ui_emo_icon_voice"
                 tools:ignore="ContentDescription" />
 
-            <Button
+            <TextView
                 android:id="@+id/im_input_btn_voice"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
@@ -47,10 +47,11 @@
                 android:layout_toStartOf="@+id/im_input_rl_multi_and_send"
                 android:layout_toEndOf="@+id/im_input_btn_voice_or_text"
                 android:background="@drawable/ui_bg_voice"
+                android:gravity="center"
                 android:stateListAnimator="@null"
                 android:text="@string/ui_input_tap_to_speaking"
                 android:textColor="#727272"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
 
             <RelativeLayout
@@ -93,14 +94,17 @@
             <TextView
                 android:id="@+id/im_input_tv_blocked"
                 android:layout_width="match_parent"
-                android:layout_height="34dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/im_input_rl_input"
+                android:layout_alignBottom="@+id/im_input_rl_input"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="8dp"
                 android:layout_toStartOf="@+id/im_input_rl_multi_and_send"
                 android:layout_toEndOf="@+id/im_input_btn_voice_or_text"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:gravity="center"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:visibility="gone" />
 
             <RelativeLayout

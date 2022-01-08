@@ -46,7 +46,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
     protected LayoutInflater inflater;
     protected ImageView btnVoiceOrText;
     protected LinearLayout mLlRootView;
-    protected Button btnVoice;
+    protected TextView btnVoice;
     protected EmoticonsEditText emoticonsEditText;
     protected ImageView btnFace;
     protected RelativeLayout inputLayout;
@@ -398,7 +398,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
         return emoticonsEditText;
     }
 
-    public Button getBtnVoice() {
+    public TextView getBtnVoice() {
         return btnVoice;
     }
 
