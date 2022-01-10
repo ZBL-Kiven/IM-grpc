@@ -38,7 +38,7 @@
                 android:src="@mipmap/ui_emo_icon_voice"
                 tools:ignore="ContentDescription" />
 
-            <TextView
+            <Button
                 android:id="@+id/im_input_btn_voice"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"
@@ -48,10 +48,11 @@
                 android:layout_toEndOf="@+id/im_input_btn_voice_or_text"
                 android:background="@drawable/ui_bg_voice"
                 android:gravity="center"
+                android:textAllCaps="false"
                 android:stateListAnimator="@null"
                 android:text="@string/ui_input_tap_to_speaking"
                 android:textColor="#727272"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
 
             <RelativeLayout

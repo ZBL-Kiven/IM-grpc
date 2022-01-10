@@ -76,6 +76,7 @@ internal object SendingDbOperator {
                 if (d.msgStatus != 0) sendDb?.deleteByCallId(d.clientMsgId)
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE_FROM_BLOCKED
+                    d.forbiddenSpeak -> ClientHubImpl.PAYLOAD_DELETE_FROM_FORBIDDEN
                     /**
                      * 暂时没有使用，Payload 保留
                      * */
