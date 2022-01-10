@@ -1,9 +1,12 @@
 package com.zj.ccIm.core.db
 
+import com.google.gson.Gson
 import com.zj.ccIm.core.ExtMsgKeys
+import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
+import com.zj.ccIm.core.fecher.MessageFetcher
 import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.sender.Converter
 import com.zj.database.dao.MessageDao
@@ -12,6 +15,7 @@ import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.utils.cast
+import org.json.JSONObject
 
 internal object SendingDbOperator {
 
@@ -92,8 +96,16 @@ internal object SendingDbOperator {
                 val pl = when (d.msgStatus) {
                     ImApi.EH.SENSITIVE_WORD_ERROR -> {
                         var pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS
-                        if (d.extContent?.containsKey(ExtMsgKeys.SENSITIVE_OTHER) == true && cast<Any?, Boolean>(d.extContent?.get(ExtMsgKeys.SENSITIVE_OTHER)) == true) {
-                            pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER
+                        val str = d.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)
+                        try {
+                            val strJson = JSONObject(str)
+                            if (strJson.has("other")) {
+                                if (strJson.getBoolean("other")) {
+                                    pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                         pl
                     }
@@ -120,4 +132,5 @@ internal object SendingDbOperator {
         result?.extContent = d.extContent
         return result
     }
+
 }

@@ -1,5 +1,6 @@
 package com.zj.ccIm.core.fecher
 
+import com.google.gson.Gson
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.MainLooper
 import com.zj.ccIm.core.*
@@ -13,6 +14,7 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.im.utils.cast
 import com.zj.protocol.grpc.ImMessage
 import com.zj.protocol.utl.ProtoBeanUtils
+import org.json.JSONObject
 
 internal object MessageFetcher {
 
@@ -105,11 +107,18 @@ internal object MessageFetcher {
                 info.systemMsgType = SystemMsgType.RECALLED.type
             }
             if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
-                if (it.containsKey(ExtMsgKeys.SENSITIVE_OTHER)) {
-                    if (cast<Any?, Boolean>(it[ExtMsgKeys.SENSITIVE_OTHER]) == true) {
-                        return@let
+                val str = info.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)
+                try {
+                    val strJson = JSONObject(str)
+                    if (strJson.has("other")) {
+                        if (strJson.getBoolean("other")) {
+                            return@let
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
+
                 val systemInfo = info.copyTo(MessageInfoEntity())
                 systemInfo?.messageType = MessageType.SYSTEM.type
                 systemInfo?.sendingState = SendMsgState.NONE.type
@@ -121,4 +130,7 @@ internal object MessageFetcher {
         }
         return lst
     }
+
+
+    data class RiskMsg(val other: Boolean?, val riskId: Int?, val multilingual: Map<String, String>?) {}
 }
