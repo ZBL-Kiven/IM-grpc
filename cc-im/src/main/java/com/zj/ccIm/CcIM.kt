@@ -32,7 +32,7 @@ internal object CcIM : IMInterface<Any?>() {
     var imConfig: ImConfigIn? = null
         get() {
             return if (field == null) {
-                postIMError(InitializedException("get IM Config"));null
+                recordLogs("CcIM", "get IM Config must not be null!", true);null
             } else field
         }
 
