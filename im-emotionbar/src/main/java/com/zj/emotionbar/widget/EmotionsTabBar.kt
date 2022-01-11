@@ -19,6 +19,7 @@ import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.interfaces.EmoticonsToolBar
 import com.zj.emotionbar.interfaces.OnToolBarItemClickListener
+import com.zj.emotionbar.utils.imageloader.GlideLoader
 import com.zj.emotionbar.utils.imageloader.ImageLoader
 
 @Suppress("unused")
@@ -161,7 +162,7 @@ open class EmotionPackTabAdapter<E : Emoticon>(private val packs: List<EmoticonP
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val fus = packs[position].image ?: ""
-        ImageLoader.displayImage(fus, holder.imageView)
+        GlideLoader.displayImage(fus, holder.imageView)
         if (packs[position].tag == null) {
             packs[position].tag = false
         }

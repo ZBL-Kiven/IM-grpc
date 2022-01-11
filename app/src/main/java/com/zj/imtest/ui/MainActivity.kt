@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity() {
 
         pack.emoticons = emojiArray.toMutableList()
         pack.status = EmoticonPack.EmoticonStatus.NORMAL
-        pack.image = "https://th.bing.com/th/id/R.c6c03edea530e9caa677c9d17f193a4d?rik=MBgpsjumbTD5eQ&riu=http%3a%2f%2fwww.desktx.com%2fd%2ffile%2fwallpaper%2fscenery%2f20170209%2fca186d97701674b996264b2d352894a7.jpg&ehk=HunG%2fPF7pUbpcS34cWpNvlS%2faoDPbcaTYL6LFFPQIIM%3d&risl=&pid=ImgRaw&r=0"
+        pack.image = "https://th.bing.com/th/id/R.b93ec31aae5b4493f23f3635fa242bd5?rik=meQoAkd%2b3Sp1YA&riu=http%3a%2f%2f24.media.tumblr.com%2f1f2e6459f5c70b27e9f6aedafa48b643%2ftumblr_mzu7u7Dimp1siovl5o1_400.gif&ehk=59Tf%2bNhxvDrJYXI45sq19Ahlws9ljUK2qqE3LQQnYcQ%3d&risl=&pid=ImgRaw&r=0"
         if (id == 3) {
             pack.type = EmoticonPack.EmoticonType.PAY.type
         }
