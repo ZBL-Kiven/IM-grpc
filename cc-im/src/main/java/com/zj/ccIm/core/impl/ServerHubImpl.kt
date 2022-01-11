@@ -106,7 +106,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
         ImApi.getRecordApi().request({ it.sendMsg(d) }, Schedulers.io(), Schedulers.io()) { isSuccess: Boolean, data: SendMessageRespEn?, throwable: HttpException?, a ->
             var resp = data
             resp?.channelKey = d.key
-            val isOk = isSuccess && resp != null && !resp.black
+            val isOk = isSuccess && resp != null && !resp.black && !resp.forbiddenSpeak
             if (!isOk) {
                 resp = setErrorMsgResult(resp, d, (a as? ImApi.EH.HttpErrorBody)?.code ?: 0)
             }

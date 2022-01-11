@@ -35,6 +35,7 @@ open class ClientHubImpl : ClientHub<Any?>() {
         const val PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER = PAYLOAD_REFUSE + "_case_sensitive_words_other"
 
         const val PAYLOAD_DELETE_FROM_BLOCKED = PAYLOAD_DELETE + "_case_block"
+        const val PAYLOAD_DELETE_FROM_FORBIDDEN = PAYLOAD_DELETE + "_case_forbidden"
         const val PAYLOAD_DELETE_FROM_SENSITIVE_WORDS = PAYLOAD_DELETE + "_case_sensitive_words"
         const val PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST = PAYLOAD_DELETE + "_case_not_following"
         const val PAYLOAD_DELETE_NOT_ENOUGH = PAYLOAD_DELETE + "_case_not_enough_coins"

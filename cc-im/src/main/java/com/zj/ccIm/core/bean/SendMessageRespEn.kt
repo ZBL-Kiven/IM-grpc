@@ -34,6 +34,11 @@ class SendMessageRespEn : BaseMessageInfo() {
     var black = false
 
     /**
+     * 是否被禁言
+     */
+    var forbiddenSpeak = false
+
+    /**
      * 服务器时间
      * */
     var sendTime: Long = 0
