@@ -250,4 +250,19 @@ public interface ImMessageOrBuilder extends
    * <code>.app.EmotionMessage emotionMessage = 19;</code>
    */
   EmotionMessageOrBuilder getEmotionMessageOrBuilder();
+
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   * @return Whether the giftMessage field is set.
+   */
+  boolean hasGiftMessage();
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   * @return The giftMessage.
+   */
+  GiftMessage getGiftMessage();
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   */
+  GiftMessageOrBuilder getGiftMessageOrBuilder();
 }

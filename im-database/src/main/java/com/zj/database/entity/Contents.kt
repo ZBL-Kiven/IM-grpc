@@ -43,25 +43,27 @@ class QuestionContent {
 }
 
 class EmotionMessage {
-    /**
-     * 表情id
-     */
     var id = 0
-
-    /**
-     * 表情包id
-     */
     var emotionId = 0
-
-    /**
-     * 图标
-     */
     var icon: String? = null
-
-    /**
-     * 表情地址
-     */
     var url: String? = null
+}
+
+class GiftMessage {
+    var giftId: Int = 0
+    var giftImage: String? = ""
+    var amount: Int = 1
+    var multiLanguage: List<MultiLanguage>? = null
+    var bundle: String? = null
+
+    fun getName(area: String): String? {
+        return multiLanguage?.first { it.area == area }?.name
+    }
+}
+
+class MultiLanguage {
+    var area: String = ""
+    var name: String = ""
 }
 
 class SenderInfo {

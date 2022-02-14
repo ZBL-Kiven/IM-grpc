@@ -3,6 +3,7 @@
 package com.zj.ccIm.core.bean
 
 import com.zj.database.entity.MessageInfoEntity
+import retrofit2.http.Field
 import java.io.Serializable
 
 

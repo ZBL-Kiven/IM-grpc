@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="GiftMarqueeView">
+        <attr name="gift_childCount" format="integer" />
+        <attr name="gift_min_disappearDuration" format="integer" />
+        <attr name="gift_disappearStep" format="integer" />
+        <attr name="gift_child" format="reference" />
+    </declare-styleable>
+
+    <style name="CircleImageStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
+
+</resources>

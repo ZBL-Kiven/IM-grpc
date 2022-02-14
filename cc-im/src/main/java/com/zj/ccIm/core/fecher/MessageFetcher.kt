@@ -81,6 +81,7 @@ internal object MessageFetcher {
                 ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
             }
             run with@{
+                /** filter self sending message, the same message successful update just use only once. */
                 IMHelper.getDb()?.sendMsgDao()?.findByCallId(msg?.clientMsgId)?.let {
                     if (it.key == key) return@with
                 }

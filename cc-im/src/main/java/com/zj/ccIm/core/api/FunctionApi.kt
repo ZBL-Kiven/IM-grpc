@@ -1,9 +1,7 @@
 package com.zj.ccIm.core.api
 
-import com.zj.ccIm.core.bean.DeleteSessionInfo
-import com.zj.ccIm.core.bean.FetchPrivateOwnerSessionBean
+import com.zj.ccIm.core.bean.*
 import com.zj.database.entity.SessionLastMsgInfo
-import com.zj.ccIm.core.bean.FetcherSessionBean
 import io.reactivex.Observable
 import org.json.JSONObject
 import retrofit2.http.*

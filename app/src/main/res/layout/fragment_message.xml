@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,6 +22,34 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </com.zj.views.list.refresh.layout.RefreshLayout>
+
+    <com.zj.imtest.ui.gift.v.GiftMarqueeView
+        android:id="@+id/im_frag_msg_gift_marquee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:visibility="gone"
+        app:gift_child="@layout/item_gift_marquee"
+        app:gift_childCount="3"
+        app:gift_disappearStep="300"
+        app:gift_min_disappearDuration="2000"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_gift_marquee" />
+
+    <com.zj.imtest.ui.gift.v.GiftShaderView
+        android:id="@+id/im_frag_msg_gift_shader"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/im_frag_msg_gift_send"
+        android:layout_width="30dp"
+        android:layout_height="23dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:background="@mipmap/ic_chat_sweet" />
+
 
     <!--    <com.zj.loading.BaseLoadingView-->
     <!--        android:id="@+id/im_reward_setting_loading"-->

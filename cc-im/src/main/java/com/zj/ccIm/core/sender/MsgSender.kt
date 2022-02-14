@@ -10,6 +10,7 @@ import com.zj.ccIm.core.IMChannelManager
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.database.entity.EmotionMessage
+import com.zj.database.entity.GiftMessage
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.sender.OnSendBefore
@@ -27,6 +28,17 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
             this.emotionId = packId
             this.url = path
         }
+        setRetryProp(sen)
+        send(sen)
+        return config.callId
+    }
+
+    fun senGift(groupId: Long, gift: GiftMessage): String {
+        val sen = SendMessageReqEn()
+        sen.groupId = groupId
+        sen.msgType = MsgType.GIFT.type
+        sen.clientMsgId = config.callId
+        sen.giftMessage = gift
         setRetryProp(sen)
         send(sen)
         return config.callId

@@ -146,7 +146,7 @@ enum class SystemMsgType(val type: String) {
 @Suppress("unused")
 enum class MsgType(val type: String) {
 
-    TEXT("text"), IMG("img"), AUDIO("audio"), CC_VIDEO("cc_video"), VIDEO("video"), QUESTION("question"), LIVE("live"), EMOTION("emotion");
+    TEXT("text"), IMG("img"), AUDIO("audio"), CC_VIDEO("cc_video"), VIDEO("video"), QUESTION("question"), LIVE("live"), EMOTION("emotion"), GIFT("gift");
 
     companion object {
 

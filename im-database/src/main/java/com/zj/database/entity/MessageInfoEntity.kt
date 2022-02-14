@@ -124,6 +124,11 @@ class MessageInfoEntity : BaseMessageInfo() {
     @TypeConverters(EmojiContentConverter::class) var emotionMessage: EmotionMessage? = null
 
     /**
+     * gift content
+     * */
+    @TypeConverters(GiftContentConverter::class) var giftMessage: GiftMessage? = null
+
+    /**
      * 0 正常， 1 撤回
      * */
     @Deprecated("not recommend use it anymore", replaceWith = ReplaceWith("replace with", "com.zj.database.entity.MessageInfoEntity.extContent")) var status: Int = 0

@@ -50,19 +50,11 @@ public interface SenderInfoOrBuilder extends
       getSenderPlatformBytes();
 
   /**
-   * <pre>
-   *男女
-   * </pre>
-   *
    * <code>string senderGender = 5;</code>
    * @return The senderGender.
    */
   java.lang.String getSenderGender();
   /**
-   * <pre>
-   *男女
-   * </pre>
-   *
    * <code>string senderGender = 5;</code>
    * @return The bytes for senderGender.
    */

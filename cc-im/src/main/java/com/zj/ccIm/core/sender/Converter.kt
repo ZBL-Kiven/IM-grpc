@@ -23,13 +23,6 @@ internal object Converter {
             this.senderName = CcIM.imConfig?.getUserName()
         }
         when (sen.msgType) {
-            MsgType.EMOTION.type -> {
-                msg.emotionMessage = EmotionMessage().apply {
-                    this.id = sen.emotionMessage?.id ?: 0
-                    this.emotionId = sen.emotionMessage?.emotionId ?: 0
-                    this.url = sen.emotionMessage?.url
-                }
-            }
             MsgType.TEXT.type -> {
                 msg.textContent = TextContent().apply {
                     this.text = sen.content
@@ -65,6 +58,12 @@ internal object Converter {
                         this.text = sen.content
                     }
                 }
+            }
+            MsgType.EMOTION.type -> {
+                msg.emotionMessage = sen.emotionMessage
+            }
+            MsgType.GIFT.type -> {
+                msg.giftMessage = sen.giftMessage
             }
         }
         if (sen.key.isNotEmpty()) IMHelper.withDb {

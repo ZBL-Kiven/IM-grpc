@@ -236,6 +236,19 @@ private static final long serialVersionUID = 0L;
 
             break;
           }
+          case 162: {
+            GiftMessage.Builder subBuilder = null;
+            if (giftMessage_ != null) {
+              subBuilder = giftMessage_.toBuilder();
+            }
+            giftMessage_ = input.readMessage(GiftMessage.parser(), extensionRegistry);
+            if (subBuilder != null) {
+              subBuilder.mergeFrom(giftMessage_);
+              giftMessage_ = subBuilder.buildPartial();
+            }
+
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -763,6 +776,32 @@ private static final long serialVersionUID = 0L;
     return getEmotionMessage();
   }
 
+  public static final int GIFTMESSAGE_FIELD_NUMBER = 20;
+  private GiftMessage giftMessage_;
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   * @return Whether the giftMessage field is set.
+   */
+  @java.lang.Override
+  public boolean hasGiftMessage() {
+    return giftMessage_ != null;
+  }
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   * @return The giftMessage.
+   */
+  @java.lang.Override
+  public GiftMessage getGiftMessage() {
+    return giftMessage_ == null ? GiftMessage.getDefaultInstance() : giftMessage_;
+  }
+  /**
+   * <code>.app.GiftMessage giftMessage = 20;</code>
+   */
+  @java.lang.Override
+  public GiftMessageOrBuilder getGiftMessageOrBuilder() {
+    return getGiftMessage();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -836,6 +875,9 @@ private static final long serialVersionUID = 0L;
         18);
     if (emotionMessage_ != null) {
       output.writeMessage(19, getEmotionMessage());
+    }
+    if (giftMessage_ != null) {
+      output.writeMessage(20, getGiftMessage());
     }
     unknownFields.writeTo(output);
   }
@@ -926,6 +968,10 @@ private static final long serialVersionUID = 0L;
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(19, getEmotionMessage());
     }
+    if (giftMessage_ != null) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(20, getGiftMessage());
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -1009,6 +1055,11 @@ private static final long serialVersionUID = 0L;
       if (!getEmotionMessage()
           .equals(other.getEmotionMessage())) return false;
     }
+    if (hasGiftMessage() != other.hasGiftMessage()) return false;
+    if (hasGiftMessage()) {
+      if (!getGiftMessage()
+          .equals(other.getGiftMessage())) return false;
+    }
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -1084,6 +1135,10 @@ private static final long serialVersionUID = 0L;
     if (hasEmotionMessage()) {
       hash = (37 * hash) + EMOTIONMESSAGE_FIELD_NUMBER;
       hash = (53 * hash) + getEmotionMessage().hashCode();
+    }
+    if (hasGiftMessage()) {
+      hash = (37 * hash) + GIFTMESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getGiftMessage().hashCode();
     }
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
@@ -1317,6 +1372,12 @@ private static final long serialVersionUID = 0L;
         emotionMessage_ = null;
         emotionMessageBuilder_ = null;
       }
+      if (giftMessageBuilder_ == null) {
+        giftMessage_ = null;
+      } else {
+        giftMessage_ = null;
+        giftMessageBuilder_ = null;
+      }
       return this;
     }
 
@@ -1403,6 +1464,11 @@ private static final long serialVersionUID = 0L;
         result.emotionMessage_ = emotionMessage_;
       } else {
         result.emotionMessage_ = emotionMessageBuilder_.build();
+      }
+      if (giftMessageBuilder_ == null) {
+        result.giftMessage_ = giftMessage_;
+      } else {
+        result.giftMessage_ = giftMessageBuilder_.build();
       }
       onBuilt();
       return result;
@@ -1509,6 +1575,9 @@ private static final long serialVersionUID = 0L;
           other.internalGetExtContent());
       if (other.hasEmotionMessage()) {
         mergeEmotionMessage(other.getEmotionMessage());
+      }
+      if (other.hasGiftMessage()) {
+        mergeGiftMessage(other.getGiftMessage());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -3164,6 +3233,122 @@ private static final long serialVersionUID = 0L;
         emotionMessage_ = null;
       }
       return emotionMessageBuilder_;
+    }
+
+    private GiftMessage giftMessage_;
+    private com.google.protobuf.SingleFieldBuilderV3<GiftMessage, GiftMessage.Builder, GiftMessageOrBuilder> giftMessageBuilder_;
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     * @return Whether the giftMessage field is set.
+     */
+    public boolean hasGiftMessage() {
+      return giftMessageBuilder_ != null || giftMessage_ != null;
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     * @return The giftMessage.
+     */
+    public GiftMessage getGiftMessage() {
+      if (giftMessageBuilder_ == null) {
+        return giftMessage_ == null ? GiftMessage.getDefaultInstance() : giftMessage_;
+      } else {
+        return giftMessageBuilder_.getMessage();
+      }
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public Builder setGiftMessage(GiftMessage value) {
+      if (giftMessageBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        giftMessage_ = value;
+        onChanged();
+      } else {
+        giftMessageBuilder_.setMessage(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public Builder setGiftMessage(
+        GiftMessage.Builder builderForValue) {
+      if (giftMessageBuilder_ == null) {
+        giftMessage_ = builderForValue.build();
+        onChanged();
+      } else {
+        giftMessageBuilder_.setMessage(builderForValue.build());
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public Builder mergeGiftMessage(GiftMessage value) {
+      if (giftMessageBuilder_ == null) {
+        if (giftMessage_ != null) {
+          giftMessage_ =
+            GiftMessage.newBuilder(giftMessage_).mergeFrom(value).buildPartial();
+        } else {
+          giftMessage_ = value;
+        }
+        onChanged();
+      } else {
+        giftMessageBuilder_.mergeFrom(value);
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public Builder clearGiftMessage() {
+      if (giftMessageBuilder_ == null) {
+        giftMessage_ = null;
+        onChanged();
+      } else {
+        giftMessage_ = null;
+        giftMessageBuilder_ = null;
+      }
+
+      return this;
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public GiftMessage.Builder getGiftMessageBuilder() {
+      
+      onChanged();
+      return getGiftMessageFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    public GiftMessageOrBuilder getGiftMessageOrBuilder() {
+      if (giftMessageBuilder_ != null) {
+        return giftMessageBuilder_.getMessageOrBuilder();
+      } else {
+        return giftMessage_ == null ?
+            GiftMessage.getDefaultInstance() : giftMessage_;
+      }
+    }
+    /**
+     * <code>.app.GiftMessage giftMessage = 20;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilderV3<GiftMessage, GiftMessage.Builder, GiftMessageOrBuilder>
+        getGiftMessageFieldBuilder() {
+      if (giftMessageBuilder_ == null) {
+        giftMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<GiftMessage, GiftMessage.Builder, GiftMessageOrBuilder>(
+                getGiftMessage(),
+                getParentForChildren(),
+                isClean());
+        giftMessage_ = null;
+      }
+      return giftMessageBuilder_;
     }
     @java.lang.Override
     public final Builder setUnknownFields(

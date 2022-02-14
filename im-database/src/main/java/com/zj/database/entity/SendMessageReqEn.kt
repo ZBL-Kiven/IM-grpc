@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.zj.database.converter.EmojiContentConverter
+import com.zj.database.converter.GiftContentConverter
 import com.zj.database.converter.MessageConverter
 
 @Entity(tableName = "sendingMsg")
@@ -78,6 +79,11 @@ class SendMessageReqEn {
      * emoji
      * */
     @TypeConverters(EmojiContentConverter::class) var emotionMessage: EmotionMessage? = null
+
+    /**
+     * gift
+     * */
+    @TypeConverters(GiftContentConverter::class) var giftMessage: GiftMessage? = null
 
     /*====================================================== 非参与上传字段 =============================================================*/
 

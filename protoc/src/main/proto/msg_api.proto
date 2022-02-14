@@ -43,6 +43,7 @@ message ImMessage{
   LiveContent         liveContent     = 17;
   map<string, string> extContent      = 18;
   EmotionMessage      emotionMessage  = 19;
+  GiftMessage         giftMessage     = 20;
 }
 
 message EmotionMessage{
@@ -50,6 +51,19 @@ message EmotionMessage{
   uint32 emotionId = 2;
   string icon      = 3;
   string url       = 4;
+}
+
+message GiftMessage{
+  uint32        giftId        = 1;
+  string        giftImage     = 2;
+  MultiLanguage multiLanguage = 3;
+  uint32        amount        = 4;
+  string        bundle        = 5;
+}
+
+message MultiLanguage{
+  string area = 1;
+  string name = 2;
 }
 
 message ImgContent{
@@ -114,7 +128,7 @@ message SenderInfo{
   string senderName     = 2;
   string senderAvatar   = 3;
   string senderPlatform = 4;
-  string senderGender   = 5; //男女
+  string senderGender   = 5;
 }
 
 message LeaveImGroupReq {

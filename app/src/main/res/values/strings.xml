@@ -12,5 +12,6 @@
     <string name="image">Image</string>
     <string name="voice">Voice</string>
     <string name="im_msg_type_video">make a video</string>
+    <string name="send_a_gift">Send a</string>
 
 </resources>

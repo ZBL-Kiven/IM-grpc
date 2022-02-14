@@ -29,6 +29,8 @@ abstract class BaseMessageFragment : BaseTabFragment() {
 
     open fun initMessageObservers(sessionKey: String) {}
 
+    open fun onMessage(msg: MessageInfoEntity) {}
+
     open fun getMessageFilter(data: MessageInfoEntity?, payload: String?): Boolean {
         return data?.channelKey == sessionKey
     }
@@ -97,6 +99,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
                     ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
                     else -> adapter?.removeIfEquals(d)
                 }
+                onMessage(d)
             }
             if (!list.isNullOrEmpty()) {
                 adapter?.change(list)

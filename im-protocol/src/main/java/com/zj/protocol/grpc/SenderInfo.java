@@ -241,10 +241,6 @@ private static final long serialVersionUID = 0L;
   public static final int SENDERGENDER_FIELD_NUMBER = 5;
   private volatile java.lang.Object senderGender_;
   /**
-   * <pre>
-   *男女
-   * </pre>
-   *
    * <code>string senderGender = 5;</code>
    * @return The senderGender.
    */
@@ -262,10 +258,6 @@ private static final long serialVersionUID = 0L;
     }
   }
   /**
-   * <pre>
-   *男女
-   * </pre>
-   *
    * <code>string senderGender = 5;</code>
    * @return The bytes for senderGender.
    */
@@ -916,10 +908,6 @@ private static final long serialVersionUID = 0L;
 
     private java.lang.Object senderGender_ = "";
     /**
-     * <pre>
-     *男女
-     * </pre>
-     *
      * <code>string senderGender = 5;</code>
      * @return The senderGender.
      */
@@ -936,10 +924,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *男女
-     * </pre>
-     *
      * <code>string senderGender = 5;</code>
      * @return The bytes for senderGender.
      */
@@ -957,10 +941,6 @@ private static final long serialVersionUID = 0L;
       }
     }
     /**
-     * <pre>
-     *男女
-     * </pre>
-     *
      * <code>string senderGender = 5;</code>
      * @param value The senderGender to set.
      * @return This builder for chaining.
@@ -976,10 +956,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *男女
-     * </pre>
-     *
      * <code>string senderGender = 5;</code>
      * @return This builder for chaining.
      */
@@ -990,10 +966,6 @@ private static final long serialVersionUID = 0L;
       return this;
     }
     /**
-     * <pre>
-     *男女
-     * </pre>
-     *
      * <code>string senderGender = 5;</code>
      * @param value The bytes for senderGender to set.
      * @return This builder for chaining.

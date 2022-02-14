@@ -41,5 +41,6 @@ dependencies {
     implementation project(':im-emotionbar')
     implementation 'com.alibaba:fastjson:1.2.72'
     implementation 'com.google.code.gson:gson:2.8.7'
+    implementation 'com.airbnb.android:lottie:3.6.1'
 
 }
