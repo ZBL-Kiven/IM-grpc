@@ -17,7 +17,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
 
     override fun getBubbleLayoutParams(d: ImMsgIn): LayoutParams {
         return LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            if (d.getMsgIsRecalled() || d.getMsgIsSensitive() || d.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE) {
+            if (d.getMsgIsRecalled() || d.getMsgIsSensitive() || d.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE||d.getUiTypeWithMessageType()==UiMsgType.MSG_TYPE_CC_GIFT) {
                 ivAvatar?.visibility = View.GONE
                 addRule(CENTER_IN_PARENT)
             } else if (d.getSenderId() == d.getSelfUserId()) {

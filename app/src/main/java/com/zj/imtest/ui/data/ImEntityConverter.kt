@@ -16,6 +16,7 @@ import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
 import com.zj.imtest.ui.data.bean.RevokeMsg
 import com.zj.imtest.ui.data.bean.RiskMsg
+import java.lang.Exception
 
 class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
@@ -332,7 +333,11 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getGiftName(): String? {
-        return info?.giftMessage?.getName("zh")
+        return try {
+            info?.giftMessage?.getName("CN")
+        } catch (e: Exception) {
+            "没礼物名字"
+        }
     }
 
     override fun getGiftAmount(): Int? {

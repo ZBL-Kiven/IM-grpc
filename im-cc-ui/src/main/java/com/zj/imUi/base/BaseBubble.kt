@@ -45,6 +45,7 @@ abstract class BaseBubble @JvmOverloads constructor(context: Context, attrs: Att
                 || curData?.invoke()?.getMsgIsRecalled() == true
                 || curData?.invoke()?.getMsgIsSensitive() == true
                 || curData?.invoke()?.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE
+                || curData?.invoke()?.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_CC_GIFT
         val maxWidth = if (isFull) {
             (resources.displayMetrics.widthPixels * 1)
         } else (resources.displayMetrics.widthPixels * 0.8).toInt()
