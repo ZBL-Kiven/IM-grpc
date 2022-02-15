@@ -53,7 +53,7 @@ class GiftMessage {
     var giftId: Int = 0
     var giftImage: String? = ""
     var amount: Int = 1
-    var multiLanguage: List<MultiLanguage>? = null
+    var multiLanguage: MutableList<MultiLanguage>? = null
     var bundle: String? = null
 
     fun getName(area: String): String? {
@@ -61,10 +61,7 @@ class GiftMessage {
     }
 }
 
-class MultiLanguage {
-    var area: String = ""
-    var name: String = ""
-}
+data class MultiLanguage(var area: String = "", var name: String = "")
 
 class SenderInfo {
     var senderId: Int = -1

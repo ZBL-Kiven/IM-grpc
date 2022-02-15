@@ -5,6 +5,7 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.database.entity.MultiLanguage
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imtest.R
 import com.zj.imtest.ui.base.BaseMessageFragment
@@ -29,7 +30,11 @@ class GroupFragment : BaseMessageFragment() {
         shaderView?.visibility = View.VISIBLE
         giftManager = GiftManager(marqueeView, shaderView)
         sendGift?.setOnClickListener {
-            IMHelper.Sender.senGift(getData().groupId, GiftInfo().toReqBean())
+            val gInfo = GiftInfo()
+            gInfo.id = 14
+            gInfo.multiLanguage = mutableListOf()
+            gInfo.multiLanguage?.add(MultiLanguage("zh", "Test"))
+            IMHelper.Sender.senGift(getData().groupId, gInfo.toReqBean())
         }
     }
 
@@ -45,7 +50,7 @@ class GroupFragment : BaseMessageFragment() {
                 this.multiLanguage = giftInfo?.multiLanguage
                 this.num = giftInfo?.amount ?: 1
             }
-            giftManager?.post(gi, true)
+            giftManager?.post(gi, false)
         }
     }
 

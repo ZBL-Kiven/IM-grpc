@@ -11,7 +11,7 @@ class GiftInfo : GiftShaderIn {
 
     var sort: Int = 0
 
-    var multiLanguage: List<MultiLanguage>? = null
+    var multiLanguage: MutableList<MultiLanguage>? = null
 
     var price: Int = 0
 
@@ -51,8 +51,7 @@ class GiftInfo : GiftShaderIn {
             this.giftId = getUniqueId()
             this.bundle = getSource()
             this.amount = num
-            this.multiLanguage = multiLanguage
-
+            this.multiLanguage = this@GiftInfo.multiLanguage
         }
     }
 
