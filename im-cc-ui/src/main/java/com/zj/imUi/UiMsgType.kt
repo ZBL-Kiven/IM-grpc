@@ -9,6 +9,7 @@ object UiMsgType {
     const val MSG_TYPE_CC_VIDEO = "cc_video"
     const val MSG_TYPE_CC_LIVE = "live"
     const val MSG_TYPE_CC_EMOTION = "emotion"
+    const val MSG_TYPE_CC_GIFT = "gift"
     const val MSG_NONE_MSG_TYPE = "NONE_MSG_TYPE"
 
     const val MSG_TYPE_RECALLED = "recall"

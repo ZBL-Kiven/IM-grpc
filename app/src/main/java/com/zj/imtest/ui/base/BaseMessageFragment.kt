@@ -3,6 +3,7 @@ package com.zj.imtest.ui.base
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
@@ -97,6 +98,14 @@ abstract class BaseMessageFragment : BaseTabFragment() {
                     ClientHubImpl.PAYLOAD_ADD, ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                     ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
                     ClientHubImpl.PAYLOAD_DELETE -> adapter?.removeIfEquals(d)
+                    ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS -> {
+                        Toast.makeText(context,"你不对劲！",Toast.LENGTH_SHORT).show()
+                        adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
+                    }
+                    ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER -> {
+                        Toast.makeText(context,"重复发言！",Toast.LENGTH_SHORT).show()
+                        adapter?.update(d, BaseImItem.NOTIFY_CHANGE_SENDING_STATE)
+                    }
                     else -> adapter?.removeIfEquals(d)
                 }
                 onMessage(d)

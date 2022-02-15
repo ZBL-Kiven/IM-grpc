@@ -129,6 +129,11 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
                 onDestroyed()
                 bubbleView = null
             }
+            val curGift = lastDataType == UiMsgType.MSG_TYPE_CC_GIFT
+            if (curGift != (dataType == UiMsgType.MSG_TYPE_CC_GIFT)) {
+                onDestroyed()
+                bubbleView = null
+            }
         }
         val curNoneType = lastDataType != UiMsgType.MSG_NONE_MSG_TYPE
         if (curNoneType != (dataType == UiMsgType.MSG_NONE_MSG_TYPE)) {
@@ -142,7 +147,14 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
         bubbleView?.setBubbleRenderer(getBubbleRenderer(data))
         addViewToSelf(bubbleView, getBubbleLayoutParams(data))
         bubbleView?.onSetData({ data }, chatType as Int?)
-        val isNormalMsg = !data.getMsgIsRecalled() && !data.getMsgIsReject() && !data.getMsgIsSensitive() && dataType != UiMsgType.MSG_TYPE_CC_LIVE && dataType != UiMsgType.MSG_TYPE_CC_VIDEO && dataType != UiMsgType.MSG_TYPE_QUESTION && dataType != UiMsgType.MSG_TYPE_CC_EMOTION
+        val isNormalMsg = !data.getMsgIsRecalled()
+                && !data.getMsgIsReject()
+                && !data.getMsgIsSensitive()
+                && dataType != UiMsgType.MSG_TYPE_CC_LIVE
+                && dataType != UiMsgType.MSG_TYPE_CC_VIDEO
+                && dataType != UiMsgType.MSG_TYPE_QUESTION
+                && dataType != UiMsgType.MSG_TYPE_CC_EMOTION
+                && dataType != UiMsgType.MSG_TYPE_CC_GIFT
         bubbleView?.setOnLongClickListener {
             if (isNormalMsg && chatType == UiMsgType.GROUP_CHAT) {
                 val popFlowWindow: BasePopFlowWindow<ImMsgIn> = BasePopFlowWindow()

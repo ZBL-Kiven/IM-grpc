@@ -2,11 +2,14 @@ package com.zj.imtest.ui.data
 
 import android.content.Context
 import android.util.Log
+import com.alibaba.fastjson.JSON
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.interfaces.ImMsgIn
 import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.zj.ccIm.core.*
+import com.zj.database.entity.GiftMessage
 import com.zj.im.chat.modle.RouteInfo
 import com.zj.imUi.UiMsgType
 import com.zj.imtest.BaseApp
@@ -54,7 +57,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getImgContentUrl(): String? {
-        return "https://obetomo.com/wp/wp-content/uploads/2018/07/nk_ice.gif"
         return info?.imgContent?.url
     }
 
@@ -127,7 +129,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getQuestionStatus(): Int {
-        return info?.questionContent?.questionStatus ?: 0
+        return info?.questionContent?.questionStatus ?: -2
     }
 
     override fun getQuestionTextContent(): String? {
@@ -322,11 +324,23 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getRecallContent(context: Context): String {
-        return "null"
+        return "撤回内容"
     }
 
     override fun getRefuseContent(context: Context): String {
         return "拒绝内容"
+    }
+
+    override fun getGiftName(): String? {
+        return info?.giftMessage?.getName("zh")
+    }
+
+    override fun getGiftAmount(): Int? {
+        return info?.giftMessage?.amount
+    }
+
+    override fun getGroupName(): String? {
+        return "群名称"
     }
 
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/
@@ -405,7 +419,8 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
                     MsgType.IMG.type -> UiMsgType.MSG_TYPE_IMG
                     MsgType.TEXT.type -> UiMsgType.MSG_TYPE_TEXT
                     MsgType.AUDIO.type -> UiMsgType.MSG_TYPE_AUDIO
-                    MsgType.EMOTION.type->UiMsgType.MSG_TYPE_CC_EMOTION
+                    MsgType.EMOTION.type -> UiMsgType.MSG_TYPE_CC_EMOTION
+                    MsgType.GIFT.type -> UiMsgType.MSG_TYPE_CC_GIFT
                     else -> UiMsgType.MSG_NONE_MSG_TYPE
                 }
             }
@@ -414,7 +429,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
                     SystemMsgType.RECALLED.type -> UiMsgType.MSG_TYPE_RECALLED
                     SystemMsgType.REFUSED.type -> UiMsgType.MSG_TYPE_SYS_REFUSE
                     SystemMsgType.SENSITIVE.type -> UiMsgType.MSG_TYPE_SENSITIVE
-                    else ->UiMsgType.MSG_NONE_MSG_TYPE
+                    else -> UiMsgType.MSG_NONE_MSG_TYPE
                 }
             }
             else -> UiMsgType.MSG_NONE_MSG_TYPE

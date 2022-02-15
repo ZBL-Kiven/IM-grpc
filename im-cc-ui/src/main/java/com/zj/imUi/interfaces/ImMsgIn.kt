@@ -121,8 +121,9 @@ interface ImMsgIn {
 
     fun getRefuseContent(context: Context): String?
 
-
-
+    fun getGiftName():String?
+    fun getGiftAmount():Int?
+    fun getGroupName():String?
     /** ========================================= app interface ======================================== */
 
 

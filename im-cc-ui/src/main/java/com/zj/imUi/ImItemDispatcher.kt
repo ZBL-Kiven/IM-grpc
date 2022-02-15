@@ -16,6 +16,7 @@ object ImItemDispatcher {
             UiMsgType.MSG_TYPE_SENSITIVE -> IMItemSensitiveTextView(context)
             UiMsgType.MSG_TYPE_SYS_REFUSE -> IMItemSystemRefuseTextView(context)
             UiMsgType.MSG_TYPE_CC_EMOTION->IMBubbleContentItem(context)
+            UiMsgType.MSG_TYPE_CC_GIFT->IMItemGiftTextView(context)
             else -> IMBubbleNotAllowedTypeItem(context)
         }
     }

@@ -69,6 +69,7 @@ class ImMsgView(context: Context) : BaseImItem<ImMsgIn>(context) {
     override fun getBubbleRenderer(data: ImMsgIn): BaseBubbleRenderer? {
         val dataType = data.getUiTypeWithMessageType()
         if (dataType == UiMsgType.MSG_TYPE_CC_EMOTION) return null
+        if (dataType == UiMsgType.MSG_TYPE_CC_GIFT) return null
         if (data.getMsgIsRecalled() || data.getMsgIsSensitive() || data.getUiTypeWithMessageType() == UiMsgType.MSG_TYPE_SYS_REFUSE) return null
         if (data.getSenderId() == data.getSelfUserId() && dataType == UiMsgType.MSG_TYPE_IMG && data.getReplyMsgClientMsgId() == null) return null
         if (dataType == UiMsgType.MSG_TYPE_AUDIO && data.getSenderId() == data.getSelfUserId() && data.getReplyMsgClientMsgId() == null) return null

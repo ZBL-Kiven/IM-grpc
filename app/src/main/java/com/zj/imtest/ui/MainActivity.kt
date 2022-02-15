@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
@@ -19,15 +18,10 @@ import com.zj.cf.managers.TabFragmentManager
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SessionInfoEntity
 import com.zj.emotionbar.adapt2cc.CCEmojiLayout
-import com.zj.emotionbar.adapt2cc.func.AppBean
-import com.zj.emotionbar.adapt2cc.func.FuncGridView
-import com.zj.emotionbar.aemoj.DefEmoticons
 import com.zj.emotionbar.data.Emoticon
 import com.zj.emotionbar.data.EmoticonPack
 import com.zj.emotionbar.epack.emoticon.EmoticonEntityUtils
-import com.zj.emotionbar.utils.getResourceUri
 import com.zj.im.chat.enums.ConnectionState
-import com.zj.im.chat.modle.RouteInfo
 import com.zj.imtest.BaseApp
 import com.zj.imtest.R
 import com.zj.imtest.ui.base.BaseMessageFragment
