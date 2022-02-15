@@ -2,21 +2,17 @@ package com.zj.imtest.ui.data
 
 import android.content.Context
 import android.util.Log
-import com.alibaba.fastjson.JSON
+import com.google.gson.Gson
+import com.zj.ccIm.core.*
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
-import com.zj.imUi.interfaces.ImMsgIn
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.zj.ccIm.core.*
-import com.zj.database.entity.GiftMessage
 import com.zj.im.chat.modle.RouteInfo
 import com.zj.imUi.UiMsgType
+import com.zj.imUi.interfaces.ImMsgIn
 import com.zj.imtest.BaseApp
 import com.zj.imtest.IMConfig.Companion.ROUTE_CALL_ID_REPLY_MESSAGE
 import com.zj.imtest.ui.data.bean.RevokeMsg
 import com.zj.imtest.ui.data.bean.RiskMsg
-import java.lang.Exception
 
 class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
 
@@ -31,7 +27,6 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     override fun getMsgId(): String {
         return info?.clientMsgId ?: ""
     }
-
 
     override fun getSendState(): Int {
         return info?.sendingState ?: SendMsgState.NONE.type
@@ -332,12 +327,10 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
         return "拒绝内容"
     }
 
-    override fun getGiftName(): String? {
-        return try {
-            info?.giftMessage?.getName("CN")
-        } catch (e: Exception) {
-            "没礼物名字"
-        }
+    override fun getGiftName(): String {
+        return kotlin.runCatching {
+            info?.giftMessage?.getName("CN") ?: info?.giftMessage?.getName("zh")
+        }.getOrNull() ?: "Undefine"
     }
 
     override fun getGiftAmount(): Int? {
@@ -345,7 +338,7 @@ class ImEntityConverter(private val info: MessageInfoEntity?) : ImMsgIn {
     }
 
     override fun getGroupName(): String? {
-        return "群名称"
+        return info?.giftMessage?.receiveUserName
     }
 
     /** ==================================================== 主动数据接口 ⬇️ ======================================================*/

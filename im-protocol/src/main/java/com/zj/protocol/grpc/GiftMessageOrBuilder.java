@@ -57,4 +57,22 @@ public interface GiftMessageOrBuilder extends
    */
   com.google.protobuf.ByteString
       getBundleBytes();
+
+  /**
+   * <code>string receiveUserName = 6;</code>
+   * @return The receiveUserName.
+   */
+  java.lang.String getReceiveUserName();
+  /**
+   * <code>string receiveUserName = 6;</code>
+   * @return The bytes for receiveUserName.
+   */
+  com.google.protobuf.ByteString
+      getReceiveUserNameBytes();
+
+  /**
+   * <code>uint32 receiveUserId = 7;</code>
+   * @return The receiveUserId.
+   */
+  int getReceiveUserId();
 }

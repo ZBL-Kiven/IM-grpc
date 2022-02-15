@@ -1,14 +1,12 @@
 package com.zj.imtest.ui.data
 
-import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
-import com.alibaba.fastjson.JSON
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.imUi.UiMsgType
 import com.zj.imUi.base.BaseImItem
 import com.zj.imUi.list.BaseImMsgAdapter
 import com.zj.imUi.ui.ImMsgView
-import org.json.JSONArray
+import com.zj.views.list.adapters.BaseAdapter.ViewBuilder
 
 
 class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<MessageInfoEntity>(recyclerView, ViewBuilder { _, _, _ -> ImMsgView(recyclerView.context) }) {
@@ -41,7 +39,6 @@ class MsgAdapter(private val recyclerView: RecyclerView) : BaseImMsgAdapter<Mess
         (holder?.itemView as? ImMsgView)?.let {
             if (payloads.isNullOrEmpty()) {
                 it.setData(m, UiMsgType.GROUP_CHAT)
-                Log.e("消息",JSON.toJSONString(module))
                 if (module != null) {
                     onChangeTimeline(module)
                 }

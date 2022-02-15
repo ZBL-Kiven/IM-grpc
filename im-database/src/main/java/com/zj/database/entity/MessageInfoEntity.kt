@@ -121,12 +121,12 @@ class MessageInfoEntity : BaseMessageInfo() {
     /**
      * emoji content
      * */
-    @TypeConverters(EmojiContentConverter::class) var emotionMessage: EmotionMessage? = null
+    @TypeConverters(EmojiContentConverter::class) override var emotionMessage: EmotionMessage? = null
 
     /**
      * gift content
      * */
-    @TypeConverters(GiftContentConverter::class) var giftMessage: GiftMessage? = null
+    @TypeConverters(GiftContentConverter::class) override var giftMessage: GiftMessage? = null
 
     /**
      * 0 正常， 1 撤回

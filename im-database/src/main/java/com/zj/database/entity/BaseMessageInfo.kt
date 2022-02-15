@@ -13,6 +13,9 @@ abstract class BaseMessageInfo {
     abstract var replyMsg: MessageInfoEntity?
     abstract var extContent: Map<String, String>?
     abstract var sendingState: Int
+    abstract var emotionMessage: EmotionMessage?
+    abstract var giftMessage: GiftMessage?
+
 
     @Suppress("unused")
     fun <T : BaseMessageInfo?> copyTo(other: T?): T? {
@@ -28,6 +31,8 @@ abstract class BaseMessageInfo {
         other.replyMsg = replyMsg
         other.extContent = extContent
         other.sendingState = sendingState
+        other.emotionMessage = emotionMessage
+        other.giftMessage = giftMessage
         return other
     }
 }

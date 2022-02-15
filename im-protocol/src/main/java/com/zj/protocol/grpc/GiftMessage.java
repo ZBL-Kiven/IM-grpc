@@ -18,6 +18,7 @@ private static final long serialVersionUID = 0L;
   private GiftMessage() {
     giftImage_ = "";
     bundle_ = "";
+    receiveUserName_ = "";
   }
 
   @java.lang.Override
@@ -83,6 +84,17 @@ private static final long serialVersionUID = 0L;
             java.lang.String s = input.readStringRequireUtf8();
 
             bundle_ = s;
+            break;
+          }
+          case 50: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            receiveUserName_ = s;
+            break;
+          }
+          case 56: {
+
+            receiveUserId_ = input.readUInt32();
             break;
           }
           default: {
@@ -241,6 +253,55 @@ private static final long serialVersionUID = 0L;
     }
   }
 
+  public static final int RECEIVEUSERNAME_FIELD_NUMBER = 6;
+  private volatile java.lang.Object receiveUserName_;
+  /**
+   * <code>string receiveUserName = 6;</code>
+   * @return The receiveUserName.
+   */
+  @java.lang.Override
+  public java.lang.String getReceiveUserName() {
+    java.lang.Object ref = receiveUserName_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      receiveUserName_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string receiveUserName = 6;</code>
+   * @return The bytes for receiveUserName.
+   */
+  @java.lang.Override
+  public com.google.protobuf.ByteString
+      getReceiveUserNameBytes() {
+    java.lang.Object ref = receiveUserName_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      receiveUserName_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
+  public static final int RECEIVEUSERID_FIELD_NUMBER = 7;
+  private int receiveUserId_;
+  /**
+   * <code>uint32 receiveUserId = 7;</code>
+   * @return The receiveUserId.
+   */
+  @java.lang.Override
+  public int getReceiveUserId() {
+    return receiveUserId_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -270,6 +331,12 @@ private static final long serialVersionUID = 0L;
     if (!getBundleBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 5, bundle_);
     }
+    if (!getReceiveUserNameBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 6, receiveUserName_);
+    }
+    if (receiveUserId_ != 0) {
+      output.writeUInt32(7, receiveUserId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -296,6 +363,13 @@ private static final long serialVersionUID = 0L;
     }
     if (!getBundleBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, bundle_);
+    }
+    if (!getReceiveUserNameBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, receiveUserName_);
+    }
+    if (receiveUserId_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(7, receiveUserId_);
     }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
@@ -325,6 +399,10 @@ private static final long serialVersionUID = 0L;
         != other.getAmount()) return false;
     if (!getBundle()
         .equals(other.getBundle())) return false;
+    if (!getReceiveUserName()
+        .equals(other.getReceiveUserName())) return false;
+    if (getReceiveUserId()
+        != other.getReceiveUserId()) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -348,6 +426,10 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getAmount();
     hash = (37 * hash) + BUNDLE_FIELD_NUMBER;
     hash = (53 * hash) + getBundle().hashCode();
+    hash = (37 * hash) + RECEIVEUSERNAME_FIELD_NUMBER;
+    hash = (53 * hash) + getReceiveUserName().hashCode();
+    hash = (37 * hash) + RECEIVEUSERID_FIELD_NUMBER;
+    hash = (53 * hash) + getReceiveUserId();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -495,6 +577,10 @@ private static final long serialVersionUID = 0L;
 
       bundle_ = "";
 
+      receiveUserName_ = "";
+
+      receiveUserId_ = 0;
+
       return this;
     }
 
@@ -530,6 +616,8 @@ private static final long serialVersionUID = 0L;
       }
       result.amount_ = amount_;
       result.bundle_ = bundle_;
+      result.receiveUserName_ = receiveUserName_;
+      result.receiveUserId_ = receiveUserId_;
       onBuilt();
       return result;
     }
@@ -594,6 +682,13 @@ private static final long serialVersionUID = 0L;
       if (!other.getBundle().isEmpty()) {
         bundle_ = other.bundle_;
         onChanged();
+      }
+      if (!other.getReceiveUserName().isEmpty()) {
+        receiveUserName_ = other.receiveUserName_;
+        onChanged();
+      }
+      if (other.getReceiveUserId() != 0) {
+        setReceiveUserId(other.getReceiveUserId());
       }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
@@ -950,6 +1045,113 @@ private static final long serialVersionUID = 0L;
   checkByteStringIsUtf8(value);
       
       bundle_ = value;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object receiveUserName_ = "";
+    /**
+     * <code>string receiveUserName = 6;</code>
+     * @return The receiveUserName.
+     */
+    public java.lang.String getReceiveUserName() {
+      java.lang.Object ref = receiveUserName_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        receiveUserName_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>string receiveUserName = 6;</code>
+     * @return The bytes for receiveUserName.
+     */
+    public com.google.protobuf.ByteString
+        getReceiveUserNameBytes() {
+      java.lang.Object ref = receiveUserName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        receiveUserName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string receiveUserName = 6;</code>
+     * @param value The receiveUserName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReceiveUserName(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      receiveUserName_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string receiveUserName = 6;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearReceiveUserName() {
+      
+      receiveUserName_ = getDefaultInstance().getReceiveUserName();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string receiveUserName = 6;</code>
+     * @param value The bytes for receiveUserName to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReceiveUserNameBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      receiveUserName_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int receiveUserId_ ;
+    /**
+     * <code>uint32 receiveUserId = 7;</code>
+     * @return The receiveUserId.
+     */
+    @java.lang.Override
+    public int getReceiveUserId() {
+      return receiveUserId_;
+    }
+    /**
+     * <code>uint32 receiveUserId = 7;</code>
+     * @param value The receiveUserId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setReceiveUserId(int value) {
+      
+      receiveUserId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 receiveUserId = 7;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearReceiveUserId() {
+      
+      receiveUserId_ = 0;
       onChanged();
       return this;
     }

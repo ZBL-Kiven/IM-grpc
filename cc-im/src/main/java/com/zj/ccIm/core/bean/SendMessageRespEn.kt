@@ -1,6 +1,8 @@
 package com.zj.ccIm.core.bean
 
 import com.zj.database.entity.BaseMessageInfo
+import com.zj.database.entity.EmotionMessage
+import com.zj.database.entity.GiftMessage
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.im.chat.enums.SendMsgState
 
@@ -27,6 +29,10 @@ class SendMessageRespEn : BaseMessageInfo() {
     override var extContent: Map<String, String>? = null
 
     override var sendingState: Int = SendMsgState.SUCCESS.type
+
+    override var emotionMessage: EmotionMessage? = null
+
+    override var giftMessage: GiftMessage? = null
 
     /**
      * true 黑名单

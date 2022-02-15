@@ -55,6 +55,8 @@ class GiftMessage {
     var amount: Int = 1
     var multiLanguage: MutableList<MultiLanguage>? = null
     var bundle: String? = null
+    var receiveUserName: String = ""
+    var receiveUserId = 0
 
     fun getName(area: String): String? {
         return multiLanguage?.first { it.area == area }?.name

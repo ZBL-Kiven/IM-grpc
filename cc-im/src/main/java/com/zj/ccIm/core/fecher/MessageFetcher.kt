@@ -1,6 +1,5 @@
 package com.zj.ccIm.core.fecher
 
-import com.google.gson.Gson
 import com.zj.api.base.BaseRetrofit
 import com.zj.ccIm.MainLooper
 import com.zj.ccIm.core.*
@@ -108,7 +107,7 @@ internal object MessageFetcher {
                 info.systemMsgType = SystemMsgType.RECALLED.type
             }
             if (it.containsKey(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)) {
-                val str = info.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT)
+                val str = info.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT) ?: ""
                 try {
                     val strJson = JSONObject(str)
                     if (strJson.has("other")) {
@@ -131,7 +130,4 @@ internal object MessageFetcher {
         }
         return lst
     }
-
-
-    data class RiskMsg(val other: Boolean?, val riskId: Int?, val multilingual: Map<String, String>?) {}
 }

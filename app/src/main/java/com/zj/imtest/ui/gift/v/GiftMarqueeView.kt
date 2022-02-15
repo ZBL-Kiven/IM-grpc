@@ -101,6 +101,7 @@ class GiftMarqueeView<T : GiftInfoIn> @JvmOverloads constructor(context: Context
                     giftQueue.poll()?.let { d ->
                         curData = d
                         idleState = false
+                        it.alpha = 0.0f
                         idleTime = checkStep + max(curData?.duration ?: 0, minDisappearDuration)
                     }
                 } else if (idleTime <= 0) {
@@ -119,12 +120,11 @@ class GiftMarqueeView<T : GiftInfoIn> @JvmOverloads constructor(context: Context
                     inStanding = true
                     inflateGiftData(it, curData)
                     it.clearAnimation()
-                    it.alpha = 1.0f
-                    val width = it.width.toFloat()
-                    it.translationX = -width
                     it.post {
+                        val width = it.width.toFloat()
                         it.translationX = -width
-                        it.animate().translationX(width).setDuration(checkStep.toLong()).setListener(this).start()
+                        it.alpha = 1.0f
+                        it.animate().translationX(0f).setDuration(checkStep.toLong()).setListener(this).start()
                     }
                 }
                 if (!inStarting && !inEnding) {
