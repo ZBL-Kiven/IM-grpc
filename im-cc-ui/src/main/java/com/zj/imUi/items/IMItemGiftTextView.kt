@@ -50,9 +50,6 @@ class IMItemGiftTextView @JvmOverloads constructor(context: Context, attrs: Attr
             addView(contentLayout)
         }
         val giftContent: String? = getGift(data)
-        if (giftContent.isNullOrEmpty()){
-            onDestroy()
-        }
         tvContent.text = giftContent
     }
 
