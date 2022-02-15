@@ -21,7 +21,7 @@ import com.zj.imtest.ui.gift.v.GiftShaderView
 import com.zj.timer.TimerManager
 
 
-open class GiftManager(var marqueeView: GiftMarqueeView<GiftInfo>? = null, var shaderView: GiftShaderView<GiftInfo>? = null) {
+open class GiftManager(private var marqueeView: GiftMarqueeView<GiftInfo>? = null, private var shaderView: GiftShaderView<GiftInfo>? = null) {
 
     open val showGiftMarquee: Boolean = true
     open val showGiftShader: Boolean = true

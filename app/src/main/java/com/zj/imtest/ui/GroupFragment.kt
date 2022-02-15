@@ -39,7 +39,7 @@ class GroupFragment : BaseMessageFragment() {
     }
 
     override fun onMessage(msg: MessageInfoEntity) {
-        if (msg.msgType == MsgType.GIFT.type && msg.sendingState == SendMsgState.SUCCESS.type || msg.sendingState == SendMsgState.NONE.type) {
+        if (msg.msgType == MsgType.GIFT.type && (msg.sendingState == SendMsgState.SUCCESS.type || msg.sendingState == SendMsgState.NONE.type)) {
             val giftInfo = msg.giftMessage
             val gi = GiftInfo().apply {
                 this.avatar = msg.sender?.senderAvatar
