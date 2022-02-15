@@ -53,4 +53,8 @@
     <string name="im_ui_saturday" translatable="false">saturday</string>
     <string name="im_ui_yesterday" translatable="false">yesterday</string>
 
+    <string name="im_ui_gift_other_to_owner">%s sent %s × %s to %s</string>
+    <string name="im_ui_gift_me_to_owner">You sent %s × %s to %s</string>
+    <string name="im_ui_gift_owner">You received %s × %s from %s</string>
+
 </resources>

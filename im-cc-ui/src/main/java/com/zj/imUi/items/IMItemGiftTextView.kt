@@ -58,10 +58,12 @@ class IMItemGiftTextView @JvmOverloads constructor(context: Context, attrs: Attr
 
     private fun getGift(data: ImMsgIn): String? {
         val isOwner = data.getSelfUserId() == data.getOwnerId()
-        return if (!isOwner && data.getSenderId() != data.getSelfUserId()) data.getSenderName() + "赠送" + data.getGiftName() + "x" + data.getGiftAmount() + "给" + data.getGroupName() //送礼人为别人给大V
-        else if (!isOwner && data.getSenderId() == data.getSelfUserId()) {       //送礼人为自己给大V
-            "你赠送" + data.getGiftName() + "x" + data.getGiftAmount() + "给" + data.getGroupName()
-        } else if (isOwner) "你收到了" + data.getSenderName() + "送的" + data.getGiftName() + "x" + data.getGiftAmount() //接收礼物
+        return if (!isOwner && data.getSenderId() != data.getSelfUserId())
+            String.format(resources.getString(R.string.im_ui_gift_other_to_owner,data.getSenderName(),data.getGiftName(),data.getGiftAmount().toString(),data.getGroupName()))
+        else if (!isOwner && data.getSenderId() == data.getSelfUserId()) {
+            String.format(resources.getString(R.string.im_ui_gift_me_to_owner,data.getGiftName(),data.getGiftAmount().toString(),data.getGroupName()))
+        } else if (isOwner)
+            String.format(resources.getString(R.string.im_ui_gift_owner,data.getGiftName(),data.getGiftAmount().toString(),data.getSenderName()))
         else null
     }
 
