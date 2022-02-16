@@ -8,11 +8,13 @@ data class ChangeBalanceRespEn(val type: String? = null, val method: String? = n
         val value = if (method == "add") num else if (method == "sub") -num else throw IllegalStateException("ChangeBalanceRespEn must typed a method with 'add' or 'sub' only!")
         var diamond = 0
         var sparks = 0
+        var coins = 0
         when (type) {
             "diamond" -> diamond = value
             "spark" -> sparks = value
+            "coin" -> coins = value
             else -> throw IllegalStateException("ChangeBalanceRespEn must be one on the type with 'diamond' and 'spark' yet")
         }
-        return AssetsChanged(sparks, diamond)
+        return AssetsChanged(sparks, diamond, coins)
     }
 }

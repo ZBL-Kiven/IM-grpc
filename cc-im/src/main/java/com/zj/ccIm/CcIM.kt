@@ -1,5 +1,7 @@
 package com.zj.ccIm
 
+import android.os.Handler
+import android.os.Looper
 import com.zj.ccIm.core.Constance
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.ImConfigIn
@@ -92,3 +94,5 @@ internal object CcIM : IMInterface<Any?>() {
         super.shutdown(case)
     }
 }
+
+internal val MainLooper = Handler(Looper.getMainLooper())

@@ -7,7 +7,7 @@ import retrofit2.http.Field
 import java.io.Serializable
 
 
-data class AssetsChanged(val spark: Int?, val diamondNum: Int?)
+data class AssetsChanged(val spark: Int?, val diamondNum: Int?, val coinsNum: Int?)
 
 data class DeleteSessionInfo(val groupId: Long, val targetUserId: Int?, val status: Int)
 

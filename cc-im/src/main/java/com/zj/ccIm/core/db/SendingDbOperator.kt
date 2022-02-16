@@ -18,8 +18,10 @@ internal object SendingDbOperator {
     fun onDealSendMsgReqInfo(d: SendMessageReqEn?, sendingState: SendMsgState?, callId: String?): Pair<MessageInfoEntity?, String?>? {
         return if (d != null) {
             val sst = sendingState ?: SendMsgState.SENDING
-            if (sst == SendMsgState.SENDING) d.diamondNum?.let {
-                AssetsChangedOperator.onAssetsChanged(callId, -it, null)
+            if (sst == SendMsgState.SENDING) {
+                val diamond = d.diamondNum ?: 0
+                val coins = d.coinsNum ?: 0
+                AssetsChangedOperator.onAssetsChanged(callId, -diamond, -coins, null)
             }
             onDealMsgSendInfo(d, sst, callId)
         } else null
@@ -27,14 +29,12 @@ internal object SendingDbOperator {
 
     fun onDealSendMsgRespInfo(d: SendMessageRespEn?, sendingState: SendMsgState?, callId: String?): Pair<MessageInfoEntity?, String?>? {
         return if (d != null) {
-            run assets@{
-                if (sendingState != SendMsgState.SUCCESS && sendingState != SendMsgState.NONE) {
-                    val diamond = d.diamondNum ?: return@assets
-                    AssetsChangedOperator.onAssetsChanged(callId, diamond, null)
-                } else {
-                    val sparks = d.sparkNum ?: return@assets
-                    AssetsChangedOperator.onAssetsChanged(callId, null, sparks)
-                }
+            if (sendingState != SendMsgState.SUCCESS && sendingState != SendMsgState.NONE) {
+                val diamond = d.diamondNum ?: 0
+                val coins = d.coinsNum ?: 0
+                AssetsChangedOperator.onAssetsChanged(callId, diamond, coins, null)
+            } else {
+                AssetsChangedOperator.onAssetsChanged(callId, null, null, d.sparkNum)
             }
             onDealMsgSentInfo(d, sendingState, callId)
         } else null

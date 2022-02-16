@@ -62,6 +62,11 @@ class SendMessageReqEn {
     var public = true
 
     /**
+     * 金币数
+     * */
+    var coinsNum: Int? = null
+
+    /**
      * 钻石数
      */
     var diamondNum: Int? = null

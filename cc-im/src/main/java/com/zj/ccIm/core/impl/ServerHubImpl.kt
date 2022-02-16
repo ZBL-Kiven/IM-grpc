@@ -233,6 +233,7 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
             this.msgStatus = status
             this.groupId = d.groupId
             this.diamondNum = d.diamondNum
+            this.coinsNum = d.coinsNum
             this.published = d.public
             this.channelKey = d.key
         } else {

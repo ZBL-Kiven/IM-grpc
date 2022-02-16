@@ -4,6 +4,7 @@ import android.view.View
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
+import com.zj.ccIm.core.sender.GiftUnitType
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.MultiLanguage
 import com.zj.im.chat.enums.SendMsgState
@@ -30,11 +31,7 @@ class GroupFragment : BaseMessageFragment() {
         shaderView?.visibility = View.VISIBLE
         giftManager = GiftManager(marqueeView, shaderView)
         sendGift?.setOnClickListener {
-            val gInfo = GiftInfo()
-            gInfo.id = 14
-            gInfo.multiLanguage = mutableListOf()
-            gInfo.multiLanguage?.add(MultiLanguage("zh", "Test"))
-            IMHelper.Sender.senGift(getData().groupId, gInfo.toReqBean())
+            IMHelper.Sender.senGift(getData().groupId, 14, 1, GiftUnitType.DIAMOND, 1)
         }
     }
 

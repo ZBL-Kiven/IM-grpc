@@ -50,6 +50,11 @@ class SendMessageRespEn : BaseMessageInfo() {
     var sendTime: Long = 0
 
     /**
+     * 金币 变化
+     * */
+    var coinsNum: Int? = null
+
+    /**
      * 钻石 变化
      */
     var diamondNum: Int? = null

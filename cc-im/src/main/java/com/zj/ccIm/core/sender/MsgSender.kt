@@ -33,12 +33,19 @@ open class MsgSender internal constructor(private val config: SendMsgConfig) {
         return config.callId
     }
 
-    fun senGift(groupId: Long, gift: GiftMessage): String {
+    fun senGift(groupId: Long, giftId: Int, price: Int, priceType: GiftUnitType, giftAmount: Int = 1): String {
         val sen = SendMessageReqEn()
         sen.groupId = groupId
         sen.msgType = MsgType.GIFT.type
         sen.clientMsgId = config.callId
-        sen.giftMessage = gift
+        when (priceType) {
+            GiftUnitType.COINS -> sen.coinsNum = price
+            GiftUnitType.DIAMOND -> sen.diamondNum = price
+        }
+        sen.giftMessage = GiftMessage().apply {
+            this.giftId = giftId
+            this.amount = giftAmount
+        }
         setRetryProp(sen)
         send(sen)
         return config.callId

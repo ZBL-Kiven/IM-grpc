@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.zj.ccIm.core.IMHelper
+import com.zj.ccIm.core.bean.AssetsChanged
 import com.zj.ccIm.core.bean.MessageTotalDots
 import com.zj.ccIm.core.sender.exchange.MessageInfoEntityDataExchange
 import com.zj.cf.managers.TabFragmentManager
@@ -90,7 +91,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListener() {
-
         ivHeadPic?.setOnClickListener {
             IMHelper.CustomSender.ignoreConnectionStateCheck(true).ignoreSendConditionCheck(true).sendWithoutState().setCustomSendCallback(object : MessageInfoEntityDataExchange() {
                 override fun onSendingStart(callId: String, d: MessageInfoEntity?) {
@@ -117,6 +117,9 @@ class MainActivity : AppCompatActivity() {
 
                 is ConnectionState.CONNECTION, is ConnectionState.RECONNECT -> tvConn?.setBackgroundResource(R.drawable.dots_yellow)
             }
+        }
+        IMHelper.addReceiveObserver<AssetsChanged>(0x1111, this).listen { r, _, _ ->
+            Log.e("-----", "AssetsChanged : c = ${r?.coinsNum} d = ${r?.diamondNum} s = ${r?.spark}")
         }
         IMHelper.addReceiveObserver<MessageTotalDots>(0x1100, this).listen { r, _, _ ->
             if (r == null) return@listen

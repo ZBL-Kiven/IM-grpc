@@ -13,9 +13,9 @@ object AssetsChangedOperator {
         CcIM.postToUiObservers(data.getNum(), ClientHubImpl.PAYLOAD_CHANGED)
     }
 
-    fun onAssetsChanged(callId: String?, diamondNum: Int?, sparkNum: Int?) {
+    fun onAssetsChanged(callId: String?, diamondNum: Int?, coinsNum: Int?, sparkNum: Int?) {
         if (sparkNum != null || diamondNum != null) {
-            CcIM.postToUiObservers(AssetsChanged(sparkNum, diamondNum), callId)
+            CcIM.postToUiObservers(AssetsChanged(sparkNum, diamondNum, coinsNum), callId)
         }
     }
 }
