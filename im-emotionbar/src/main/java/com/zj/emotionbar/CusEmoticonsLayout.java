@@ -28,6 +28,7 @@ import com.zj.emotionbar.data.EmoticonPack;
 import com.zj.emotionbar.interfaces.EmoticonsFuncListener;
 import com.zj.emotionbar.interfaces.EmoticonsToolBar;
 import com.zj.emotionbar.interfaces.ExtInflater;
+import com.zj.emotionbar.interfaces.OnGiftCLickListener;
 import com.zj.emotionbar.interfaces.OnToolBarItemClickListener;
 import com.zj.emotionbar.utils.EmoticonsKeyboardUtils;
 import com.zj.emotionbar.widget.AutoHeightLayout;
@@ -51,6 +52,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
     protected ImageView btnFace;
     protected RelativeLayout inputLayout;
     protected ImageView btnMultimedia;
+    protected ImageView giftView;
     protected Button btnSend;
     protected FrameLayout extContainer;
     protected FuncLayout funcLayout;
@@ -62,6 +64,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
     protected EmoticonsToolBar<E> emoticonsToolBar;
     private TextView mTvBlocked;
     private EmoticonsFuncListener<E> mEmoticonsFuncListener;
+    private OnGiftCLickListener giftClickListener;
     protected boolean dispatchKeyEventPreImeLock = false;
     private boolean isBlocked = false;
     private int viewModel = 1;
@@ -101,6 +104,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
         btnFace = findViewById(R.id.im_input_btn_face);
         inputLayout = findViewById(R.id.im_input_rl_input);
         btnMultimedia = findViewById(R.id.im_input_btn_multimedia);
+        giftView = findViewById(R.id.im_input_btn_gift);
         btnSend = findViewById(R.id.im_input_btn_send);
         extContainer = findViewById(R.id.im_input_ext_container);
         funcLayout = findViewById(R.id.im_input_key_board_func);
@@ -108,6 +112,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
         btnVoiceOrText.setOnClickListener(this);
         btnFace.setOnClickListener(this);
         btnMultimedia.setOnClickListener(this);
+        giftView.setOnClickListener(this);
         emoticonsEditText.setOnBackKeyClickListener(this);
     }
 
@@ -151,12 +156,15 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
                 if (!TextUtils.isEmpty(s)) {
                     btnSend.setVisibility(VISIBLE);
                     btnMultimedia.setVisibility(GONE);
+                    giftView.setVisibility(GONE);
                 } else {
                     btnSend.setVisibility(GONE);
                     if (viewModel == 0) {
                         btnMultimedia.setVisibility(GONE);
+                        giftView.setVisibility(VISIBLE);
                     } else {
                         btnMultimedia.setVisibility(VISIBLE);
+                        giftView.setVisibility(GONE);
                     }
                 }
             }
@@ -188,6 +196,7 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
         viewModel = 0;
         btnVoiceOrText.setVisibility(View.GONE);
         btnMultimedia.setVisibility(View.GONE);
+        giftView.setVisibility(VISIBLE);
     }
 
     public void setExtInflater(ExtInflater<T> inflater) {
@@ -324,6 +333,8 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
             toggleFuncView(FUNC_TYPE_EMOTION);
         } else if (i == R.id.im_input_btn_multimedia) {
             toggleFuncView(FUNC_TYPE_APS);
+        } else if (i == R.id.im_input_btn_gift) {
+            if (giftClickListener != null) giftClickListener.onGiftClick();
         }
     }
 
@@ -424,5 +435,9 @@ public class CusEmoticonsLayout<T, E extends Emoticon> extends AutoHeightLayout 
 
     public View getChatInputRootView() {
         return mLlRootView;
+    }
+
+    public void setOnGiftClickListener(OnGiftCLickListener giftClickListener) {
+        this.giftClickListener = giftClickListener;
     }
 }

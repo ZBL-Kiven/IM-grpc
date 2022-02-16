@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,21 +8,23 @@
     android:focusable="true"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:id="@+id/im_input_ext_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:id="@+id/im_emotion_ll_root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#FFF"
-        android:orientation="vertical">
-
-        <FrameLayout
-            android:id="@+id/im_input_ext_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@android:color/white"
             android:orientation="horizontal"
             android:paddingTop="8dp"
@@ -48,9 +49,9 @@
                 android:layout_toEndOf="@+id/im_input_btn_voice_or_text"
                 android:background="@drawable/ui_bg_voice"
                 android:gravity="center"
-                android:textAllCaps="false"
                 android:stateListAnimator="@null"
                 android:text="@string/ui_input_tap_to_speaking"
+                android:textAllCaps="false"
                 android:textColor="#727272"
                 android:visibility="gone" />
 
@@ -72,9 +73,6 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/im_input_btn_face"
-                    android:background="@null"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
                     android:maxLines="3"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="5dp"
@@ -103,7 +101,6 @@
                 android:layout_toStartOf="@+id/im_input_rl_multi_and_send"
                 android:layout_toEndOf="@+id/im_input_btn_voice_or_text"
                 android:background="@android:color/transparent"
-                android:clickable="true"
                 android:gravity="center"
                 android:textSize="14sp"
                 android:visibility="gone" />
@@ -118,18 +115,22 @@
                 android:orientation="horizontal"
                 android:paddingEnd="8dp">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/im_input_btn_multimedia"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerInParent="true"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:background="@mipmap/ui_emo_icon_more"
-                    android:visibility="visible"
-                    tools:ignore="ContentDescription" />
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/ui_emo_icon_more" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/im_input_btn_gift"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:background="@mipmap/ui_emo_icon_gift"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/im_input_btn_send"
@@ -143,15 +144,17 @@
                     android:textColor="@color/color_primary"
                     android:textSize="12sp"
                     android:visibility="gone" />
+
             </RelativeLayout>
         </RelativeLayout>
-
-        <com.zj.emotionbar.widget.FuncLayout
-            android:id="@+id/im_input_key_board_func"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:visibility="visible" />
     </LinearLayout>
+
+    <com.zj.emotionbar.widget.FuncLayout
+        android:id="@+id/im_input_key_board_func"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:visibility="visible" />
+
 </LinearLayout>
