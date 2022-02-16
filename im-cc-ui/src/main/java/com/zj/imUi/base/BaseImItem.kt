@@ -134,11 +134,11 @@ abstract class BaseImItem<T : ImMsgIn> @JvmOverloads constructor(context: Contex
                 onDestroyed()
                 bubbleView = null
             }
-        }
-        val curNoneType = lastDataType != UiMsgType.MSG_NONE_MSG_TYPE
-        if (curNoneType != (dataType == UiMsgType.MSG_NONE_MSG_TYPE)) {
-            onDestroyed()
-            bubbleView = null
+            val curNoneType = lastDataType != UiMsgType.MSG_NONE_MSG_TYPE
+            if (curNoneType != (dataType == UiMsgType.MSG_NONE_MSG_TYPE)) {
+                onDestroyed()
+                bubbleView = null
+            }
         }
         if (bubbleView == null) {
             bubbleView = ImItemDispatcher.getItemWithData(data, context)
