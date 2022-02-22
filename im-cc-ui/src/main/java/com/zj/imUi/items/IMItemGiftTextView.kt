@@ -18,6 +18,7 @@ import android.text.method.LinkMovementMethod
 
 import android.text.Html
 import java.lang.StringBuilder
+import java.util.*
 
 
 @SuppressLint("ResourceAsColor")
@@ -38,8 +39,8 @@ class IMItemGiftTextView @JvmOverloads constructor(context: Context, attrs: Attr
         tvContent.textSize = 11f
         tvContent.ellipsize = TextUtils.TruncateAt.END
         tvContent.gravity = Gravity.CENTER_HORIZONTAL
-        tvContent.maxLines =2
-        tvContent.setPadding(basePadding, basePadding / 2, basePadding, basePadding / 2)
+        tvContent.maxLines = 2
+        tvContent.setPadding(basePadding, 0, basePadding,  0)
         tvContent.setTextColor(ContextCompat.getColor(context, R.color.im_msg_bg_color_gray))
 
         val lpTvL = LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -62,16 +63,18 @@ class IMItemGiftTextView @JvmOverloads constructor(context: Context, attrs: Attr
     private fun getGift(data: ImMsgIn): String? {
         val isOwner = data.getSelfUserId() == data.getOwnerId()
         val senderName = data.getSenderName()
+        val giftName = data.getGiftName()
         val changedSenderName = "<font color='#FEA30F'>$senderName</font>"
+        val changedGiftName = "<font color='#FEA30F'>$giftName</font>"
 
 
         return if (!isOwner && data.getSenderId() != data.getSelfUserId())
-            String.format(resources.getString(R.string.im_ui_gift_other_to_owner,changedSenderName,data.getGiftName(),data.getGiftAmount().toString(),data.getGroupName()))
+            String.format(resources.getString(R.string.im_ui_gift_other_to_owner, changedSenderName, changedGiftName, data.getGiftAmount().toString(), data.getGroupName()))
         else if (!isOwner && data.getSenderId() == data.getSelfUserId()) {
-            String.format(resources.getString(R.string.im_ui_gift_me_to_owner,data.getGiftName(),data.getGiftAmount().toString(),data.getGroupName()))
-        } else if (isOwner)
-            String.format(resources.getString(R.string.im_ui_gift_owner,data.getGiftName(),data.getGiftAmount().toString(),changedSenderName))
-        else null
+            String.format(resources.getString(R.string.im_ui_gift_me_to_owner, changedGiftName, data.getGiftAmount().toString(), data.getGroupName()))
+        } else if (isOwner) {
+            String.format(resources.getString(R.string.im_ui_gift_owner, changedGiftName, data.getGiftAmount().toString(), changedSenderName))
+        } else null
     }
 
     override fun onResume() {
