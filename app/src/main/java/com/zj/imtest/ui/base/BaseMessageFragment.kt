@@ -97,7 +97,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
                     if (adapter?.isMsgReplying(it) == true) adapter?.setRewardViewState(it, false)
                 }
                 when (pl) {
-                    ClientHubImpl.PAYLOAD_ADD -> if (d.msgType == MsgType.GIFT.type) return@listen else adapter?.update(d)
+                    ClientHubImpl.PAYLOAD_ADD -> if (d.sendingState == SendMsgState.SENDING.type && d.msgType == MsgType.GIFT.type) return@listen else adapter?.update(d)
                     ClientHubImpl.PAYLOAD_CHANGED -> adapter?.update(d)
                     ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE -> {
                         if (d.msgType == MsgType.GIFT.type) {

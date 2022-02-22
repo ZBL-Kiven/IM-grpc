@@ -54,13 +54,13 @@ message EmotionMessage{
 }
 
 message GiftMessage{
-  uint32        giftId          = 1;
-  string        giftImage       = 2;
-  MultiLanguage multiLanguage   = 3;
-  uint32        amount          = 4;
-  string        bundle          = 5;
-  string        receiveUserName = 6;
-  uint32        receiveUserId   = 7;
+  uint32                 giftId          = 1;
+  string                 giftImage       = 2;
+  repeated MultiLanguage multiLanguage   = 3;
+  uint32                 amount          = 4;
+  string                 bundle          = 5;
+  string                 receiveUserName = 6;
+  uint32                 receiveUserId   = 7;
 }
 
 message MultiLanguage{

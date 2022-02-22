@@ -17,6 +17,7 @@ private static final long serialVersionUID = 0L;
   }
   private GiftMessage() {
     giftImage_ = "";
+    multiLanguage_ = java.util.Collections.emptyList();
     bundle_ = "";
     receiveUserName_ = "";
   }
@@ -41,6 +42,7 @@ private static final long serialVersionUID = 0L;
     if (extensionRegistry == null) {
       throw new java.lang.NullPointerException();
     }
+    int mutable_bitField0_ = 0;
     com.google.protobuf.UnknownFieldSet.Builder unknownFields =
         com.google.protobuf.UnknownFieldSet.newBuilder();
     try {
@@ -63,16 +65,12 @@ private static final long serialVersionUID = 0L;
             break;
           }
           case 26: {
-            MultiLanguage.Builder subBuilder = null;
-            if (multiLanguage_ != null) {
-              subBuilder = multiLanguage_.toBuilder();
+            if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+              multiLanguage_ = new java.util.ArrayList<MultiLanguage>();
+              mutable_bitField0_ |= 0x00000001;
             }
-            multiLanguage_ = input.readMessage(MultiLanguage.parser(), extensionRegistry);
-            if (subBuilder != null) {
-              subBuilder.mergeFrom(multiLanguage_);
-              multiLanguage_ = subBuilder.buildPartial();
-            }
-
+            multiLanguage_.add(
+                input.readMessage(MultiLanguage.parser(), extensionRegistry));
             break;
           }
           case 32: {
@@ -112,6 +110,9 @@ private static final long serialVersionUID = 0L;
       throw new com.google.protobuf.InvalidProtocolBufferException(
           e).setUnfinishedMessage(this);
     } finally {
+      if (((mutable_bitField0_ & 0x00000001) != 0)) {
+        multiLanguage_ = java.util.Collections.unmodifiableList(multiLanguage_);
+      }
       this.unknownFields = unknownFields.build();
       makeExtensionsImmutable();
     }
@@ -179,29 +180,43 @@ private static final long serialVersionUID = 0L;
   }
 
   public static final int MULTILANGUAGE_FIELD_NUMBER = 3;
-  private MultiLanguage multiLanguage_;
+  private java.util.List<MultiLanguage> multiLanguage_;
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
-   * @return Whether the multiLanguage field is set.
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
   @java.lang.Override
-  public boolean hasMultiLanguage() {
-    return multiLanguage_ != null;
+  public java.util.List<MultiLanguage> getMultiLanguageList() {
+    return multiLanguage_;
   }
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
-   * @return The multiLanguage.
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
   @java.lang.Override
-  public MultiLanguage getMultiLanguage() {
-    return multiLanguage_ == null ? MultiLanguage.getDefaultInstance() : multiLanguage_;
+  public java.util.List<? extends MultiLanguageOrBuilder>
+      getMultiLanguageOrBuilderList() {
+    return multiLanguage_;
   }
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
   @java.lang.Override
-  public MultiLanguageOrBuilder getMultiLanguageOrBuilder() {
-    return getMultiLanguage();
+  public int getMultiLanguageCount() {
+    return multiLanguage_.size();
+  }
+  /**
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+   */
+  @java.lang.Override
+  public MultiLanguage getMultiLanguage(int index) {
+    return multiLanguage_.get(index);
+  }
+  /**
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+   */
+  @java.lang.Override
+  public MultiLanguageOrBuilder getMultiLanguageOrBuilder(
+      int index) {
+    return multiLanguage_.get(index);
   }
 
   public static final int AMOUNT_FIELD_NUMBER = 4;
@@ -322,8 +337,8 @@ private static final long serialVersionUID = 0L;
     if (!getGiftImageBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, giftImage_);
     }
-    if (multiLanguage_ != null) {
-      output.writeMessage(3, getMultiLanguage());
+    for (int i = 0; i < multiLanguage_.size(); i++) {
+      output.writeMessage(3, multiLanguage_.get(i));
     }
     if (amount_ != 0) {
       output.writeUInt32(4, amount_);
@@ -353,9 +368,9 @@ private static final long serialVersionUID = 0L;
     if (!getGiftImageBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, giftImage_);
     }
-    if (multiLanguage_ != null) {
+    for (int i = 0; i < multiLanguage_.size(); i++) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(3, getMultiLanguage());
+        .computeMessageSize(3, multiLanguage_.get(i));
     }
     if (amount_ != 0) {
       size += com.google.protobuf.CodedOutputStream
@@ -390,11 +405,8 @@ private static final long serialVersionUID = 0L;
         != other.getGiftId()) return false;
     if (!getGiftImage()
         .equals(other.getGiftImage())) return false;
-    if (hasMultiLanguage() != other.hasMultiLanguage()) return false;
-    if (hasMultiLanguage()) {
-      if (!getMultiLanguage()
-          .equals(other.getMultiLanguage())) return false;
-    }
+    if (!getMultiLanguageList()
+        .equals(other.getMultiLanguageList())) return false;
     if (getAmount()
         != other.getAmount()) return false;
     if (!getBundle()
@@ -418,9 +430,9 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getGiftId();
     hash = (37 * hash) + GIFTIMAGE_FIELD_NUMBER;
     hash = (53 * hash) + getGiftImage().hashCode();
-    if (hasMultiLanguage()) {
+    if (getMultiLanguageCount() > 0) {
       hash = (37 * hash) + MULTILANGUAGE_FIELD_NUMBER;
-      hash = (53 * hash) + getMultiLanguage().hashCode();
+      hash = (53 * hash) + getMultiLanguageList().hashCode();
     }
     hash = (37 * hash) + AMOUNT_FIELD_NUMBER;
     hash = (53 * hash) + getAmount();
@@ -558,6 +570,7 @@ private static final long serialVersionUID = 0L;
     private void maybeForceBuilderInitialization() {
       if (com.google.protobuf.GeneratedMessageV3
               .alwaysUseFieldBuilders) {
+        getMultiLanguageFieldBuilder();
       }
     }
     @java.lang.Override
@@ -568,10 +581,10 @@ private static final long serialVersionUID = 0L;
       giftImage_ = "";
 
       if (multiLanguageBuilder_ == null) {
-        multiLanguage_ = null;
+        multiLanguage_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
       } else {
-        multiLanguage_ = null;
-        multiLanguageBuilder_ = null;
+        multiLanguageBuilder_.clear();
       }
       amount_ = 0;
 
@@ -607,9 +620,14 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public GiftMessage buildPartial() {
       GiftMessage result = new GiftMessage(this);
+      int from_bitField0_ = bitField0_;
       result.giftId_ = giftId_;
       result.giftImage_ = giftImage_;
       if (multiLanguageBuilder_ == null) {
+        if (((bitField0_ & 0x00000001) != 0)) {
+          multiLanguage_ = java.util.Collections.unmodifiableList(multiLanguage_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
         result.multiLanguage_ = multiLanguage_;
       } else {
         result.multiLanguage_ = multiLanguageBuilder_.build();
@@ -673,8 +691,31 @@ private static final long serialVersionUID = 0L;
         giftImage_ = other.giftImage_;
         onChanged();
       }
-      if (other.hasMultiLanguage()) {
-        mergeMultiLanguage(other.getMultiLanguage());
+      if (multiLanguageBuilder_ == null) {
+        if (!other.multiLanguage_.isEmpty()) {
+          if (multiLanguage_.isEmpty()) {
+            multiLanguage_ = other.multiLanguage_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureMultiLanguageIsMutable();
+            multiLanguage_.addAll(other.multiLanguage_);
+          }
+          onChanged();
+        }
+      } else {
+        if (!other.multiLanguage_.isEmpty()) {
+          if (multiLanguageBuilder_.isEmpty()) {
+            multiLanguageBuilder_.dispose();
+            multiLanguageBuilder_ = null;
+            multiLanguage_ = other.multiLanguage_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            multiLanguageBuilder_ = 
+              com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                 getMultiLanguageFieldBuilder() : null;
+          } else {
+            multiLanguageBuilder_.addAllMessages(other.multiLanguage_);
+          }
+        }
       }
       if (other.getAmount() != 0) {
         setAmount(other.getAmount());
@@ -718,6 +759,7 @@ private static final long serialVersionUID = 0L;
       }
       return this;
     }
+    private int bitField0_;
 
     private int giftId_ ;
     /**
@@ -826,115 +868,236 @@ private static final long serialVersionUID = 0L;
       return this;
     }
 
-    private MultiLanguage multiLanguage_;
-    private com.google.protobuf.SingleFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder> multiLanguageBuilder_;
-    /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
-     * @return Whether the multiLanguage field is set.
-     */
-    public boolean hasMultiLanguage() {
-      return multiLanguageBuilder_ != null || multiLanguage_ != null;
+    private java.util.List<MultiLanguage> multiLanguage_ =
+      java.util.Collections.emptyList();
+    private void ensureMultiLanguageIsMutable() {
+      if (!((bitField0_ & 0x00000001) != 0)) {
+        multiLanguage_ = new java.util.ArrayList<MultiLanguage>(multiLanguage_);
+        bitField0_ |= 0x00000001;
+       }
     }
+
+    private com.google.protobuf.RepeatedFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder> multiLanguageBuilder_;
+
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
-     * @return The multiLanguage.
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    public MultiLanguage getMultiLanguage() {
+    public java.util.List<MultiLanguage> getMultiLanguageList() {
       if (multiLanguageBuilder_ == null) {
-        return multiLanguage_ == null ? MultiLanguage.getDefaultInstance() : multiLanguage_;
+        return java.util.Collections.unmodifiableList(multiLanguage_);
       } else {
-        return multiLanguageBuilder_.getMessage();
+        return multiLanguageBuilder_.getMessageList();
       }
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    public Builder setMultiLanguage(MultiLanguage value) {
+    public int getMultiLanguageCount() {
+      if (multiLanguageBuilder_ == null) {
+        return multiLanguage_.size();
+      } else {
+        return multiLanguageBuilder_.getCount();
+      }
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public MultiLanguage getMultiLanguage(int index) {
+      if (multiLanguageBuilder_ == null) {
+        return multiLanguage_.get(index);
+      } else {
+        return multiLanguageBuilder_.getMessage(index);
+      }
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public Builder setMultiLanguage(
+        int index, MultiLanguage value) {
       if (multiLanguageBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
-        multiLanguage_ = value;
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.set(index, value);
         onChanged();
       } else {
-        multiLanguageBuilder_.setMessage(value);
+        multiLanguageBuilder_.setMessage(index, value);
       }
-
       return this;
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
     public Builder setMultiLanguage(
+        int index, MultiLanguage.Builder builderForValue) {
+      if (multiLanguageBuilder_ == null) {
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.set(index, builderForValue.build());
+        onChanged();
+      } else {
+        multiLanguageBuilder_.setMessage(index, builderForValue.build());
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public Builder addMultiLanguage(MultiLanguage value) {
+      if (multiLanguageBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.add(value);
+        onChanged();
+      } else {
+        multiLanguageBuilder_.addMessage(value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public Builder addMultiLanguage(
+        int index, MultiLanguage value) {
+      if (multiLanguageBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.add(index, value);
+        onChanged();
+      } else {
+        multiLanguageBuilder_.addMessage(index, value);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public Builder addMultiLanguage(
         MultiLanguage.Builder builderForValue) {
       if (multiLanguageBuilder_ == null) {
-        multiLanguage_ = builderForValue.build();
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.add(builderForValue.build());
         onChanged();
       } else {
-        multiLanguageBuilder_.setMessage(builderForValue.build());
+        multiLanguageBuilder_.addMessage(builderForValue.build());
       }
-
       return this;
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    public Builder mergeMultiLanguage(MultiLanguage value) {
+    public Builder addMultiLanguage(
+        int index, MultiLanguage.Builder builderForValue) {
       if (multiLanguageBuilder_ == null) {
-        if (multiLanguage_ != null) {
-          multiLanguage_ =
-            MultiLanguage.newBuilder(multiLanguage_).mergeFrom(value).buildPartial();
-        } else {
-          multiLanguage_ = value;
-        }
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.add(index, builderForValue.build());
         onChanged();
       } else {
-        multiLanguageBuilder_.mergeFrom(value);
+        multiLanguageBuilder_.addMessage(index, builderForValue.build());
       }
-
       return this;
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public Builder addAllMultiLanguage(
+        java.lang.Iterable<? extends MultiLanguage> values) {
+      if (multiLanguageBuilder_ == null) {
+        ensureMultiLanguageIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, multiLanguage_);
+        onChanged();
+      } else {
+        multiLanguageBuilder_.addAllMessages(values);
+      }
+      return this;
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
     public Builder clearMultiLanguage() {
       if (multiLanguageBuilder_ == null) {
-        multiLanguage_ = null;
+        multiLanguage_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000001);
         onChanged();
       } else {
-        multiLanguage_ = null;
-        multiLanguageBuilder_ = null;
+        multiLanguageBuilder_.clear();
       }
-
       return this;
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    public MultiLanguage.Builder getMultiLanguageBuilder() {
-      
-      onChanged();
-      return getMultiLanguageFieldBuilder().getBuilder();
+    public Builder removeMultiLanguage(int index) {
+      if (multiLanguageBuilder_ == null) {
+        ensureMultiLanguageIsMutable();
+        multiLanguage_.remove(index);
+        onChanged();
+      } else {
+        multiLanguageBuilder_.remove(index);
+      }
+      return this;
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    public MultiLanguageOrBuilder getMultiLanguageOrBuilder() {
-      if (multiLanguageBuilder_ != null) {
-        return multiLanguageBuilder_.getMessageOrBuilder();
-      } else {
-        return multiLanguage_ == null ?
-            MultiLanguage.getDefaultInstance() : multiLanguage_;
+    public MultiLanguage.Builder getMultiLanguageBuilder(
+        int index) {
+      return getMultiLanguageFieldBuilder().getBuilder(index);
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public MultiLanguageOrBuilder getMultiLanguageOrBuilder(
+        int index) {
+      if (multiLanguageBuilder_ == null) {
+        return multiLanguage_.get(index);  } else {
+        return multiLanguageBuilder_.getMessageOrBuilder(index);
       }
     }
     /**
-     * <code>.app.MultiLanguage multiLanguage = 3;</code>
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
      */
-    private com.google.protobuf.SingleFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder>
+    public java.util.List<? extends MultiLanguageOrBuilder>
+         getMultiLanguageOrBuilderList() {
+      if (multiLanguageBuilder_ != null) {
+        return multiLanguageBuilder_.getMessageOrBuilderList();
+      } else {
+        return java.util.Collections.unmodifiableList(multiLanguage_);
+      }
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public MultiLanguage.Builder addMultiLanguageBuilder() {
+      return getMultiLanguageFieldBuilder().addBuilder(
+          MultiLanguage.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public MultiLanguage.Builder addMultiLanguageBuilder(
+        int index) {
+      return getMultiLanguageFieldBuilder().addBuilder(
+          index, MultiLanguage.getDefaultInstance());
+    }
+    /**
+     * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+     */
+    public java.util.List<MultiLanguage.Builder>
+         getMultiLanguageBuilderList() {
+      return getMultiLanguageFieldBuilder().getBuilderList();
+    }
+    private com.google.protobuf.RepeatedFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder>
         getMultiLanguageFieldBuilder() {
       if (multiLanguageBuilder_ == null) {
-        multiLanguageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder>(
-                getMultiLanguage(),
+        multiLanguageBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<MultiLanguage, MultiLanguage.Builder, MultiLanguageOrBuilder>(
+                multiLanguage_,
+                ((bitField0_ & 0x00000001) != 0),
                 getParentForChildren(),
                 isClean());
         multiLanguage_ = null;

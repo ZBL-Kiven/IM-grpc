@@ -26,19 +26,28 @@ public interface GiftMessageOrBuilder extends
       getGiftImageBytes();
 
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
-   * @return Whether the multiLanguage field is set.
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
-  boolean hasMultiLanguage();
+  java.util.List<MultiLanguage>
+      getMultiLanguageList();
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
-   * @return The multiLanguage.
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
-  MultiLanguage getMultiLanguage();
+  MultiLanguage getMultiLanguage(int index);
   /**
-   * <code>.app.MultiLanguage multiLanguage = 3;</code>
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
    */
-  MultiLanguageOrBuilder getMultiLanguageOrBuilder();
+  int getMultiLanguageCount();
+  /**
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+   */
+  java.util.List<? extends MultiLanguageOrBuilder>
+      getMultiLanguageOrBuilderList();
+  /**
+   * <code>repeated .app.MultiLanguage multiLanguage = 3;</code>
+   */
+  MultiLanguageOrBuilder getMultiLanguageOrBuilder(
+      int index);
 
   /**
    * <code>uint32 amount = 4;</code>

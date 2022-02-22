@@ -168,7 +168,7 @@ public final class IMProtoc {
       "(\t:\0028\001\"J\n\016EmotionMessage\022\n\n\002id\030\001 \001(\r\022\021\n\t" +
       "emotionId\030\002 \001(\r\022\014\n\004icon\030\003 \001(\t\022\013\n\003url\030\004 \001" +
       "(\t\"\253\001\n\013GiftMessage\022\016\n\006giftId\030\001 \001(\r\022\021\n\tgi" +
-      "ftImage\030\002 \001(\t\022)\n\rmultiLanguage\030\003 \001(\0132\022.a" +
+      "ftImage\030\002 \001(\t\022)\n\rmultiLanguage\030\003 \003(\0132\022.a" +
       "pp.MultiLanguage\022\016\n\006amount\030\004 \001(\r\022\016\n\006bund" +
       "le\030\005 \001(\t\022\027\n\017receiveUserName\030\006 \001(\t\022\025\n\rrec" +
       "eiveUserId\030\007 \001(\r\"+\n\rMultiLanguage\022\014\n\004are" +
