@@ -26,6 +26,7 @@
     <color name="im_msg_message_textColor_meReplyOthers">#FFFFFFFF</color>
     <color name="im_msg_text_color_white">#FFFFFFFF</color>
     <color name="im_msg_bg_color_white">#FFFEFEFE</color>
+    <color name="im_msg_bg_color_gray">#FFA2A8BB</color>
     <color name="im_msg_text_color_purple_private">#FFB36EFF</color>
     <color name="im_msg_text_color_purple_private_60">#66944DE2</color>
     <color name="im_msg_text_color_origin_private">#FFF0723B</color>

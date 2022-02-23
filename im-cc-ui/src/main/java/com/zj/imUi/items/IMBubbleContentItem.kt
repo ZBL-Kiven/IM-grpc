@@ -76,7 +76,7 @@ class IMBubbleContentItem @JvmOverloads constructor(context: Context, attrs: Att
         }
         performRegisterTimer()
         setViewStub(data)
-        if (chatType == 1) {
+        if (chatType == UiMsgType.GROUP_CHAT) {
             setReplyContent(data)
             setIconVisibility(data)
         }
