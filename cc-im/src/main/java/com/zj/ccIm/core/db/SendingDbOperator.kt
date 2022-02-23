@@ -1,6 +1,5 @@
 package com.zj.ccIm.core.db
 
-import com.zj.ccIm.core.ExtMsgType
 import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.api.ImApi
 import com.zj.ccIm.core.bean.SendMessageRespEn
@@ -11,7 +10,6 @@ import com.zj.database.dao.SendMsgDao
 import com.zj.database.entity.MessageInfoEntity
 import com.zj.database.entity.SendMessageReqEn
 import com.zj.im.chat.enums.SendMsgState
-import org.json.JSONObject
 
 internal object SendingDbOperator {
 
@@ -90,25 +88,7 @@ internal object SendingDbOperator {
             SendMsgState.NONE, SendMsgState.SUCCESS -> {
                 sendDb?.deleteByCallId(d.clientMsgId)
                 msgDb?.deleteMsgByClientId(d.clientMsgId)
-                val pl = when (d.msgStatus) {
-                    ImApi.EH.SENSITIVE_WORD_ERROR -> {
-                        var pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS
-                        val str = d.extContent?.get(ExtMsgType.EXTENDS_TYPE_SENSITIVE_HINT) ?: ""
-                        try {
-                            val strJson = JSONObject(str)
-                            if (strJson.has("other")) {
-                                if (strJson.getBoolean("other")) {
-                                    pl = ClientHubImpl.PAYLOAD_REFUSE_FROM_SENSITIVE_WORDS_OTHER
-                                }
-                            }
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                        pl
-                    }
-                    else -> ClientHubImpl.PAYLOAD_CHANGED_SEND_STATE
-                }
-                Pair(localMsg, pl)
+                null
             }
         }
     }

@@ -50,9 +50,10 @@ object ImApi {
         const val GROUP_STOPPED = 20002
         const val NOT_OWNER = 20003
         const val SENSITIVE_WORD = 20004
-        const val SENSITIVE_WORD_ERROR = 2
         const val GROUP_MEMBER_NOT_EXIST = 20006
         const val DIAMOND_NOT_ENOUGH = 20007
+
+        // const val SENSITIVE_WORD_ERROR = 2
 
         override fun onError(throwable: Throwable?): Pair<Boolean, Any?> {
             var msgBody: Any? = null

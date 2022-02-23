@@ -81,20 +81,14 @@ internal object MessageFetcher {
             val msg: MessageInfoEntity? = (d as? MessageInfoEntity) ?: (d as? ImMessage)?.let {
                 ProtoBeanUtils.toPojoBean(MessageInfoEntity::class.java, d as? ImMessage)
             }
-            run with@{
-                /** filter self sending message, the same message successful update just use only once. */
-                IMHelper.getDb()?.sendMsgDao()?.findByCallId(msg?.clientMsgId)?.let {
-                    if (it.key == key) return@with
-                }
-                msg?.channelKey = key
-                msg?.messageType = MessageType.MESSAGE.type
-                if (msg?.questionContent?.questionStatus == 3) { // refused message
-                    msg.messageType = MessageType.SYSTEM.type
-                    msg.systemMsgType = SystemMsgType.REFUSED.type
-                }
-                return dealMsgExtendsContent(msg)
+            msg?.channelKey = key
+            msg?.messageType = MessageType.MESSAGE.type
+            if (msg?.questionContent?.questionStatus == 3) {
+                // refused message
+                msg.messageType = MessageType.SYSTEM.type
+                msg.systemMsgType = SystemMsgType.REFUSED.type
             }
-            return arrayListOf()
+            return dealMsgExtendsContent(msg)
         }
     }
 
