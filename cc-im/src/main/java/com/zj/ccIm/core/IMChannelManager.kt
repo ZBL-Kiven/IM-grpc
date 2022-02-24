@@ -1,6 +1,7 @@
 package com.zj.ccIm.core
 
 
+import android.util.Log
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs
@@ -13,15 +14,15 @@ internal object IMChannelManager {
 
     private var lastMsgRegister = LinkedBlockingDeque<ChannelRegisterInfo>()
 
-    fun offerLast(req: ChannelRegisterInfo) {
-        if (lastMsgRegister.isNullOrEmpty()) {
-            lastMsgRegister.offerLast(req)
+    fun offerLast(req: ChannelRegisterInfo): Boolean {
+        return if (lastMsgRegister.isNullOrEmpty()) {
+            lastMsgRegister.offerLast(req);true
         } else {
             val last = lastMsgRegister.firstOrNull { it.key == req.key }
             if (last != null) {
-                last.hasPendingCount++
+                last.hasPendingCount++;false
             } else {
-                lastMsgRegister.offerLast(req)
+                lastMsgRegister.offerLast(req);true
             }
         }
     }

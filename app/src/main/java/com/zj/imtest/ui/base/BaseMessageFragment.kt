@@ -71,7 +71,18 @@ abstract class BaseMessageFragment : BaseTabFragment() {
         rlv?.setOnRefreshListener {
             getHistoryMessage()
         }
+    }
+
+    override fun onResumed() {
+        super.onResumed()
         initMessage()
+    }
+
+    override fun onPaused() {
+        super.onPaused()
+        if (::sessionKey.isInitialized) {
+            IMHelper.leaveChatRoom(sessionKey)
+        }
     }
 
     private fun initMessage() {

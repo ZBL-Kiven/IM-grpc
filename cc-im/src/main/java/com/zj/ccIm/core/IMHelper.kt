@@ -156,8 +156,9 @@ object IMHelper {
     }
 
     fun registerChatRoom(req: ChannelRegisterInfo): String? {
-        IMChannelManager.offerLast(req)
-        return resumedChatRoomIfConnection(req)
+        return if (IMChannelManager.offerLast(req)) {
+            resumedChatRoomIfConnection(req)
+        } else req.key
     }
 
     fun leaveChatRoom(key: String) {
