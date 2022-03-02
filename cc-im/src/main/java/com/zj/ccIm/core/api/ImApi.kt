@@ -45,15 +45,13 @@ object ImApi {
     object EH : ErrorHandler {
 
         private const val SERVER_ERROR = 555
-        const val NOT_ENOUGH = 125
-        const val REPEAT_ANSWER = 20001
-        const val GROUP_STOPPED = 20002
-        const val NOT_OWNER = 20003
-        const val SENSITIVE_WORD = 20004
-        const val GROUP_MEMBER_NOT_EXIST = 20006
-        const val DIAMOND_NOT_ENOUGH = 20007
-
-        // const val SENSITIVE_WORD_ERROR = 2
+        const val NOT_ENOUGH = 125 // 资金不够，无法发送有偿消息
+        const val REPEAT_ANSWER = 20001 // 重复回答消息
+        const val GROUP_STOPPED = 20002 // 群组被冻结，消息不可发出
+        const val NOT_OWNER = 20003 //对方不是 CO
+        const val SENSITIVE_WORD_ERROR = 300110 // 触发被 CO 设置的敏感词，消息不可发送
+        const val GROUP_MEMBER_NOT_EXIST = 20006 // 该成员未关注此 ClapHouse
+        const val DIAMOND_NOT_ENOUGH = 20007 // 钻石不够，无法发送有偿消息
 
         override fun onError(throwable: Throwable?): Pair<Boolean, Any?> {
             var msgBody: Any? = null

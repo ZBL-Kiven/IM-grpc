@@ -35,10 +35,14 @@ dependencies {
     implementation 'com.zj.repo:album:2.1.4'
     implementation 'com.zj.repo:loading:1.2.9'
     implementation 'com.zj.repo:constrain-fragment:2.2.0'
+
+    implementation 'com.cc.android:cc-im-emotion:1.2.2'
+
     implementation 'com.cc.android:views:2.0.5'
     implementation project(':im-cc-ui')
+
+//    implementation project(':im-emotionbar')
     implementation project(':cc-im')
-    implementation project(':im-emotionbar')
     implementation 'com.alibaba:fastjson:1.2.72'
     implementation 'com.google.code.gson:gson:2.8.7'
     implementation 'com.airbnb.android:lottie:3.6.1'

@@ -19,6 +19,7 @@ class BaseApp : Application(), Application.ActivityLifecycleCallbacks {
         lateinit var config: IMConfig
 
         fun initChat(uid: Int) {
+            IMConfig.defaultTestUid = uid
             hasInitChat = true
             config = IMConfig(uid)
             IMHelper.init(context, config)

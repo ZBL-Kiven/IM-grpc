@@ -34,8 +34,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fragmentManager: TabFragmentManager<Long, BaseMessageFragment>
 
-    private val groupId = 32L
-    private val ownerId = 151120
+    private val groupId = 100L
+    private val ownerId = 151473
     private val targetUserId = 151254 //151473
     private var tvConn: View? = null
     private var tvName: TextView? = null

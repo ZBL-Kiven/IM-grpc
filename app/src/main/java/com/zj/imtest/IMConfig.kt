@@ -11,7 +11,7 @@ import com.zj.im.chat.exceptions.IMException
 class IMConfig(private val uid: Int) : ImConfigIn {
 
     companion object {
-        const val defaultTestUid = 151120
+        var defaultTestUid = 151147
         const val ROUTE_CALL_ID_REPLY_MESSAGE = "im_route_reply_message"
     }
 

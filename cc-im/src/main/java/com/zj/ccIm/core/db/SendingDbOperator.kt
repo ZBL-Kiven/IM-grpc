@@ -71,10 +71,7 @@ internal object SendingDbOperator {
                 val pl = when {
                     d.black -> ClientHubImpl.PAYLOAD_DELETE_FROM_BLOCKED
                     d.forbiddenSpeak -> ClientHubImpl.PAYLOAD_DELETE_FROM_FORBIDDEN
-                    /**
-                     * 暂时没有使用，Payload 保留
-                     * */
-                    d.msgStatus == ImApi.EH.SENSITIVE_WORD -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
+                    d.msgStatus == ImApi.EH.SENSITIVE_WORD_ERROR -> ClientHubImpl.PAYLOAD_DELETE_FROM_SENSITIVE_WORDS
                     d.msgStatus == ImApi.EH.NOT_ENOUGH -> ClientHubImpl.PAYLOAD_DELETE_NOT_ENOUGH
                     d.msgStatus == ImApi.EH.NOT_OWNER -> ClientHubImpl.PAYLOAD_DELETE_NOT_OWNER
                     d.msgStatus == ImApi.EH.GROUP_MEMBER_NOT_EXIST -> ClientHubImpl.PAYLOAD_DELETE_FROM_GROUP_MEMBER_NOT_EXIST
