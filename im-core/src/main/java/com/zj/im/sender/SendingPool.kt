@@ -76,7 +76,7 @@ internal class SendingPool<T> : OnStatus<T> {
         sending = false
     }
 
-    override fun call(executeId: String, callId: String, data: T) {
+    override fun call(callId: String, data: T) {
         printInFile("SendExecutors.send", "$callId before sending task success")
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             if (onSendBefore.isNullOrEmpty()) {
@@ -91,7 +91,7 @@ internal class SendingPool<T> : OnStatus<T> {
         }
     }
 
-    override fun error(executeId: String, callId: String, e: Throwable?, payloadInfo: Any?) {
+    override fun error(callId: String, e: Throwable?, payloadInfo: Any?) {
         printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = SendingUp.CANCEL
@@ -103,7 +103,7 @@ internal class SendingPool<T> : OnStatus<T> {
         }
     }
 
-    override fun onProgress(executeId: String, callId: String, progress: Int) {
+    override fun onProgress(callId: String, progress: Int) {
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             customSendingCallback?.let {
                 it.onSendingUploading(progress, sendWithoutState, callId)
