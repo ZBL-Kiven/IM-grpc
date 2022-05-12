@@ -1,7 +1,6 @@
 package com.zj.ccIm.core
 
 
-import android.util.Log
 import com.zj.ccIm.CcIM
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.logger.ImLogs

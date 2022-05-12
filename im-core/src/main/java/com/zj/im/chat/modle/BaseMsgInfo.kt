@@ -7,6 +7,7 @@ import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.utils.Constance
 import com.zj.im.utils.getIncrementNumber
+import java.util.concurrent.LinkedBlockingQueue
 
 /**
  * Created by ZJJ
@@ -43,7 +44,7 @@ internal class BaseMsgInfo<T> private constructor() {
 
     var timeOut = Constance.DEFAULT_TIMEOUT
 
-    var onSendBefore: OnSendBefore<T>? = null
+    var onSendBefore: LinkedBlockingQueue<OnSendBefore<T>>? = null
 
     var sendingUp: SendingUp = SendingUp.NORMAL
 
@@ -56,7 +57,7 @@ internal class BaseMsgInfo<T> private constructor() {
     var customSendingCallback: CustomSendingCallback<T>? = null
 
     /**
-     *the pending id for per message，
+     * the pending id for per message，
      *
      * it used in the status notification ,example 'timeout' / 'sending status changed' / 'success' /...
      *
@@ -100,13 +101,23 @@ internal class BaseMsgInfo<T> private constructor() {
             return baseInfo
         }
 
-        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?): BaseMsgInfo<T> {
+        /**
+         * @param ignoreStateCheck This message is sent without checking whether it should currently be blocked or not.
+         * @param ignoreConnecting This message will not detect the network available flag passed by [com.zj.im.chat.hub.ServerHub.postOnConnected].
+         * @param ignoreSendState 此消息不再被 UIObservers 捕获
+         * @param customSendingCallback see [com.zj.im.sender.CustomSendingCallback.setPending]
+         * @param sendBefore see [com.zj.im.sender.OnSendBefore.call]
+         * */
+        fun <T> sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, ignoreStateCheck: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, customSendingCallback: CustomSendingCallback<T>? = null, vararg sendBefore: OnSendBefore<T>): BaseMsgInfo<T> {
             return BaseMsgInfo<T>().apply {
                 this.data = data
                 this.callId = callId
                 this.timeOut = timeOut
                 this.isResend = isResend
-                this.onSendBefore = sendBefore
+                if (!sendBefore.isNullOrEmpty()) {
+                    onSendBefore = LinkedBlockingQueue()
+                    this.onSendBefore?.addAll(sendBefore)
+                }
                 this.createdTs = getIncrementNumber()
                 this.type = MessageHandleType.SEND_MSG
                 this.sendWithoutState = ignoreSendState
@@ -114,7 +125,7 @@ internal class BaseMsgInfo<T> private constructor() {
                 this.ignoreConnecting = ignoreConnecting
                 this.sendingState = SendMsgState.SENDING
                 this.customSendingCallback = customSendingCallback
-                this.sendingUp = if (sendBefore != null) SendingUp.WAIT else SendingUp.NORMAL
+                this.sendingUp = if (sendBefore.isNotEmpty()) SendingUp.WAIT else SendingUp.NORMAL
             }
         }
 

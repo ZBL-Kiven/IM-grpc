@@ -14,4 +14,8 @@
     <string name="im_msg_type_video">make a video</string>
     <string name="send_a_gift">Send a</string>
 
+    <string name="rfl_load_end">No more data</string>
+    <string name="rfl_load_failed">load more failed</string>
+    <string name="rfl_loading">Loading…</string>
+
 </resources>

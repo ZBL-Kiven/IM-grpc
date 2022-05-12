@@ -9,7 +9,6 @@ import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
-import java.util.*
 import kotlin.collections.ArrayList
 
 internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, inObserver: (Class<R>) -> Unit, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {

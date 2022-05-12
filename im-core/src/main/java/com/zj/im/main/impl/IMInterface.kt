@@ -230,12 +230,12 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     /**
      * send a msg ，see [RunnerClientStub.sendMsg]
      * */
-    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
-        getServiceOrCache("IMInterface.send") { sendMsg(data, callId, timeOut, false, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback) }
+    fun send(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, customSendingCallback: CustomSendingCallback<T>? = null, vararg sendBefore: OnSendBefore<T>) {
+        getServiceOrCache("IMInterface.send") { sendMsg(data, callId, timeOut, false, isSpecialData, ignoreConnecting, ignoreSendState, customSendingCallback, *sendBefore) }
     }
 
-    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>? = null) {
-        getServiceOrCache("IMInterface.resend") { sendMsg(data, callId, timeOut, true, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback) }
+    fun resend(data: T, callId: String, timeOut: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, customSendingCallback: CustomSendingCallback<T>? = null, vararg sendBefore: OnSendBefore<T>) {
+        getServiceOrCache("IMInterface.resend") { sendMsg(data, callId, timeOut, true, isSpecialData, ignoreConnecting, ignoreSendState, customSendingCallback, *sendBefore) }
     }
 
     fun <CLS : Any> routeToUi(data: RouteInfo<CLS>, callId: String) {

@@ -10,7 +10,6 @@ import com.zj.ccIm.core.impl.ClientHubImpl
 import com.zj.ccIm.core.impl.ServerHubImpl
 import com.zj.ccIm.error.AuthenticationError
 import com.zj.ccIm.error.ConnectionError
-import com.zj.ccIm.error.InitializedException
 import com.zj.ccIm.live.impl.LiveClientHubImpl
 import com.zj.ccIm.live.impl.LiveServerHubImpl
 import com.zj.database.entity.PrivateOwnerEntity

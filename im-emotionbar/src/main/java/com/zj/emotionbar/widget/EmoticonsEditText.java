@@ -3,14 +3,13 @@ package com.zj.emotionbar.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
-import android.view.View;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
 import com.zj.emotionbar.interfaces.EmoticonFilter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class EmoticonsEditText extends AppCompatEditText {

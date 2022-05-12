@@ -13,4 +13,14 @@
         <item name="cornerSize">15dp</item>
     </style>
 
+    <declare-styleable name="RefreshFooter">
+        <attr name="noMoreDataText" format="string|reference" />
+        <attr name="noMoreDataToastEnable" format="boolean" />
+        <attr name="loadFailed" format="string|reference" />
+    </declare-styleable>
+
+    <declare-styleable name="RefreshHeader">
+        <attr name="foregroundColor" format="color" />
+    </declare-styleable>
+
 </resources>

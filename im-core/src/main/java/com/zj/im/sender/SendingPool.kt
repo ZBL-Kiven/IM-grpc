@@ -16,25 +16,11 @@ internal class SendingPool<T> : OnStatus<T> {
 
     private val sendMsgQueue = cusListOf<BaseMsgInfo<T>>()
 
-    fun setSendState(state: SendingUp, callId: String, data: T? = null, payloadInfo: Any?) {
-        sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
-            this.sendingUp = state
-            this.data = data
-            val sendState: SendMsgState
-            if (state != SendingUp.CANCEL) {
-                this.onSendBefore = null
-                sendState = SendMsgState.ON_SEND_BEFORE_END
-            } else {
-                sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
-            }
-            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend, sendWithoutState)
-            DataReceivedDispatcher.pushData(notifyState)
-        }
-    }
-
     fun push(info: BaseMsgInfo<T>) {
         sendMsgQueue.add(info)
-        if (info.onSendBefore != null) info.onSendBefore?.call(this)
+        if (info.onSendBefore.isNullOrEmpty().not()) {
+            info.onSendBefore?.poll()?.call(this)
+        }
     }
 
     fun lock() {
@@ -90,21 +76,39 @@ internal class SendingPool<T> : OnStatus<T> {
         sending = false
     }
 
-    override fun call(isFinish: Boolean, callId: String, progress: Int, data: T, isOK: Boolean, e: Throwable?, payloadInfo: Any?) {
-        if (isFinish) {
-            if (isOK) {
-                printInFile("SendExecutors.send", "$callId before sending task success\npayload = $payloadInfo")
+    override fun call(executeId: String, callId: String, data: T) {
+        printInFile("SendExecutors.send", "$callId before sending task success")
+        sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
+            if (onSendBefore.isNullOrEmpty()) {
+                this.sendingUp = SendingUp.READY
+                this.data = data
+                val sendState = SendMsgState.ON_SEND_BEFORE_END
+                val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend, sendWithoutState)
+                DataReceivedDispatcher.pushData(notifyState)
             } else {
-                printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
+                this.onSendBefore?.poll()?.call(this@SendingPool)
             }
-            setSendState(if (isOK) SendingUp.READY else SendingUp.CANCEL, callId, data, payloadInfo)
-        } else {
-            sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
-                customSendingCallback?.let {
-                    it.onSendingUploading(progress, sendWithoutState, callId)
-                    if (it.pending) DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
-                } ?: DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
-            }
+        }
+    }
+
+    override fun error(executeId: String, callId: String, e: Throwable?, payloadInfo: Any?) {
+        printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
+        sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
+            this.sendingUp = SendingUp.CANCEL
+            this.onSendBefore?.clear()
+            this.onSendBefore = null
+            val sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
+            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend, sendWithoutState)
+            DataReceivedDispatcher.pushData(notifyState)
+        }
+    }
+
+    override fun onProgress(executeId: String, callId: String, progress: Int) {
+        sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
+            customSendingCallback?.let {
+                it.onSendingUploading(progress, sendWithoutState, callId)
+                if (it.pending) DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
+            } ?: DataReceivedDispatcher.pushData(BaseMsgInfo.onProgressChange<T>(progress, callId))
         }
     }
 }

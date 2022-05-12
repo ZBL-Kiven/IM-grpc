@@ -16,7 +16,7 @@ internal interface RunnerClientStub<T> {
      * @param ignoreSendState This tag will set the message never notify to ui before success
      * @param sendBefore The processing protocol that the message can carry Process, it will run in an independent thread of IM and wait for execution in the queue
      * */
-    fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?)
+    fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, customSendingCallback: CustomSendingCallback<T>?, vararg sendBefore: OnSendBefore<T>)
 
     /**
      * Add a pending entry to the IM processing queue

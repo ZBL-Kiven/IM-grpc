@@ -44,8 +44,8 @@ internal object Constance {
     const val INTERNAL_CALL_ID_PREFIX = "internal_call"
     const val CALL_ID_START_LISTEN_SESSION = INTERNAL_CALL_ID_PREFIX + "_start_listen_session"
     const val CALL_ID_START_LISTEN_TOTAL_DOTS = INTERNAL_CALL_ID_PREFIX + "_start_listen_totalDots"
-
     const val CALL_ID_START_LISTEN_PRIVATE_OWNER_CHAT = INTERNAL_CALL_ID_PREFIX + "_start_listen_privateOwnerChat"
+
     const val CALL_ID_SUBSCRIBE_NEW_TOPIC = INTERNAL_CALL_ID_PREFIX + "_subscribe_new_topic_type"
 
     const val CALL_ID_SUBSCRIBE_REMOVE_TOPIC = INTERNAL_CALL_ID_PREFIX + "_subscribe_remove_topic_type"

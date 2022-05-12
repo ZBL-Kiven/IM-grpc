@@ -71,12 +71,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     open fun onRouteCall(callId: String?, data: T?) {}
 
-    open fun reConnect(case: String) {
+    open fun onRConnect(case: String) {
         connectDelay()
     }
 
-    open fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
-        onChecked(isNetWorkAccess)
+    open fun pingServer(response: (Boolean) -> Unit) {
+        response(isNetWorkAccess)
     }
 
     protected fun postOnConnected() {
@@ -102,13 +102,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     internal fun checkNetWork(alwaysCheck: Boolean) {
-        this.isAlwaysHeartBeats = alwaysCheck
+        this.isAlwaysHeartBeats = this.isAlwaysHeartBeats || alwaysCheck
         curConnectionState = ConnectionState.PING
     }
 
     internal fun tryToReConnect(case: String) {
         NetRecordUtils.recordDisconnectCount()
-        reConnect(case)
+        onRConnect(case)
     }
 
     internal fun sendToServer(params: T, callId: String, callBack: SendingCallBack<T>) {
@@ -125,7 +125,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     private fun pingServer() {
-        onCheckNetWorkEnable {
+        pingServer {
             if (it) {
                 heartbeatsTime = HEART_BEATS_BASE_TIME
                 curConnectionState = ConnectionState.PONG

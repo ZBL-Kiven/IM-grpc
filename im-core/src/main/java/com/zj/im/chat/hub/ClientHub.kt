@@ -15,14 +15,19 @@ import com.zj.im.utils.log.logger.printInFile
  * the bridge of client, override and custom your client hub.
  *
  * it may reconnection if change the system clock to earlier.
- *
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class ClientHub<T> {
 
     var context: Application? = null; internal set
 
+    abstract fun progressUpdate(progress: Int, callId: String)
+
     protected open fun onMsgPatch(data: T?, callId: String?, ignoreSendState: Boolean, sendingState: SendMsgState?, isResent: Boolean, onFinish: () -> Unit) {
+        postToUi(data, callId, ignoreSendState, onFinish)
+    }
+
+    protected fun postToUi(data: Any?, callId: String?, ignoreSendState: Boolean, onFinish: () -> Unit) {
         try {
             if (!ignoreSendState) MessageInterface.postToUIObservers(null, data, callId, onFinish)
         } catch (e: Exception) {
@@ -32,20 +37,18 @@ abstract class ClientHub<T> {
 
     open fun onRouteCall(callId: String?, data: T?) {}
 
-    abstract fun progressUpdate(progress: Int, callId: String)
-
-    internal fun onSendingStateChanged(sendingState: SendMsgState, callId: String, data: T?, ignoreSendState: Boolean, resend: Boolean) {
-        onMsgPatch(data, callId, ignoreSendState, sendingState, resend) {
-            StatusHub.isReceiving = false
-        }
-    }
-
     open fun canReceived(): Boolean {
         return StatusHub.isRunning() && !StatusHub.isReceiving && DataReceivedDispatcher.isDataEnable()
     }
 
     open fun canSend(): Boolean {
         return StatusHub.isAlive() && DataReceivedDispatcher.isDataEnable()
+    }
+
+    internal fun onSendingStateChanged(sendingState: SendMsgState, callId: String, data: T?, ignoreSendState: Boolean, resend: Boolean) {
+        onMsgPatch(data, callId, ignoreSendState, sendingState, resend) {
+            StatusHub.isReceiving = false
+        }
     }
 
     internal fun pause(code: String): Boolean {

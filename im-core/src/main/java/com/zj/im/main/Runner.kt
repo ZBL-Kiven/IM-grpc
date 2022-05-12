@@ -121,12 +121,12 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
     /**
      * send a msg
      * */
-    override fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, sendBefore: OnSendBefore<T>?, customSendingCallback: CustomSendingCallback<T>?) {
+    override fun sendMsg(data: T, callId: String, timeOut: Long, isResend: Boolean, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, customSendingCallback: CustomSendingCallback<T>?, vararg sendBefore: OnSendBefore<T>) {
         if (customSendingCallback == null || customSendingCallback.pending) {
             enqueue(BaseMsgInfo.sendingStateChange(SendMsgState.SENDING, callId, data, isResend, ignoreSendState))
         }
         customSendingCallback?.onStart(callId, ignoreSendState, data)
-        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendingCallback))
+        enqueue(BaseMsgInfo.sendMsg(data, callId, timeOut, isResend, isSpecialData, ignoreConnecting, ignoreSendState, customSendingCallback, *sendBefore))
     }
 
     private fun setLooperEfficiency(total: Int) {
