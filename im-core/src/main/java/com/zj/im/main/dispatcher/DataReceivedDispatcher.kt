@@ -11,6 +11,7 @@ import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.printInFile
 
 
+@Suppress("IMPLICIT_NOTHING_TYPE_ARGUMENT_IN_RETURN_POSITION")
 internal object DataReceivedDispatcher {
 
     private var chatBase: ChatBase<*>? = null

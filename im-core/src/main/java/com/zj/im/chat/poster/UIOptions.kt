@@ -36,6 +36,8 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     private val cag = "category"
     private val handleWhat = 0x1101
     private var dataHandler: DataHandler<T, R>? = null
+
+    /**Compatible call order is affected by LifecycleOwner * */
     internal var hasPendingCount = 0
 
     private val handler = Handler(Looper.getMainLooper()) {
@@ -73,6 +75,12 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
 
     fun getUnique(): Any {
         return uniqueCode
+    }
+
+    internal fun canConsumed(data: Any?): Boolean {
+        if (data == null) return false
+        val castedData = cast<Any, T>(data) ?: return false
+        return postData(castedData, "check") != null
     }
 
     fun post(cls: Class<*>?, data: Any?, ld: Collection<*>?, payload: String?): Boolean {

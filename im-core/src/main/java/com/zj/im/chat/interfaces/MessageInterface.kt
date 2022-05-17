@@ -42,6 +42,17 @@ abstract class MessageInterface<T> {
         }
 
         /**
+         * For some types that are currently registered,
+         * it is convenient to use this method to query and cancel the unread count
+         * */
+        fun canConsumeByCurrentUiObserver(d: Any?): Boolean {
+            msgObservers.values.forEach {
+                if (it.canConsumed(d)) return true
+            }
+            return false
+        }
+
+        /**
          * post a data into msg processor ,
          * only supported type Data or List<Data>
          * */

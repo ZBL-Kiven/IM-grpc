@@ -27,9 +27,13 @@ abstract class ClientHub<T> {
         postToUi(data, callId, ignoreSendState, onFinish)
     }
 
-    protected fun postToUi(data: Any?, callId: String?, ignoreSendState: Boolean, onFinish: () -> Unit) {
+    protected fun postToUi(data: Any?, pl: String?, ignoreSendState: Boolean, onFinish: () -> Unit) {
         try {
-            if (!ignoreSendState) MessageInterface.postToUIObservers(null, data, callId, onFinish)
+            if (ignoreSendState) {
+                onFinish()
+            } else {
+                MessageInterface.postToUIObservers(null, data, pl, onFinish)
+            }
         } catch (e: Exception) {
             printInFile("client hub error ", " the ui poster throw an error case: ${e.message}")
         }
