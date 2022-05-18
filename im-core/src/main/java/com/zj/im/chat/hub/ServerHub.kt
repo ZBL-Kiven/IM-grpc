@@ -10,6 +10,8 @@ import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.main.looper.MsgExecutor
 import com.zj.im.main.looper.MsgHandlerQueue
 import com.zj.im.utils.log.logger.NetRecordUtils
+import com.zj.im.utils.log.logger.e
+import com.zj.im.utils.log.logger.printErrorInFile
 import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
@@ -59,6 +61,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     open fun onRouteCall(callId: String?, data: T?) {}
 
     open fun onReConnect(case: String) {
+        printErrorInFile("ServerHub.onReconnect", case, true)
         connectDelay()
     }
 

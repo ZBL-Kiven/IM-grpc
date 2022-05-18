@@ -86,7 +86,7 @@ internal object DataReceivedDispatcher {
                 is ConnectionState.OFFLINE -> "net work state changed"
                 else -> ""
             }
-            getServer("server may need to reconnect $reason")?.tryToReConnect(reason)
+            getServer("connect state changed to ${connState::class.java.simpleName}")?.tryToReConnect(reason)
         }
         StatusHub.curConnectionState = connState
         chatBase?.notify("on connection state changed to ${connState::class.java.simpleName}")?.onConnectionStatusChanged(connState)
