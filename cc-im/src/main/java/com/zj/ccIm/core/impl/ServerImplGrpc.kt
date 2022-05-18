@@ -52,17 +52,11 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
     }
 
-    /**
-     * Detect the current connection status with the server by sending ping-pong,
-     * which is mainly used to determine the disconnection under special circumstances and reduce the number of disconnections
-     * eg: when the front and back are switched, the focus of the APP changes,
-     * the network environment continues to be unstable, and the message sending fails, etc.
-     * */
-    override fun onCheckNetWorkEnable(onChecked: (Boolean) -> Unit) {
+    override fun pingServer(response: (Boolean) -> Unit) {
         withChannel {
             it?.ping(null, object : CusObserver<Pong>(isStreaming = false) {
                 override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
-                    onChecked(isOk)
+                    response(isOk)
                 }
             })
         }

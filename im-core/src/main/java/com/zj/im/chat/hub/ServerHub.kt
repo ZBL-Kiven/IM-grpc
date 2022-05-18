@@ -1,20 +1,21 @@
 package com.zj.im.chat.hub
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
 import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.interfaces.SendingCallBack
 import com.zj.im.main.StatusHub
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
+import com.zj.im.main.looper.MsgExecutor
+import com.zj.im.main.looper.MsgHandlerQueue
 import com.zj.im.utils.log.logger.NetRecordUtils
 import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
 import java.util.*
+
 
 @Suppress("unused", "SameParameterValue", "MemberVisibilityCanBePrivate")
 abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean = false) {
@@ -35,8 +36,38 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     private var pingTime = 0L
     open var heartbeatsTime = HEART_BEATS_BASE_TIME
     open val reconnectionTime = RECONNECTION_TIME
-    private val handler = Handler(Looper.myLooper() ?: Looper.getMainLooper()) {
-        when (it.what) {
+    private lateinit var handler: MsgExecutor
+
+    val isNetWorkAccess: Boolean
+        get() {
+            return connectivityManager?.isNetWorkActive == NetWorkInfo.CONNECTED
+        }
+
+    protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
+
+    protected abstract fun closeConnection(case: String)
+
+    protected abstract fun connect(connectId: String)
+
+    open fun init(context: Application?) {
+        this.app = context
+        connectivityManager = IConnectivityManager()
+        connectivityManager?.init(context) { netWorkStateChanged(it) }
+        curConnectionState = ConnectionState.CONNECTION(false)
+    }
+
+    open fun onRouteCall(callId: String?, data: T?) {}
+
+    open fun onReConnect(case: String) {
+        connectDelay()
+    }
+
+    open fun pingServer(response: (Boolean) -> Unit) {
+        response(isNetWorkAccess)
+    }
+
+    private fun onHandlerExecute(what: Int, obj: Any?) {
+        when (what) {
             HEART_BEATS_EVENT -> {
                 curConnectionState = ConnectionState.PING
             }
@@ -45,38 +76,14 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 currentConnectId = UUID.randomUUID().toString()
                 connect(currentConnectId)
             }
+            else -> onMsgThreadCallback(what, obj)
         }
-        return@Handler false
     }
 
-    val isNetWorkAccess: Boolean
-        get() {
-            return connectivityManager?.isNetWorkActive == NetWorkInfo.CONNECTED
-        }
+    open fun onMsgThreadCallback(what: Int, obj: Any?) {}
 
-    open fun init(context: Application?) {
-        this.app = context
-        connectivityManager = IConnectivityManager()
-        connectivityManager?.init(context) { netWorkStateChanged(it) }
-        curConnectionState = ConnectionState.CONNECTION(false)
-        currentConnectId = UUID.randomUUID().toString()
-        connect(currentConnectId)
-    }
-
-    protected abstract fun send(params: T, callId: String, callBack: SendingCallBack<T>): Long
-
-    protected abstract fun closeConnection(case: String)
-
-    protected abstract fun connect(connectId: String)
-
-    open fun onRouteCall(callId: String?, data: T?) {}
-
-    open fun onRConnect(case: String) {
-        connectDelay()
-    }
-
-    open fun pingServer(response: (Boolean) -> Unit) {
-        response(isNetWorkAccess)
+    protected fun sendToMsgThread(what: Int, delay: Long, obj: Any?) {
+        handler.enqueue(what, delay, obj)
     }
 
     protected fun postOnConnected() {
@@ -108,7 +115,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     internal fun tryToReConnect(case: String) {
         NetRecordUtils.recordDisconnectCount()
-        onRConnect(case)
+        onReConnect(case)
     }
 
     internal fun sendToServer(params: T, callId: String, callBack: SendingCallBack<T>) {
@@ -118,6 +125,11 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     internal fun isDataEnable(): Boolean {
         return StatusHub.curConnectionState.isConnected() && isNetWorkAccess
+    }
+
+    internal fun onLooperPrepared(queue: MsgHandlerQueue) {
+        handler = MsgExecutor(queue, ::onHandlerExecute)
+        handler.enqueue(CONNECTION_EVENT, 0)
     }
 
     private fun netWorkStateChanged(state: NetWorkInfo) {
@@ -156,18 +168,17 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     open fun shutdown() {
         closeConnection("shutdown")
+        handler.clearAndDrop()
         curConnectionState = ConnectionState.INIT
         connectivityManager?.shutDown()
     }
 
     private fun nextHeartbeats() {
-        handler.removeMessages(HEART_BEATS_EVENT)
-        handler.sendEmptyMessageDelayed(HEART_BEATS_EVENT, heartbeatsTime)
+        handler.enqueue(HEART_BEATS_EVENT, heartbeatsTime)
     }
 
     private fun connectDelay(connTime: Long = reconnectionTime) {
-        handler.removeMessages(CONNECTION_EVENT)
-        handler.sendEmptyMessageDelayed(CONNECTION_EVENT, connTime)
+        handler.enqueue(CONNECTION_EVENT, connTime)
     }
 
     private var curConnectionState: ConnectionState = ConnectionState.INIT

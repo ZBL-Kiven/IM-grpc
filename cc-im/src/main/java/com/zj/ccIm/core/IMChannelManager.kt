@@ -50,16 +50,16 @@ internal object IMChannelManager {
         return lastMsgRegister.isNotEmpty()
     }
 
-    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, isRecent: Boolean, sendBefore: OnSendBefore<Any?>?, customSendCallback: CustomSendingCallback<Any?>?) {
+    fun sendMsgWithChannel(sen: SendMessageReqEn, clientMsgId: String, sendMsgDefaultTimeout: Long, isSpecialData: Boolean, ignoreConnecting: Boolean, ignoreSendState: Boolean, isRecent: Boolean, vararg sendBefore: OnSendBefore<Any?>, customSendCallback: CustomSendingCallback<Any?>?) {
         if (sen.key.isEmpty()) {
             sen.key = lastMsgRegister.peekLast()?.key ?: ""
         }
         if (sen.key.isEmpty()) ImLogs.recordErrorInFile("sendMsgWithChannel", "you are sending a message without sending key ,this message may couldn't retry if failed!")
         ImLogs.recordLogsInFile("sendMsgWithChannel", "send new Msg by sending key:${sen.key}")
         if (isRecent) {
-            CcIM.resend(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendCallback)
+            CcIM.resend(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, ignoreSendState, customSendCallback, *sendBefore)
         } else {
-            CcIM.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, ignoreSendState, sendBefore, customSendCallback)
+            CcIM.send(sen, clientMsgId, sendMsgDefaultTimeout, isSpecialData, ignoreConnecting, ignoreSendState, customSendCallback, *sendBefore)
         }
     }
 

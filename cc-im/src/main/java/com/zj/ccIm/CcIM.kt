@@ -57,7 +57,7 @@ internal object CcIM : IMInterface<Any?>() {
         } else imConfig?.onSdkDeadlyError(e)
     }
 
-    override fun onNewListenerRegistered(cls: Class<*>) {
+    override fun onNewListenerRegistered(cls: Class<*>, withData: Any?) {
         when (cls) {
             SessionInfoEntity::class.java -> {
                 routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)

@@ -61,7 +61,7 @@ import java.util.concurrent.LinkedBlockingDeque
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 abstract class IMInterface<T> : MessageInterface<T>() {
 
-    private var cachedListenClasses = LinkedBlockingDeque<Class<*>>()
+    private var cachedListenClasses = LinkedBlockingDeque<Pair<Class<*>, Any?>>()
     private var cachedServiceOperations = LinkedBlockingDeque<RunnerClientStub<T>.() -> Unit>()
     private var baseConnectionService: ChatBase<T>? = null
     private var serviceConn: ServiceConnection? = null
@@ -70,15 +70,15 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     private var isServiceConnected = false
     internal var option: BaseOption? = null
 
-    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         if (classT == RouteInfo::class.java) throw IllegalStateException("Must use [#addRouteInfoObserver] to observe the RouteInfo type.")
         return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR) { cls ->
-            setNewListener(cls)
+            setNewListener(cls, withData)
         }
     }
 
-    fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return addTransferObserver(classT, classT, uniqueCode, lifecycleOwner).build()
+    fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, withData: Any?, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        return addTransferObserver(classT, classT, uniqueCode, withData, lifecycleOwner).build()
     }
 
     fun <T : Any> addRouteInfoObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
@@ -91,19 +91,19 @@ abstract class IMInterface<T> : MessageInterface<T>() {
         return this.addRouteInfoObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
-    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
+    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, withData, lifecycleOwner)
     }
 
-    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return this.addReceiveObserver(T::class.java, uniqueCode, lifecycleOwner)
+    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        return this.addReceiveObserver(T::class.java, uniqueCode, withData, lifecycleOwner)
     }
 
-    private fun <N> setNewListener(cls: Class<N>) {
+    private fun <N> setNewListener(cls: Class<N>, withData: Any?) {
         if (isServiceConnected) {
-            onNewListenerRegistered(cls)
+            onNewListenerRegistered(cls, withData)
         } else {
-            cachedListenClasses.add(cls)
+            cachedListenClasses.add(Pair(cls, withData))
         }
     }
 
@@ -133,8 +133,8 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                     isServiceConnected = true
                     this@IMInterface.onServiceConnected()
                     if (cachedListenClasses.isNotEmpty()) {
-                        cachedListenClasses.forEach { cls ->
-                            onNewListenerRegistered(cls)
+                        cachedListenClasses.forEach { p ->
+                            onNewListenerRegistered(p.first, p.second)
                         }
                     }
                     if (cachedServiceOperations.isNotEmpty()) {
@@ -225,7 +225,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
 
     open fun onServiceDisConnected() {}
 
-    protected open fun onNewListenerRegistered(cls: Class<*>) {}
+    protected open fun onNewListenerRegistered(cls: Class<*>, withData: Any?) {}
 
     /**
      * send a msg ，see [RunnerClientStub.sendMsg]

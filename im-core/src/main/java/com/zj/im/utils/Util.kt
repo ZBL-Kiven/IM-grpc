@@ -163,6 +163,17 @@ internal class CustomList<OUT> {
         }
     }
 
+    fun forEachSafely(block: (MutableIterator<OUT>) -> Unit) {
+        lst.runSync { lst ->
+            if (!lst.isNullOrEmpty()) {
+                val each = lst.iterator()
+                while (each.hasNext()) {
+                    block(each)
+                }
+            }
+        }
+    }
+
     fun group(predicate: (i: OUT) -> Boolean): Map<Boolean, List<OUT>>? {
         return lst.runSync {
             it.groupBy(predicate)
@@ -181,6 +192,10 @@ internal class CustomList<OUT> {
                 it.removeAll(predicate)
             }
         }
+    }
+
+    fun any(predicate: (OUT) -> Boolean): Boolean {
+        return lst.any(predicate)
     }
 
     fun <R : Any> mapTo(asReversed: Boolean = false, transfer: (OUT) -> R): MutableList<R> {

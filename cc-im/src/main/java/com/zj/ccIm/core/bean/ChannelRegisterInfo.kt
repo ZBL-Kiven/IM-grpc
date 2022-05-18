@@ -45,7 +45,7 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
 
     fun setMessageReceiveObserver(): UIHelperCreator<MessageInfoEntity, MessageInfoEntity, *> {
         observerKey = "${lo?.javaClass?.simpleName ?: "UNKNOWN_LIFECYCLE"}&&$key"
-        return CcIM.addReceiveObserver(MessageInfoEntity::class.java, observerKey, lo)
+        return CcIM.addReceiveObserver(MessageInfoEntity::class.java, observerKey,null, lo)
     }
 
     fun toReqBody(msgId: Long?, @MsgFetchType type: Int? = null): ChannelRegisterInfo {

@@ -1,6 +1,10 @@
 package com.zj.im.main;
 
+
+import com.zj.im.chat.enums.RuntimeEfficiency;
 import com.zj.im.main.impl.RunningObserver;
+import com.zj.im.main.looper.MsgHandlerQueue;
+import com.zj.im.utils.log.logger.LogUtilsKt;
 
 import java.util.concurrent.TimeUnit;
 
@@ -13,10 +17,6 @@ import java.util.concurrent.TimeUnit;
  */
 class MsgLooper extends Thread {
 
-    interface AbandonInterruptedListener {
-        void looperInterrupted();
-    }
-
     void setFrequency(Long time) {
         if (checkRunning(false)) frequencyConversion(time);
     }
@@ -24,7 +24,7 @@ class MsgLooper extends Thread {
     boolean checkRunning(boolean ignoreQuit) {
         boolean isRunning = isAlive() && (ignoreQuit || !mQuit) && !isInterrupted();
         if (!isRunning && !ignoreQuit) {
-            abandonInterruptedListener.looperInterrupted();
+            observer.looperInterrupted();
         }
         return isRunning;
     }
@@ -32,20 +32,18 @@ class MsgLooper extends Thread {
     private Long sleepTime;
     private final String runningKey;
     private final RunningObserver observer;
-    private final AbandonInterruptedListener abandonInterruptedListener;
+    private MsgHandlerQueue msgQueue;
 
     /**
      * the Loop started by construct
      */
-    MsgLooper(String runningKey, Long sleepTime, RunningObserver observer, AbandonInterruptedListener l) {
+    MsgLooper(String runningKey, Long sleepTime, RunningObserver observer) {
         super("msg_handler");
-        this.abandonInterruptedListener = l;
         this.runningKey = runningKey;
         this.observer = observer;
         this.sleepTime = sleepTime;
         start();
     }
-
 
     private void frequencyConversion(Long sleepTime) {
         synchronized (this) {
@@ -60,9 +58,23 @@ class MsgLooper extends Thread {
         while (!mQuit) {
             try {
                 if (isInterrupted()) return;
-                observer.runningInBlock(runningKey);
-                TimeUnit.NANOSECONDS.sleep(sleepTime);
-            } catch (Exception ignored) {
+                boolean isEmptyQueue = observer.runningInBlock(runningKey);
+                if (msgQueue == null) {
+                    this.msgQueue = new MsgHandlerQueue();
+                    observer.onLooperPrepared(msgQueue);
+                }
+                if (isEmptyQueue && !msgQueue.hasData()) {
+                    frequencyConversion(RuntimeEfficiency.SLEEP.getInterval());
+                } else {
+                    msgQueue.loopOnce(sleepTime);
+                }
+                TimeUnit.MILLISECONDS.sleep(sleepTime);
+            } catch (Exception e) {
+                if (e instanceof InterruptedException) {
+                    observer.looperInterrupted();
+                } else {
+                    LogUtilsKt.printErrorInFile("MsgLooper", e.getMessage(), true);
+                }
             }
         }
     }

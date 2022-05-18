@@ -6,7 +6,6 @@ import com.zj.ccIm.core.MsgType
 import com.zj.ccIm.core.bean.ChannelRegisterInfo
 import com.zj.ccIm.core.sender.GiftUnitType
 import com.zj.database.entity.MessageInfoEntity
-import com.zj.database.entity.MultiLanguage
 import com.zj.im.chat.enums.SendMsgState
 import com.zj.imtest.R
 import com.zj.imtest.ui.base.BaseMessageFragment

@@ -14,6 +14,7 @@ import com.zj.im.main.dispatcher.EventHub
 import com.zj.im.main.impl.IMInterface
 import com.zj.im.main.impl.RunnerClientStub
 import com.zj.im.main.impl.RunningObserver
+import com.zj.im.main.looper.MsgHandlerQueue
 import com.zj.im.sender.CustomSendingCallback
 import com.zj.im.sender.OnSendBefore
 import com.zj.im.sender.SendExecutors
@@ -60,12 +61,12 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         initUtils()
         initBase()
         initQueue()
+        initHandler()
         getServer("init and start")?.init(context)
         getClient("init.setRunningKey and start")?.let {
             dataStore?.canSend { it.canSend() }
             dataStore?.canReceive { it.canReceived() }
         }
-        initHandler()
         isInit = true
         imi.prepare()
     }
@@ -86,9 +87,7 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         runningKey = getIncrementKey()
         curRunningKey = runningKey
         curFrequency = imi?.option?.runtimeEfficiency ?: RuntimeEfficiency.MEDIUM
-        msgLooper = MsgLooper(curRunningKey, curFrequency.interval, this) {
-            postError(LooperInterruptedException("thread has been destroyed!"))
-        }
+        msgLooper = MsgLooper(curRunningKey, curFrequency.interval, this)
     }
 
     private fun initQueue() {
@@ -109,6 +108,14 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         cast<BaseMsgInfo<R>, BaseMsgInfo<T>>(data)?.let {
             sendingPool?.push(it)
         }
+    }
+
+    override fun onLooperPrepared(queue: MsgHandlerQueue) {
+        getServer("msg looper prepared")?.onLooperPrepared(queue)
+    }
+
+    override fun looperInterrupted() {
+        postError(LooperInterruptedException("thread has been destroyed!"))
     }
 
     override fun <R> enqueue(data: BaseMsgInfo<R>) {
@@ -143,15 +150,18 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         }
     }
 
-    override fun run(runningKey: String) {
+    override fun run(runningKey: String): Boolean {
         if (runningKey != curRunningKey) {
             msgLooper?.shutdown()
             correctConnectionState(ConnectionState.ERROR("running key invalid"))
-            return
+            return false
         }
+        var isEmptyQueue = false
         catching {
             dataStore?.pop()?.let {
                 eventHub?.handle(it)
+            } ?: run {
+                isEmptyQueue = true
             }
         }
         catching {
@@ -159,10 +169,14 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         }
         catching {
             sendingPool?.pop()?.let {
+                isEmptyQueue = false
                 sendingPool?.lock()
                 SendExecutors(it, imi?.getServer("send"), this)
+            } ?: run {
+                isEmptyQueue = true
             }
         }
+        return isEmptyQueue
     }
 
     override fun result(isOK: Boolean, retryAble: Boolean, d: BaseMsgInfo<T>, throwable: Throwable?, payloadInfo: Any?) {
