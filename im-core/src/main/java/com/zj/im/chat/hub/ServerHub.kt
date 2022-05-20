@@ -10,7 +10,6 @@ import com.zj.im.main.dispatcher.DataReceivedDispatcher
 import com.zj.im.main.looper.MsgExecutor
 import com.zj.im.main.looper.MsgHandlerQueue
 import com.zj.im.utils.log.logger.NetRecordUtils
-import com.zj.im.utils.log.logger.e
 import com.zj.im.utils.log.logger.printErrorInFile
 import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
@@ -142,11 +141,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     private fun pingServer() {
         pingServer {
             if (it) {
-                heartbeatsTime = HEART_BEATS_BASE_TIME
+                val inc = (heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.2f.coerceAtMost(HEART_BEATS_BASE_TIME * 6f)
+                heartbeatsTime = inc.toLong()
                 curConnectionState = ConnectionState.PONG
                 if (isAlwaysHeartBeats) nextHeartbeats()
             } else {
-                heartbeatsTime = (heartbeatsTime * if (it) 1f else 0.5f).toLong()
+                val inc = heartbeatsTime * 0.2f.coerceAtLeast(100f)
+                heartbeatsTime = inc.toLong()
                 nextHeartbeats()
             }
         }
