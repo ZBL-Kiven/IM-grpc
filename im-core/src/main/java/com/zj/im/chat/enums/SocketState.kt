@@ -1,16 +1,16 @@
 package com.zj.im.chat.enums
 
 @Suppress("unused")
-sealed class ConnectionState {
+sealed class ConnectionState(internal val code: Int) {
 
-    object INIT : ConnectionState()
-    object PING : ConnectionState()
-    object PONG : ConnectionState()
-    class CONNECTION(val fromReconnect: Boolean) : ConnectionState()
-    class RECONNECT(val reason: String) : ConnectionState()
-    class CONNECTED(val fromReconnect: Boolean) : ConnectionState()
-    class ERROR(val reason: String) : ConnectionState()
-    object OFFLINE : ConnectionState()
+    object INIT : ConnectionState(0x11981)
+    object PING : ConnectionState(0x11982)
+    object PONG : ConnectionState(0x11983)
+    class CONNECTION(val fromReconnect: Boolean) : ConnectionState(0x11984)
+    class RECONNECT(val reason: String) : ConnectionState(0x11985)
+    class CONNECTED(val fromReconnect: Boolean) : ConnectionState(0x11986)
+    class ERROR(val reason: String) : ConnectionState(0x11987)
+    object OFFLINE : ConnectionState(0x11988)
 
     fun isConnected(): Boolean {
         return this is CONNECTED || this is PING || this is PONG

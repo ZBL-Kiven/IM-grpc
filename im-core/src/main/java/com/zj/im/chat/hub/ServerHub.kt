@@ -16,6 +16,8 @@ import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 
 @Suppress("unused", "SameParameterValue", "MemberVisibilityCanBePrivate")
@@ -25,17 +27,19 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         private const val PING_TIMEOUT = "reconnection because the ping was no response too many times!"
         private const val RECONNECTION_TIME = 3000L
         private const val HEART_BEATS_BASE_TIME = 3000L
-        private const val CONNECTION_EVENT = 0xf1378
-        private const val HEART_BEATS_EVENT = 0xf1365
+        private const val CONNECT_STATE_CHANGE = 0xf1379
         var currentConnectId: String = ""; private set
     }
 
     protected var app: Application? = null
     private var connectivityManager: IConnectivityManager? = null
+    private var alwaysHeartbeats: AtomicBoolean = AtomicBoolean(isAlwaysHeartBeats)
     private var pingHasNotResponseCount = 0
     private var pongTime = 0L
     private var pingTime = 0L
-    open var heartbeatsTime = HEART_BEATS_BASE_TIME
+    open var maxPingCount = 5
+    private var curPingCount: AtomicInteger = AtomicInteger(0)
+    private var heartbeatsTime = HEART_BEATS_BASE_TIME
     open val reconnectionTime = RECONNECTION_TIME
     private lateinit var handler: MsgExecutor
 
@@ -54,14 +58,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         this.app = context
         connectivityManager = IConnectivityManager()
         connectivityManager?.init(context) { netWorkStateChanged(it) }
-        curConnectionState = ConnectionState.CONNECTION(false)
     }
 
     open fun onRouteCall(callId: String?, data: T?) {}
 
     open fun onReConnect(case: String) {
         printErrorInFile("ServerHub.onReconnect", case, true)
-        connectDelay()
+        handler.enqueue(ConnectionState.CONNECTION(true), reconnectionTime)
     }
 
     open fun pingServer(response: (Boolean) -> Unit) {
@@ -69,17 +72,29 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     private fun onHandlerExecute(what: Int, obj: Any?) {
-        when (what) {
-            HEART_BEATS_EVENT -> {
-                curConnectionState = ConnectionState.PING
+        if (obj is ConnectionState) {
+            when (obj) {
+                is ConnectionState.INIT -> {
+                }
+                is ConnectionState.CONNECTION -> {
+                    curConnectionState = ConnectionState.CONNECTION(true)
+                    currentConnectId = UUID.randomUUID().toString()
+                    connect(currentConnectId)
+                }
+                is ConnectionState.PING -> {
+                    onCalledPing()
+                }
+                is ConnectionState.PONG -> {
+                    onCalledPong()
+                }
+                is ConnectionState.CONNECTED -> {
+                    onCalledConnected(obj.fromReconnect)
+                }
+                is ConnectionState.OFFLINE, is ConnectionState.ERROR, is ConnectionState.RECONNECT -> {
+                    onCalledError(obj)
+                }
             }
-            CONNECTION_EVENT -> {
-                curConnectionState = ConnectionState.CONNECTION(true)
-                currentConnectId = UUID.randomUUID().toString()
-                connect(currentConnectId)
-            }
-            else -> onMsgThreadCallback(what, obj)
-        }
+        } else onMsgThreadCallback(what, obj)
     }
 
     open fun onMsgThreadCallback(what: Int, obj: Any?) {}
@@ -88,13 +103,16 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         handler.enqueue(what, delay, obj)
     }
 
+    protected fun removeFromMsgThread(what: Int) {
+        handler.removeMessages(what)
+    }
+
     protected fun postOnConnected() {
-        curConnectionState = ConnectionState.CONNECTED(false)
+        handler.enqueue(ConnectionState.CONNECTED(false))
     }
 
     protected fun postToClose(case: String) {
-        heartbeatsTime = HEART_BEATS_BASE_TIME
-        curConnectionState = ConnectionState.ERROR(case)
+        handler.enqueue(ConnectionState.ERROR(case))
     }
 
     protected fun postError(case: String) {
@@ -111,8 +129,8 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     internal fun checkNetWork(alwaysCheck: Boolean) {
-        this.isAlwaysHeartBeats = this.isAlwaysHeartBeats || alwaysCheck
-        curConnectionState = ConnectionState.PING
+        this.alwaysHeartbeats.set(this.isAlwaysHeartBeats || alwaysCheck)
+        nextHeartbeats(true)
     }
 
     internal fun tryToReConnect(case: String) {
@@ -131,26 +149,11 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     internal fun onLooperPrepared(queue: MsgHandlerQueue) {
         handler = MsgExecutor(queue, ::onHandlerExecute)
-        handler.enqueue(CONNECTION_EVENT, 0)
+        handler.enqueue(ConnectionState.CONNECTION(false))
     }
 
     private fun netWorkStateChanged(state: NetWorkInfo) {
         DataReceivedDispatcher.pushData(BaseMsgInfo.networkStateChanged<T>(state))
-    }
-
-    private fun pingServer() {
-        pingServer {
-            if (it) {
-                val inc = (heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.2f.coerceAtMost(HEART_BEATS_BASE_TIME * 6f)
-                heartbeatsTime = inc.toLong()
-                curConnectionState = ConnectionState.PONG
-                if (isAlwaysHeartBeats) nextHeartbeats()
-            } else {
-                val inc = heartbeatsTime * 0.2f.coerceAtLeast(100f)
-                heartbeatsTime = inc.toLong()
-                nextHeartbeats()
-            }
-        }
     }
 
     /**
@@ -170,52 +173,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         if (size > 0) NetRecordUtils.recordLastModifyReceiveData(size)
     }
 
-    open fun shutdown() {
-        closeConnection("shutdown")
-        handler.clearAndDrop()
-        curConnectionState = ConnectionState.INIT
-        connectivityManager?.shutDown()
-    }
-
-    private fun nextHeartbeats() {
-        handler.enqueue(HEART_BEATS_EVENT, heartbeatsTime)
-    }
-
-    private fun connectDelay(connTime: Long = reconnectionTime) {
-        handler.enqueue(CONNECTION_EVENT, connTime)
+    private fun nextHeartbeats(resetPingCount: Boolean) {
+        if (resetPingCount) curPingCount.set(0)
+        handler.enqueue(ConnectionState.PING, heartbeatsTime)
     }
 
     private var curConnectionState: ConnectionState = ConnectionState.INIT
         set(value) {
-            when (value) {
-                is ConnectionState.PONG -> {
-                    pingHasNotResponseCount = 0
-                    pongTime = System.currentTimeMillis()
-                }
-                is ConnectionState.PING -> {
-                    val curTime = System.currentTimeMillis()
-                    val outOfTime = HEART_BEATS_BASE_TIME * 3f
-                    val lastPingTime = curTime - pingTime - heartbeatsTime
-                    if (pingTime > 0 && pongTime <= 0) {
-                        pingHasNotResponseCount++
-                    }
-                    if (pingHasNotResponseCount > 3 || (pongTime > 0L && curTime - (pongTime + lastPingTime) > outOfTime)) {
-                        postToClose(PING_TIMEOUT)
-                    } else {
-                        pingServer()
-                    }
-                    pingTime = System.currentTimeMillis()
-                }
-                is ConnectionState.CONNECTED -> {
-                    clearPingRecord()
-                    if (isAlwaysHeartBeats) nextHeartbeats()
-                }
-                is ConnectionState.OFFLINE, is ConnectionState.ERROR, is ConnectionState.RECONNECT -> {
-                    clearPingRecord()
-                }
-                else -> {
-                }
-            }
             if (value != field) {
                 field = value
                 if (value.isValidState()) DataReceivedDispatcher.pushData<T>(BaseMsgInfo.connectStateChange(value))
@@ -233,10 +197,64 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
             }
         }
 
+    private fun onCalledPing() {
+        if (!alwaysHeartbeats.get()) curPingCount.addAndGet(1)
+        if (pingTime > 0 && pongTime <= 0) {
+            pingHasNotResponseCount++
+        }
+        if (pingHasNotResponseCount > 3) {
+            postToClose(PING_TIMEOUT)
+        } else {
+            pingServer {
+                if (!it) postToClose("PING sent with server received explicit error callback, see [pingServer(Result)]!")
+                else {
+                    handler.enqueue(ConnectionState.PONG)
+                }
+            }
+            val inc = if (pongTime < 0) {
+                heartbeatsTime * 0.2f.coerceAtLeast(100f)
+            } else {
+                (heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.2f.coerceAtMost(HEART_BEATS_BASE_TIME * 6f)
+            }
+            heartbeatsTime = inc.toLong()
+            if (alwaysHeartbeats.get() || curPingCount.get() < maxPingCount) nextHeartbeats(false)
+        }
+        pingTime = System.currentTimeMillis()
+        pongTime = -1
+        curConnectionState = ConnectionState.PING
+    }
+
+    private fun onCalledPong() {
+        pingHasNotResponseCount = 0
+        pongTime = System.currentTimeMillis()
+        curConnectionState = ConnectionState.PONG
+    }
+
+    private fun onCalledConnected(fromReconnected: Boolean) {
+        curConnectionState = ConnectionState.CONNECTED(fromReconnected)
+        clearPingRecord()
+        if (alwaysHeartbeats.get() || curPingCount.get() < maxPingCount) nextHeartbeats(false)
+    }
+
+    private fun onCalledError(state: ConnectionState) {
+        clearPingRecord()
+        curConnectionState = state
+    }
+
     private fun clearPingRecord() {
         pongTime = 0L
         pingTime = 0L
+        curPingCount.set(0)
         pingHasNotResponseCount = 0
-        handler.removeMessages(HEART_BEATS_EVENT)
+        heartbeatsTime = HEART_BEATS_BASE_TIME
+        handler.remove(ConnectionState.PING)
+        handler.remove(ConnectionState.PONG)
+    }
+
+    open fun shutdown() {
+        closeConnection("shutdown")
+        handler.clearAndDrop()
+        curConnectionState = ConnectionState.INIT
+        connectivityManager?.shutDown()
     }
 }

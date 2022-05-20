@@ -52,15 +52,15 @@ internal abstract class ServerImplGrpc : ServerHub<Any?>() {
         }
     }
 
-    override fun pingServer(response: (Boolean) -> Unit) {
-        withChannel {
-            it?.ping(null, object : CusObserver<Pong>(isStreaming = false) {
-                override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
-                    response(isOk)
-                }
-            })
-        }
-    }
+//    override fun pingServer(response: (Boolean) -> Unit) {
+//        withChannel {
+//            it?.ping(null, object : CusObserver<Pong>(isStreaming = false) {
+//                override fun onResult(isOk: Boolean, data: Pong?, t: Throwable?) {
+//                    response(isOk)
+//                }
+//            })
+//        }
+//    }
 
     protected fun <R> withChannel(require: Boolean = true, r: (MsgApiGrpc.MsgApiStub?) -> R?): R? {
         CcIM.imConfig?.getApiHeader()?.let { header ->

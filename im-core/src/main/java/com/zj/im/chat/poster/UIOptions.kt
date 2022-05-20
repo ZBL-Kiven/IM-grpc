@@ -55,6 +55,9 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
                         result(null, lst, payload)
                     } ?: log("the data ${it.obj} was handled but null list result in cast transform")
                 }
+                2 -> {
+                    result(null, null, payload)
+                }
             }
         }
         return@Handler false
@@ -108,12 +111,12 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
             return
         }
         run(data, lst, payload) { d, ls, p ->
-            val a: Any = d ?: (ls ?: return@run)
-            postToMain(a, p, if (a == d) 0 else 1)
+            val a: Any? = d ?: ls
+            postToMain(a, p, if (a == null) 2 else if (a == d) 0 else 1)
         }
     }
 
-    private fun postToMain(data: Any, payload: String?, c: Int) {
+    private fun postToMain(data: Any?, payload: String?, c: Int) {
         handler.sendMessage(Message.obtain().apply {
             what = handleWhat
             obj = data

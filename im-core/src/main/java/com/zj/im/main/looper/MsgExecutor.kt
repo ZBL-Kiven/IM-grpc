@@ -1,5 +1,6 @@
 package com.zj.im.main.looper
 
+import com.zj.im.chat.enums.ConnectionState
 import com.zj.im.utils.log.logger.d
 import java.util.concurrent.ConcurrentHashMap
 
@@ -24,6 +25,14 @@ internal class MsgExecutor(queue: MsgHandlerQueue, private val callback: (what: 
         if (isDropped) {
             d("MsgExecutor.enqueue", "failed to enqueue message because the MsgLooper has been dropped!")
         } else messages[what] = Message(delay, obj)
+    }
+
+    fun enqueue(connectionState: ConnectionState, delay: Long = 0) {
+        enqueue(connectionState.code, delay, connectionState)
+    }
+
+    fun remove(connectionState: ConnectionState) {
+        removeMessages(connectionState.code)
     }
 
     fun removeMessages(what: Int) {

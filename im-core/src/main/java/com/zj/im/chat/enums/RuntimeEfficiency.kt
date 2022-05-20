@@ -8,5 +8,5 @@ package com.zj.im.chat.enums
  **/
 
 enum class RuntimeEfficiency(val interval: Long) {
-    SLEEP(512), LOW(256), MEDIUM(64), HIGH(32), OVERCLOCK(16)
+    SLEEP(256), LOW(64), MEDIUM(32), HIGH(16), OVERCLOCK(8)
 }
