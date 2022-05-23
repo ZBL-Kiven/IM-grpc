@@ -41,7 +41,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     private var curPingCount: AtomicInteger = AtomicInteger(0)
     private var heartbeatsTime = HEART_BEATS_BASE_TIME
     open val reconnectionTime = RECONNECTION_TIME
-    private lateinit var handler: MsgExecutor
+    private var handler: MsgExecutor? = null
 
     val isNetWorkAccess: Boolean
         get() {
@@ -64,7 +64,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     open fun onReConnect(case: String) {
         printErrorInFile("ServerHub.onReconnect", case, true)
-        handler.enqueue(ConnectionState.CONNECTION(true), reconnectionTime)
+        handler?.enqueue(ConnectionState.CONNECTION(true), reconnectionTime)
     }
 
     open fun pingServer(response: (Boolean) -> Unit) {
@@ -100,19 +100,19 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     open fun onMsgThreadCallback(what: Int, obj: Any?) {}
 
     protected fun sendToMsgThread(what: Int, delay: Long, obj: Any?) {
-        handler.enqueue(what, delay, obj)
+        handler?.enqueue(what, delay, obj)
     }
 
     protected fun removeFromMsgThread(what: Int) {
-        handler.removeMessages(what)
+        handler?.removeMessages(what)
     }
 
     protected fun postOnConnected() {
-        handler.enqueue(ConnectionState.CONNECTED(false))
+        handler?.enqueue(ConnectionState.CONNECTED(false))
     }
 
     protected fun postToClose(case: String) {
-        handler.enqueue(ConnectionState.ERROR(case))
+        handler?.enqueue(ConnectionState.ERROR(case))
     }
 
     protected fun postError(case: String) {
@@ -148,8 +148,8 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     internal fun onLooperPrepared(queue: MsgHandlerQueue) {
-        handler = MsgExecutor(queue, ::onHandlerExecute)
-        handler.enqueue(ConnectionState.CONNECTION(false))
+        if (handler == null) handler = MsgExecutor(queue, ::onHandlerExecute)
+        handler?.enqueue(ConnectionState.CONNECTION(false))
     }
 
     private fun netWorkStateChanged(state: NetWorkInfo) {
@@ -175,7 +175,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
 
     private fun nextHeartbeats(resetPingCount: Boolean) {
         if (resetPingCount) curPingCount.set(0)
-        handler.enqueue(ConnectionState.PING, heartbeatsTime)
+        handler?.enqueue(ConnectionState.PING, heartbeatsTime)
     }
 
     private var curConnectionState: ConnectionState = ConnectionState.INIT
@@ -208,7 +208,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
             pingServer {
                 if (!it) postToClose("PING sent with server received explicit error callback, see [pingServer(Result)]!")
                 else {
-                    handler.enqueue(ConnectionState.PONG)
+                    handler?.enqueue(ConnectionState.PONG)
                 }
             }
             val inc = if (pongTime < 0) {
@@ -217,7 +217,9 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 (heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.2f.coerceAtMost(HEART_BEATS_BASE_TIME * 6f)
             }
             heartbeatsTime = inc.toLong()
-            if (alwaysHeartbeats.get() || curPingCount.get() < maxPingCount) nextHeartbeats(false)
+            if (alwaysHeartbeats.get() || curPingCount.get() < maxPingCount) {
+                nextHeartbeats(false)
+            }
         }
         pingTime = System.currentTimeMillis()
         pongTime = -1
@@ -247,13 +249,13 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         curPingCount.set(0)
         pingHasNotResponseCount = 0
         heartbeatsTime = HEART_BEATS_BASE_TIME
-        handler.remove(ConnectionState.PING)
-        handler.remove(ConnectionState.PONG)
+        handler?.remove(ConnectionState.PING)
+        handler?.remove(ConnectionState.PONG)
     }
 
     open fun shutdown() {
         closeConnection("shutdown")
-        handler.clearAndDrop()
+        handler?.clearAndDrop()
         curConnectionState = ConnectionState.INIT
         connectivityManager?.shutDown()
     }

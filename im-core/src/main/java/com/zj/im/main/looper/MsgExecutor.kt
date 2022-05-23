@@ -40,15 +40,17 @@ internal class MsgExecutor(queue: MsgHandlerQueue, private val callback: (what: 
     }
 
     fun loop(interval: Long) {
+        val mMessages = arrayListOf<Pair<Int, Any?>>()
         val iterator = messages.entries.iterator()
         while (iterator.hasNext()) {
             val next = iterator.next()
             next.value.delay -= interval
             if (next.value.delay <= 0) {
-                callback(next.key, next.value.obj)
+                mMessages.add(Pair(next.key, next.value.obj))
                 iterator.remove()
             }
         }
+        mMessages.forEach { callback(it.first, it.second) }
     }
 
     fun clearAndDrop() {
