@@ -19,6 +19,7 @@ import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.hub.ClientHub
 import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.interfaces.MessageInterface
+import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.impl.IMInterface
 
 
@@ -57,7 +58,7 @@ internal object CcIM : IMInterface<Any?>() {
         } else imConfig?.onSdkDeadlyError(e)
     }
 
-    override fun onNewListenerRegistered(cls: Class<*>, withData: Any?) {
+    override fun onNewListenerRegistered(cls: UIHelperCreator<*, *, *>, withData: Any?) {
         when (cls) {
             SessionInfoEntity::class.java -> {
                 routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)

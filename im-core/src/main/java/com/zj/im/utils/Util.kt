@@ -133,7 +133,7 @@ internal class CustomList<OUT> {
     }
 
     fun <R : Comparable<R>> sort(selector: (OUT) -> R) {
-        lst.sortBy(selector)
+        lst.runSync { it.sortBy(selector) }
     }
 
     fun addAll(elements: Collection<OUT>?) {

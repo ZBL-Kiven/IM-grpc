@@ -19,6 +19,7 @@ import com.zj.im.chat.hub.ServerHub
 import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.modle.RouteInfo
+import com.zj.im.chat.poster.ObserverIn
 import com.zj.im.chat.poster.UIHandlerCreator
 import com.zj.im.chat.poster.UIHelperCreator
 import com.zj.im.main.ChatBase
@@ -59,9 +60,9 @@ import java.util.concurrent.LinkedBlockingDeque
  *
  */
 @Suppress("unused", "MemberVisibilityCanBePrivate")
-abstract class IMInterface<T> : MessageInterface<T>() {
+abstract class IMInterface<T> : MessageInterface<T>(), ObserverIn {
 
-    private var cachedListenClasses = LinkedBlockingDeque<Pair<Class<*>, Any?>>()
+    private var cachedListenClasses = LinkedBlockingDeque<UIHelperCreator<*, *, *>>()
     private var cachedServiceOperations = LinkedBlockingDeque<RunnerClientStub<T>.() -> Unit>()
     private var baseConnectionService: ChatBase<T>? = null
     private var serviceConn: ServiceConnection? = null
@@ -70,42 +71,49 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     private var isServiceConnected = false
     internal var option: BaseOption? = null
 
-    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+    fun <T : Any, R : Any> addTransferObserver(classT: Class<T>, classR: Class<R>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
         if (classT == RouteInfo::class.java) throw IllegalStateException("Must use [#addRouteInfoObserver] to observe the RouteInfo type.")
-        return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR) { cls ->
-            setNewListener(cls, withData)
-        }
+        return UIHandlerCreator(uniqueCode, lifecycleOwner, classT, classR, null, this)
     }
 
-    fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, withData: Any?, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return addTransferObserver(classT, classT, uniqueCode, withData, lifecycleOwner).build()
+    fun <T : Any> addReceiveObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        return addTransferObserver(classT, classT, uniqueCode, lifecycleOwner).build()
     }
 
     fun <T : Any> addRouteInfoObserver(classT: Class<T>, uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
         if (classT == RouteInfo::class.java) throw IllegalStateException("Needn't to use RouteInfo wrapped type, use addRouteInfoUIObserver<Int> such as need to monitor <Route<Int>>")
         val r = RouteInfo<T>(null).javaClass
-        return UIHelperCreator(uniqueCode, lifecycleOwner, r, r, null, classT) {}
+        return UIHelperCreator(uniqueCode, lifecycleOwner, r, r, null, classT, this)
     }
 
     inline fun <reified T : Any> addRouteInfoObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<RouteInfo<T>, RouteInfo<T>, *> {
         return this.addRouteInfoObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
-    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
-        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, withData, lifecycleOwner)
+    inline fun <reified T : Any, reified R : Any> addTransferObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHandlerCreator<T, R> {
+        return this.addTransferObserver(T::class.java, R::class.java, uniqueCode, lifecycleOwner)
     }
 
-    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, withData: Any? = null, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
-        return this.addReceiveObserver(T::class.java, uniqueCode, withData, lifecycleOwner)
+    inline fun <reified T : Any> addReceiveObserver(uniqueCode: Any, lifecycleOwner: LifecycleOwner? = null): UIHelperCreator<T, T, *> {
+        return this.addReceiveObserver(T::class.java, uniqueCode, lifecycleOwner)
     }
 
-    private fun <N> setNewListener(cls: Class<N>, withData: Any?) {
+
+    final override fun onObserverRegistered(creator: UIHelperCreator<*, *, *>) {
         if (isServiceConnected) {
-            onNewListenerRegistered(cls, withData)
+            onNewListenerRegistered(creator)
         } else {
-            cachedListenClasses.add(Pair(cls, withData))
+            cachedListenClasses.add(creator)
         }
     }
+
+    final override fun onObserverUnRegistered(creator: UIHelperCreator<*, *, *>) {
+        cachedListenClasses.remove(creator)
+        onListenerUnRegistered(creator)
+    }
+
+    open fun onNewListenerRegistered(creator: UIHelperCreator<*, *, *>) {}
+    open fun onListenerUnRegistered(creator: UIHelperCreator<*, *, *>) {}
 
     protected fun initChat(option: BaseOption) {
         this.option = option
@@ -134,7 +142,7 @@ abstract class IMInterface<T> : MessageInterface<T>() {
                     this@IMInterface.onServiceConnected()
                     if (cachedListenClasses.isNotEmpty()) {
                         cachedListenClasses.forEach { p ->
-                            onNewListenerRegistered(p.first, p.second)
+                            onNewListenerRegistered(p)
                         }
                     }
                     if (cachedServiceOperations.isNotEmpty()) {
@@ -224,8 +232,6 @@ abstract class IMInterface<T> : MessageInterface<T>() {
     open fun onServiceConnected() {}
 
     open fun onServiceDisConnected() {}
-
-    protected open fun onNewListenerRegistered(cls: Class<*>, withData: Any?) {}
 
     /**
      * send a msg ，see [RunnerClientStub.sendMsg]

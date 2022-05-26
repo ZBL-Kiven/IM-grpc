@@ -11,7 +11,7 @@ import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
 import kotlin.collections.ArrayList
 
-internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, inObserver: (Class<R>) -> Unit, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val inObserver: ObserverIn, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
 
     init {
         lifecycleOwner?.let {
@@ -29,7 +29,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
             }
         }
         MessageInterface.putAnObserver(this)
-        inObserver(creator.outerCls)
+        inObserver.onObserverRegistered(creator)
     }
 
     private val pal = "payload"
@@ -78,12 +78,6 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
 
     fun getUnique(): Any {
         return uniqueCode
-    }
-
-    internal fun canConsumed(data: Any?): Boolean {
-        if (data == null) return false
-        val castedData = cast<Any, T>(data) ?: return false
-        return postData(castedData, "check") != null
     }
 
     fun post(cls: Class<*>?, data: Any?, ld: Collection<*>?, payload: String?): Boolean {
@@ -187,6 +181,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     internal fun destroy() {
         try {
             MessageInterface.removeAnObserver(this.getUnique())
+            inObserver.onObserverUnRegistered(creator)
             handler.removeCallbacksAndMessages(null)
             lifecycleOwner?.lifecycle?.removeObserver(this)
         } catch (e: Exception) {
