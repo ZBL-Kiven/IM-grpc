@@ -210,6 +210,7 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
         if (e is LooperInterruptedException) {
             if (!isFinishing(curRunningKey)) initHandler()
             else printInFile("ChatBase.IM.LooperInterrupted", " the MsgLooper was stopped by SDK shutDown")
+            return
         }
         imi?.postError(e)
     }

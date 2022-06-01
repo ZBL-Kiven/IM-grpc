@@ -109,7 +109,9 @@ abstract class IMInterface<T> : MessageInterface<T>(), ObserverIn {
 
     final override fun onObserverUnRegistered(creator: UIHelperCreator<*, *, *>) {
         cachedListenClasses.remove(creator)
-        onListenerUnRegistered(creator)
+        if (isServiceConnected) {
+            onListenerUnRegistered(creator)
+        }
     }
 
     open fun onNewListenerRegistered(creator: UIHelperCreator<*, *, *>) {}

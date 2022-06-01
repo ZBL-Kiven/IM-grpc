@@ -58,8 +58,8 @@ internal object CcIM : IMInterface<Any?>() {
         } else imConfig?.onSdkDeadlyError(e)
     }
 
-    override fun onNewListenerRegistered(cls: UIHelperCreator<*, *, *>, withData: Any?) {
-        when (cls) {
+    override fun onNewListenerRegistered(creator: UIHelperCreator<*, *, *>) {
+        when (creator.inCls) {
             SessionInfoEntity::class.java -> {
                 routeToClient(null, Constance.CALL_ID_START_LISTEN_SESSION)
             }
