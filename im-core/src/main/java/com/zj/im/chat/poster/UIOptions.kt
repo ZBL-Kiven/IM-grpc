@@ -9,7 +9,6 @@ import com.zj.im.chat.interfaces.MessageInterface
 import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
-import kotlin.collections.ArrayList
 
 internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val inObserver: ObserverIn, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
 
@@ -121,24 +120,11 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
         })
     }
 
-    private fun run(data: T?, lst: Collection<T>?, payload: String?, finished: (R?, ArrayList<R>?, String?) -> Unit) {
-
+    private fun run(data: T?, lst: Collection<T>?, payload: String?, finished: (R?, List<R?>?, String?) -> Unit) {
         try {
-            val ds = arrayListOf<T>()
-            if (lst != null) ds.addAll(lst)
-            if (data != null) ds.add(data)
-
-            val handled = arrayListOf<R>()
-            ds.forEach {
-                postData(it, payload)?.let { r ->
-                    handled.add(r)
-                }
-            }
-            if (handled.isNullOrEmpty()) finished(null, null, payload) else {
-                val hd = if (handled.size == 1) handled.first() else null
-                val hds = if (handled.size > 1) handled else null
-                finished(hd, hds, payload)
-            }
+            val dh = data?.let { postData(it, payload) }
+            val dsh = lst?.map { postData(it, payload) }
+            finished(dh, dsh, payload)
         } catch (e: Exception) {
             e.printStackTrace()
         }
