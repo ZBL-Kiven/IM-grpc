@@ -50,7 +50,9 @@ internal class MsgExecutor(queue: MsgHandlerQueue, private val callback: (what: 
                 iterator.remove()
             }
         }
-        mMessages.forEach { callback(it.first, it.second) }
+        mMessages.forEach {
+            callback(it.first, it.second)
+        }
     }
 
     fun clearAndDrop() {

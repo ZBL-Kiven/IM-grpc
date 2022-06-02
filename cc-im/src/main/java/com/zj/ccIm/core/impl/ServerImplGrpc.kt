@@ -15,7 +15,7 @@ import io.grpc.Status
 import io.grpc.StatusRuntimeException
 import io.grpc.stub.StreamObserver
 
-internal abstract class ServerImplGrpc : ServerHub<Any?>() {
+internal abstract class ServerImplGrpc : ServerHub<Any?>(true) {
 
     private var curCachedRunningKey: String = ""
 

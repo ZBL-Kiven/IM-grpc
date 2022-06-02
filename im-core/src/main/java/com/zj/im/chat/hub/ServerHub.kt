@@ -68,7 +68,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     open fun pingServer(response: (Boolean) -> Unit) {
-        response(isNetWorkAccess)
+            response(isNetWorkAccess)
     }
 
     private fun onHandlerExecute(what: Int, obj: Any?) {
@@ -204,6 +204,8 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         }
         if (pingHasNotResponseCount > 3) {
             postToClose(PING_TIMEOUT)
+            clearPingRecord()
+            return
         } else {
             pingServer {
                 if (!it) postToClose("PING sent with server received explicit error callback, see [pingServer(Result)]!")
@@ -212,9 +214,9 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
                 }
             }
             val inc = if (pongTime < 0) {
-                heartbeatsTime * 0.2f.coerceAtLeast(100f)
+                (heartbeatsTime * 0.2f).coerceAtLeast(100f)
             } else {
-                (heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.2f.coerceAtMost(HEART_BEATS_BASE_TIME * 6f)
+                ((heartbeatsTime.coerceAtLeast(HEART_BEATS_BASE_TIME)) * 1.5f).coerceAtMost(HEART_BEATS_BASE_TIME * 10f)
             }
             heartbeatsTime = inc.toLong()
             if (alwaysHeartbeats.get() || curPingCount.get() < maxPingCount) {
