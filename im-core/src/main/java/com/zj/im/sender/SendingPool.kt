@@ -1,6 +1,7 @@
 package com.zj.im.sender
 
 import com.zj.im.chat.enums.SendMsgState
+import com.zj.im.chat.exceptions.IMException
 import com.zj.im.chat.modle.BaseMsgInfo
 import com.zj.im.chat.modle.SendingUp
 import com.zj.im.main.dispatcher.DataReceivedDispatcher
@@ -92,7 +93,15 @@ internal class SendingPool<T> : OnStatus<T> {
     }
 
     override fun error(callId: String, e: Throwable?, payloadInfo: Any?) {
-        printInFile("SendExecutors.send", "$callId before sending task error,case:\n${e?.message}\npayload = $payloadInfo")
+        if (e != null) {
+            val ime = if (e is IMException) {
+                val body = e.getBodyData()
+                IMException("SendExecutors.send $callId before sending task error,case:\n${e.message}\n payload = $payloadInfo", body)
+            } else {
+                IMException("SendExecutors.send $callId before sending task error,case:\n${e.message}\n payload = $payloadInfo", e)
+            }
+            DataReceivedDispatcher.postError(ime)
+        }
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
             this.sendingUp = SendingUp.CANCEL
             this.onSendBefore?.clear()

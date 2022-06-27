@@ -8,11 +8,8 @@ import com.zj.im.utils.cusListOf
 
 /**
  * created by ZJJ
- *
  * the message queue for sdk
- *
  * thread-safety list will pop their top  by their priority
- *
  * */
 internal class DataStore<T> {
 
