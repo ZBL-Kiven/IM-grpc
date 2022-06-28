@@ -8,6 +8,7 @@ import com.zj.ccIm.core.IMHelper
 import com.zj.ccIm.core.catching
 import com.zj.ccIm.core.fecher.FetchMsgChannel
 import com.zj.database.entity.MessageInfoEntity
+import com.zj.im.chat.poster.DataHandler
 import com.zj.im.chat.poster.UIHelperCreator
 import java.lang.IllegalArgumentException
 
@@ -43,9 +44,10 @@ data class ChannelRegisterInfo internal constructor(internal val lo: LifecycleOw
         key = createKey(mChannel.serializeName, groupId, ownerId?.toLong(), targetUserid?.toLong())
     }
 
-    fun setMessageReceiveObserver(): UIHelperCreator<MessageInfoEntity, MessageInfoEntity, *> {
+    fun <TR : DataHandler<MessageInfoEntity>> setMessageReceiveObserver(transfer: Class<TR>? = null): UIHelperCreator<MessageInfoEntity, MessageInfoEntity, *> {
         observerKey = "${lo?.javaClass?.simpleName ?: "UNKNOWN_LIFECYCLE"}&&$key"
-        return CcIM.addReceiveObserver(MessageInfoEntity::class.java, observerKey, lo)
+        val creator = CcIM.addTransferObserver<MessageInfoEntity, MessageInfoEntity>(observerKey, lo)
+        return if (transfer != null) creator.addHandler(transfer) else creator.build()
     }
 
     fun toReqBody(msgId: Long?, @MsgFetchType type: Int? = null): ChannelRegisterInfo {

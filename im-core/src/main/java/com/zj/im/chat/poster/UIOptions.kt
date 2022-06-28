@@ -10,7 +10,7 @@ import com.zj.im.chat.modle.RouteInfo
 import com.zj.im.utils.cast
 import com.zj.im.utils.log.logger.d
 
-internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val inObserver: ObserverIn, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
+internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqueCode: Any, private val lifecycleOwner: LifecycleOwner? = null, private val creator: UIHelperCreator<T, R, L>, private val inObserver: ObserverIn, private val result: (R?, List<R>?, String?) -> Unit) : LifecycleEventObserver {
 
     init {
         lifecycleOwner?.let {
@@ -34,7 +34,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
     private val pal = "payload"
     private val cag = "category"
     private val handleWhat = 0x1101
-    private var dataHandler: DataHandler<T, R>? = null
+    private var dataHandler: DataHandler<T>? = null
 
     /**Compatible call order is affected by LifecycleOwner * */
     internal var hasPendingCount = 0
@@ -122,28 +122,56 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T, R>>(private val un
 
     private fun run(data: T?, lst: Collection<T>?, payload: String?, finished: (R?, List<R?>?, String?) -> Unit) {
         try {
-            val dh = data?.let { postData(it, payload) }
-            val dsh = lst?.map { postData(it, payload) }
-            finished(dh, dsh, payload)
+            data?.let {
+                postData(it, payload).forEach { d ->
+                    finished(d, null, payload)
+                }
+            }
+            val dsh = mutableListOf<R?>()
+            lst?.forEach {
+                dsh.addAll(postData(it, payload))
+            }
+            finished(null, dsh, payload)
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
 
-    private fun postData(data: T, payload: String?): R? {
+    private fun postData(data: T, payload: String?): List<R> {
         return creator.filterIn?.let {
             if (it.invoke(data, payload)) postFilterInData(data, payload)
             else {
                 log("the data $data may abandon with filter in")
-                return@postData null
+                return@postData mutableListOf()
             }
         } ?: postFilterInData(data, payload)
     }
 
-    private fun postFilterInData(data: T, payload: String?): R? {
+    private fun postFilterInData(data: T, payload: String?): List<R> {
         if (dataHandler == null) dataHandler = creator.handlerCls?.newInstance()
-        val out: R = dataHandler?.handle(data) ?: castNotSafety(data)
-        return postHandlerData(out, payload)
+        val o = dataHandler?.handle(data)
+        val os = mutableListOf<R?>()
+        if (o != null && o is Collection<*>) {
+            o.forEach {
+                val o1 = parseAnyObj(it, data, payload)
+                if (o1 != null) os.add(o1)
+            }
+        } else {
+            os.add(parseAnyObj(o, data, payload))
+        }
+        return os.mapNotNull { postHandlerData(it, payload) }
+    }
+
+    private fun parseAnyObj(o: Any?, data: T, payload: String?): R? {
+        val out: R? = kotlin.runCatching { castNotSafety<Any, R>(o ?: data) }.getOrNull()
+        return if ((o != null && out == null) || (out != null && out::class.java != creator.outerCls)) {
+            (out ?: o)?.let {
+                MessageInterface.postToUIObservers(it::class.java, it, payload) {}
+            }
+            null
+        } else {
+            out
+        }
     }
 
     private fun postHandlerData(data: R?, payload: String?): R? {

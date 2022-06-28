@@ -97,7 +97,6 @@ internal open class ServerHubImpl : ServerImplGrpc(), LoggerInterface {
      * send msg to server
      * */
     private fun sendMsg(d: Any?, callId: String, callBack: SendingCallBack<Any?>) {
-        ImLogs.d("server hub event ", "on new msg send")
         if (d !is SendMessageReqEn) {
             callBack.result(false, null, false, IllegalArgumentException("the send msg type is not supported except SendMessageReqEn.class"), null)
             return

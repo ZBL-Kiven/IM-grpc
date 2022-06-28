@@ -15,6 +15,7 @@ import com.zj.im.chat.enums.SendMsgState
 import com.zj.imUi.base.BaseImItem
 import com.zj.imtest.R
 import com.zj.imtest.ui.data.MsgAdapter
+import com.zj.imtest.ui.data.MsgInfoTransfer
 import com.zj.loading.BaseLoadingView
 import com.zj.loading.DisplayMode
 import com.zj.views.list.refresh.layout.RefreshLayout
@@ -100,7 +101,7 @@ abstract class BaseMessageFragment : BaseTabFragment() {
     }
 
     private fun initMessageObserver() {
-        val observer = msgReqInfo.setMessageReceiveObserver().filterIn(::getMessageFilter)
+        val observer = msgReqInfo.setMessageReceiveObserver(MsgInfoTransfer::class.java).filterIn(::getMessageFilter)
         observer.ignoreNullData(false)
         observer.listen { d, list, pl ->
             if (d != null) {
