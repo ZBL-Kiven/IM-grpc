@@ -127,11 +127,13 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqu
                     finished(d, null, payload)
                 }
             }
-            val dsh = mutableListOf<R?>()
-            lst?.forEach {
-                dsh.addAll(postData(it, payload))
+            lst?.let { l ->
+                val dsh = mutableListOf<R?>()
+                l.forEach {
+                    dsh.addAll(postData(it, payload))
+                }
+                finished(null, dsh, payload)
             }
-            finished(null, dsh, payload)
         } catch (e: Exception) {
             e.printStackTrace()
         }
