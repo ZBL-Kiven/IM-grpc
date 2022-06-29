@@ -13,12 +13,12 @@ enum class SendMsgState(val type: Int) {
 
     private var specialBody: Any? = null
 
-    internal fun setSpecialBody(specialBody: Any?): SendMsgState {
+    fun setSpecialBody(specialBody: Any?): SendMsgState {
         this.specialBody = specialBody
         return this
     }
 
-    internal fun peekSpecialBody(): Any? {
+    fun peekSpecialBody(): Any? {
         return specialBody
     }
 

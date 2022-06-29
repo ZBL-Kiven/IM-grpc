@@ -125,13 +125,14 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqu
             when {
                 data != null -> {
                     postData(data, payload).forEach { d ->
-                        finished(d, null, payload)
+                        finished(d.first, null, d.second)
                     }
                 }
                 !lst.isNullOrEmpty() -> {
                     val dsh = mutableListOf<R?>()
                     lst.forEach {
-                        dsh.addAll(postData(it, payload))
+                        val d = postData(it, payload)
+                        dsh.addAll(d.map { l -> l.first })
                     }
                     finished(null, dsh, payload)
                 }
@@ -144,7 +145,7 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqu
         }
     }
 
-    private fun postData(data: T, payload: String?): List<R> {
+    private fun postData(data: T, payload: String?): List<Pair<R?, String?>> {
         return creator.filterIn?.let {
             if (it.invoke(data, payload)) postFilterInData(data, payload)
             else {
@@ -154,19 +155,18 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqu
         } ?: postFilterInData(data, payload)
     }
 
-    private fun postFilterInData(data: T, payload: String?): List<R> {
+    private fun postFilterInData(data: T, payload: String?): List<Pair<R?, String?>> {
         if (dataHandler == null) dataHandler = creator.handlerCls?.newInstance()
-        val o = dataHandler?.handle(data)
-        val os = mutableListOf<R?>()
-        if (o != null && o is Collection<*>) {
-            o.forEach {
-                val o1 = parseAnyObj(it, data, payload)
-                if (o1 != null) os.add(o1)
-            }
-        } else {
-            os.add(parseAnyObj(o, data, payload))
+        val os = mutableListOf<Pair<R?, String?>>()
+        dataHandler?.handle(data, payload)?.forEach {
+            val pl = it.second
+            val o1 = parseAnyObj(it.first, data, pl)
+            if (o1 != null) os.add(Pair(o1, pl))
+        } ?: run {
+            val o2 = parseAnyObj(null, data, payload)
+            if (o2 != null) os.add(Pair(o2, payload))
         }
-        return os.mapNotNull { postHandlerData(it, payload) }
+        return os.map { Pair(postHandlerData(it.first, it.second), it.second) }
     }
 
     private fun parseAnyObj(o: Any?, data: T, payload: String?): R? {
