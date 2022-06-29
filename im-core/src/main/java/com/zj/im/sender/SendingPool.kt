@@ -106,9 +106,7 @@ internal class SendingPool<T> : OnStatus<T> {
             this.sendingUp = SendingUp.CANCEL
             this.onSendBefore?.clear()
             this.onSendBefore = null
-            val sendState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
-            val notifyState = BaseMsgInfo.sendingStateChange(sendState, callId, data, isResend, sendWithoutState)
-            DataReceivedDispatcher.pushData(notifyState)
+            this.sendingState = SendMsgState.FAIL.setSpecialBody(payloadInfo)
         }
     }
 

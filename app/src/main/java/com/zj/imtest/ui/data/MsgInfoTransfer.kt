@@ -6,6 +6,7 @@ import com.zj.im.chat.poster.DataHandler
 class MsgInfoTransfer : DataHandler<MessageInfoEntity> {
 
     override fun handle(data: MessageInfoEntity): Any {
+
         return data
     }
 
