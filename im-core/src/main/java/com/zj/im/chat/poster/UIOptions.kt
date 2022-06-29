@@ -122,17 +122,22 @@ internal class UIOptions<T : Any, R : Any, L : DataHandler<T>>(private val uniqu
 
     private fun run(data: T?, lst: Collection<T>?, payload: String?, finished: (R?, List<R?>?, String?) -> Unit) {
         try {
-            data?.let {
-                postData(it, payload).forEach { d ->
-                    finished(d, null, payload)
+            when {
+                data != null -> {
+                    postData(data, payload).forEach { d ->
+                        finished(d, null, payload)
+                    }
                 }
-            }
-            lst?.let { l ->
-                val dsh = mutableListOf<R?>()
-                l.forEach {
-                    dsh.addAll(postData(it, payload))
+                !lst.isNullOrEmpty() -> {
+                    val dsh = mutableListOf<R?>()
+                    lst.forEach {
+                        dsh.addAll(postData(it, payload))
+                    }
+                    finished(null, dsh, payload)
                 }
-                finished(null, dsh, payload)
+                else -> {
+                    finished(null, null, payload)
+                }
             }
         } catch (e: Exception) {
             e.printStackTrace()
