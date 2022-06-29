@@ -65,7 +65,7 @@ internal class FileSender(private val d: SendMessageReqEn) : BaseFileSender(d, d
 
         override fun onError(p0: Int, case: String) {
             ImLogs.d("MsgFileUploader", "video compress error case : $case ")
-            onStatus?.error(d.clientMsgId, IllegalArgumentException(case))
+            onStatus?.error(d.clientMsgId, d, IllegalArgumentException(case))
         }
 
         override fun onFileTransform(p0: String?) {

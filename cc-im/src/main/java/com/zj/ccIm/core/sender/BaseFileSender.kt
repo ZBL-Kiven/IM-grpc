@@ -24,7 +24,7 @@ internal open class BaseFileSender(private val d: SendMessageReqEn, private val 
 
         override fun onError(uploadId: String, exception: Throwable?, errorBody: Any?) {
             exception?.printStackTrace()
-            onStatus?.error(uploadId, exception, errorBody)
+            onStatus?.error(uploadId, d, exception, errorBody)
         }
 
         override fun onProgress(uploadId: String, progress: Int) {
@@ -44,7 +44,7 @@ internal open class BaseFileSender(private val d: SendMessageReqEn, private val 
         try {
             startUpload(false)
         } catch (e: Exception) {
-            onStatus.error(callId, e)
+            onStatus.error(callId, d, e)
             e.printStackTrace()
         }
     }
@@ -69,7 +69,7 @@ internal open class BaseFileSender(private val d: SendMessageReqEn, private val 
     }
 
     open fun cancel() {
-        onStatus?.error(callId, java.lang.IllegalArgumentException("file upload error case : canceled!"))
+        onStatus?.error(callId, d, java.lang.IllegalArgumentException("file upload error case : canceled!"))
         sendingToken?.cancel()
     }
 }
