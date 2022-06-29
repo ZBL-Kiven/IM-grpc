@@ -16,7 +16,7 @@ interface OnStatus<T> {
      * @param payloadInfo is the custom information attached to the error type,
      * which can be obtained through [com.zj.im.chat.enums.SendMsgState.getSpecialBody].
      * */
-    fun error(callId: String, data: T, e: Throwable?, payloadInfo: Any? = null)
+    fun error(callId: String, data: T? = null, e: Throwable?, payloadInfo: Any? = null)
 
     /**
      * @param progress Task execution progress.

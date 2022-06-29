@@ -92,7 +92,7 @@ internal class SendingPool<T> : OnStatus<T> {
         }
     }
 
-    override fun error(callId: String, data: T, e: Throwable?, payloadInfo: Any?) {
+    override fun error(callId: String, data: T?, e: Throwable?, payloadInfo: Any?) {
         if (e != null) {
             val ime = if (e is IMException) {
                 val body = e.getBodyData()
@@ -103,7 +103,7 @@ internal class SendingPool<T> : OnStatus<T> {
             DataReceivedDispatcher.postError(ime)
         }
         sendMsgQueue.getFirst { obj -> obj.callId == callId }?.apply {
-            this.data = data
+            if (data != null) this.data = data
             this.sendingUp = SendingUp.CANCEL
             this.onSendBefore?.clear()
             this.onSendBefore = null
