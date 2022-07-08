@@ -9,7 +9,7 @@ sealed class ConnectionState(internal val code: Int) {
     class CONNECTION(val fromReconnect: Boolean) : ConnectionState(11984)
     class RECONNECT(val reason: String) : ConnectionState(11985)
     class CONNECTED(val fromReconnect: Boolean) : ConnectionState(11986)
-    class ERROR(val reason: String) : ConnectionState(11987)
+    class ERROR(val reason: String, val reconAble: Boolean) : ConnectionState(11987)
     object OFFLINE : ConnectionState(11988)
 
     fun isConnected(): Boolean {

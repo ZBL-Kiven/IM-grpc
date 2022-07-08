@@ -153,7 +153,7 @@ internal abstract class Runner<T> : RunningObserver(), RunnerClientStub<T>, Send
     override fun run(runningKey: String): Boolean {
         if (runningKey != curRunningKey) {
             msgLooper?.shutdown()
-            correctConnectionState(ConnectionState.ERROR("running key invalid"))
+            correctConnectionState(ConnectionState.ERROR("running key invalid", true))
             return false
         }
         var isEmptyQueue = false

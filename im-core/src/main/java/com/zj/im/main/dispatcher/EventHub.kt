@@ -13,7 +13,7 @@ internal class EventHub<T> {
             MessageHandleType.ROUTE_SERVER -> DataReceivedDispatcher.routeToServer(data.data, data.callId)
             MessageHandleType.SEND_MSG -> DataReceivedDispatcher.sendMsg(data)
             MessageHandleType.RECEIVED_MSG -> DataReceivedDispatcher.received(data.data, data.sendingState, data.callId)
-            MessageHandleType.CONNECT_STATE -> DataReceivedDispatcher.onConnectionStateChange(data.connStateChange ?: ConnectionState.ERROR("null connect state"))
+            MessageHandleType.CONNECT_STATE -> DataReceivedDispatcher.onConnectionStateChange(data.connStateChange ?: ConnectionState.ERROR("null connect state", true))
             MessageHandleType.SEND_STATE_CHANGE -> DataReceivedDispatcher.sendingStateChanged(data.sendingState ?: SendMsgState.NONE, data.callId, data.data, data.ignoreStateCheck, data.isResend)
             MessageHandleType.NETWORK_STATE -> DataReceivedDispatcher.onNetworkStateChanged(data.netWorkState)
             MessageHandleType.SEND_PROGRESS_CHANGED -> DataReceivedDispatcher.onSendingProgress(data.callId, data.progress)

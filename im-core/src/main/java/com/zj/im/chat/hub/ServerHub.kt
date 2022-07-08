@@ -15,6 +15,7 @@ import com.zj.im.utils.log.logger.printInFile
 import com.zj.im.utils.netUtils.IConnectivityManager
 import com.zj.im.utils.netUtils.NetWorkInfo
 import com.zj.im.utils.nio
+import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -68,7 +69,7 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     open fun pingServer(response: (Boolean) -> Unit) {
-            response(isNetWorkAccess)
+        response(isNetWorkAccess)
     }
 
     private fun onHandlerExecute(what: Int, obj: Any?) {
@@ -111,8 +112,8 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
         handler?.enqueue(ConnectionState.CONNECTED(false))
     }
 
-    protected fun postToClose(case: String) {
-        handler?.enqueue(ConnectionState.ERROR(case))
+    protected fun postToClose(case: String, reconAble: Boolean) {
+        handler?.enqueue(ConnectionState.ERROR(case, reconAble))
     }
 
     protected fun postError(case: String) {
@@ -120,7 +121,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
     }
 
     protected fun postError(throws: Throwable?) {
-        postToClose(throws?.message ?: "UN_KNOW_ERROR")
+        val reconAble = if (throws is IMException) {
+            throws.errorLevel == IMException.ERROR_LEVEL_ALERT
+        } else {
+            throws !is RuntimeException
+        }
+        postToClose(throws?.message ?: "UN_KNOW_ERROR", reconAble)
         throws?.let { DataReceivedDispatcher.postError(it) }
     }
 
@@ -203,12 +209,12 @@ abstract class ServerHub<T> constructor(private var isAlwaysHeartBeats: Boolean 
             pingHasNotResponseCount++
         }
         if (pingHasNotResponseCount > 3) {
-            postToClose(PING_TIMEOUT)
+            postToClose(PING_TIMEOUT, true)
             clearPingRecord()
             return
         } else {
             pingServer {
-                if (!it) postToClose("PING sent with server received explicit error callback, see [pingServer(Result)]!")
+                if (!it) postToClose("PING sent with server received explicit error callback, see [pingServer(Result)]!", true)
                 else {
                     handler?.enqueue(ConnectionState.PONG)
                 }
